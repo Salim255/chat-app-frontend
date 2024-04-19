@@ -1,0 +1,54 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> {{ !autMode ? 'Sign up' : 'Login' }} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <ion-grid>
+       <ion-row>
+          <ion-col size-md="6" offset-md="3">
+             <ion-list>
+             <ion-item *ngIf="!autMode">
+                <ion-label position="floating">First name</ion-label>
+                <ion-input ngModel id="first_name"  name="first_name"  [(ngModel)]="userInput.first_name"  required></ion-input>
+              </ion-item>
+             <ion-item *ngIf="!autMode">
+                <ion-label position="floating">Last name</ion-label>
+                <ion-input ngModel id="last_name"  name="last_name" [(ngModel)]="userInput.last_name" required></ion-input>
+             </ion-item>
+              <ion-item>
+                <ion-label position="floating">Your email</ion-label>
+                <ion-input type="email" id="e_mail" name="e_mail" ngModel [(ngModel)]="userInput.e_mail" required email></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input ngModel id="password" name="password" [(ngModel)]="userInput.password" required></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="!autMode">
+                <ion-label position="floating">Confirm password</ion-label>
+                <ion-input ngModel id="confirm-password" name="confirm-password" [(ngModel)]="userInput.confirm_password" required></ion-input>
+              </ion-item>
+             </ion-list>
+
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col  size-md="6" offset-md="3">
+            <ion-button fill="clear" expand="full" type="button" (click)="switchAuth()">Switch to {{ autMode ? 'Sign Up': 'Login' }}</ion-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col  size-md="6" offset-md="3">
+            <ion-button  expand="full" type="submit" [disabled]="!f.valid">{{ autMode ? 'Login': 'Sign Up' }}</ion-button>
+          </ion-col>
+        </ion-row>
+
+    </ion-grid>
+  </form>
+</ion-content>
