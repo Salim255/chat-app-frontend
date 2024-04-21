@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AuthPost } from 'src/app/interfaces/auth.interface';
@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './auth.page.html',
   styleUrls: ['./auth.page.scss'],
 })
-export class AuthPage implements OnInit {
+export class AuthPage {
  autMode: boolean =  true;
  userInput: AuthPost;
   constructor(private authService: AuthService) {
@@ -23,11 +23,6 @@ export class AuthPage implements OnInit {
     }
    }
 
-  ngOnInit() {
-    console.log('====================================');
-    console.log("hello");
-    console.log('====================================');
-  }
 
   switchAuth(){
     this.autMode =  !this.autMode
@@ -44,12 +39,10 @@ export class AuthPage implements OnInit {
 
    authObs.subscribe({
     error: (err) => {
-      console.log('====================================');
-      console.log(err);
-      console.log('====================================');
+
     },
     next: (res) => {
-      console.log(res);
+
 
     }
    })

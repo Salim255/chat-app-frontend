@@ -44,6 +44,28 @@ export class AuthService implements OnDestroy {
   private removeStoredData = async () => {
     await Preferences.remove({ key: "authData" })
   }
+
+  get userIsAuthenticated() {
+    return this.user.asObservable().pipe(
+      map((user) => {
+        if (user) {
+          return !!user.token;
+        }
+        return false;
+      })
+    );
+  }
+
+  get userId () {
+    return this.user.asObservable().pipe(
+      map((user) => {
+        if (user) {
+          return user.id
+        }
+        return null
+      })
+    )
+  }
   private autoLogout (duration: number) {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
