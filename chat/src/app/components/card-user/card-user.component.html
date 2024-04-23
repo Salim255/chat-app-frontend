@@ -1,0 +1,19 @@
+ <ion-grid >
+  <ion-row>
+  <ion-col>
+    <ion-card>
+      <ion-card-content>
+        {{friend.last_name}}
+      </ion-card-content>
+    </ion-card>
+  </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+
+      <ion-button (click)="userClickedButton($event, true)">{{friend.last_name}}</ion-button>
+      <ion-button (click)="userClickedButton($event, true)">add to friends</ion-button>
+
+    </ion-col>
+  </ion-row>
+</ion-grid>

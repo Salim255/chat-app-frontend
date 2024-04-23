@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { AccountService } from 'src/app/services/account/account.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountPage implements OnInit {
 
-  constructor() { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
+    let accountOb: Observable<any> ;
+     accountOb = this.accountService.fetchAccount();
+     accountOb.subscribe({
+      error: (err) => {
+        console.log(err);
+
+      },
+      next: (res) => {
+        console.log('====================================');
+        console.log(res);
+        console.log('====================================');
+      }
+     })
   }
 
 }

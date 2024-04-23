@@ -15,7 +15,16 @@ const routes: Routes = [
      {
       path: 'account',
       loadChildren: () => import('../pages/account/account.module').then((m) => m.AccountPageModule)
+     },
+     {
+      path: 'community',
+      loadChildren: () => import('../pages/community/community.module').then((m)  => m.CommunityPageModule)
+     },
+     {
+      path: 'friends',
+      loadChildren: () => import('../pages/friends/friends.module').then((m) => m.FriendsPageModule)
      }
+
     ]
   }
 ];

@@ -1,0 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>community</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <app-card-user *ngFor="let friend of noConnectedFriendsList" [friend]="friend" ></app-card-user>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>

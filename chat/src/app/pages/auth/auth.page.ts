@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthPost } from 'src/app/interfaces/auth.interface';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -13,7 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class AuthPage {
  autMode: boolean =  true;
  userInput: AuthPost;
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     this.userInput  = {
       first_name: "",
       last_name: "",
@@ -32,7 +33,7 @@ export class AuthPage {
    if(!f.valid){
     return
    }
-   let mode = this.autMode ? 'login' : 'createUser'
+   let mode = this.autMode ? 'login' : 'signup/createUser'
    let authObs: Observable<any>
 
    authObs = this.authService.authenticate(mode, this.userInput)
@@ -43,6 +44,7 @@ export class AuthPage {
     },
     next: (res) => {
 
+     this.router.navigateByUrl('/tabs/home')
 
     }
    })

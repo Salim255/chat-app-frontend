@@ -18,6 +18,9 @@ export class AuthService implements OnDestroy {
   constructor(private http: HttpClient) { }
 
   authenticate(mode: string, userInput: AuthPost){
+    console.log('====================================');
+    console.log(userInput, mode);
+    console.log('====================================');
       return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {

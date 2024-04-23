@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>friends</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-list *ngFor="let user of [1, 2,3,4]" >
+            <app-card-friend></app-card-friend>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <app-conversation></app-conversation>
+    </ion-row>
+  </ion-grid>
+</ion-content>
