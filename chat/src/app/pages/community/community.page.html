@@ -8,7 +8,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <app-card-user *ngFor="let friend of noConnectedFriendsList" [friend]="friend" ></app-card-user>
+          <app-card-user *ngFor="let friend of noConnectedFriendsList" [friend]="friend" (shiftList)="skipFriend($event)"  (addFriend)="addFriend($event)" ></app-card-user>
         </ion-col>
       </ion-row>
     </ion-grid>

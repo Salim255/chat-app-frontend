@@ -47,6 +47,33 @@ export class CommunityService {
     )
   }
 
+  addFriend(friendId: number) {
+    return from(Preferences.get({key: "authData"})).pipe(
+      map((storedData) => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+
+        const parseData = JSON.parse(storedData.value) as {
+          _token: string;
+          userId: string;
+          tokenExpirationDate: string;
+        }
+
+        let token = parseData._token;
+
+        return token;
+      }), switchMap((token) => {
+        return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
+        { friend_id: friendId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      })
+    )
+  }
   get getNoConnectedFriendsArray () {
       return this.noConnectedFriendsArray.asObservable()
   }

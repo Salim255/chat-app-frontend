@@ -8,6 +8,9 @@ import { Friend } from 'src/app/models/friend.model';
 })
 export class CardUserComponent  implements OnInit, OnChanges {
   @Input() friend!: Friend
+  @Output() shiftList = new EventEmitter();
+  @Output() addFriend = new EventEmitter<number>()
+
   constructor(private renderer: Renderer2) { }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -21,7 +24,11 @@ export class CardUserComponent  implements OnInit, OnChanges {
 
   }
 
-  userClickedButton(event: any, type: boolean) {
 
+  onSkip(){
+    this.shiftList.emit();
+  }
+  onAddFriend(userId: number) {
+      this.addFriend.emit(userId)
   }
 }

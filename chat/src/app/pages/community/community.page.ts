@@ -10,8 +10,10 @@ import { CommunityService } from 'src/app/services/community/community.service';
   styleUrls: ['./community.page.scss'],
 })
 export class CommunityPage implements OnInit {
+
   private noConnectedFriendsSource!: Subscription;
   noConnectedFriendsList: Array<Friend>
+
   constructor(private communityService: CommunityService, private router: Router) {
     this.noConnectedFriendsList = []
   }
@@ -19,15 +21,33 @@ export class CommunityPage implements OnInit {
   ngOnInit(): void {
     this.noConnectedFriendsSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
       this.noConnectedFriendsList = data
-      console.log('====================================');
-      console.log(this.noConnectedFriendsList);
-      console.log('====================================');
     })
 
   }
 
   ionViewWillEnter() {
      this.communityService.fetchUsers().subscribe()
+  }
+
+  addFriend(userId: number){
+     let addFriendObs: Observable<any>
+
+     addFriendObs = this.communityService.addFriend(userId) ;
+
+     addFriendObs.subscribe({
+        error: () => {
+            console.log("error");
+
+        } ,
+        next: (response) => {
+           this.communityService.fetchUsers().subscribe()
+           this.noConnectedFriendsList.shift()
+        }
+     })
+  }
+
+  skipFriend(event: any){
+    this.noConnectedFriendsList.shift()
   }
 
 }

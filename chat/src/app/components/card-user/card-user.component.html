@@ -2,18 +2,22 @@
   <ion-row>
   <ion-col>
     <ion-card>
+      <ion-card-header>
+        <ion-card-title>Card Title</ion-card-title>
+        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+      </ion-card-header>
+
       <ion-card-content>
         {{friend.last_name}}
+         <ion-button (click)="onSkip()">
+           <ion-icon name="close"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="onAddFriend(friend.id)">
+            <ion-icon name="heart"></ion-icon>
+        </ion-button>
       </ion-card-content>
     </ion-card>
   </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col>
 
-      <ion-button (click)="userClickedButton($event, true)">{{friend.last_name}}</ion-button>
-      <ion-button (click)="userClickedButton($event, true)">add to friends</ion-button>
-
-    </ion-col>
-  </ion-row>
 </ion-grid>

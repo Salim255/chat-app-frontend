@@ -1,3 +1,24 @@
-ion-row{
+ion-content {
+  position: relative;
+  ion-grid {
+    width: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    ion-row {
+      position: relative;
+      ion-col{
+        app-card-user{
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
 
+        }
+     }
+    }
+  }
 }
+
