@@ -28,7 +28,7 @@ export class AuthPage {
   switchAuth(){
     this.autMode =  !this.autMode
   }
-  onSubmit(f:NgForm){
+  onSubmit(f: NgForm){
 
    if(!f.valid){
     return

@@ -40,7 +40,7 @@ export class CommunityPage implements OnInit {
 
         } ,
         next: (response) => {
-           this.communityService.fetchUsers().subscribe()
+           //this.communityService.fetchUsers().subscribe()
            this.noConnectedFriendsList.shift()
         }
      })

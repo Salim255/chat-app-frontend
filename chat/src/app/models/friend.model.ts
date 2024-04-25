@@ -1,6 +1,6 @@
 export class Friend {
   constructor(
-    public id: number,
+    public friend_id: number,
     private created_at: Date,
     private updated_at: Date,
     public first_name: string,

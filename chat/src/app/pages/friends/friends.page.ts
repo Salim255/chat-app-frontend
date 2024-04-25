@@ -17,6 +17,8 @@ export class FriendsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
       this.friendsSource = this.friendsService.getFriendsArray.subscribe(data => {
+      console.log(data);
+
       this.friendsArray = data;
       console.log(this.friendsArray);
 

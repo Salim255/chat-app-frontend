@@ -29,6 +29,9 @@ export class CardUserComponent  implements OnInit, OnChanges {
     this.shiftList.emit();
   }
   onAddFriend(userId: number) {
+      console.log(userId);
+
       this.addFriend.emit(userId)
+
   }
 }

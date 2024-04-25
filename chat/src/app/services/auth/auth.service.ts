@@ -34,6 +34,8 @@ export class AuthService implements OnDestroy {
       const buildUser = new User(userId, authData.token, expirationTime);
       this.user.next(buildUser);
       this.storeAuthData(buildUser);
+      console.log(buildUser, "hello");
+
   }
 
   private storeAuthData = async (dataToStore: User) => {

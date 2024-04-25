@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
+
 import { environment } from "src/environments/environment";
 
-import { Account } from "src/app/models/account.model";
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Preferences } from "@capacitor/preferences";
 import { Friend } from "src/app/models/friend.model";
