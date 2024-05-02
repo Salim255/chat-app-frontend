@@ -1,24 +1,45 @@
 ion-content {
-  position: relative;
+  ion-list{
+    padding-top: 1rem;
+    ion-item {
+
+      ion-text{
+        max-width: 80%;
+        display: inline;
+        padding: .4rem;
+        border-radius: .6rem;
+      }
+      .sender{
+        background: rgb(197, 235, 255);
+
+      }
+      .receiver {
+        background: rgb(144, 233, 245);
+      }
 
 
-  form{
-    //position: absolute;
-    //bottom: 0;
-    //padding: 2rem;
-    //width: 100%;
-     padding: 1rem;
-    ion-textarea {
-      width: 100%;
-
-      text-align: left;
     }
+
   }
 
-}
-ion-tab-bar{
+  form{
+     ion-tab-bar{
+      border-radius: 2rem;
+      background: rgb(220, 218, 218);
+      margin: 0 1rem;
+      margin-bottom: .5rem;
+      ion-textarea {
+        width: 100%;
+        text-align: left;
+        padding: 0 .5rem ;
 
-}
-ion-tab-button{
-  background: blue;
+      }
+
+      ion-button{
+        width: 2rem;
+        margin-right: 1rem;
+      }
+     }
+
+  }
 }

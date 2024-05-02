@@ -8,7 +8,7 @@ import { FriendsService } from 'src/app/services/friends/friends.service';
   styleUrls: ['./friends.page.scss'],
 })
 export class FriendsPage implements OnInit, OnDestroy {
-  private  friendsSource!: Subscription;
+  private friendsSource!: Subscription;
   friendsArray: Array<Friend>;
 
   constructor(private friendsService: FriendsService) {
@@ -17,14 +17,8 @@ export class FriendsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
       this.friendsSource = this.friendsService.getFriendsArray.subscribe(data => {
-      console.log(data);
-
       this.friendsArray = data;
-      console.log(this.friendsArray);
-
-  })
-
-
+    })
   }
 
   ionViewWillEnter() {

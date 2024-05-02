@@ -1,10 +1,10 @@
-export class ActiveConversation {
+export class Conversation {
   constructor(
-    private id: number,
-    private created_at: string,
-    private updated_at: string,
-    private messages: any [],
-    private users: any []
+    public id: number,
+    public created_at: string,
+    public updated_at: string,
+    public messages: any [],
+    public users: any []
   ){}
 
 }

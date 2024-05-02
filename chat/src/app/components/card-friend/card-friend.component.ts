@@ -15,8 +15,8 @@ export class CardFriendComponent  implements OnInit {
     console.log("Hello");
     console.log('====================================');
   }
-  openChat(userId: number){
-    this.router.navigate(['/active-conversation'], { queryParams: { partner: userId  } });
+  openChat(partnerId: number){
+    this.router.navigate(['/active-conversation'], { queryParams: { partner: partnerId } });
 
   }
 }

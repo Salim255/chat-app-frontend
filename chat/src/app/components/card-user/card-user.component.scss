@@ -10,8 +10,21 @@
       ion-card-content{
         position: absolute;
         bottom: 0;
+        display: flex;
+        width: 100%;
+       ion-button:first-child{
+          margin-right:auto ;
+          &:hover{
+            fill: green;
+          }
+       }
       }
     }
   }
 }
 
+ion-icon{
+  height: 3rem;
+  width: 3rem;
+
+}

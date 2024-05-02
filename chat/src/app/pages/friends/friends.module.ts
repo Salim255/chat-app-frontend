@@ -9,7 +9,7 @@ import { FriendsPageRoutingModule } from './friends-routing.module';
 import { FriendsPage } from './friends.page';
 
 import { CardFriendComponent } from 'src/app/components/card-friend/card-friend.component';
-import { ConversationComponent } from 'src/app/components/conversation/conversation.component';
+
 
 @NgModule({
   imports: [
@@ -18,6 +18,6 @@ import { ConversationComponent } from 'src/app/components/conversation/conversat
     IonicModule,
     FriendsPageRoutingModule
   ],
-  declarations: [FriendsPage, CardFriendComponent, ConversationComponent]
+  declarations: [FriendsPage, CardFriendComponent]
 })
 export class FriendsPageModule {}

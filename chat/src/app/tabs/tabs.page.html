@@ -2,17 +2,17 @@
   <ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)">
     <ion-tab-bar slot="bottom" >
       <ion-tab-button  tab="home">
-            Home
+        <ion-icon name="home-outline"></ion-icon>
       </ion-tab-button>
-      <ion-tab-button tab="account">
-            Account
+      <ion-tab-button tab="conversations">
+        <ion-icon name="chatbubble-outline"></ion-icon>
       </ion-tab-button>
 
       <ion-tab-button tab="community">
-        Community
+        <ion-icon name="person-add-outline"></ion-icon>
       </ion-tab-button>
       <ion-tab-button tab="friends">
-        Friends
+        <ion-icon name="people-outline"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>

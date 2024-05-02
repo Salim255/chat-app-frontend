@@ -14,8 +14,15 @@ import { ActivatedRoute } from '@angular/router';
 export class ActiveConversationPage implements OnInit {
   activeChat: any;
   message= '';
-  private partnerId: any = null;
+  partnerId: any = null;
+  userId: any;
+  partnerData: any;
   constructor(private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
+
+    this.authService.userId.subscribe( data =>{
+      this.userId = data
+    });
+
     this.route.queryParams.subscribe(params => {
       this.partnerId = params['partner'] * 1;
     });
@@ -25,6 +32,15 @@ export class ActiveConversationPage implements OnInit {
   ngOnInit() {
     console.log('Hello');
 
+   }
+
+  ionViewWillEnter() {
+      this.conversationService.getActiveConversation.subscribe(data => {
+        if (data) {
+          this.partnerData = this.getPartnerInfo(data.users);
+
+        }
+      })
    }
 
   onSubmit(f: NgForm) {
@@ -60,16 +76,13 @@ export class ActiveConversationPage implements OnInit {
   }
 
   sendMessage(message: string){
-    let userId;
-    this.authService.userId.subscribe( data =>{
-      userId = data
-    });
 
-    if (!userId) {
+
+    if (!this.userId) {
       return
     };
 
-    const data = {  content: this.message, userId, chatId: this.activeChat.id};
+    const data = {  content: this.message, userId: this.userId, chatId: this.activeChat.id};
 
     let sendMessageObs: Observable<any> ;
     sendMessageObs = this.conversationService.sendMessage(data);
@@ -84,5 +97,13 @@ export class ActiveConversationPage implements OnInit {
       }
     })
 
+  }
+
+  getPartnerInfo(users: any){
+    console.log('====================================');
+    console.log(users);
+    console.log('====================================');
+    let partner =   users.filter((user: any) => user.user_id !== this.userId);;
+    return partner[0]
   }
 }
