@@ -10,8 +10,9 @@ import { Conversation } from "src/app/models/activeConversation.model";
 })
 export class ConversationService {
   private ENV = environment;
-  private activeConversationSource = new BehaviorSubject<Conversation | null >(null);
-  private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null)
+  private activeConversationSource = new BehaviorSubject<Conversation | null > (null);
+  private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
+  private partnerInfoSource = new BehaviorSubject<any | null > (null);
   constructor(private htp: HttpClient) {
 
     }
@@ -49,8 +50,6 @@ export class ConversationService {
   }
 
   setActiveConversation(conversation: Conversation) {
-    console.log(conversation);
-
     const buildActiveChat = new Conversation(conversation.id, conversation.created_at, conversation.updated_at, conversation.messages, conversation.users);
     this.activeConversationSource.next(buildActiveChat)
   }
@@ -59,11 +58,15 @@ export class ConversationService {
      this.conversationsSource.next(chats)
   }
 
+  setPartnerInfo(data:any) {
+    this.partnerInfoSource.next(data)
+  }
+
   sendMessage(data: any) {
       return from(Preferences.get({key: 'authData'})).pipe(
         map(( storedData ) => {
             if (!storedData || !storedData.value) {
-              return null
+              return null;
             }
 
             const parseData = JSON.parse(storedData.value) as {
@@ -71,7 +74,6 @@ export class ConversationService {
               userId: string;
               tokenExpirationDate: string;
             }
-
             let token = parseData._token;
 
             return token;
@@ -84,6 +86,8 @@ export class ConversationService {
             }
            }
         )
+        }),tap( () => {
+          this.fetchConversations()
         })
       )
   }
@@ -135,5 +139,9 @@ export class ConversationService {
 
   get getConversations(){
     return this.conversationsSource.asObservable()
+  }
+
+  get getPartnerInfo(){
+    return this.partnerInfoSource.asObservable();
   }
 }

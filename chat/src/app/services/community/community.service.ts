@@ -41,12 +41,17 @@ export class CommunityService {
         });
       }),
       tap((response) => {
+        console.log(response.data, "Hello 👹");
+
         this.noConnectedFriendsArray.next(response.data)
       })
     )
   }
 
   addFriend(friendId: number) {
+    console.log('====================================');
+    console.log(friendId, 'ici');
+    console.log('====================================');
     return from(Preferences.get({key: "authData"})).pipe(
       map((storedData) => {
         if (!storedData || !storedData.value) {

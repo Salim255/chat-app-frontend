@@ -39,7 +39,7 @@ export class ConversationComponent  implements OnInit, OnChanges {
         if (conversation){
          let partner = this.getPartnerInfo(conversation.users);
          if (partner[0]) {
-               this.router.navigate(['/active-conversation'], { queryParams: { partner: partner[0].user_id } });
+               this.router.navigate(['/active-conversation'], { queryParams: { partner: partner[0].user_id }, replaceUrl: true });
          }
 
         }

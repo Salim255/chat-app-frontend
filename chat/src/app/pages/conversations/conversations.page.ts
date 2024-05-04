@@ -13,6 +13,7 @@ export class ConversationsPage implements OnInit {
   constructor(private conversationService: ConversationService) { }
 
   ngOnInit() {
+
   this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
     console.log(chats);
     if(chats){
@@ -28,6 +29,9 @@ export class ConversationsPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    console.log('====================================');
+    console.log("Hello from will enter 💥💥");
+    console.log('====================================');
     this.conversationService.fetchConversations().subscribe()
  }
 

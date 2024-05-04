@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, Renderer2, SimpleChanges, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges } from '@angular/core';
 import { Friend } from 'src/app/models/friend.model';
 
 @Component({
@@ -7,31 +7,27 @@ import { Friend } from 'src/app/models/friend.model';
   styleUrls: ['./card-user.component.scss'],
 })
 export class CardUserComponent  implements OnInit, OnChanges {
-  @Input() friend!: Friend
+  @Input() friend!: any;
   @Output() shiftList = new EventEmitter();
-  @Output() addFriend = new EventEmitter<number>()
+  @Output() addFriend = new EventEmitter<number>();
 
   constructor(private renderer: Renderer2) { }
 
   ngOnChanges(changes: SimpleChanges) {
-
     console.log(this.friend);
-
   }
 
   ngOnInit() {
-     console.log("hello");
-
+    console.log("hello");
   }
-
 
   onSkip(){
     this.shiftList.emit();
   }
-  onAddFriend(userId: number) {
-      console.log(userId);
-
-      this.addFriend.emit(userId)
-
+  onAddFriend() {
+    if (this.friend?.id){
+      this.addFriend.emit(this.friend.id);
+    }
   }
+
 }

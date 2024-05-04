@@ -16,17 +16,15 @@ export class ActiveConversationPage implements OnInit {
   message= '';
   partnerId: any = null;
   userId: any;
-  partnerData: any;
+  partnerInfo: any;
   constructor(private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
-
     this.authService.userId.subscribe( data =>{
-      this.userId = data
+      this.userId = data;
     });
 
     this.route.queryParams.subscribe(params => {
       this.partnerId = params['partner'] * 1;
     });
-
    }
 
   ngOnInit() {
@@ -37,10 +35,18 @@ export class ActiveConversationPage implements OnInit {
   ionViewWillEnter() {
       this.conversationService.getActiveConversation.subscribe(data => {
         if (data) {
-          this.partnerData = this.getPartnerInfo(data.users);
+
+          this.conversationService.getActiveConversation.subscribe(data=>{
+            this.activeChat = data;
+          })
 
         }
       })
+     this.conversationService.getPartnerInfo.subscribe(partnerInfo => {
+        if (partnerInfo) {
+          this.partnerInfo = partnerInfo
+        }
+     })
    }
 
   onSubmit(f: NgForm) {
@@ -60,6 +66,13 @@ export class ActiveConversationPage implements OnInit {
 
   createConversation(message: string) {
     let createChatObs: Observable<any> ;
+    if (!this.partnerId) {
+      console.log('====================================');
+      console.log(this.partnerId);
+      console.log('====================================');
+      return
+    };
+
     let chatData = { partnerId: this.partnerId, message}
     createChatObs = this.conversationService.createConversation(chatData);
 
@@ -70,14 +83,13 @@ export class ActiveConversationPage implements OnInit {
       next: (res) => {
         this.conversationService.getActiveConversation.subscribe(data=>{
           this.activeChat = data;
+
         })
       }
     })
   }
 
   sendMessage(message: string){
-
-
     if (!this.userId) {
       return
     };
@@ -99,11 +111,4 @@ export class ActiveConversationPage implements OnInit {
 
   }
 
-  getPartnerInfo(users: any){
-    console.log('====================================');
-    console.log(users);
-    console.log('====================================');
-    let partner =   users.filter((user: any) => user.user_id !== this.userId);;
-    return partner[0]
-  }
 }

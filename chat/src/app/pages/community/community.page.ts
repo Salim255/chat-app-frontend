@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { Friend } from 'src/app/models/friend.model';
@@ -9,7 +9,7 @@ import { CommunityService } from 'src/app/services/community/community.service';
   templateUrl: './community.page.html',
   styleUrls: ['./community.page.scss'],
 })
-export class CommunityPage implements OnInit {
+export class CommunityPage implements OnInit, OnDestroy {
 
   private noConnectedFriendsSource!: Subscription;
   noConnectedFriendsList: Array<Friend>
@@ -20,34 +20,37 @@ export class CommunityPage implements OnInit {
 
   ngOnInit(): void {
     this.noConnectedFriendsSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
-      this.noConnectedFriendsList = data
+      this.noConnectedFriendsList = data;
+      console.log(this.noConnectedFriendsList);
     })
-
   }
 
   ionViewWillEnter() {
      this.communityService.fetchUsers().subscribe()
   }
 
-  addFriend(userId: number){
-     let addFriendObs: Observable<any>
+  addFriend(non_friend_id: number){
+    if (non_friend_id) {
+      let addFriendObs: Observable<any>
+      addFriendObs = this.communityService.addFriend(non_friend_id);
 
-     addFriendObs = this.communityService.addFriend(userId) ;
-
-     addFriendObs.subscribe({
+      addFriendObs.subscribe({
         error: () => {
-            console.log("error");
-
-        } ,
-        next: (response) => {
-           //this.communityService.fetchUsers().subscribe()
-           this.noConnectedFriendsList.shift()
+          console.log("error");
+        },
+        next: () => {
+          this.noConnectedFriendsList.pop();
         }
      })
+    }
+
   }
 
   skipFriend(event: any){
-    this.noConnectedFriendsList.shift()
+    this.noConnectedFriendsList.pop()
   }
 
+  ngOnDestroy(): void {
+    this.noConnectedFriendsSource.unsubscribe()
+  }
 }
