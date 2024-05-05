@@ -17,7 +17,7 @@ export class ConversationService {
 
     }
 
-  createConversation(data: any) {
+  createConversation (data: any) {
     return from(Preferences.get({key: 'authData'})).pipe(
       map( (storedData) => {
           if (!storedData || !storedData.value ) {
@@ -54,7 +54,7 @@ export class ConversationService {
     this.activeConversationSource.next(buildActiveChat)
   }
 
-  setConversations(chats: any){
+  setConversations (chats: any) {
      this.conversationsSource.next(chats)
   }
 
@@ -64,7 +64,7 @@ export class ConversationService {
 
   sendMessage(data: any) {
       return from(Preferences.get({key: 'authData'})).pipe(
-        map(( storedData ) => {
+        map( ( storedData ) => {
             if (!storedData || !storedData.value) {
               return null;
             }
@@ -78,7 +78,7 @@ export class ConversationService {
 
             return token;
         }),
-        switchMap((token) => {
+        switchMap( (token) => {
           return this.htp.post<any>(`${this.ENV.apiUrl}/messages`, data,
           {
             headers: {
@@ -92,9 +92,9 @@ export class ConversationService {
       )
   }
 
-  fetchConversations(){
+  fetchConversations () {
     return from(Preferences.get({key: 'authData'})).pipe(
-      map((storedData) => {
+      map( (storedData) => {
         if (!storedData || !storedData.value) {
           return null
         }
@@ -109,7 +109,7 @@ export class ConversationService {
 
         return token;
       }),
-      switchMap((token) => {
+      switchMap ( (token) => {
         return this.htp.get<any>(`${this.ENV.apiUrl}/chats`,
         {
           headers: {
@@ -118,9 +118,9 @@ export class ConversationService {
          }
         )
       }),
-      tap((response) => {
+      tap ( (response) => {
         if (response) {
-          if (response.data){
+          if (response.data) {
             this.setConversations(response.data)
           }
         }
@@ -129,19 +129,57 @@ export class ConversationService {
     )
   }
 
-  onConversation(conversation: Conversation){
+  fetchChatByUsers (partnerId: number) {
+    return from (Preferences.get({key: 'authData'}))
+    .pipe(
+      map ( (storedData) => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+
+        const parseData = JSON.parse(storedData.value) as {
+          _token: string;
+          userId: string;
+          tokenExpirationDate: string;
+        }
+
+        let token = parseData._token;
+
+        return token;
+      }),
+      switchMap ( (token) => {
+        return this.htp.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+         }
+        )
+      }),
+      tap ( (response) => {
+        if (!response.data) {
+          this.activeConversationSource.next(null)
+          return
+        }
+        this.setActiveConversation(response.data)
+      })
+    )
+  }
+
+  onConversation (conversation: Conversation) {
     this.setActiveConversation(conversation)
 
   }
-  get getActiveConversation(){
+  get getActiveConversation () {
     return this.activeConversationSource.asObservable()
   }
 
-  get getConversations(){
+  get getConversations () {
     return this.conversationsSource.asObservable()
   }
 
-  get getPartnerInfo(){
+  get getPartnerInfo (){
     return this.partnerInfoSource.asObservable();
   }
+
 }
