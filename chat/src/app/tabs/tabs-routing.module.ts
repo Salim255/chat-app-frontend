@@ -13,9 +13,18 @@ const routes: Routes = [
       loadChildren: () =>  import('../pages/home/home.module').then((m) => m.HomePageModule)
      },
      {
-      path: 'account',
-      loadChildren: () => import('../pages/account/account.module').then((m) => m.AccountPageModule)
+      path: 'conversations',
+      loadChildren: () => import('../pages/conversations/conversations.module').then((m) => m.ConversationsPageModule)
+     },
+     {
+      path: 'community',
+      loadChildren: () => import('../pages/community/community.module').then((m)  => m.CommunityPageModule)
+     },
+     {
+      path: 'friends',
+      loadChildren: () => import('../pages/friends/friends.module').then((m) => m.FriendsPageModule)
      }
+
     ]
   }
 ];

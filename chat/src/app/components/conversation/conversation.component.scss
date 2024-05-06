@@ -1,0 +1,26 @@
+ion-item{
+  margin: .5rem 0;
+  ion-avatar{
+    width: 4rem;
+    height: 4rem;
+    img{
+      object-position: top;
+    }
+  }
+  ion-label{
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    ion-text:first-child{
+      font-weight: bold;
+    }
+    ion-text:last-child{
+      color: rgb(143, 146, 147);
+      white-space: nowrap;
+      overflow: hidden;
+       text-overflow: ellipsis;
+       font-weight: 600;
+       font-size: .8rem;
+    }
+  }
+}
