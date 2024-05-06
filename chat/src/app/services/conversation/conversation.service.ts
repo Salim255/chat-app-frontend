@@ -4,6 +4,7 @@ import { environment } from "src/environments/environment";
 import { Preferences } from "@capacitor/preferences";
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Conversation } from "src/app/models/activeConversation.model";
+import { Partner } from "src/app/interfaces/partner.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,7 @@ export class ConversationService {
      this.conversationsSource.next(chats)
   }
 
-  setPartnerInfo(data:any) {
+  setPartnerInfo(data: Partner) {
     this.partnerInfoSource.next(data)
   }
 
@@ -166,10 +167,7 @@ export class ConversationService {
     )
   }
 
-  onConversation (conversation: Conversation) {
-    this.setActiveConversation(conversation)
 
-  }
   get getActiveConversation () {
     return this.activeConversationSource.asObservable()
   }

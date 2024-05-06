@@ -1,44 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {  Subscription } from 'rxjs';
 import { Conversation } from 'src/app/models/activeConversation.model';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
+
 @Component({
   selector: 'app-conversations',
   templateUrl: './conversations.page.html',
   styleUrls: ['./conversations.page.scss'],
 })
-export class ConversationsPage implements OnInit {
+export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;
-  conversations!: Array<any> ;
+  conversations!: Array<Conversation> ;
   constructor(private conversationService: ConversationService) { }
 
   ngOnInit() {
-
-  this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
-    console.log(chats);
-    if(chats){
-      this.conversations = chats;
-      console.log(this.conversations);
-    }
-
-
-
-  })
-
-
+    this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
+      if(chats){
+        this.conversations = chats;
+      }
+    })
   }
 
-  ionViewWillEnter() {
-    console.log('====================================');
-    console.log("Hello from will enter 💥💥");
-    console.log('====================================');
-    this.conversationService.fetchConversations().subscribe()
- }
+  ionViewWillEnter () {
+    this.conversationService.fetchConversations().subscribe();
+  }
 
-
- ngOnDestroy(): void {
-  //Called once, before the instance is destroyed.
-  //Add 'implements OnDestroy' to the class.
+ ngOnDestroy () {
     this.conversationsSource.unsubscribe();
  }
 }

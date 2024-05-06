@@ -11,25 +11,24 @@ import { FriendsService } from 'src/app/services/friends/friends.service';
 
 export class FriendsPage implements OnInit, OnDestroy {
   private friendsSource!: Subscription;
-  friendsArray: Array<Friend>;
+  friendsArray: Array < Friend >;
 
   constructor(private friendsService: FriendsService) {
     this.friendsArray = []
   }
 
-  ngOnInit() {
+  ngOnInit () {
     this.friendsSource = this.friendsService.getFriendsArray
       .subscribe(data => {
           this.friendsArray = data;
       });
   }
 
-  ionViewWillEnter() {
+  ionViewWillEnter () {
     this.friendsService.fetchFriends().subscribe( );
   }
 
-
-  ngOnDestroy(){
+  ngOnDestroy (){
     this.friendsSource.unsubscribe();
    }
 }

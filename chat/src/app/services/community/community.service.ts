@@ -1,16 +1,15 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-
 import { environment } from "src/environments/environment";
-
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Preferences } from "@capacitor/preferences";
-import { Friend } from "src/app/models/friend.model";
+import { Foreigner } from "src/app/models/Foreigner.model";
+
 @Injectable({
   providedIn: 'root'
 })
 export class CommunityService {
-  noConnectedFriendsArray = new BehaviorSubject<Array<Friend>> ([]);
+  noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
   private ENV = environment
   constructor(private http: HttpClient){
 
@@ -41,19 +40,14 @@ export class CommunityService {
         });
       }),
       tap((response) => {
-        console.log(response.data, "Hello 👹");
-
         this.noConnectedFriendsArray.next(response.data)
       })
     )
   }
 
-  addFriend(friendId: number) {
-    console.log('====================================');
-    console.log(friendId, 'ici');
-    console.log('====================================');
+  addFriend (friendId: number) {
     return from(Preferences.get({key: "authData"})).pipe(
-      map((storedData) => {
+      map( (storedData) => {
         if (!storedData || !storedData.value) {
           return null;
         }

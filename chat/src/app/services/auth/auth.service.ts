@@ -15,12 +15,10 @@ export class AuthService implements OnDestroy {
   private user = new BehaviorSubject <User | null> (null);
   activeLogoutTimer: any;
 
-  constructor(private http: HttpClient) { }
+  constructor (private http: HttpClient) { }
 
-  authenticate(mode: string, userInput: AuthPost){
-    console.log('====================================');
-    console.log(userInput, mode);
-    console.log('====================================');
+  authenticate (mode: string, userInput: AuthPost) {
+
       return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {
@@ -28,14 +26,12 @@ export class AuthService implements OnDestroy {
       }))
   }
 
-  private setAuthData(authData: AuthResponse){
+  private setAuthData (authData: AuthResponse) {
       const expirationTime = new Date(new Date().getTime() + +authData.expireIn);
       let userId = authData.id;
       const buildUser = new User(userId, authData.token, expirationTime);
       this.user.next(buildUser);
       this.storeAuthData(buildUser);
-      console.log(buildUser, "hello");
-
   }
 
   private storeAuthData = async (dataToStore: User) => {
@@ -50,7 +46,7 @@ export class AuthService implements OnDestroy {
     await Preferences.remove({ key: "authData" })
   }
 
-  get userIsAuthenticated() {
+  get userIsAuthenticated () {
     return this.user.asObservable().pipe(
       map((user) => {
         if (user) {
@@ -129,7 +125,7 @@ export class AuthService implements OnDestroy {
     )
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy () {
    if (this.activeLogoutTimer) {
     clearTimeout(this.activeLogoutTimer)
    }

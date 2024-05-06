@@ -6,27 +6,20 @@ import { Friend } from 'src/app/models/friend.model';
   templateUrl: './card-user.component.html',
   styleUrls: ['./card-user.component.scss'],
 })
-export class CardUserComponent  implements OnInit, OnChanges {
-  @Input() friend!: any;
+export class CardUserComponent {
+  @Input() foreigner!: any;
   @Output() shiftList = new EventEmitter();
   @Output() addFriend = new EventEmitter<number>();
 
-  constructor(private renderer: Renderer2) { }
+  constructor (private renderer: Renderer2) { }
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(this.friend);
-  }
-
-  ngOnInit() {
-    console.log("hello");
-  }
-
-  onSkip(){
+  onSkip () {
     this.shiftList.emit();
   }
-  onAddFriend() {
-    if (this.friend?.id){
-      this.addFriend.emit(this.friend.id);
+
+  onAddFriend () {
+    if (this.foreigner.id) {
+      this.addFriend.emit(this.foreigner.id);
     }
   }
 

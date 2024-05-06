@@ -11,45 +11,35 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './active-conversation.page.html',
   styleUrls: ['./active-conversation.page.scss'],
 })
-export class ActiveConversationPage implements OnInit {
+export class ActiveConversationPage {
   activeChat: any;
   message= '';
-  partnerId: any = null;
   userId: any;
   partnerInfo: any;
-  constructor(private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
+
+  constructor (private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
-
-    this.route.queryParams.subscribe(params => {
-      this.partnerId = params['partner'] * 1;
-    });
    }
 
-  ngOnInit() {
-    console.log('Hello');
-
-   }
-
-  ionViewWillEnter() {
-      this.conversationService.getActiveConversation.subscribe(data => {
+  ionViewWillEnter () {
+      this.conversationService.getActiveConversation.subscribe( data => {
         if (data) {
-
-          this.conversationService.getActiveConversation.subscribe(data=>{
+          this.conversationService.getActiveConversation.subscribe( data=>{
             this.activeChat = data;
-          })
-
+          });
         }
-      })
-     this.conversationService.getPartnerInfo.subscribe(partnerInfo => {
+      });
+
+     this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo
         }
      })
    }
 
-  onSubmit(f: NgForm) {
+  onSubmit (f: NgForm) {
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
@@ -61,19 +51,16 @@ export class ActiveConversationPage implements OnInit {
     }
 
     this.sendMessage(this.message);
-    f.reset()
+    f.reset();
   }
 
   createConversation(message: string) {
     let createChatObs: Observable<any> ;
-    if (!this.partnerId) {
-      console.log('====================================');
-      console.log(this.partnerId);
-      console.log('====================================');
+    if (!this.partnerInfo.partner_id) {
       return
     };
 
-    let chatData = { partnerId: this.partnerId, message}
+    let chatData = { partnerId: this.partnerInfo.partner_id, message}
     createChatObs = this.conversationService.createConversation(chatData);
 
     createChatObs.subscribe({
@@ -93,19 +80,18 @@ export class ActiveConversationPage implements OnInit {
     if (!this.userId) {
       return
     };
-
     const data = {  content: this.message, userId: this.userId, chatId: this.activeChat.id};
 
     let sendMessageObs: Observable<any> ;
+
     sendMessageObs = this.conversationService.sendMessage(data);
+
     sendMessageObs.subscribe({
       error: (err) => {
         console.log(err);
       },
       next: (response) => {
-          this.activeChat = response.data[0]
-          console.log( this.activeChat);
-
+          this.activeChat = response.data[0];
       }
     })
 

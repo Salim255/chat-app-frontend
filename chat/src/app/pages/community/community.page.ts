@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { Friend } from 'src/app/models/friend.model';
 import { CommunityService } from 'src/app/services/community/community.service';
+import { Foreigner } from 'src/app/models/Foreigner.model';
 
 @Component({
   selector: 'app-community',
@@ -11,46 +11,44 @@ import { CommunityService } from 'src/app/services/community/community.service';
 })
 export class CommunityPage implements OnInit, OnDestroy {
 
-  private noConnectedFriendsSource!: Subscription;
-  noConnectedFriendsList: Array<Friend>
+  private foreignersSource!: Subscription;
+  foreignersList: Array < Foreigner >
 
-  constructor(private communityService: CommunityService, private router: Router) {
-    this.noConnectedFriendsList = []
+  constructor (private communityService: CommunityService, private router: Router) {
+    this.foreignersList = []
   }
 
-  ngOnInit(): void {
-    this.noConnectedFriendsSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
-      this.noConnectedFriendsList = data;
-      console.log(this.noConnectedFriendsList);
+  ngOnInit () {
+    this.foreignersSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
+      this.foreignersList = data;
     })
   }
 
-  ionViewWillEnter() {
+  ionViewWillEnter () {
      this.communityService.fetchUsers().subscribe()
   }
 
-  addFriend(non_friend_id: number){
-    if (non_friend_id) {
+  addFriend(foreigner_id: number){
+    if (foreigner_id) {
       let addFriendObs: Observable<any>
-      addFriendObs = this.communityService.addFriend(non_friend_id);
+      addFriendObs = this.communityService.addFriend(foreigner_id);
 
       addFriendObs.subscribe({
         error: () => {
           console.log("error");
         },
         next: () => {
-          this.noConnectedFriendsList.pop();
+          this.foreignersList.pop();
         }
      })
     }
-
   }
 
-  skipFriend(event: any){
-    this.noConnectedFriendsList.pop()
+  skipFriend (event: any) {
+    this.foreignersList.pop()
   }
 
-  ngOnDestroy(): void {
-    this.noConnectedFriendsSource.unsubscribe()
+  ngOnDestroy () {
+    this.foreignersSource.unsubscribe()
   }
 }
