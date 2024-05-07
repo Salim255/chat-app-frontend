@@ -10,11 +10,11 @@ ion-content {
         border-radius: .6rem;
       }
       .sender{
-        background: rgb(197, 235, 255);
+        background: rgb(182 216 255);
 
       }
       .receiver {
-        background: rgb(144, 233, 245);
+        background: rgb(222 222 222);
       }
 
 
@@ -31,7 +31,8 @@ ion-content {
       ion-textarea {
         width: 100%;
         text-align: left;
-        padding: 0 .5rem ;
+        padding: 1rem ;
+
 
       }
 
