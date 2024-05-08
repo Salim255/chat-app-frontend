@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage  {
 
-  constructor() { }
+  constructor(private router : Router) { }
 
 
-
+  onAccount () {
+     this.router.navigate(['/account'])
+  }
 
 }

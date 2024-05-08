@@ -19,11 +19,13 @@ const routes: Routes = [
   },
   {
     path: 'active-conversation',
-    loadChildren: () => import('./pages/active-conversation/active-conversation.module').then( m => m.ActiveConversationPageModule)
+    loadChildren: () => import('./pages/active-conversation/active-conversation.module').then( m => m.ActiveConversationPageModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'conversations',
-    loadChildren: () => import('./pages/conversations/conversations.module').then( m => m.ConversationsPageModule)
+    loadChildren: () => import('./pages/conversations/conversations.module').then( m => m.ConversationsPageModule),
+    canLoad: [AuthGuard]
   }
 
 ];
