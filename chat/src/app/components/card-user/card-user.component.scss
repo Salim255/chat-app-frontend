@@ -2,22 +2,56 @@
  ion-grid{
   ion-row:first-child{
     ion-card{
-      height: 60vh;
+      height: 75vh;
       background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww');
       background-position: top;
       background-size: cover;
       position: relative;
+
       ion-card-content{
         position: absolute;
         bottom: 0;
         display: flex;
+        flex-direction: column;
         width: 100%;
-       ion-button:first-child{
-          margin-right:auto ;
-          &:hover{
-            fill: green;
+
+        /* Linear gradient */
+        background: linear-gradient(to bottom,
+            /* Start with color stop at top, clear color */
+            rgba(0, 0, 0, 0.01) 0%,
+            /* End with completely dark color */
+            rgba(0, 0, 0, 1) 100%
+        );
+        /* For smoother rendering */
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        padding: 0 1rem;
+        padding-bottom: 1rem;
+        ion-text {
+          font-size: 1.2rem;
+          font-weight: bold;
+          color: #fff;
+        }
+         div {
+          display: flex;
+
+          width: 100%;
+          ion-button {
+            --padding-start: 0;
+            --padding-end: 0;
+            --padding-top: 0;
+            --padding-bottom: 0;
           }
-       }
+
+          ion-button:first-child{
+            margin-right:auto ;
+          }
+
+          ion-button:last-child {
+            color:  rgb(47, 210, 142);
+          }
+         }
+
       }
     }
   }

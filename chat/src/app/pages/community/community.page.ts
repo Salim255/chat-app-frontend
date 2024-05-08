@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { CommunityService } from 'src/app/services/community/community.service';
-import { Foreigner } from 'src/app/models/Foreigner.model';
+import { Foreigner } from 'src/app/models/foreigner.model';
 
 @Component({
   selector: 'app-community',

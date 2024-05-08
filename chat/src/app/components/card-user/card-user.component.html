@@ -2,22 +2,20 @@
   <ion-row>
   <ion-col>
     <ion-card>
-      <ion-card-header>
-        <ion-card-title>Card Title</ion-card-title>
-        <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-      </ion-card-header>
-
       <ion-card-content>
-        {{ foreigner.last_name }}
-         <ion-button (click)="onSkip()" fill="clear">
-          <ion-icon name="close-circle-outline" ></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" (click)="onAddFriend()">
-          <ion-icon name="heart-circle-outline"></ion-icon>
-        </ion-button>
+        <ion-text>
+           {{foreigner.first_name}}
+        </ion-text>
+         <div>
+            <ion-button (click)="onSkip()" fill="clear">
+              <ion-icon name="close-circle-outline" ></ion-icon>
+            </ion-button>
+            <ion-button fill="clear" (click)="onAddFriend()">
+              <ion-icon name="heart-circle-outline" fill="secondary"></ion-icon>
+            </ion-button>
+         </div>
       </ion-card-content>
     </ion-card>
   </ion-col>
   </ion-row>
-
 </ion-grid>

@@ -8,6 +8,8 @@ import { AccountPageRoutingModule } from './account-routing.module';
 
 import { AccountPage } from './account.page';
 
+import { AccountInfoComponent } from 'src/app/components/account/account-info/account-info.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +17,6 @@ import { AccountPage } from './account.page';
     IonicModule,
     AccountPageRoutingModule
   ],
-  declarations: [AccountPage]
+  declarations: [AccountPage, AccountInfoComponent]
 })
 export class AccountPageModule {}
