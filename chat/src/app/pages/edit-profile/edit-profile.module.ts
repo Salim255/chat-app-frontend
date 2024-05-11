@@ -20,6 +20,7 @@ import { LivingComponent } from 'src/app/components/account/edit-account/living/
 import { GenderComponent } from 'src/app/components/account/edit-account/gender/gender.component';
 import { OrientationComponent } from 'src/app/components/account/edit-account/orientation/orientation.component';
 import { ControlComponent } from 'src/app/components/account/edit-account/control/control.component';
+import { CardMediaComponent } from 'src/app/components/account/edit-account/media/card-media/card.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,6 @@ import { ControlComponent } from 'src/app/components/account/edit-account/contro
     IonicModule,
     EditProfilePageRoutingModule
   ],
-  declarations: [EditProfilePage, AccountMediaComponent,AboutMeComponent, InterestsComponent, RelationGoalsComponent, SchoolComponent,RelationTypeComponent, LanguagesComponent, LifeStyleComponent, LivingComponent, GenderComponent, OrientationComponent, ControlComponent ]
+  declarations: [EditProfilePage, AccountMediaComponent,AboutMeComponent, InterestsComponent, RelationGoalsComponent, SchoolComponent,RelationTypeComponent, LanguagesComponent, LifeStyleComponent, LivingComponent, GenderComponent, OrientationComponent, ControlComponent, CardMediaComponent ]
 })
 export class EditProfilePageModule {}
