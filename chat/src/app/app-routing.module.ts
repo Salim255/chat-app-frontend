@@ -17,16 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule),
     canLoad: [AuthGuard]
   },
-  {
-    path: 'active-conversation',
-    loadChildren: () => import('./pages/active-conversation/active-conversation.module').then( m => m.ActiveConversationPageModule),
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'conversations',
-    loadChildren: () => import('./pages/conversations/conversations.module').then( m => m.ConversationsPageModule),
-    canLoad: [AuthGuard]
-  }
+
 
 ];
 
