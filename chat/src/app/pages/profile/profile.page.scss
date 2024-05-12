@@ -1,0 +1,30 @@
+ion-header {
+  ion-toolbar {
+    --background: #fff;
+    --border-width: 0;
+      ion-text {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      ion-icon {
+          color: var(--ion-color-primary);
+          height: 3rem;
+          width: 3rem;
+      }
+
+  }
+}
+
+ion-content {
+   ion-grid {
+    margin: 0;
+    padding: 0;
+     ion-row {
+         ion-col {
+          margin: 0;
+          padding: 0;
+         }
+     }
+   }
+}
+

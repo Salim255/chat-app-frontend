@@ -1,0 +1,16 @@
+<swiper-container
+[modules]="swiperModules"
+(slidechange)="onSlideChange($event)"
+[pagination]="true"
+>
+  <swiper-slide *ngFor="let item of presentationData; let index">
+      <ion-grid [fixed]="true">
+        <ion-row class="justify-content-center align-items-center">
+          <ion-col >
+            <img [src]="item"/>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  </swiper-slide>
+</swiper-container>
+

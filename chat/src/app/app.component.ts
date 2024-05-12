@@ -2,6 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { register } from 'swiper/element/bundle';
+
+register();
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

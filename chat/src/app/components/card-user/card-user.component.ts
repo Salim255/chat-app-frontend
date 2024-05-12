@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges } from '@angular/core';
-import { Friend } from 'src/app/models/friend.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-user',
@@ -11,7 +11,7 @@ export class CardUserComponent {
   @Output() shiftList = new EventEmitter();
   @Output() addFriend = new EventEmitter<number>();
 
-  constructor (private renderer: Renderer2) { }
+  constructor (private renderer: Renderer2, private router: Router) { }
 
   onSkip () {
     this.shiftList.emit();
@@ -24,7 +24,7 @@ export class CardUserComponent {
   }
 
   onViewProfile(){
-
+     this.router.navigate(['/tabs/profile'])
   }
 
 }
