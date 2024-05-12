@@ -8,7 +8,7 @@
 
   ion-row:first-child{
     ion-card{
-      height: 75vh;
+      height: 90vh;
       background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D');
       background-position: top;
       background-size: cover;
@@ -19,6 +19,7 @@
         position: absolute;
         bottom: 0;
         display: flex;
+        gap: .5rem;
         flex-direction: column;
         width: 100%;
 
@@ -50,16 +51,13 @@
         .details-section {
           display: flex;
           flex-direction: column;
+          gap: .5rem;
           &__info {
             display: flex;
-            div {
-              display: flex;
-              flex-direction: column;
-
-            }
-
             ion-text {
               align-self: center;
+              font-size: 1.5rem;
+              font-weight: bold;
             }
             ion-icon {
               margin-left: auto;
@@ -67,46 +65,43 @@
               height: 2.5rem;
             }
           }
+
           .location {
             display: flex;
-             gap: 1rem;
+            gap: .4rem;
             ion-icon {
-             height: 1.5rem;
-             width: 2rem;
+             height: 1rem;
+             width: 1rem;
              align-self:center ;
              color: white;
-
             }
-
             ion-text {
               align-self: center;
             }
           }
+
+          .btns {
+            display: flex;
+            width: 100%;
+            padding-top: 1rem;
+            ion-button {
+              --padding-start: 0;
+              --padding-end: 0;
+              --padding-top: 0;
+              --padding-bottom: 0;
+            }
+            ion-button:first-child{
+              margin-right:auto ;
+            }
+            ion-button:last-child {
+              color:  rgb(47, 210, 142);
+            }
+           }
+
         }
         ion-text {
-          font-size: 1.2rem;
-          font-weight: bold;
           color: #fff;
         }
-         div {
-          display: flex;
-
-          width: 100%;
-          ion-button {
-            --padding-start: 0;
-            --padding-end: 0;
-            --padding-top: 0;
-            --padding-bottom: 0;
-          }
-
-          ion-button:first-child{
-            margin-right:auto ;
-          }
-
-          ion-button:last-child {
-            color:  rgb(47, 210, 142);
-          }
-         }
 
       }
     }

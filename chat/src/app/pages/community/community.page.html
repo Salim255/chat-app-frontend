@@ -17,7 +17,7 @@
 <ion-content [fullscreen]="true">
     <ion-grid>
       <ion-row>
-        <ion-col>
+        <ion-col size-md="6"  offset-md="3">
           <app-card-user *ngFor="let foreigner of foreignersList" [foreigner]="foreigner" (shiftList)="skipFriend($event)"  (addFriend)="addFriend($event)" ></app-card-user>
         </ion-col>
       </ion-row>
