@@ -23,4 +23,8 @@ export class CardUserComponent {
     }
   }
 
+  onViewProfile(){
+
+  }
+
 }
