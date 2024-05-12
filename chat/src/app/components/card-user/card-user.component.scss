@@ -1,13 +1,20 @@
 
- ion-grid{
+ ion-grid {
+  margin: 0;
+  padding: 0;
+  ion-col{
+    padding: 0;
+  }
+
   ion-row:first-child{
     ion-card{
       height: 75vh;
-      background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww');
+      background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D');
       background-position: top;
       background-size: cover;
       position: relative;
-
+      padding: 0;
+      margin: 0;
       ion-card-content{
         position: absolute;
         bottom: 0;
@@ -17,16 +24,65 @@
 
         /* Linear gradient */
         background: linear-gradient(to bottom,
-            /* Start with color stop at top, clear color */
             rgba(0, 0, 0, 0.01) 0%,
-            /* End with completely dark color */
             rgba(0, 0, 0, 1) 100%
         );
-        /* For smoother rendering */
+
         background-repeat: no-repeat;
         background-size: 100% 100%;
         padding: 0 1rem;
         padding-bottom: 1rem;
+        .tag-section {
+             app-tag {
+              ::ng-deep ion-badge {
+                color: white;
+                font-size: 1rem;
+                font-weight: 700;
+                padding-bottom: .3rem ;
+                padding-left: .6rem;
+                padding-right: .6rem;
+                text-transform: capitalize;
+                border-radius: 2rem;
+                background: #048478;
+              }
+             }
+        }
+        .details-section {
+          display: flex;
+          flex-direction: column;
+          &__info {
+            display: flex;
+            div {
+              display: flex;
+              flex-direction: column;
+
+            }
+
+            ion-text {
+              align-self: center;
+            }
+            ion-icon {
+              margin-left: auto;
+              color: white;
+              height: 2.5rem;
+            }
+          }
+          .location {
+            display: flex;
+             gap: 1rem;
+            ion-icon {
+             height: 1.5rem;
+             width: 2rem;
+             align-self:center ;
+             color: white;
+
+            }
+
+            ion-text {
+              align-self: center;
+            }
+          }
+        }
         ion-text {
           font-size: 1.2rem;
           font-weight: bold;

@@ -3,17 +3,31 @@
   <ion-col>
     <ion-card>
       <ion-card-content>
-        <ion-text>
-           {{foreigner.first_name}}
-        </ion-text>
-         <div>
-            <ion-button (click)="onSkip()" fill="clear">
-              <ion-icon name="close-circle-outline" ></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" (click)="onAddFriend()">
-              <ion-icon name="heart-circle-outline" fill="secondary"></ion-icon>
-            </ion-button>
-         </div>
+          <div class="tag-section">
+            <app-tag [message]="'active'"></app-tag>
+          </div>
+          <div class="details-section">
+              <div class="details-section__info">
+
+                    <ion-text>
+                      {{foreigner.first_name}}
+                    </ion-text>
+
+                <ion-icon name="eye"></ion-icon>
+              </div>
+              <div class="location">
+                <ion-icon name="location"></ion-icon>
+                <ion-text>2 miles away</ion-text>
+              </div>
+              <div>
+                 <ion-button (click)="onSkip()" fill="clear">
+                    <ion-icon name="close-circle-outline" ></ion-icon>
+                  </ion-button>
+                  <ion-button fill="clear" (click)="onAddFriend()">
+                    <ion-icon name="heart-circle-outline" fill="secondary"></ion-icon>
+                  </ion-button>
+              </div>
+          </div>
       </ion-card-content>
     </ion-card>
   </ion-col>

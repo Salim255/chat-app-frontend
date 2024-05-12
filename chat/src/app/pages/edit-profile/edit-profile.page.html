@@ -1,5 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start" (click)="onNavigateBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-buttons>
     <ion-title>Edit-profile</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -24,7 +27,7 @@
         <app-account-interests></app-account-interests>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row class="relationship-goals-section">
       <ion-col>
         <ion-text>Relationship Goals</ion-text>
         <app-account-relation-goals></app-account-relation-goals>
