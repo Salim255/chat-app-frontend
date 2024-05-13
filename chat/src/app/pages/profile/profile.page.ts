@@ -14,7 +14,7 @@ export class ProfilePage implements OnInit {
 
   }
 
-    goBackToExplore () {
+  goBackToExplore () {
       this.nativeController.back()
-    }
+  }
 }

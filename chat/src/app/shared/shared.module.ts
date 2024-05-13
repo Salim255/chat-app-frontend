@@ -1,10 +1,11 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { TagComponent } from "./native-component/tag/tag.component";
+import { ActionComponent } from "./profile/action/action.component";
 import { IonicModule } from "@ionic/angular";
+
 @NgModule({
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [TagComponent],
-  exports: [TagComponent],
+  declarations: [TagComponent,ActionComponent],
+  exports: [TagComponent, ActionComponent],
   imports: [
     IonicModule
   ]

@@ -22,7 +22,9 @@ swiper-container {
           padding: 0;
           img {
             height: 30rem;
-            width: 30rem;
+            width: 100%;
+            object-fit: cover;
+            object-position: top;
           }
 
         }

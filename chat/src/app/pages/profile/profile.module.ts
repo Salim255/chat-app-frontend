@@ -8,6 +8,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { SliderComponent } from 'src/app/components/profile/slider/slider.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -15,7 +16,8 @@ import { SliderComponent } from 'src/app/components/profile/slider/slider.compon
     CommonModule,
     FormsModule,
     IonicModule,
-    ProfilePageRoutingModule
+    ProfilePageRoutingModule,
+    SharedModule
   ],
   declarations: [ProfilePage, SliderComponent]
 })
