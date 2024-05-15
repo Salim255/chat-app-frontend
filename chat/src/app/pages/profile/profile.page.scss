@@ -33,8 +33,16 @@ ion-content {
 app-profile-action {
   position: fixed;
   left: 50%;
-  top: 65%;
-  transform: translate(-50%, -50%);
+  bottom:  0%;
+  transform: translate(-50%, -0%);
   z-index: 1;
   width: 100%;
+
+  /* Linear gradient */
+      background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.01) 0%,
+      rgba(0, 0, 0, 1) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }

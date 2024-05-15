@@ -5,6 +5,9 @@ ion-grid {
       display: flex;
       ion-button:last-child {
         margin-left: auto;
+        ion-icon {
+          color:  rgb(47, 210, 142);
+        }
       }
       ion-button {
         padding: 0;

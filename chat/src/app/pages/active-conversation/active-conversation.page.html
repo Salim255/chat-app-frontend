@@ -1,7 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>{{partnerInfo?.first_name}}</ion-title>
-  </ion-toolbar>
+    <ion-text slot="start">{{partnerInfo?.first_name}}</ion-text>
+
+    <ion-icon slot="end"  name="ellipsis-vertical" ></ion-icon>
+
+</ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">

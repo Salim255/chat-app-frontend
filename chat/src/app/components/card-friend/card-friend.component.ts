@@ -1,4 +1,4 @@
-import { Component,  Input, OnInit } from '@angular/core';
+import { Component,  Input} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
@@ -44,7 +44,7 @@ export class CardFriendComponent {
       next: () => {
           this.conversationService.setPartnerInfo(this.partnerInfo);
 
-          this.router.navigate(['./active-conversation'], { queryParams: { partner: this.friend?.friend_id } });
+          this.router.navigate(['./tabs/active-conversation'], { queryParams: { partner: this.friend?.friend_id } });
       }
     })
   }

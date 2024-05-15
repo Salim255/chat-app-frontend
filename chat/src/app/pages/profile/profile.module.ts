@@ -9,6 +9,12 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { SliderComponent } from 'src/app/components/profile/slider/slider.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { EssentialsComponent } from 'src/app/components/profile/essentials/essentials.component';
+import { LifestyleComponent } from 'src/app/components/profile/lifestyle/lifestyle.component';
+import { LookingForComponent } from 'src/app/components/profile/looking-for/looking-for.component';
+import { blockComponent } from 'src/app/components/profile/security/block-profile/block.component';
+import { ReportComponent } from 'src/app/components/profile/security/report-profile/report.component';
+import { AboutMeComponent } from 'src/app/components/profile/about-me/about-me.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -19,6 +25,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ProfilePageRoutingModule,
     SharedModule
   ],
-  declarations: [ProfilePage, SliderComponent]
+  declarations: [ProfilePage, SliderComponent, EssentialsComponent, LifestyleComponent, LookingForComponent, blockComponent, ReportComponent, AboutMeComponent]
 })
 export class ProfilePageModule {}
