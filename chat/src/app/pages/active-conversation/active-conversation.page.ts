@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +17,7 @@ export class ActiveConversationPage {
   userId: any;
   partnerInfo: any;
 
-  constructor (private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
+  constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService ) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
@@ -94,7 +94,13 @@ export class ActiveConversationPage {
           this.activeChat = response.data[0];
       }
     })
-
   }
 
+  onBackArrow () {
+     this.router.navigate(['./tabs/conversations']);
+  }
+
+  onProfile () {
+      this.router.navigate(['./tabs/profile'])
+  }
 }

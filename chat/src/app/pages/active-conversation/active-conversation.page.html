@@ -1,10 +1,18 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-text slot="start">{{partnerInfo?.first_name}}</ion-text>
-
-    <ion-icon slot="end"  name="ellipsis-vertical" ></ion-icon>
-
-</ion-toolbar>
+    <ion-button slot="start" fill="clear" size="small" (click)="onBackArrow()">
+      <ion-icon name="arrow-back-outline" ></ion-icon>
+    </ion-button>
+    <ion-item  slot="start" lines="none">
+      <ion-avatar role="button" (click)="onProfile()" >
+        <img alt="Silhouette of a person's head" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww" />
+      </ion-avatar>
+      <ion-label>{{partnerInfo?.first_name}}</ion-label>
+    </ion-item>
+   <ion-button slot="end"  fill="clear"  size="small">
+    <ion-icon  name="ellipsis-vertical" ></ion-icon>
+   </ion-button>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
