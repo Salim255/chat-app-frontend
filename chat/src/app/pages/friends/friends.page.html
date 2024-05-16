@@ -8,6 +8,11 @@
   <ion-grid>
     <ion-row>
       <ion-col>
+          <app-search-bar></app-search-bar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
         <ion-list *ngFor="let friend of friendsArray" >
             <app-card-friend [friend]="friend" ></app-card-friend>
         </ion-list>
