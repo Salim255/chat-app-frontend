@@ -16,6 +16,7 @@ ion-header {
 }
 
 ion-content {
+  --padding-bottom: 8rem;
    ion-grid {
     margin: 0;
     padding: 0;
@@ -24,7 +25,11 @@ ion-content {
           margin: 0;
           padding: 0;
          }
-     }
+    }
+
+    ion-row {
+      margin-top: .5rem;
+    }
    }
 
 }

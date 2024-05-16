@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
       <ion-text slot="start">Salim, 31</ion-text>
-      <ion-icon name="arrow-redo-circle" slot="end" (click)="goBackToExplore()"></ion-icon>
+      <ion-icon name="close" slot="end" (click)="goBackToExplore()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -17,11 +17,7 @@
        <app-profile-looking-for></app-profile-looking-for>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col>
-          <app-profile-about-me></app-profile-about-me>
-      </ion-col>
-    </ion-row>
+
     <ion-row>
       <ion-col>
         <app-profile-essentials></app-profile-essentials>
@@ -29,17 +25,12 @@
     </ion-row>
     <ion-row>
       <ion-col>
-       <app-profile-lifestyle></app-profile-lifestyle>
+        <app-block-profile></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <app-report-profile></app-report-profile>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <app-block-profile></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
