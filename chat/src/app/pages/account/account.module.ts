@@ -9,6 +9,7 @@ import { AccountPageRoutingModule } from './account-routing.module';
 import { AccountPage } from './account.page';
 
 import { AccountInfoComponent } from 'src/app/components/account/account-info/account-info.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { AccountInfoComponent } from 'src/app/components/account/account-info/ac
     CommonModule,
     FormsModule,
     IonicModule,
-    AccountPageRoutingModule
+    AccountPageRoutingModule,
+    SharedModule
   ],
   declarations: [AccountPage, AccountInfoComponent]
 })
