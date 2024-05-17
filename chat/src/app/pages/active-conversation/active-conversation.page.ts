@@ -97,6 +97,8 @@ export class ActiveConversationPage {
   }
 
   onBackArrow () {
+    console.log("Hello world");
+
      this.router.navigate(['./tabs/conversations']);
   }
 

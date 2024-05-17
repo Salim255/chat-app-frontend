@@ -10,6 +10,7 @@ import { AccountPage } from './account.page';
 
 import { AccountInfoComponent } from 'src/app/components/account/account-info/account-info.component';
 
+
 @NgModule({
   imports: [
     CommonModule,

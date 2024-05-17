@@ -7,7 +7,9 @@
       <ion-button>  <ion-icon name="shield"></ion-icon> </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button> <ion-icon name="settings"></ion-icon> </ion-button>
+      <ion-button (click)="onSettings()">
+        <ion-icon name="settings" ></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
