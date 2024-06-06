@@ -8,13 +8,15 @@ import { ConversationsPageRoutingModule } from './conversations-routing.module';
 
 import { ConversationsPage } from './conversations.page';
 import { ConversationComponent } from 'src/app/components/conversation/conversation.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ConversationsPageRoutingModule
+    ConversationsPageRoutingModule,
+    SharedModule
   ],
   declarations: [ConversationsPage, ConversationComponent]
 })

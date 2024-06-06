@@ -3,6 +3,7 @@ import { AuthService } from './services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
+import { SocketIoService } from './services/socket.io/socket.io.serve';
 
 register();
 
@@ -17,7 +18,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private socketIoService: SocketIoService
   ) {}
 
   ngOnInit () {
@@ -27,6 +29,10 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       this.previousAuthState = isAuth
     })
+
+    console.log("Hello from app");
+
+    this.socketIoService.connect();
   }
 
   ngOnDestroy() {
