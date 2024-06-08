@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
+import { SocketIoService } from 'src/app/services/socket.io/socket.io.serve';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -17,20 +18,25 @@ export class ActiveConversationPage {
   userId: any;
   partnerInfo: any;
 
-  constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService ) {
+  constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService, private socketIoService: SocketIoService ) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
    }
 
   ionViewWillEnter () {
-      this.conversationService.getActiveConversation.subscribe( data => {
-        if (data) {
+    console.log("Hello");
           this.conversationService.getActiveConversation.subscribe( data=>{
             this.activeChat = data;
+            console.log(data, "Hello ");
+
+            const conversationId = data?.id;
+            if (data?.id) {
+
+              this.joinConversation(data)
+            }
           });
-        }
-      });
+
 
      this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
@@ -39,10 +45,19 @@ export class ActiveConversationPage {
      })
    }
 
+   onTextChange(text: any) {
+    if (text.length !== 0) {
+      console.log(text.length);
+
+      this.socketIoService.userIsTyping()
+    }
+   }
   onSubmit (f: NgForm) {
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
+
+
 
     if (!this.activeChat) {
       this.createConversation(this.message)
@@ -70,7 +85,6 @@ export class ActiveConversationPage {
       next: (res) => {
         this.conversationService.getActiveConversation.subscribe(data=>{
           this.activeChat = data;
-
         })
       }
     })
@@ -104,5 +118,9 @@ export class ActiveConversationPage {
 
   onProfile () {
       this.router.navigate(['./tabs/profile'])
+  }
+
+  joinConversation (activeConversation: any) {
+    this.socketIoService.joinConversation(activeConversation)
   }
 }

@@ -30,7 +30,8 @@
     <ion-tabs>
         <form #f="ngForm" (ngSubmit)="onSubmit(f)">
           <ion-tab-bar slot="bottom">
-            <ion-textarea ngModel name="message" required [(ngModel)]="message" rows="1">
+            <ion-textarea ngModel name="message" required [(ngModel)]="message" rows="1"
+            (ngModelChange)="onTextChange($event)">
             </ion-textarea>
             <ion-button type="submit" fill="clear" size="medium" [disabled]="!f.valid" >send</ion-button>
           </ion-tab-bar>
