@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
-import { SocketIoService } from 'src/app/services/socket.io/socket.io.serve';
+import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -12,11 +12,13 @@ import { Router } from '@angular/router';
   templateUrl: './active-conversation.page.html',
   styleUrls: ['./active-conversation.page.scss'],
 })
-export class ActiveConversationPage {
+export class ActiveConversationPage implements OnDestroy {
   activeChat: any;
   message= '';
   userId: any;
   partnerInfo: any;
+  typingState: boolean = false;
+  private typingSubscription!: Subscription;
 
   constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService, private socketIoService: SocketIoService ) {
     this.authService.userId.subscribe( data =>{
@@ -25,18 +27,21 @@ export class ActiveConversationPage {
    }
 
   ionViewWillEnter () {
-    console.log("Hello");
-          this.conversationService.getActiveConversation.subscribe( data=>{
-            this.activeChat = data;
-            console.log(data, "Hello ");
+    this.typingSubscription = this.socketIoService.comingTypingEvent.subscribe((data) => {
+      if (data) {
+        this.typingState = true
+      } else {
+        this.typingState = false
+      }
+    })
 
-            const conversationId = data?.id;
-            if (data?.id) {
-
-              this.joinConversation(data)
+    this.conversationService.getActiveConversation.subscribe( data=>{
+      this.activeChat = data;
+        const conversationId = data?.id;
+        if (data?.id) {
+          this.joinConversation(data)
             }
-          });
-
+        });
 
      this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
@@ -122,5 +127,11 @@ export class ActiveConversationPage {
 
   joinConversation (activeConversation: any) {
     this.socketIoService.joinConversation(activeConversation)
+  }
+
+  ngOnDestroy() {
+    if (this.typingSubscription) {
+      this.typingSubscription.unsubscribe();
+    }
   }
 }
