@@ -26,7 +26,9 @@
         </ion-text>
       </ion-item>
     </ion-list>
-
+     <ion-item lines="none">
+        <ion-text *ngIf="typingState "> typing...</ion-text>
+     </ion-item>
     <ion-tabs>
         <form #f="ngForm" (ngSubmit)="onSubmit(f)">
           <ion-tab-bar slot="bottom">

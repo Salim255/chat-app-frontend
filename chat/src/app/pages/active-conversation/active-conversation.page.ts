@@ -27,14 +27,20 @@ export class ActiveConversationPage implements OnDestroy {
    }
 
   ionViewWillEnter () {
+    this.typingState = false;
+    // Here we listen to partner typing event
     this.typingSubscription = this.socketIoService.comingTypingEvent.subscribe((data) => {
       if (data) {
+        // If data = true, then we set typing to true
         this.typingState = true
       } else {
+        // If data = false, then we set typing to false
         this.typingState = false
       }
     })
 
+
+    // Here we get active conversation
     this.conversationService.getActiveConversation.subscribe( data=>{
       this.activeChat = data;
         const conversationId = data?.id;
@@ -43,6 +49,7 @@ export class ActiveConversationPage implements OnDestroy {
             }
         });
 
+    // Here we get the partner id
      this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo
@@ -50,23 +57,26 @@ export class ActiveConversationPage implements OnDestroy {
      })
    }
 
+   // Here we listen to user typing event
    onTextChange(text: any) {
-    if (text.length !== 0) {
-      console.log(text.length);
-
+    if (!text || text.length === 0) {
+      this.socketIoService.userStopTyping();
+      return;
+    } else {
+      // If text not "", user is typing
       this.socketIoService.userIsTyping()
     }
    }
+
   onSubmit (f: NgForm) {
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
 
-
-
     if (!this.activeChat) {
       this.createConversation(this.message)
-      f.reset()
+      f.reset();
+
       return;
     }
 
@@ -90,6 +100,8 @@ export class ActiveConversationPage implements OnDestroy {
       next: (res) => {
         this.conversationService.getActiveConversation.subscribe(data=>{
           this.activeChat = data;
+          // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sentMessageEmitter(this.userId)
         })
       }
     })
@@ -111,13 +123,13 @@ export class ActiveConversationPage implements OnDestroy {
       },
       next: (response) => {
           this.activeChat = response.data[0];
+          // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sentMessageEmitter(this.userId)
       }
     })
   }
 
   onBackArrow () {
-    console.log("Hello world");
-
      this.router.navigate(['./tabs/conversations']);
   }
 
@@ -133,5 +145,9 @@ export class ActiveConversationPage implements OnDestroy {
     if (this.typingSubscription) {
       this.typingSubscription.unsubscribe();
     }
+
+  /*   if (this.comingMessageSubscription) {
+      this.comingMessageSubscription.unsubscribe()
+    } */
   }
 }
