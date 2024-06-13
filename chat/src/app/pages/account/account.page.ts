@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccountService } from 'src/app/services/account/account.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
@@ -8,7 +9,7 @@ import { AccountService } from 'src/app/services/account/account.service';
 })
 export class AccountPage implements OnInit {
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   ngOnInit() {
     let accountOb: Observable<any> ;
@@ -24,6 +25,13 @@ export class AccountPage implements OnInit {
         console.log('====================================');
       }
      })
+  }
+
+  onSettings() {
+    console.log('====================================');
+    console.log("Hello Salim");
+    console.log('====================================');
+    this.router.navigate(["./tabs/settings"])
   }
 
 }

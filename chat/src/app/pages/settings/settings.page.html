@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-button slot="start" fill="clear" size="small" (click)="onBackArrow()">
+      <ion-icon name="arrow-back-outline" ></ion-icon>
+    </ion-button>
+    <ion-text slot="start">Settings</ion-text>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+ <ion-grid>
+    <ion-row>
+        <ion-col>
+            <app-logout></app-logout>
+        </ion-col>
+    </ion-row>
+ </ion-grid>
+</ion-content>

@@ -145,7 +145,6 @@ export class ConversationService {
         }
 
         let token = parseData._token;
-
         return token;
       }),
       switchMap ( (token) => {
@@ -166,7 +165,6 @@ export class ConversationService {
       })
     )
   }
-
 
   get getActiveConversation () {
     return this.activeConversationSource.asObservable()

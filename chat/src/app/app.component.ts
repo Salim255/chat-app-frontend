@@ -2,6 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { register } from 'swiper/element/bundle';
+import { SocketIoService } from './services/socket.io/socket.io.service';
+
+register();
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -13,7 +18,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private socketIoService: SocketIoService
   ) {}
 
   ngOnInit () {
@@ -23,6 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
       this.previousAuthState = isAuth
     })
+
   }
 
   ngOnDestroy() {

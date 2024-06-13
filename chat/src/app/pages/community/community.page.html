@@ -1,13 +1,23 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>community</ion-title>
+    <ion-buttons slot="start">
+      <ion-button> Love </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+     <ion-button>
+      <ion-icon name="notifications"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button> <ion-icon name="options-outline"></ion-icon> </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
     <ion-grid>
       <ion-row>
-        <ion-col>
+        <ion-col size-md="6"  offset-md="3">
           <app-card-user *ngFor="let foreigner of foreignersList" [foreigner]="foreigner" (shiftList)="skipFriend($event)"  (addFriend)="addFriend($event)" ></app-card-user>
         </ion-col>
       </ion-row>

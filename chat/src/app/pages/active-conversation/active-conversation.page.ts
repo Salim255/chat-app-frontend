@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
+import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,32 +12,60 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './active-conversation.page.html',
   styleUrls: ['./active-conversation.page.scss'],
 })
-export class ActiveConversationPage {
+export class ActiveConversationPage implements OnDestroy {
   activeChat: any;
   message= '';
   userId: any;
   partnerInfo: any;
+  typingState: boolean = false;
+  private typingSubscription!: Subscription;
 
-  constructor (private conversationService: ConversationService, private route: ActivatedRoute, private authService: AuthService ) {
+  constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService, private socketIoService: SocketIoService ) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
    }
 
   ionViewWillEnter () {
-      this.conversationService.getActiveConversation.subscribe( data => {
-        if (data) {
-          this.conversationService.getActiveConversation.subscribe( data=>{
-            this.activeChat = data;
-          });
-        }
-      });
+    this.typingState = false;
+    // Here we listen to partner typing event
+    this.typingSubscription = this.socketIoService.comingTypingEvent.subscribe((data) => {
+      if (data) {
+        // If data = true, then we set typing to true
+        this.typingState = true
+      } else {
+        // If data = false, then we set typing to false
+        this.typingState = false
+      }
+    })
 
+
+    // Here we get active conversation
+    this.conversationService.getActiveConversation.subscribe( data=>{
+      this.activeChat = data;
+        const conversationId = data?.id;
+        if (data?.id) {
+          this.joinConversation(data)
+            }
+        });
+
+    // Here we get the partner id
      this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo
         }
      })
+   }
+
+   // Here we listen to user typing event
+   onTextChange(text: any) {
+    if (!text || text.length === 0) {
+      this.socketIoService.userStopTyping();
+      return;
+    } else {
+      // If text not "", user is typing
+      this.socketIoService.userIsTyping()
+    }
    }
 
   onSubmit (f: NgForm) {
@@ -46,7 +75,8 @@ export class ActiveConversationPage {
 
     if (!this.activeChat) {
       this.createConversation(this.message)
-      f.reset()
+      f.reset();
+
       return;
     }
 
@@ -70,7 +100,8 @@ export class ActiveConversationPage {
       next: (res) => {
         this.conversationService.getActiveConversation.subscribe(data=>{
           this.activeChat = data;
-
+          // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sentMessageEmitter(this.userId)
         })
       }
     })
@@ -92,9 +123,31 @@ export class ActiveConversationPage {
       },
       next: (response) => {
           this.activeChat = response.data[0];
+          // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sentMessageEmitter(this.userId)
       }
     })
-
   }
 
+  onBackArrow () {
+     this.router.navigate(['./tabs/conversations']);
+  }
+
+  onProfile () {
+      this.router.navigate(['./tabs/profile'])
+  }
+
+  joinConversation (activeConversation: any) {
+    this.socketIoService.joinConversation(activeConversation)
+  }
+
+  ngOnDestroy() {
+    if (this.typingSubscription) {
+      this.typingSubscription.unsubscribe();
+    }
+
+  /*   if (this.comingMessageSubscription) {
+      this.comingMessageSubscription.unsubscribe()
+    } */
+  }
 }

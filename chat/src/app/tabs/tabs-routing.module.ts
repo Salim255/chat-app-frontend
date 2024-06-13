@@ -28,8 +28,23 @@ const routes: Routes = [
       path: 'account',
       loadChildren: () => import('../pages/account/account.module').then( (m) => m.AccountPageModule)
      }
-
     ]
+  },
+  {
+    path: 'active-conversation',
+    loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
+  },
+  {
+    path: 'edit-profile',
+    loadChildren: () => import('../pages/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('../pages/profile/profile.module').then( (m) => m.ProfilePageModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('../pages/settings/settings.module').then( (m) => m.SettingsPageModule)
   }
 ];
 

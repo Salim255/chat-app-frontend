@@ -77,11 +77,10 @@ export class AuthService implements OnDestroy {
     }, duration);
   }
 
-  private logout () {
+  logout () {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }
-
     this.user.next(null);
     this.removeStoredData();
   }
