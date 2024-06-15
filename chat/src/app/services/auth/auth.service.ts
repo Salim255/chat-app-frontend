@@ -6,6 +6,7 @@ import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
 import { User } from 'src/app/models/user.model';
 import { BehaviorSubject, from, map, tap } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,9 @@ export class AuthService implements OnDestroy {
   private user = new BehaviorSubject <User | null> (null);
   activeLogoutTimer: any;
 
-  constructor (private http: HttpClient) { }
+  constructor (private http: HttpClient) {
+
+  }
 
   authenticate (mode: string, userInput: AuthPost) {
 

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Preferences } from "@capacitor/preferences";
-import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
+import { BehaviorSubject, from, map, pipe, switchMap, tap } from "rxjs";
 import { Conversation } from "src/app/models/activeConversation.model";
 import { Partner } from "src/app/interfaces/partner.interface";
 
@@ -14,7 +14,7 @@ export class ConversationService {
   private activeConversationSource = new BehaviorSubject<Conversation | null > (null);
   private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
   private partnerInfoSource = new BehaviorSubject<any | null > (null);
-  constructor(private htp: HttpClient) {
+  constructor(private http: HttpClient) {
 
     }
 
@@ -35,7 +35,7 @@ export class ConversationService {
 
           return token;
       }), switchMap( (token) => {
-          return this.htp.post<any>(`${this.ENV.apiUrl}/chats`, {
+          return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {
             partnerId: data.partnerId,
             content: data.message
          }, {
@@ -80,7 +80,7 @@ export class ConversationService {
             return token;
         }),
         switchMap( (token) => {
-          return this.htp.post<any>(`${this.ENV.apiUrl}/messages`, data,
+          return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -111,7 +111,7 @@ export class ConversationService {
         return token;
       }),
       switchMap ( (token) => {
-        return this.htp.get<any>(`${this.ENV.apiUrl}/chats`,
+        return this.http.get<any>(`${this.ENV.apiUrl}/chats`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -148,7 +148,7 @@ export class ConversationService {
         return token;
       }),
       switchMap ( (token) => {
-        return this.htp.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`,
+        return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -166,6 +166,33 @@ export class ConversationService {
     )
   }
 
+  updateMessagesStatus (chatId: number, messageStatus: string) {
+    return from (Preferences.get({key: 'authData'}))
+      .pipe (
+        map (
+          (storedData ) => {
+            if (!storedData || !storedData.value) {
+              return null
+            }
+            return this.subtractToken(storedData);
+          }
+        ),
+        switchMap ( (token) => {
+          return this.http.put<any>(`${this.ENV.apiUrl}/chats/${chatId}/messages/${messageStatus}`, {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+           })
+        }),
+        tap ( (response) => {
+          console.log(response, "Hello from updated messages");
+        }
+
+        )
+      )
+  }
+
   get getActiveConversation () {
     return this.activeConversationSource.asObservable()
   }
@@ -176,6 +203,17 @@ export class ConversationService {
 
   get getPartnerInfo (){
     return this.partnerInfoSource.asObservable();
+  }
+
+  subtractToken (storedData: any) {
+    const parseData = JSON.parse(storedData.value) as {
+      _token: string;
+      userId: string;
+      tokenExpirationDate: string;
+    }
+
+    let token = parseData._token;
+    return token;
   }
 
 }
