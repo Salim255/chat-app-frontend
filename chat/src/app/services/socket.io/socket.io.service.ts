@@ -47,6 +47,12 @@ export class SocketIoService {
     // Listen to coming typing event
     this.onTypingListener();
 
+    // Listen to delivered message
+    this.onMessageDelivered();
+
+    // Listen to message read
+    this.onMessageRead()
+
     })
   }
 
@@ -83,10 +89,58 @@ export class SocketIoService {
   }
   onNewMessage() {
     this.socket.on('new_message', (data) => {
-       // fetch chats
-       let chatsObs: Observable <any> ;
-       chatsObs = this.conversationService.fetchConversations();
-       chatsObs.subscribe()
+      // Dealing with delivered message
+       this.socket.emit('delivered_message',data);
+       // fetch conversations
+       this.fetchConversations()
     })
+  }
+
+  onMessageDelivered() {
+    console.log("Hello from message delivered");
+    this.socket.on('message_delivered', (data) => {
+      console.log(data);
+      // Run the code that modify sent messages to delivered
+      let setToDelivered: Observable <any> ;
+      setToDelivered = this.conversationService.updateMessagesStatus(data.chatId, 'delivered');
+
+      setToDelivered.subscribe({
+        error: (err) => {
+          console.log("Error", err);
+        },
+        next: (res) => {
+          // fetch conversations
+          this.fetchConversations()
+        }
+      })
+    })
+  }
+
+  readMessage(chatId: number, toUserId: number) {
+    this.socket.emit('read_message', { chatId , toUserId });
+  }
+
+  onMessageRead() {
+    this.socket.on('message_read', (data) => {
+      console.log(data);
+         // Run the code that modify sent messages to read
+         let setToDelivered: Observable <any> ;
+         setToDelivered = this.conversationService.updateMessagesStatus(data.chatId, 'read');
+
+         setToDelivered.subscribe({
+           error: () => {
+           },
+           next: () => {
+             // fetch conversations
+             this.fetchConversations()
+           }
+         })
+    })
+  }
+
+  fetchConversations () {
+    let chatsObs: Observable <any> ;
+    chatsObs = this.conversationService.fetchConversations();
+    chatsObs.subscribe();
   }
 }

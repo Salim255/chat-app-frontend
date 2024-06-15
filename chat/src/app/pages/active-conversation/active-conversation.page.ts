@@ -27,6 +27,7 @@ export class ActiveConversationPage implements OnDestroy {
     });
    }
 
+
   ionViewWillEnter () {
     this.typingState = false;
 
@@ -54,6 +55,13 @@ export class ActiveConversationPage implements OnDestroy {
         }
      })
 
+     if ( this.partnerInfo && this.activeChat) {
+      let toUserId = this.partnerInfo.partner_id;
+      let chatId = this.activeChat.id;
+
+      // Read messages emitter
+      this.socketIoService.readMessage(chatId, toUserId)
+     }
    }
 
    // Here we listen to user typing event
@@ -138,6 +146,8 @@ export class ActiveConversationPage implements OnDestroy {
 
 
   ngOnDestroy() {
+    this.partnerInfo =  null ;
+
     if (this.typingSubscription) {
       this.typingSubscription.unsubscribe();
     }
