@@ -63,6 +63,41 @@ export class ConversationService {
     this.partnerInfoSource.next(data)
   }
 
+  fetchChatByChatId(chatId: number) {
+    return from(Preferences.get({key: 'authData'})).pipe(
+      map( ( storedData ) => {
+        if (!storedData || !storedData.value) {
+          return null;
+        }
+
+        const parseData = JSON.parse(storedData.value) as {
+          _token: string;
+          userId: string;
+          tokenExpirationDate: string;
+        }
+        let token = parseData._token;
+
+        return token;
+        }
+      ),
+      switchMap( (token) => {
+        return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+           }
+        )
+      }),
+      tap( (response) => {
+        this.setActiveConversation(response.data[0])
+
+      })
+    )
+  }
+
+
+  //
   sendMessage(data: any) {
       return from(Preferences.get({key: 'authData'})).pipe(
         map( ( storedData ) => {

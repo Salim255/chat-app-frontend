@@ -20,6 +20,8 @@ export class ActiveConversationPage implements OnDestroy {
   typingState: boolean = false;
   private typingSubscription!: Subscription;
   private comingMessageEvent!: Subscription;
+  private activeConversationSubscription!: Subscription;
+  private deliveredEventSubscription!: Subscription;
 
   constructor (private conversationService: ConversationService, private router: Router, private authService: AuthService, private socketIoService: SocketIoService ) {
     this.authService.userId.subscribe( data =>{
@@ -32,19 +34,19 @@ export class ActiveConversationPage implements OnDestroy {
     this.typingState = false;
 
     // Here we listen to partner typing event
-   this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
-      if (status) {
-        // If data = true, then we set typing to true
-        this.typingState = status
-      } else {
-        // If data = false, then we set typing to false
-        this.typingState = status
-      }
-    })
+    this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
+        if (status) {
+          // If data = true, then we set typing to true
+          this.typingState = status
+        } else {
+          // If data = false, then we set typing to false
+          this.typingState = status
+        }
+      })
 
 
     // Here we get active conversation
-    this.conversationService.getActiveConversation.subscribe( data =>{
+    this.activeConversationSubscription = this.conversationService.getActiveConversation.subscribe( data =>{
       this.activeChat = data;
         });
 
@@ -55,13 +57,30 @@ export class ActiveConversationPage implements OnDestroy {
         }
      })
 
+     // listen to receiver message delivered event, in case receiver is in current conversation
+     this.deliveredEventSubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe((data:any) => {
+
+
+      console.log(data, "Hello data 🚨🚨🚨");
+
+      if (data) {
+        const {chatId, toUserId, fromUserId} = data
+        if (chatId && toUserId && fromUserId) {
+          this.readMessageEmitter(chatId, fromUserId, toUserId)
+        }
+      }
+     })
+
      if ( this.partnerInfo && this.activeChat) {
       let toUserId = this.partnerInfo.partner_id;
       let chatId = this.activeChat.id;
 
       // Read messages emitter
-      this.socketIoService.readMessage(chatId, toUserId)
+      this.readMessageEmitter(chatId, this.userId, toUserId)
+
      }
+
+
    }
 
    // Here we listen to user typing event
@@ -129,6 +148,7 @@ export class ActiveConversationPage implements OnDestroy {
         console.log(err);
       },
       next: (response) => {
+
           this.activeChat = response.data[0];
           // Sending this partnerId to be used in fetching  active chat
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.partner_id, message)
@@ -144,6 +164,10 @@ export class ActiveConversationPage implements OnDestroy {
       this.router.navigate(['./tabs/profile'])
   }
 
+  //
+  readMessageEmitter (chatId: number,  toUserId: number, fromUserId: number,) {
+    this.socketIoService.readMessage(chatId, fromUserId, toUserId)
+  }
 
   ngOnDestroy() {
     this.partnerInfo =  null ;
@@ -154,6 +178,21 @@ export class ActiveConversationPage implements OnDestroy {
 
     if (this.comingMessageEvent) {
         this.comingMessageEvent.unsubscribe()
-      }
     }
+
+    if (this.activeConversationSubscription) {
+      this.activeConversationSubscription.unsubscribe()
+    }
+  }
+
+  returnMessageStatus(messageStatus: string) {
+    switch(messageStatus) {
+      case 'read':
+        return 'checkmark-done-outline';
+      case 'delivered':
+        return 'checkmark-done-outline';
+      default:
+        return 'checkmark-outline'
+    }
+  }
 }

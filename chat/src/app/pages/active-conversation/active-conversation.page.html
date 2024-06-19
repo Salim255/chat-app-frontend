@@ -22,7 +22,8 @@
           <ion-text [slot]="[message.from_user_id === userId ? 'end' : 'start' ]"
         [ngClass]="[message.from_user_id === userId ? 'sender' : 'receiver' ]"
         >
-         {{ message.content }}
+         {{ message.content }} {{message.status}}
+         <ion-icon [name]="returnMessageStatus(message.status)" *ngIf="message.from_user_id === userId" [ngClass]="[message.status === 'read' ? 'message message__read': 'message message__sent']"></ion-icon>
         </ion-text>
       </ion-item>
     </ion-list>
