@@ -201,6 +201,34 @@ export class ConversationService {
     )
   }
 
+  // Once user connected we want to mark all messages with status sent to delivered
+  markMessagesAsDeliveredOnceUserConnected () {
+    return from(Preferences.get({key: 'authData'}))
+      .pipe (
+        map (
+          ( storedData ) => {
+              if (!storedData || !storedData.value) {
+                return null
+              }
+              return this.subtractToken(storedData);
+          }
+        ),
+        switchMap ( (token) => {
+          return this.http.put<any>(`${this.ENV.apiUrl}/messages/user`, {},
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+             }
+          )
+        }),
+        tap ( (response) => {
+
+          console.log(response , 'Hello response ⛱️⛱️⛱️');
+
+        })
+      )
+  }
   updateMessagesStatus (chatId: number, messageStatus: string) {
     return from (Preferences.get({key: 'authData'}))
       .pipe (

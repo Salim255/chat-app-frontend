@@ -36,8 +36,9 @@ export class SocketIoService {
     this.socket.on('connect', () => {
       console.log('Connected to server');
 
+
       this.socket.on('Welcome', (data) => {
-        console.log(data);
+        console.log(data, 'welcome');
       })
 
     //
@@ -63,6 +64,9 @@ export class SocketIoService {
 
     //
     this.onDisplayMessageReadSenderSide()
+
+    //
+    this.onMarkComingMessagesAsDelivered()
 
     })
   }
@@ -113,6 +117,13 @@ export class SocketIoService {
     })
   }
 
+  onMarkComingMessagesAsDelivered() {
+    this.socket.on('mark_coming_messages_as_delivered', (data) => {
+      console.log(data, "🏝️🏝️🏝️🌋🌋🌋🏜️🏜️");
+      this.markMessagesAsDeliveredOnceUserConnected()
+
+    })
+  }
   onMessageDelivered() {
     //console.log("Hello from message delivered");
     this.socket.on('message_delivered_with_modify_fetch_messages', (data) => {
@@ -180,7 +191,6 @@ export class SocketIoService {
 
   onDisplayReadMessage() {
     this.socket.on('display_message_read', (data) => {
-        console.log(data, 'test🚔🚍🚘');
 
     })
   }
@@ -221,5 +231,22 @@ fetchCurrentConversation ( chatId: number) {
 
    }
  })
+  }
+
+
+  markMessagesAsDeliveredOnceUserConnected () {
+    if (this.userId) {
+      let deliveredMessagesObs: Observable <any>;
+      deliveredMessagesObs = this.conversationService.markMessagesAsDeliveredOnceUserConnected();
+      deliveredMessagesObs.subscribe({
+        error: (err) => {
+          console.log(err);
+
+        },
+        next: (res) => {
+          console.log(res);
+        }
+      })
+    }
   }
 }

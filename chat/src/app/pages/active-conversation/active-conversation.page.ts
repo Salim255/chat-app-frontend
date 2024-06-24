@@ -1,4 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild} from '@angular/core';
+import { IonContent } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
@@ -13,11 +14,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./active-conversation.page.scss'],
 })
 export class ActiveConversationPage implements OnDestroy {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   activeChat: any;
   message= '';
   userId: any;
   partnerInfo: any;
   typingState: boolean = false;
+
   private typingSubscription!: Subscription;
   private comingMessageEvent!: Subscription;
   private activeConversationSubscription!: Subscription;
@@ -29,6 +33,10 @@ export class ActiveConversationPage implements OnDestroy {
     });
    }
 
+   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+   ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
   ionViewWillEnter () {
     this.typingState = false;
@@ -125,6 +133,7 @@ export class ActiveConversationPage implements OnDestroy {
         this.conversationService.getActiveConversation.subscribe(data=>{
           this.activeChat = data;
           // Sending this partnerId to be used in fetching  active chat
+
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.id, this.message)
 
           // Update
@@ -137,7 +146,7 @@ export class ActiveConversationPage implements OnDestroy {
     if (!this.userId) {
       return
     };
-    const data = {  content: this.message, userId: this.userId, chatId: this.activeChat.id};
+    const data = {  content: this.message, fromUserId: this.userId, toUserId: this.partnerInfo.partner_id,  chatId: this.activeChat.id};
 
     let sendMessageObs: Observable<any> ;
 
@@ -169,6 +178,21 @@ export class ActiveConversationPage implements OnDestroy {
     this.socketIoService.readMessage(chatId, fromUserId, toUserId)
   }
 
+  returnMessageStatus(messageStatus: string) {
+    switch(messageStatus) {
+      case 'read':
+        return 'checkmark-done-outline';
+      case 'delivered':
+        return 'checkmark-done-outline';
+      default:
+        return 'checkmark-outline'
+    }
+  }
+
+  scrollToBottom() {
+    this.content.scrollToBottom(300); // Scrolls to bottom with a duration of 300ms
+  }
+
   ngOnDestroy() {
     this.partnerInfo =  null ;
 
@@ -185,14 +209,5 @@ export class ActiveConversationPage implements OnDestroy {
     }
   }
 
-  returnMessageStatus(messageStatus: string) {
-    switch(messageStatus) {
-      case 'read':
-        return 'checkmark-done-outline';
-      case 'delivered':
-        return 'checkmark-done-outline';
-      default:
-        return 'checkmark-outline'
-    }
-  }
+
 }

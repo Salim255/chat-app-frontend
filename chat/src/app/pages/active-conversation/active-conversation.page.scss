@@ -1,4 +1,5 @@
 ion-header {
+  --keyboard-offset: 0px;
   ion-toolbar {
     --background: #fff;
 
@@ -26,10 +27,11 @@ ion-header {
 }
 
 ion-content {
+  position: relative;
   ion-list{
     padding-top: 1rem;
+    padding-bottom: 2rem;
     ion-item {
-
       ion-text{
         max-width: 80%;
         display: inline;
@@ -64,24 +66,33 @@ ion-content {
 
   }
 
-  form{
-     ion-tab-bar{
-      border-radius: 2rem;
-      background: rgb(220, 218, 218);
-      margin: 0 1rem;
-      margin-bottom: .5rem;
-      ion-textarea {
-        width: 100%;
-        text-align: left;
-        padding: 1rem ;
+  ion-tabs {
+    position: fixed;
+    bottom: 0%;
+    top: 90%;
+    height: 5rem;
+    z-index: 2;
+    form{
+      ion-tab-bar{
+       border-radius: 2rem;
+       background: rgb(220, 218, 218);
+       margin: 0 1rem;
+       margin-bottom: .5rem;
+       ion-textarea {
+         width: 100%;
+         text-align: left;
+         padding: 1rem ;
 
 
+       }
+       ion-button{
+         width: 2rem;
+         margin-right: 1rem;
+       }
       }
-      ion-button{
-        width: 2rem;
-        margin-right: 1rem;
-      }
-     }
 
-  }
+   }
+ }
 }
+
+

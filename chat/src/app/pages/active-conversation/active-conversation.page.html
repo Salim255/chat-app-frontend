@@ -15,8 +15,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-
+<ion-content #content [fullscreen]="true">
+    <!-- Here we display all the messages -->
     <ion-list *ngIf="activeChat">
       <ion-item *ngFor="let message of activeChat.messages" lines="none">
           <ion-text [slot]="[message.from_user_id === userId ? 'end' : 'start' ]"
@@ -27,9 +27,13 @@
         </ion-text>
       </ion-item>
     </ion-list>
+
+    <!-- Here we display typing notifications -->
      <ion-item lines="none">
         <ion-text *ngIf="typingState "> typing...</ion-text>
      </ion-item>
+
+    <!-- section to type and send text -->
     <ion-tabs>
         <form #f="ngForm" (ngSubmit)="onSubmit(f)">
           <ion-tab-bar slot="bottom">
