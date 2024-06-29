@@ -1,11 +1,12 @@
-import { Component, OnDestroy, ViewChild} from '@angular/core';
-import { IonContent } from '@ionic/angular';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild} from '@angular/core';
+import { IonContent, IonTextarea } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { Message } from 'src/app/interfaces/message.interface';
 
 
 @Component({
@@ -15,8 +16,10 @@ import { Router } from '@angular/router';
 })
 export class ActiveConversationPage implements OnDestroy {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
+  @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
 
   activeChat: any;
+  messagesList: any;
   message= '';
   userId: any;
   partnerInfo: any;
@@ -34,8 +37,42 @@ export class ActiveConversationPage implements OnDestroy {
    }
 
    // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+   ngAfterViewInit() {
+    // this.setFocus()
+    //this.initializeKeyboard();
+    console.log('====================================');
+    console.log("Hello");
+    console.log('====================================');
+  }
+
+   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
    ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+
+  submitMessageObs(data: any) {
+    console.log('====================================');
+    console.log(data, "Hello message from active chat");
+    console.log('====================================');
+    let sendMessageObs: Observable<any> ;
+
+    sendMessageObs = this.conversationService.sendMessage(data);
+
+    sendMessageObs.subscribe({
+      error: (err) => {
+        console.log(err);
+      },
+      next: (response) => {
+
+          this.activeChat = response.data[0];
+
+          let lastMessage = this.getLastMessage(this.activeChat)
+
+          this.pushMessageToMessagesList(lastMessage)
+          // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.partner_id, data.content)
+      }
+    })
   }
 
   ionViewWillEnter () {
@@ -56,6 +93,7 @@ export class ActiveConversationPage implements OnDestroy {
     // Here we get active conversation
     this.activeConversationSubscription = this.conversationService.getActiveConversation.subscribe( data =>{
       this.activeChat = data;
+      this.messagesList = this.activeChat.messages
         });
 
     // Here we get the partner id
@@ -67,9 +105,6 @@ export class ActiveConversationPage implements OnDestroy {
 
      // listen to receiver message delivered event, in case receiver is in current conversation
      this.deliveredEventSubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe((data:any) => {
-
-
-      console.log(data, "Hello data 🚨🚨🚨");
 
       if (data) {
         const {chatId, toUserId, fromUserId} = data
@@ -91,6 +126,10 @@ export class ActiveConversationPage implements OnDestroy {
 
    }
 
+
+
+
+
    // Here we listen to user typing event
    onTextChange(text: any) {
     if (!text || text.length === 0) {
@@ -101,7 +140,7 @@ export class ActiveConversationPage implements OnDestroy {
     }
    }
 
-  onSubmit (f: NgForm) {
+/*   onSubmit (f: NgForm) {
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
@@ -113,8 +152,9 @@ export class ActiveConversationPage implements OnDestroy {
     }
 
     this.sendMessage(this.message);
+
     f.reset();
-  }
+  } */
 
   createConversation(message: string) {
     let createChatObs: Observable<any> ;
@@ -131,7 +171,15 @@ export class ActiveConversationPage implements OnDestroy {
       },
       next: (res) => {
         this.conversationService.getActiveConversation.subscribe(data=>{
+
+
           this.activeChat = data;
+
+          let lastMessage = this.getLastMessage(this.activeChat);
+
+          this.pushMessageToMessagesList(lastMessage);
+
+
           // Sending this partnerId to be used in fetching  active chat
 
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.id, this.message)
@@ -159,6 +207,10 @@ export class ActiveConversationPage implements OnDestroy {
       next: (response) => {
 
           this.activeChat = response.data[0];
+
+          let lastMessage = this.getLastMessage(this.activeChat)
+
+          this.pushMessageToMessagesList(lastMessage)
           // Sending this partnerId to be used in fetching  active chat
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.partner_id, message)
       }
@@ -192,6 +244,20 @@ export class ActiveConversationPage implements OnDestroy {
   scrollToBottom() {
     this.content.scrollToBottom(300); // Scrolls to bottom with a duration of 300ms
   }
+
+  pushMessageToMessagesList(message: Message){
+     this.messagesList.push(message)
+  }
+
+  getLastMessage(activeChat: any) {
+    if (activeChat?.messages) {
+      const lastMessageIndex = activeChat.messages.length - 1 ;
+      return activeChat.messages[lastMessageIndex]
+    }
+    return  null
+  }
+
+
 
   ngOnDestroy() {
     this.partnerInfo =  null ;

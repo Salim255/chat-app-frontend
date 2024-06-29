@@ -44,7 +44,9 @@ export class ConversationComponent  implements OnChanges {
       this.conversationService.getActiveConversation.subscribe((conversation) => {
         if (conversation ) {
               this.conversationService.setPartnerInfo(this.partnerInfo);
-              this.router.navigate(['tabs/active-conversation'], { queryParams: { partner: this.partnerInfo.partner_id }, replaceUrl: true });
+              /* this.router.navigate(['tabs/active-conversation'], { queryParams: { partner: this.partnerInfo.partner_id }, replaceUrl: true }); */
+              //this.router.navigate(['tabs/active-chat']);
+              this.router.navigate(['tabs/active-chat'], { queryParams: { partner: this.partnerInfo.partner_id }, replaceUrl: true });
         }
       })
     }

@@ -1,0 +1,45 @@
+div {
+  position: relative;
+  padding-bottom: 5rem;
+  ion-list{
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    ion-item {
+      ion-text{
+        max-width: 80%;
+        display: inline;
+        padding: .4rem ;
+        padding-bottom: 1.5rem;
+        border-radius: .6rem;
+        position: relative;
+        .message {
+          position: absolute;
+          right: 1%;
+          bottom: 1%;
+          height: 1.3rem;
+          width: 1.3rem;
+          &__read {
+            color: #1f91e0;
+          }
+          &__sent {
+            color: #9ca1a3;
+          }
+        }
+      }
+      .sender{
+        background: rgb(242 230 79);
+
+      }
+      .receiver {
+        background: rgb(222 222 222);
+      }
+
+
+    }
+
+  }
+
+  .typing{
+    margin-bottom: 4rem;
+  }
+}

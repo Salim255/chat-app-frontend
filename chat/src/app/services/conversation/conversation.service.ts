@@ -14,6 +14,8 @@ export class ConversationService {
   private activeConversationSource = new BehaviorSubject<Conversation | null > (null);
   private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
   private partnerInfoSource = new BehaviorSubject<any | null > (null);
+  private activeChatMessagesListSource = new BehaviorSubject<any | null> (null);
+
   constructor(private http: HttpClient) {
 
     }
@@ -268,6 +270,9 @@ export class ConversationService {
     return this.partnerInfoSource.asObservable();
   }
 
+  get getActiveChatMessages() {
+    return this.activeChatMessagesListSource.asObservable()
+  }
   subtractToken (storedData: any) {
     const parseData = JSON.parse(storedData.value) as {
       _token: string;
@@ -279,4 +284,7 @@ export class ConversationService {
     return token;
   }
 
+ setActiveConversationMessages(messagesList: any){
+    this.activeChatMessagesListSource.next(messagesList)
+ }
 }
