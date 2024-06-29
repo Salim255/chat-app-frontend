@@ -159,7 +159,7 @@ export class SocketIoService {
     })
   }
 
-  readMessage(chatId: number, toUserId: number, fromUserId: number) {
+  readMessage(chatId: number,  fromUserId: number, toUserId: number,) {
     this.socket.emit('read_message', { chatId , toUserId, fromUserId });
   }
 
@@ -173,7 +173,6 @@ export class SocketIoService {
            error: () => {
            },
            next: () => {
-            console.log(data, "Fuck you ⛱️⛱️⛱️⛱️");
 
              // fetch conversations
              this.fetchConversations();

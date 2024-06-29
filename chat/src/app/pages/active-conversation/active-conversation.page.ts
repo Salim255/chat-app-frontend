@@ -181,10 +181,8 @@ export class ActiveConversationPage implements OnDestroy {
 
 
           // Sending this partnerId to be used in fetching  active chat
-
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.id, this.message)
 
-          // Update
         })
       }
     })

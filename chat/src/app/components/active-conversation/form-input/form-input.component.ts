@@ -14,7 +14,7 @@ import { AuthService } from "src/app/services/auth/auth.service";
 export class FormInputComponent implements OnInit  {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitMessageObs = new EventEmitter<any>();
-  @Output() createConversation = new EventEmitter<string>();
+  @Output() createNewChatObs = new EventEmitter<string>();
   @Output() typingListener = new EventEmitter<any>();
   @Input() chatId: any;
   @Input() toUserId: any;
@@ -44,29 +44,22 @@ export class FormInputComponent implements OnInit  {
       return
     }
 
-    console.log('====================================');
-    console.log(this.message, !f.valid );
-    console.log('====================================');
-
     if (!this.chatId) {
-      this.createConversation.emit(this.message)
+      this.createNewChatObs.emit(this.message)
       f.reset();
       return;
     }
 
-    this.sendMessage(this.message);
+    this.sendMessage();
 
     f.reset();
   }
 
-  sendMessage(message: string){
+  sendMessage(){
     if (!this.userId) {
       return
     };
     const data = {  content: this.message, fromUserId: this.userId, toUserId: this.toUserId,  chatId: this.chatId};
-    console.log(data, "Hello data to send 🌋🌋🌋");
-
     this.submitMessageObs.emit(data);
-
   }
 }
