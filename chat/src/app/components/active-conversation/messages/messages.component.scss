@@ -1,10 +1,12 @@
 div {
   position: relative;
+  padding-top: 3rem;
   padding-bottom: 5rem;
   ion-list{
     padding-top: 1rem;
     padding-bottom: 2rem;
     ion-item {
+      margin: .3rem 0;
       ion-text{
         max-width: 80%;
         display: inline;
