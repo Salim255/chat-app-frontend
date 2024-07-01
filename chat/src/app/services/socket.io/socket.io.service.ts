@@ -76,6 +76,9 @@ export class SocketIoService {
   }
 
   get getComingTypingEvent () {
+    console.log('====================================');
+    console.log('Trigged typing');
+    console.log('====================================');
     return this.comingTypingSource.asObservable();
  }
 

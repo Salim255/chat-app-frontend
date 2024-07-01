@@ -8,6 +8,7 @@ import { FormInputComponent } from "src/app/components/active-conversation/form-
 import { FormsModule } from "@angular/forms";
 
 
+
 @NgModule({
   imports: [CommonModule, ActiveChatPageRoutingModule, IonicModule, FormsModule],
   declarations: [ActiveChatPage, headerComponent, FormInputComponent ]

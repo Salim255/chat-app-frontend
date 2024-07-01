@@ -145,10 +145,6 @@ export class ActiveChatPage implements OnDestroy {
  ngOnDestroy() {
   this.partnerInfo =  null ;
 
-  if (this.typingSubscription) {
-    this.typingSubscription.unsubscribe();
-  }
-
   if (this.comingMessageEvent) {
       this.comingMessageEvent.unsubscribe()
   }

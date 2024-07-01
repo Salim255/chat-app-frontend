@@ -76,18 +76,7 @@ export class ActiveConversationPage implements OnDestroy {
   }
 
   ionViewWillEnter () {
-    this.typingState = false;
 
-    // Here we listen to partner typing event
-    this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
-        if (status) {
-          // If data = true, then we set typing to true
-          this.typingState = status
-        } else {
-          // If data = false, then we set typing to false
-          this.typingState = status
-        }
-      })
 
 
     // Here we get active conversation

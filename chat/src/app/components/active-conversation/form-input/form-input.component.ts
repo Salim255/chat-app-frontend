@@ -4,6 +4,7 @@ import { IonTextarea } from "@ionic/angular";
 
 
 import { AuthService } from "src/app/services/auth/auth.service";
+import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({
   selector: 'app-form-input',
@@ -22,7 +23,7 @@ export class FormInputComponent implements OnInit  {
 
   message= '';
   private userId: any;
-  constructor(private authService: AuthService){
+  constructor(private authService: AuthService, private socketIoService: SocketIoService){
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
@@ -34,9 +35,21 @@ export class FormInputComponent implements OnInit  {
   }
 
   // Here we listen to user typing event
-  onTextChange(text: any) {
+ /*  onTextChange(text: any) {
         this.typingListener.emit(text)
-  }
+  } */
+   // Here we listen to user typing event
+   onTextChange(text: any) {
+    console.log('====================================');
+    console.log(text, "hello text");
+    console.log('====================================');
+    if (!text || text.length === 0) {
+      this.socketIoService.onTyping(this.toUserId, false);
+    } else if (text.length > 0) {
+      // If text not "", user is typing
+      this.socketIoService.onTyping(this.toUserId, true);
+    }
+   }
 
   onSubmit (f: NgForm) {
 

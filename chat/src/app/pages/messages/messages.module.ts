@@ -8,6 +8,7 @@ import { MessagesPageRoutingModule } from './messages-routing.module';
 
 import { MessagesPage } from './messages.page';
 import { MessagesComponent } from 'src/app/components/active-conversation/messages/messages.component';
+import { TypingComponent } from 'src/app/components/active-conversation/typing/typing.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { MessagesComponent } from 'src/app/components/active-conversation/messag
     IonicModule,
     MessagesPageRoutingModule,
   ],
-  declarations: [MessagesPage,MessagesComponent]
+  declarations: [MessagesPage,MessagesComponent, TypingComponent]
 })
 export class MessagesPageModule {}
