@@ -1,21 +1,11 @@
-<!-- <ion-content #content [fullscreen]="true"> -->
-  <!-- Here we display all the messages -->
 
-
-
-
-  <!-- section to type and send text -->
-
-<!--   <app-user-input class="user-input-container" (submitMessageObs)="submitMessageObs($event)"  (createConversation)="createConversation($event)" (typingListener)="onTextChange($event)" [chatId]="this.activeChat?.id"></app-user-input> -->
-
-<!-- </ion-content> -->
 <div>
   <ion-list >
     <ion-item *ngFor="let message of messagesList" lines="none">
         <ion-text [slot]="[message.from_user_id === userId ? 'end' : 'start' ]"
       [ngClass]="[message.from_user_id === userId ? 'sender' : 'receiver' ]"
       >
-       {{ message.content }} {{ message.status }}
+       {{ message.content }}
        <ion-icon [name]="getMessageStatus(message.status)" *ngIf="message.from_user_id === userId" [ngClass]="[message.status === 'read' ? 'message message__read': 'message message__sent']"></ion-icon>
       </ion-text>
     </ion-item>

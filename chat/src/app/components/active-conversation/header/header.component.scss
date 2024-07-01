@@ -2,9 +2,13 @@ ion-header {
 
   ion-toolbar {
     --background: #fff;
-
+    padding-bottom: .5rem;
     ion-item {
       --background: none;
+      --padding-start:0;
+      --padding-end: 0;
+      --inner-padding-start: 0;
+      --inner-padding-end: 0;
       ion-avatar {
         margin-right: 1rem;
         height: 3rem;
@@ -19,8 +23,8 @@ ion-header {
       }
     }
     ion-icon {
-      height: 2rem;
-      width: 2rem;
+      height: 1.5rem;
+      width: 1.5rem;
     }
   }
 }

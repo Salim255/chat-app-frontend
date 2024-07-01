@@ -34,8 +34,6 @@ export class MessagesPage implements OnInit, OnDestroy {
 
     // Here we listen to partner typing event
     this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
-      console.log(status, "Hello from status 🎠🎠🎠");
-
         if (status) {
           // If data = true, then we set typing to true
           this.typingState = status
