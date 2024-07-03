@@ -1,16 +1,37 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-
+import { Subscription } from "rxjs";
+import { Account } from "src/app/models/account.model";
+import { AccountService } from "src/app/services/account/account.service";
 @Component({
   selector: 'app-account-info',
   templateUrl: './account-info.component.html',
   styleUrls: ['./account-info.component.scss']
 })
 
-export class AccountInfoComponent {
+export class AccountInfoComponent implements OnInit, OnDestroy {
+  private accountInfoSource!: Subscription;
+ accountData!: Account;
+  constructor (private router: Router, private accountService: AccountService ) {}
 
-  constructor (private router: Router) {}
+  ngOnInit() {
+    console.log('Hello World');
+    this.accountInfoSource = this.accountService.getAccount.subscribe(data => {
+      console.log('====================================');
+      console.log(data);
+      console.log('====================================');
+      if (data) this.accountData = data
+
+     })
+  }
+
   onEditProfile(){
       this.router.navigate(['/tabs/edit-profile'])
+  }
+
+  ngOnDestroy() {
+    if (this.accountInfoSource) {
+      this.accountInfoSource.unsubscribe()
+    }
   }
 }

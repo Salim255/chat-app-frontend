@@ -4,10 +4,11 @@ import { ActionComponent } from "./profile/action/action.component";
 import { IonicModule } from "@ionic/angular";
 import { SearchBarComponent } from "./native-component/search-bar/search-bar.component";
 import { LogoComponent } from "./app-logo/logo.component";
+import { CardComponent } from "./native-component/card/card.component";
 
 @NgModule({
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent],
-  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent],
+  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent ],
+  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent ],
   imports: [
     IonicModule
   ]
