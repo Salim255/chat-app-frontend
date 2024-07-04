@@ -12,6 +12,7 @@ import { AccountInfoComponent } from 'src/app/components/account/account-info/ac
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ShoppingCardsComponent } from 'src/app/components/account/shopping-cards/shopping-cards.component';
 import { CardComponent } from 'src/app/components/account/shopping-cards/card/card.component';
+import { FeaturesComponent } from 'src/app/components/account/features/features.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { CardComponent } from 'src/app/components/account/shopping-cards/card/ca
     AccountPageRoutingModule,
     SharedModule
   ],
-  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent]
+  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent, FeaturesComponent]
 })
 export class AccountPageModule {}
