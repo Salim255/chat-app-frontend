@@ -1,0 +1,61 @@
+ion-card {
+  margin: 0;
+  padding: 0;
+  height: 5.5rem;
+  background-image: linear-gradient( rgb(231, 231, 231), rgb(20, 6, 20));
+  ion-card-header{
+    display: flex;
+    padding-top: 1rem;
+    padding-bottom: .5rem;
+    .icon-style {
+      margin: auto;
+      height: 1.3rem;
+      width: 1.3rem;
+      &__likes {
+        fill: rgb(49, 166, 205);
+      }
+
+      &__boots {
+        fill: rgb(255, 30, 0);
+      }
+
+      &__subs {
+        fill: rgb(88, 25, 139);
+        padding-top: .5rem;
+      }
+
+    }
+  }
+
+  ion-card-content {
+    -webkit-padding-start: 16px;
+    padding-inline-start: 16px;
+    -webkit-padding-end: 16px;
+    padding-inline-end: 16px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.6;
+    .content {
+        //background: red;
+      ion-text {
+        color: white;
+
+      }
+    }
+    .btn {
+      cursor:pointer;
+
+      &__text {
+          text-transform: uppercase;
+          font-weight: 700;
+          &--likes {
+            color: rgb(49, 166, 205);
+          }
+          &--boots {
+            color: rgb(255, 30, 0);
+          }
+      }
+
+    }
+  }
+}

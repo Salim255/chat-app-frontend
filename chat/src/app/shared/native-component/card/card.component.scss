@@ -1,0 +1,11 @@
+ion-card {
+  margin: 0;
+  padding: 0;
+
+  ion-card-content {
+    -webkit-padding-start: 16px;
+    padding-inline-start: 16px;
+    -webkit-padding-end: 16px;
+    padding-inline-end: 16px;
+  }
+}

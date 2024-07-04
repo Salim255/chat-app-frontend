@@ -1,16 +1,28 @@
 ion-grid {
 
   ion-row {
-    background: green;
+    //background: green;
     ion-col {
-      background: red;
+      --padding-start: 0px;
+      --padding-end: 0px;
+
 
     }
     ion-col:not(:last-child) {
-       // margin-right: 1rem;
-        background: yellowgreen;
-    }
   }
 
+
+}
+
+
+
+}
+
+::ng-deep app-shopping-card {
+  /* Your styles here */
+  ion-card {
+
+
+  }
 
 }

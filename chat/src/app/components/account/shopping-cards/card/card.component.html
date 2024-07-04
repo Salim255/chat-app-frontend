@@ -1,0 +1,19 @@
+<ion-card>
+
+<ion-card-header>
+  <ion-icon [ngClass]="getCssByIcon(logo)" [name]="logo"></ion-icon>
+</ion-card-header>
+<ion-card-content>
+
+    <div class="content">
+      <ion-text>
+        {{ content }}
+      </ion-text>
+    </div>
+
+    <div class="btn">
+       <ion-text role="button" [ngClass]="getCssByBtn(logo)">{{ btnContent}}</ion-text>
+    </div>
+
+  </ion-card-content>
+</ion-card>

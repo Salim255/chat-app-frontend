@@ -1,13 +1,15 @@
 <ion-grid>
   <ion-row>
     <ion-col size="4">
-     <app-card></app-card>
+      <app-shopping-card [content]="'0 Super Likes'" [btnContent]="'get more'"  [logo]="'star'"></app-shopping-card>
+
     </ion-col>
     <ion-col size="4">
-      <app-card></app-card>
+      <app-shopping-card [content]="'My Boots'" [btnContent]="'get more'" [logo]="'flash'"></app-shopping-card>
     </ion-col>
     <ion-col size="4">
-      <app-card></app-card>
+
+      <app-shopping-card  [logo]="'rose'" [content]="'Subscriptions'"></app-shopping-card>
     </ion-col>
   </ion-row>
 </ion-grid>
