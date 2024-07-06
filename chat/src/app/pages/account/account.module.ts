@@ -13,8 +13,16 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ShoppingCardsComponent } from 'src/app/components/account/shopping-cards/shopping-cards.component';
 import { CardComponent } from 'src/app/components/account/shopping-cards/card/card.component';
 import { FeaturesComponent } from 'src/app/components/account/features/features.component';
+import { FeatureCardComponent } from 'src/app/components/account/features/card/feature-card.component';
+import { FeatureCardHeaderComponent } from 'src/app/components/account/features/card/feature-card-header/feature-cared-header.component';
+import { DetailsComponent } from 'src/app/components/account/features/card/details/details.component';
+import { DetailsContentComponent } from 'src/app/components/account/features/card/details/details-content/details-content.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+
 
 @NgModule({
+ schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   imports: [
     CommonModule,
     FormsModule,
@@ -22,6 +30,6 @@ import { FeaturesComponent } from 'src/app/components/account/features/features.
     AccountPageRoutingModule,
     SharedModule
   ],
-  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent, FeaturesComponent]
+  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent, FeaturesComponent, FeatureCardComponent, FeatureCardHeaderComponent, DetailsComponent, DetailsContentComponent]
 })
 export class AccountPageModule {}

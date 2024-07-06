@@ -1,7 +1,16 @@
-<ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-text>Hello Salim</ion-text>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+
+<swiper-container
+[loop]="true"
+[pagination]="true"
+>
+  <swiper-slide>
+    <app-feature-card></app-feature-card>
+  </swiper-slide>
+  <swiper-slide>
+    <app-feature-card></app-feature-card>
+  </swiper-slide>
+    <swiper-slide>
+      <app-feature-card></app-feature-card>
+  </swiper-slide>
+</swiper-container>
+
