@@ -1,11 +1,11 @@
-<ion-card>
+<ion-card [ngClass]="getCardCategoryStyle(category)">
   <ion-card-header>
     <ion-card-title>
      <!--  <ion-icon  class="half-heart-icon" name="heart-outline"></ion-icon> -->
-      <app-feature-card-header></app-feature-card-header>
+      <app-feature-card-header [category]="category"></app-feature-card-header>
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <app-features-details></app-features-details>
+    <app-features-details [category]="category"></app-features-details>
   </ion-card-content>
 </ion-card>

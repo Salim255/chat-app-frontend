@@ -1,13 +1,13 @@
 <ion-grid>
   <ion-row  class="details-header">
-    <ion-col class="details-header__title"  size="8">
+    <ion-col class="details-header__title"  size="6">
        <ion-text>What's included</ion-text>
     </ion-col>
-    <ion-col size="2">
+    <ion-col size="3">
       <ion-text>Free</ion-text>
    </ion-col>
-   <ion-col size="2">
-    <ion-text>Gold</ion-text>
+   <ion-col size="3">
+    <ion-text>{{ category }}</ion-text>
  </ion-col>
   </ion-row>
 
@@ -23,7 +23,7 @@
     </ion-col>
   </ion-row>
 
-  <ion-row class="details-btn">
+  <ion-row [ngClass]="styleSeeFeature(category)">
     <ion-col size="12">
       <ion-button size="small" fill="clear">See all features</ion-button>
     </ion-col>

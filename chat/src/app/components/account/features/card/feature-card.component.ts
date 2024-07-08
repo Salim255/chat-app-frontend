@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
   selector: 'app-feature-card',
@@ -7,12 +7,16 @@ import { Component, OnInit } from "@angular/core";
 })
 
 export class FeatureCardComponent implements OnInit{
+  @Input() category!: string
   constructor() {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     console.log('hello');
+  }
 
+  getCardCategoryStyle( category: string) {
+     return `card card__${category}`
   }
 }

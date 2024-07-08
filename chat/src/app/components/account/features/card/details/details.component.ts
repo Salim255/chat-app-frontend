@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: 'app-features-details',
@@ -7,5 +7,10 @@ import { Component } from "@angular/core";
 })
 
 export class DetailsComponent {
+  @Input() category!: string;
   constructor() {}
+
+  styleSeeFeature (category: string) {
+    return `details-btn details-btn__${ category }`
+  }
 }

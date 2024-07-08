@@ -3,7 +3,7 @@
     <ion-col>
 
         <div class="container" >
-          <div class="container__icon">
+          <div [ngClass]=" styleLogo(category)">
             <ion-icon   name="heart"></ion-icon>
           </div>
 
@@ -11,11 +11,11 @@
              <ion-text >love</ion-text>
           </div>
 
-          <div class="container__category">
-             <ion-text>GOLD</ion-text>
+          <div [ngClass]="styleCategory(category)">
+             <ion-text>{{ category }}</ion-text>
           </div>
 
-          <div class="container__upgrade">
+          <div [ngClass]="styleBadge(category)">
             <app-badge [text]="'upgrade'"></app-badge>
           </div>
         </div>

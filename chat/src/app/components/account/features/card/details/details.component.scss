@@ -6,9 +6,14 @@ ion-grid {
     font-weight: bold;
     color: black;
     padding-bottom: .5rem;
+    font-size: .9rem;
     ion-col {
       margin: 0;
       padding: 0;
+    }
+
+    ion-col:not(:first-child) {
+      text-align: right;
     }
     &__title {
       text-align: left;
@@ -27,12 +32,25 @@ ion-grid {
       margin: 0;
       padding: 0;
       ion-button {
-        color: rgb(156, 112, 3);
         font-size: 1.1rem;
         font-weight: bolder;
       }
     }
-
+    &__gold {
+      ion-button {
+        color: rgb(156, 112, 3);
+      }
+    }
+    &__platinum {
+      ion-button {
+        color: rgb(50, 50, 51);
+      }
+    }
+    &__plus {
+      ion-button {
+        color: rgb(156, 3, 125);
+      }
+    }
   }
 
 }
