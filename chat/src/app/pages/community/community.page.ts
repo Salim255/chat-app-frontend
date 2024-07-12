@@ -22,6 +22,14 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   ngOnInit () {
+    this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
+      if (state ===  'skip') {
+        this.skipFriend()
+      } else if (state ===  'like') {
+        this.addFriend();
+      }
+     });
+
     this.foreignersSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
       this.foreignersList = data;
       if (data) {
@@ -32,13 +40,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter () {
-     this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
-      if (state ===  'skip') {
-        this.skipFriend()
-      } else if (state ===  'like') {
-        this.addFriend();
-      }
-     });
+
 
      this.communityService.fetchUsers().subscribe()
   }
