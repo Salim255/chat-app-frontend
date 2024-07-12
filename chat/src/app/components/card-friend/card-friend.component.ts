@@ -44,7 +44,7 @@ export class CardFriendComponent {
       next: () => {
           this.conversationService.setPartnerInfo(this.partnerInfo);
 
-          this.router.navigate(['./tabs/active-conversation'], { queryParams: { partner: this.friend?.friend_id } });
+          this.router.navigate(['./tabs/active-chat'], { queryParams: { partner: this.friend?.friend_id } });
       }
     })
   }

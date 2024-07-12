@@ -1,0 +1,58 @@
+.btn {
+  border-radius: 50%;
+  background: rgb(219, 218, 218);
+  padding: 0;
+  position: relative;
+  ion-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+
+
+  &__dislike {
+    ion-icon {
+
+    }
+  }
+
+  &__stars {
+
+  }
+
+  &__like, &__dislike {
+    height: 3.5rem;
+    width: 3.5rem;
+    ion-icon {
+      height: 2rem;
+      width: 2rem;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__boost, &__stars , &__undo  {
+    height: 2.5rem;
+    width: 2.5rem;
+    ion-icon {
+      height: 1.2rem;
+      width: 1.2rem;
+      transform: translate(-50%, -50%);
+    }
+  }
+  &__undo {
+    ion-icon {
+      //background: orange;
+      transform: translate(-50%, -50%) scaleX(-1);
+    }
+  }
+
+  &__like {
+
+  }
+  &__boost {
+
+  }
+}
+
+

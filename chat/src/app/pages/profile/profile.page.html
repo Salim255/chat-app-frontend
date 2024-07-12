@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-      <ion-text slot="start">Salim, 31</ion-text>
+      <ion-text slot="start">{{ currentProfile.first_name }}, 31</ion-text>
       <ion-icon name="close" slot="end" (click)="goBackToExplore()"></ion-icon>
   </ion-toolbar>
 </ion-header>
@@ -9,7 +9,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md="6" offset-md="3">
-        <app-profile-slider></app-profile-slider>
+       <app-profile-slider></app-profile-slider>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -35,7 +35,8 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <app-profile-action></app-profile-action>
+        <app-profile-action>
+      </app-profile-action>
       </ion-col>
     </ion-row>
   </ion-grid>

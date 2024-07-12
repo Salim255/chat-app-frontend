@@ -16,7 +16,7 @@ import { FeaturesComponent } from 'src/app/components/account/features/features.
 import { FeatureCardComponent } from 'src/app/components/account/features/card/feature-card.component';
 import { FeatureCardHeaderComponent } from 'src/app/components/account/features/card/feature-card-header/feature-cared-header.component';
 import { DetailsComponent } from 'src/app/components/account/features/card/details/details.component';
-import { DetailsContentComponent } from 'src/app/components/account/features/card/details/details-content/details-content.component';
+
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
@@ -30,6 +30,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     AccountPageRoutingModule,
     SharedModule
   ],
-  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent, FeaturesComponent, FeatureCardComponent, FeatureCardHeaderComponent, DetailsComponent, DetailsContentComponent]
+  declarations: [AccountPage, AccountInfoComponent, ShoppingCardsComponent,CardComponent, FeaturesComponent, FeatureCardComponent, FeatureCardHeaderComponent, DetailsComponent]
 })
 export class AccountPageModule {}

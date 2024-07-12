@@ -13,4 +13,30 @@ export class DetailsComponent {
   styleSeeFeature (category: string) {
     return `details-btn details-btn__${ category }`
   }
+
+  getIncludeText1(category: string) {
+    switch(category){
+      case 'gold':
+        return `See who's like you`;
+      case 'platinum':
+        return `Priority Likes`;
+      case 'plus':
+        return `See who's like you`;
+      default:
+        return ''
+    }
+  }
+
+  getIncludeText2(category: string) {
+    switch(category){
+      case 'gold':
+        return `Top Picks`;
+      case 'platinum':
+        return `Message before matching`;
+      case 'plus':
+        return `See who's like you`;
+      default:
+        return ''
+    }
+  }
 }

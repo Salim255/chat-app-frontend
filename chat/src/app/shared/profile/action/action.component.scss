@@ -1,22 +1,18 @@
 ion-grid {
+
+  padding: 0;
   ion-row {
+    padding: 0;
     ion-col {
-      width: 100%;
+      padding: 0;
+    }
+    .btns {
       display: flex;
-      ion-button:last-child {
-        margin-left: auto;
-        ion-icon {
-          color:  rgb(47, 210, 142);
-        }
-      }
-      ion-button {
-        padding: 0;
-        margin: 0;
-        ion-icon {
-         width: 5rem;
-         height: 5rem;
-        }
-      }
+      justify-content: center;
+      gap: .8rem;
+       div {
+        align-self: center;
+       }
     }
   }
 }

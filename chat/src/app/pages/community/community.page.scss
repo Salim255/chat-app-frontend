@@ -6,28 +6,29 @@ ion-header {
 }
 
 ion-content {
-  position: relative;
+
   ion-grid {
-    width: 100%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     padding: 0;
-    margin: 0;
+    position: relative;
     ion-row {
-      position: relative;
+
       ion-col{
+
         app-card-user{
           position: absolute;
           left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
+          top: 10%;
+          transform: translate(-50%, -10%);
           width: 100%;
-
         }
      }
     }
+  }
+  app-profile-action{
+    position: fixed;
+    left: 50%;
+    bottom: 0%;
+    transform: translate(-50%, 0%);
   }
 }
 

@@ -1,4 +1,7 @@
 .card {
+  margin-left: 0rem;
+  margin-right: 0em;
+  margin-top: 0;
   &__gold {
     background: linear-gradient(180deg, rgb(248, 245, 51) -70%, rgb(252, 251, 168) -27%, rgb(255, 255, 255) 60%)
   }
@@ -13,6 +16,7 @@
 
   ion-card-header {
     padding-top: .5rem;
+    padding-bottom: 0.2rem;
     padding-left: 0;
     padding-right: 0;
     .half-heart-icon {
