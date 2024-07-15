@@ -108,7 +108,9 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   onPress(event: any) {
-
+    console.log('====================================');
+    console.log('pressed', event);
+    console.log('====================================');
   }
 
   onSwipe(event: any) {

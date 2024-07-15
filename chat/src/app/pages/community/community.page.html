@@ -21,7 +21,9 @@
         <app-card-user offset-md="3" *ngFor="let foreigner of foreignersList" [foreigner]="foreigner"
         appTap
         (tap)="onTap($event)"
-        (doubleTap)="onDoubleTap($event)"  ></app-card-user>
+        (doubleTap)="onDoubleTap($event)"
+        appPress
+        (press)="onPress($event)"  ></app-card-user>
       </ion-col>
     </ion-row>
   </ion-grid>
