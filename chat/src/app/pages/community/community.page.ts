@@ -114,6 +114,8 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   onSwipe(event: any) {
-
+    console.log('====================================');
+    console.log(event, "Swiper");
+    console.log('====================================');
   }
 }

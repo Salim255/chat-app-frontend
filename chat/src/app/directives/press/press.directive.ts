@@ -35,12 +35,13 @@ export class PressDirective implements OnInit {
   }
 
   private handlePressing(type:any) { // touched or touchstart
+
     if (type === 'touchstart') {
       this.pressTimeOut = setTimeout(() => {
         this.isPressing = true;
         this.press.emit('start');
       })
-    } else if (type === 'touched') {
+    } else if (type === 'touchend') {
       clearTimeout(this.pressTimeOut);
 
       if (this.isPressing) {

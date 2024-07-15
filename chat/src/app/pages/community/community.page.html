@@ -23,7 +23,9 @@
         (tap)="onTap($event)"
         (doubleTap)="onDoubleTap($event)"
         appPress
-        (press)="onPress($event)"  ></app-card-user>
+        (press)="onPress($event)"
+        appSwipe
+        (swipe)="onSwipe($event)" ></app-card-user>
       </ion-col>
     </ion-row>
   </ion-grid>
