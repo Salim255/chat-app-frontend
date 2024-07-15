@@ -48,7 +48,7 @@ export class AccountService {
       this.account.next(buildAccount)
   }
 
-  private getAccount () {
+  get getAccount () {
     return this.account.asObservable().pipe(
       map(account => {
         if (account) {

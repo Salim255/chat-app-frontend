@@ -1,12 +1,13 @@
 ion-header {
   ion-toolbar {
-    --background: #fff;
+    --background: var(--ion-background-color);
     --border-width: 0;
 
   }
 }
 
 ion-content {
+  --background: var(--ion-background-color);
   ion-grid {
     margin-top: 2rem;
   }

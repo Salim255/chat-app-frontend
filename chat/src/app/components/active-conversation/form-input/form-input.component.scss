@@ -1,0 +1,20 @@
+ion-item {
+  --padding-start:4px;
+  --padding-end: 4px;
+  --inner-padding-start: 0;
+  --inner-padding-end: 0;
+
+  form{
+    border-radius: 2rem;
+    background: rgb(220, 218, 218);
+    display:  flex;
+    width: 100%;
+    ion-textarea {
+      text-align: left;
+      padding: .3rem 1rem ;
+    }
+    ion-button{
+      text-transform: uppercase;
+    }
+  }
+ }

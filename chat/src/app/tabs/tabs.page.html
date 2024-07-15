@@ -1,22 +1,22 @@
-<ion-content>
-  <ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)">
-    <ion-tab-bar slot="bottom" >
-      <ion-tab-button tab="community">
-        <app-logo></app-logo>
-      </ion-tab-button>
 
-      <ion-tab-button tab="conversations">
-        <ion-icon name="chatbubbles"></ion-icon>
-      </ion-tab-button>
+<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)">
 
-      <ion-tab-button tab="friends">
-        <ion-icon name="people"></ion-icon>
-      </ion-tab-button>
+  <ion-tab-bar slot="bottom" >
+    <ion-tab-button tab="community">
+      <ion-icon name="rose"></ion-icon>
+    </ion-tab-button>
 
-      <ion-tab-button  tab="account">
-        <ion-icon name="person"></ion-icon>
-      </ion-tab-button>
+    <ion-tab-button tab="conversations">
+      <ion-icon name="chatbubbles"></ion-icon>
+    </ion-tab-button>
 
-    </ion-tab-bar>
-  </ion-tabs>
-</ion-content>
+    <ion-tab-button tab="friends">
+      <ion-icon name="people"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button  tab="account">
+      <ion-icon name="person"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>

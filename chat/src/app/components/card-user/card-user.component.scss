@@ -1,113 +1,33 @@
 
- ion-grid {
+ion-grid {
   margin: 0;
   padding: 0;
-  ion-col{
-    padding: 0;
-  }
-  ion-row:first-child{
-    ion-card{
-      height: 90vh;
-      background-image: url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D');
-      background-position: top;
-      background-size: cover;
-      position: relative;
-      padding: 0;
+  padding-top: 5rem;
+  position: relative;
+  ion-row {
+    ion-col {
       margin: 0;
-      ion-card-content{
+      padding: 0;
+      .details-section {
         position: absolute;
-        bottom: 0;
-        display: flex;
-        gap: .5rem;
-        flex-direction: column;
         width: 100%;
-
-        /* Linear gradient */
+        height: 30%;
+        bottom: 0%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        z-index: 1;
         background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.01) 0%,
-            rgba(0, 0, 0, 1) 100%
-        );
-
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        padding: 0 1rem;
-        padding-bottom: 1rem;
-        .tag-section {
-             app-tag {
-              ::ng-deep ion-badge {
-                color: white;
-                font-size: 1rem;
-                font-weight: 700;
-                padding-bottom: .3rem ;
-                padding-left: .6rem;
-                padding-right: .6rem;
-                text-transform: capitalize;
-                border-radius: 2rem;
-                background: #048478;
-              }
-             }
-        }
-        .details-section {
-          display: flex;
-          flex-direction: column;
-          gap: .5rem;
-          &__info {
-            display: flex;
-            ion-text {
-              align-self: center;
-              font-size: 1.5rem;
-              font-weight: bold;
-            }
-            ion-icon {
-              margin-left: auto;
-              color: white;
-              height: 2.5rem;
-            }
-          }
-
-          .location {
-            display: flex;
-            gap: .4rem;
-            ion-icon {
-             height: 1rem;
-             width: 1rem;
-             align-self:center ;
-             color: white;
-            }
-            ion-text {
-              align-self: center;
-            }
-          }
-
-          .btns {
-            display: flex;
-            width: 100%;
-            padding-top: 1rem;
-            ion-button {
-              --padding-start: 0;
-              --padding-end: 0;
-              --padding-top: 0;
-              --padding-bottom: 0;
-            }
-            ion-button:first-child{
-              margin-right:auto ;
-            }
-            ion-button:last-child {
-              color:  rgb(47, 210, 142);
-            }
-           }
-
-        }
-        ion-text {
-          color: #fff;
+          rgba(0, 0, 0, 0.01) 0%,
+          rgb(0, 0, 0) 100%);
         }
 
-      }
-    }
-  }
+
+
+       }
+     }
 }
 
-ion-icon{
-  height: 5rem;
-  width: 5rem;
-}
+
+

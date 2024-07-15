@@ -35,6 +35,11 @@ const routes: Routes = [
     loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
   },
   {
+    path: 'active-chat',
+    loadChildren: () => import('../pages/active-chat/active-chat.Module').then( (m) => m.ActiveChatPageModule)
+  }
+  ,
+  {
     path: 'edit-profile',
     loadChildren: () => import('../pages/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
   },

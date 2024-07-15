@@ -8,13 +8,15 @@ import { ActiveConversationPageRoutingModule } from './active-conversation-routi
 
 import { ActiveConversationPage } from './active-conversation.page';
 
+import { UserInputComponent } from 'src/app/components/active-conversation/user-input/user-input.component';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ActiveConversationPageRoutingModule
+    ActiveConversationPageRoutingModule,
   ],
-  declarations: [ActiveConversationPage]
+  declarations: [ActiveConversationPage, UserInputComponent]
 })
 export class ActiveConversationPageModule {}

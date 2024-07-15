@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { SocketIoService } from './services/socket.io/socket.io.service';
 
+
 register();
 
 @Component({
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit () {
 
+
     this.authSub = this.authService.userIsAuthenticated.subscribe((isAuth) => {
       if (!isAuth && this.previousAuthState != isAuth) {
         this.router.navigateByUrl("/auth")
@@ -34,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
     })
 
   }
+
 
   ngOnDestroy() {
     if (this.authSub) {

@@ -1,0 +1,10 @@
+
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <ion-item slot="bottom" lines="none">
+      <ion-textarea #inputArea ngModel name="message" required [(ngModel)]="message" rows="1"
+      (ngModelChange)="onTextChange($event)">
+      </ion-textarea>
+      <ion-button type="submit" fill="clear" size="medium" [disabled]="!f.valid" >send</ion-button>
+    </ion-item>
+  </form>
+

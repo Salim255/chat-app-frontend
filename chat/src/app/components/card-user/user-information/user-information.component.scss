@@ -1,0 +1,23 @@
+ion-grid {
+  padding-left: 1rem ;
+  padding-right: 1rem;
+  ion-col {
+
+    padding: 0;
+  }
+
+  app-tag {
+    ::ng-deep ion-badge {
+      color: rgb(255, 255, 255);
+      font-size: .8rem;
+      font-weight: 600;
+      padding: .3rem .4rem;
+      text-transform: capitalize;
+      border-radius: 2rem;
+      background: #048478;
+    }
+   }
+
+}
+
+

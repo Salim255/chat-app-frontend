@@ -1,8 +1,8 @@
 export class Account {
   constructor(
     private userId: number,
-    private firstName: string,
-    private lastName: string,
+    public firstName: string,
+    public lastName: string,
     private email: string,
     private avatar: string,
     private isStaff: boolean,
