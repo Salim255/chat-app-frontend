@@ -49,21 +49,21 @@
       "size" : "40x40"
     },
     {
-      "filename" : "Icon-40x40@3x 1.png",
+      "filename" : "Icon-40x40@3x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "Icon-40x40@3x.png",
+      "filename" : "Icon-60x60@2x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "Icon-60x60@3x 1.png",
+      "filename" : "Icon-60x60@3x.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",

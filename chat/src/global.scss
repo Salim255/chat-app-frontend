@@ -37,3 +37,6 @@
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 
+ion-toolbar {
+  --background: var(--ion-color-tertiary);
+}

@@ -5,17 +5,10 @@ ion-grid {
     ion-col {
       --padding-start: 0px;
       --padding-end: 0px;
-
-
     }
     ion-col:not(:last-child) {
   }
-
-
 }
-
-
-
 }
 
 ::ng-deep app-shopping-card {

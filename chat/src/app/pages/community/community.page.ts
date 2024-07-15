@@ -98,4 +98,20 @@ export class CommunityPage implements OnInit, OnDestroy {
       this.disLikeActionSource.unsubscribe()
     }
   }
+
+  onTap(event: any){
+        console.log('tap: ', event);
+  }
+
+  onDoubleTap(event: any) {
+    console.log('double Tap: ', event);
+  }
+
+  onPress(event: any) {
+
+  }
+
+  onSwipe(event: any) {
+
+  }
 }

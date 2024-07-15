@@ -11,6 +11,7 @@ import { CardUserComponent } from 'src/app/components/card-user/card-user.compon
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NameAgeComponent } from 'src/app/components/card-user/user-information/name-age/name-age.component';
 import { DistanceComponent } from 'src/app/components/card-user/user-information/distance/distance.component';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
 
@@ -19,7 +20,8 @@ import { DistanceComponent } from 'src/app/components/card-user/user-information
     FormsModule,
     IonicModule,
     CommunityPageRoutingModule,
-    SharedModule
+    SharedModule,
+    DirectivesModule
   ],
   declarations: [CommunityPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent]
 })

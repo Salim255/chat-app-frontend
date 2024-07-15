@@ -2,7 +2,7 @@
 ion-tabs {
   ion-tab-bar {
     padding-top: 1rem ;
-    --background: #fff;
+    --background: var(--ion-background-color);
     border: none;
   }
 }
