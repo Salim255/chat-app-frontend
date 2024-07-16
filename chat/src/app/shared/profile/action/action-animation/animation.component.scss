@@ -1,0 +1,30 @@
+div {
+
+  position: relative;
+  .text {
+      fill: rgb(14, 14, 14);
+      position: absolute;
+      left: 0%;
+      top: 0%;
+      font-size: 8rem;
+      font-weight: bold;
+      transform: translate(-50%, -50% );
+
+
+
+      font-family: cursive;
+
+      &__like {
+        background: linear-gradient(to right, #2d7a49, #5cc7da);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      &__dislike {
+        background: linear-gradient(to right, #f01906, #0097b2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+  }
+}

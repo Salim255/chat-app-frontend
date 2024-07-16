@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { CommunityService } from 'src/app/services/community/community.service';
 import { Foreigner } from 'src/app/models/foreigner.model';
+import { AnimationService } from 'src/app/services/animation/animation.service';
 
 @Component({
   selector: 'app-community',
@@ -18,12 +19,12 @@ export class CommunityPage implements OnInit, OnDestroy {
   private disLikeActionSource!: Subscription;
   transform: any = null;
   currentIndex:any= null;
-  counter:any = -50;
-  counterY:any = -10;
+  counterX:any = -50;
+  counterY:any = -50;
   rotateCounterY= 0;
   rotateCounterX= 0;
 
-  constructor (private communityService: CommunityService, private router: Router) {
+  constructor (private communityService: CommunityService, private animationService: AnimationService) {
     this.foreignersList = []
   }
 
@@ -73,7 +74,6 @@ export class CommunityPage implements OnInit, OnDestroy {
   setCurrentProfile () {
     if (this.foreignersList?.length > 0 ) {
          const currentProfile = this.getCurrentProfile();
-         console.log(currentProfile, 'Profile 😇😇😇');
          if (currentProfile) {
            this.communityService.setDisplayedProfile(currentProfile)
          }
@@ -125,25 +125,35 @@ export class CommunityPage implements OnInit, OnDestroy {
     this.currentIndex = index;
 
     if (event.dirX === 'right') {
-      this.counter += 1;
+      this.counterX += 1;
       if (this.rotateCounterX< 7) {
         this.rotateCounterX += 0.3
       }
-      this.transform = `translateX(${this.counter}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`
+      this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
+      this.animationService.animationListener('like');
+
     } else if (event.dirX === 'left') {
-      this.counter -= 1;
+      this.counterX -= 1;
       if (this.rotateCounterY < 7) {
         this.rotateCounterY += 0.3;
       }
-       this.transform = `translateX(${this.counter}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
+       this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`;
+       this.animationService.animationListener('dislike');
+    } else if (event.dirY === 'up') {
+      this.counterY--;
+      this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
+    } else if (event.dirY === 'down') {
+      this.counterY++;
+         this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
     }
 
     if (event.swipeType === 'moveEnd') {
       this.transform = null;
-      this.counter = -50;
-      this.counterY = -10;
+      this.counterX = -50;
+      this.counterY = -50;
       this.rotateCounterY = 0;
       this.rotateCounterX = 0;
+      this.animationService.animationListener('none');
      }
 
   }

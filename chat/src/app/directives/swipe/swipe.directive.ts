@@ -1,19 +1,19 @@
 import { Directive, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
-import { GestureController } from '@ionic/angular';
+import { GestureConfig, GestureController } from '@ionic/angular';
 
 @Directive({
   selector: '[appSwipe]'
 })
 export class SwipeDirective implements OnInit  {
-  @Output() swipe = new EventEmitter();
+  @Output() swipe = new EventEmitter<any>();
 
   swipeGesture = {
     name: 'swipe',
-    enable:  false,
+    enable:  true,
     interval: 250,
     threshold: 15,
-    reportInterval: undefined,
-    direction: ['', '']
+    reportInterval: 'live',
+    direction: ['left', 'right', 'up', 'down']
   };
 
   GESTURE_CREATED = false;
@@ -26,8 +26,6 @@ export class SwipeDirective implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.swipeGesture.enable = true;
-    this.swipeGesture.direction = ['left', 'right'];
     this.createGesture();
   }
 
@@ -35,67 +33,88 @@ export class SwipeDirective implements OnInit  {
     if (this.GESTURE_CREATED) {
       return ;
     }
-
-    const gesture = this.gestureCtrl.create({
-      gestureName: 'swipe-gesture',
+    const gestureY = this.gestureCtrl.create({
+      gestureName: 'swipe-y',
       el: this.el.nativeElement,
-      onStart: () => {
-        if (this.swipeGesture.enable) {
-          this.isMoving = true;
-          this.moveTimeOut = setInterval(() => {
-            this.isMoving = false
-          }, 249)
-        }
-      },
-
-      onMove: ($event) => {
-        if (this.swipeGesture.enable) {
-          this.handleMoving('moving', $event)
-        }
-      },
-
-      onEnd: ($event) => {
-        if (this.swipeGesture.enable) {
-          this.handleMoving('moveEnd', $event)
-        }
-      },
+      direction: 'y',
+      threshold: this.swipeGesture.threshold,
+      onStart: (event) => this.onStart(event),
+      onMove: (event) => this.onMove(event),
+      onEnd: (event) => this.onEnd(event)
     }, true);
 
-    gesture.enable();
+    const gestureX = this.gestureCtrl.create({
+      gestureName: 'swipe-x',
+      el: this.el.nativeElement,
+      direction: 'x',
+      threshold: this.swipeGesture.threshold,
+      onStart: (event) => this.onStart(event),
+      onMove: (event) => this.onMove(event),
+      onEnd: (event) => this.onEnd(event)
+    }, true);
+
+
+    gestureX.enable();
+    gestureY.enable();
+
+
     this.GESTURE_CREATED = true;
   }
 
-  private handleMoving(moveType:string, $event: any) {
+  private onStart(event: any) {
+
+    this.isMoving = true;
+    this.moveTimeOut = setInterval(() => {
+        this.isMoving = false
+    }, 249)
+
+  }
+
+  private onMove(event: any) {
+    if (this.swipeGesture.enable) {
+      this.handleMoving('moving', event)
+    }
+  }
+
+  private onEnd(event: any) {
+
+    if (this.swipeGesture.enable) {
+      this.handleMoving('moveEnd', event)
+    }
+  }
+
+  private handleMoving(moveType:string, event: any) {
     if (this.moveTimeOut !== null) {
       clearTimeout(this.moveTimeOut);
       this.moveTimeOut = null;
     }
 
-    const deltaX = $event.deltaX;
-    const deltaY = $event.deltaY;
+    const deltaX = event.deltaX;
+    const deltaY = event.deltaY;
     const absDeltaX = Math.abs(deltaX);
     const absDeltaY = Math.abs(deltaY);
-    const reportInterval = this.swipeGesture.reportInterval || 'live';
+
     const threshold = this.swipeGesture.threshold;
 
     if ( absDeltaX < threshold && absDeltaY < threshold) {
         return
     }
 
-    const shouldReport = this.isMoving &&
-    (
-      (reportInterval === 'live') ||
-      (reportInterval === 'end' && moveType === 'movedEnd')||
-      (reportInterval === 'start' && this.lastSwipingReport == null)
+    const shouldReport = this.isMoving && (
+      (this.swipeGesture.reportInterval === 'start' && this.lastSwipingReport === null)||
+      this.swipeGesture.reportInterval === 'live' ||
+      (this.swipeGesture.reportInterval === 'end' && moveType === 'moveEnd')
+
     );
 
-    this.lastSwipingReport = $event.timeStamp;
+
+    this.lastSwipingReport = event.timeStamp;
     if (shouldReport) {
       let emitObj = {
         dirX: undefined,
         dirY: undefined,
         swipeType: moveType,
-        ...$event
+        ...event
       };
 
       if (absDeltaX > threshold) {
@@ -107,9 +126,9 @@ export class SwipeDirective implements OnInit  {
       }
       if (absDeltaY > threshold) {
         if (deltaY > 0) {
-          emitObj.dirY = 'up'
-        } else if (deltaY < 0) {
           emitObj.dirY = 'down'
+        } else if (deltaY < 0) {
+          emitObj.dirY = 'up'
         }
       }
 

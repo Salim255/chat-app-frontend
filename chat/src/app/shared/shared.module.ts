@@ -11,11 +11,12 @@ import { BadgeComponent } from "./native-component/badge/badge.component";
 import { ActionBtnComponent } from "./profile/action/action-btn/action-btn.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SliderComponent } from "./profile/slider/slider.component";
+import { AnimationComponent } from "./profile/action/action-animation/animation.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent ],
-  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent ],
+  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent ],
+  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent ],
   imports: [
     IonicModule,
     CommonModule

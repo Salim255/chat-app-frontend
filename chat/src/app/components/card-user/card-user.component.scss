@@ -28,11 +28,22 @@ ion-grid {
           margin-bottom: 3rem;
         }
         }
-
-
-
        }
-     }
+  }
+
+  .animation-section {
+      position: absolute;
+      top: 25%;
+      z-index: 10;
+      &__like {
+        left: 35%;
+        transform: translate(35%, 25%);
+      }
+      &__dislike {
+        right: 35%;
+        transform: translate(35%, 25%);
+      }
+  }
 }
 
 
