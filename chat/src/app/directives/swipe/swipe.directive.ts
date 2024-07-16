@@ -86,7 +86,7 @@ export class SwipeDirective implements OnInit  {
     (
       (reportInterval === 'live') ||
       (reportInterval === 'end' && moveType === 'movedEnd')||
-      (reportInterval === 'start' && this.lastSwipingReport === null)
+      (reportInterval === 'start' && this.lastSwipingReport == null)
     );
 
     this.lastSwipingReport = $event.timeStamp;

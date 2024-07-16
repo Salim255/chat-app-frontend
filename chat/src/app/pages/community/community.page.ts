@@ -16,6 +16,12 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   private likeActionSource!: Subscription;
   private disLikeActionSource!: Subscription;
+  transform: any = null;
+  currentIndex:any= null;
+  counter:any = -50;
+  counterY:any = -10;
+  rotateCounterY= 0;
+  rotateCounterX= 0;
 
   constructor (private communityService: CommunityService, private router: Router) {
     this.foreignersList = []
@@ -113,9 +119,32 @@ export class CommunityPage implements OnInit, OnDestroy {
     console.log('====================================');
   }
 
-  onSwipe(event: any) {
-    console.log('====================================');
-    console.log(event, "Swiper");
-    console.log('====================================');
+
+
+  onSwipe(event: any, index: number) {
+    this.currentIndex = index;
+
+    if (event.dirX === 'right') {
+      this.counter += 1;
+      if (this.rotateCounterX< 7) {
+        this.rotateCounterX += 0.3
+      }
+      this.transform = `translateX(${this.counter}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`
+    } else if (event.dirX === 'left') {
+      this.counter -= 1;
+      if (this.rotateCounterY < 7) {
+        this.rotateCounterY += 0.3;
+      }
+       this.transform = `translateX(${this.counter}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
+    }
+
+    if (event.swipeType === 'moveEnd') {
+      this.transform = null;
+      this.counter = -50;
+      this.counterY = -10;
+      this.rotateCounterY = 0;
+      this.rotateCounterX = 0;
+     }
+
   }
 }

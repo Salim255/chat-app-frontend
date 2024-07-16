@@ -18,14 +18,10 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md="6" >
-        <app-card-user offset-md="3" *ngFor="let foreigner of foreignersList" [foreigner]="foreigner"
-        appTap
-        (tap)="onTap($event)"
-        (doubleTap)="onDoubleTap($event)"
-        appPress
-        (press)="onPress($event)"
+        <app-card-user [ngClass]="{'swipeable': true}" class="red" offset-md="3" *ngFor="let foreigner of foreignersList; let i = index " [foreigner]="foreigner"
         appSwipe
-        (swipe)="onSwipe($event)" ></app-card-user>
+        (swipe)="onSwipe($event, i)"
+        [style.transform]="i === currentIndex ?transform:''"></app-card-user>
       </ion-col>
     </ion-row>
   </ion-grid>
