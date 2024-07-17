@@ -1,3 +1,5 @@
-<div >
-  <ion-text [ngClass]="animationType === 'like' ? 'text text__like' : 'text text__dislike'" >{{  getContentText(animationType) }}</ion-text>
+<div *ngIf="animationType === 'like' || animationType === 'dislike'" >
+  <ion-text [name]="animationType === 'like' ? 'happy' : 'sad'" class="text">
+    {{getIcon(animationType)}}
+  </ion-text>
 </div>

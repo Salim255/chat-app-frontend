@@ -33,15 +33,16 @@ ion-grid {
 
   .animation-section {
       position: absolute;
-      top: 25%;
       z-index: 10;
       &__like {
-        left: 35%;
-        transform: translate(35%, 25%);
+        top: 20%;
+        left: 10%;
+        transform: translate(-20%, -10%);
       }
       &__dislike {
-        right: 35%;
-        transform: translate(35%, 25%);
+        top: 19%;
+        right: 0%;
+        transform: translate(-19%, -0%);
       }
   }
 }

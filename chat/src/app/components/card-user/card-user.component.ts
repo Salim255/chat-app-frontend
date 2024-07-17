@@ -9,6 +9,8 @@ import { AnimationService } from 'src/app/services/animation/animation.service';
 })
 export class CardUserComponent implements OnInit, OnDestroy {
   @Input() foreigner!: any;
+  @Input() lastProfileIndex: any;
+  @Input() profileIndex: any;
 
   private animationEventSource!: Subscription;
   animationType: any = null;

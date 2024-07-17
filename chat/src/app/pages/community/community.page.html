@@ -21,7 +21,9 @@
         <app-card-user [ngClass]="{'swipeable': true}" class="red" offset-md="3" *ngFor="let foreigner of foreignersList; let i = index " [foreigner]="foreigner"
         appSwipe
         (swipe)="onSwipe($event, i)"
-        [style.transform]="i === currentIndex ?transform:''"></app-card-user>
+        [style.transform]="i === currentIndex ?transform:''"
+        [lastProfileIndex]="currentIndex"
+        [profileIndex]="i"></app-card-user>
       </ion-col>
     </ion-row>
   </ion-grid>

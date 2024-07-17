@@ -1,6 +1,6 @@
 .btn {
   border-radius: 50%;
-  background: rgb(219, 218, 218);
+  background: #dbdada;
   padding: 0;
   position: relative;
   ion-icon {
@@ -9,16 +9,16 @@
     left: 50%;
   }
 
-
-
-  &__dislike {
-    ion-icon {
-
+  &__like {
+    &--animation {
+      background: linear-gradient(#098652, #c5f02a);
     }
   }
 
-  &__stars {
-
+  &__dislike {
+    &--animation {
+      background: linear-gradient(#ea0b25, #f85c6e);
+    }
   }
 
   &__like, &__dislike {
@@ -40,6 +40,7 @@
       transform: translate(-50%, -50%);
     }
   }
+
   &__undo {
     ion-icon {
       //background: orange;
@@ -47,12 +48,11 @@
     }
   }
 
-  &__like {
 
-  }
-  &__boost {
 
-  }
 }
 
+.btn2 {
+  background: red;
+}
 

@@ -17,9 +17,7 @@ export class AnimationComponent implements OnInit, OnDestroy {
       if (event) {
         this.animationType =  event
       }
-
      })
-
   }
 
   ngOnDestroy(): void {
@@ -28,10 +26,10 @@ export class AnimationComponent implements OnInit, OnDestroy {
     }
   }
 
-  getContentText(animationType: string) {
-     if (animationType) {
-          return animationType === 'like' ? 'Like' : animationType === 'dislike' ? 'Sorry': '';
-     }
-     return
+  getIcon(animationType: string) {
+    if (animationType) {
+     return  animationType === 'like'? '🥰': animationType === 'dislike'? '😔': ''
+    }
+    return
   }
 }
