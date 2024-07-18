@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
-import Swiper from "swiper";
+import { Subscription } from "rxjs";
+import { TapService } from "src/app/services/tap/tap.service";
 
 
 @Component({
@@ -8,14 +9,17 @@ import Swiper from "swiper";
   templateUrl: "./slider.component.html",
   styleUrls: ["./slider.component.scss"]
 })
-export class SliderComponent implements OnInit, OnChanges {
+export class SliderComponent implements OnInit, OnDestroy{
   @Input() profile: any;
   @Input() swipeDirection: any;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer: any;
 
   swiperModules= [IonicSlides];
   presentationData:any ;
-  constructor () {
+
+  private tapEventSource!: Subscription ;
+
+  constructor (private tapService: TapService) {
 
   }
 
@@ -23,14 +27,13 @@ export class SliderComponent implements OnInit, OnChanges {
     if (this.profile) {
       this.presentationData = this.profile.images
     }
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.swipeDirection) {
-     this.onSwipe(this.swipeDirection)
-    }
+    this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
+      if (data?.tapSide && data?.clientId === this.profile?.id) {
+        this.onSwipe(data.tapSide)
+      }
+    })
   }
-
 
   onSwipe(swipeDirection: string) {
      if (swipeDirection === 'right') {
@@ -44,6 +47,12 @@ export class SliderComponent implements OnInit, OnChanges {
 
   onSlideChange(event: any){
 
+  }
+
+  ngOnDestroy(): void {
+    if (this.tapEventSource) {
+      this.tapEventSource.unsubscribe()
+    }
   }
 
 }

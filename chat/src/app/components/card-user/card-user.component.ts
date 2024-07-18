@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AnimationService } from 'src/app/services/animation/animation.service';
+import { TapService } from 'src/app/services/tap/tap.service';
 
 @Component({
   selector: 'app-card-user',
@@ -13,11 +14,14 @@ export class CardUserComponent implements OnInit, OnDestroy {
   @Input() profileIndex: any;
   @Input() profileImages: any;
 
-  swipeDirection: any = null;
 
   private animationEventSource!: Subscription;
   animationType: any = null;
-  constructor (private renderer: Renderer2, private animationService: AnimationService) { }
+  constructor (
+    private renderer: Renderer2,
+    private animationService: AnimationService,
+    private tapService : TapService ) { }
+
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -49,8 +53,11 @@ export class CardUserComponent implements OnInit, OnDestroy {
   }
 
   onTapSide(side: any) {
-    console.log('Tabess 🍼🍼', side);
-    this.swipeDirection = side
+    if (side) {
+      const data = {clientId: this.foreigner.id, tapSide: side }
+      this.tapService.setTapEventSource(data)
+    }
+
   }
 
 
