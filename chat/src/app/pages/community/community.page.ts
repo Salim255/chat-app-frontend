@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { CommunityService } from 'src/app/services/community/community.service';
 import { Foreigner } from 'src/app/models/foreigner.model';
 import { AnimationService } from 'src/app/services/animation/animation.service';
+import { DataService } from 'src/app/services/data/data.service';
 
 @Component({
   selector: 'app-community',
@@ -24,11 +25,20 @@ export class CommunityPage implements OnInit, OnDestroy {
   rotateCounterY= 0;
   rotateCounterX= 0;
 
-  constructor (private communityService: CommunityService, private animationService: AnimationService) {
+  profilesImages: any;
+
+  constructor (
+     private communityService: CommunityService,
+     private animationService: AnimationService,
+     private dataService: DataService
+    ) {
     this.foreignersList = []
   }
 
   ngOnInit () {
+    this.profilesImages = this.dataService.getImages;
+    console.log(this.profilesImages);
+
     this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
       if (state ===  'skip') {
         this.skipFriend()

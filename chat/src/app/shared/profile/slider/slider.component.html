@@ -2,6 +2,7 @@
 [modules]="swiperModules"
 (slidechange)="onSlideChange($event)"
 [pagination]="true"
+#swiperContainer
 >
   <swiper-slide *ngFor="let item of presentationData; let index">
       <ion-grid [fixed]="true">

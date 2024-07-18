@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button> Love </ion-button>
+      <ion-button> Intimacy </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
      <ion-button>
@@ -23,7 +23,8 @@
         (swipe)="onSwipe($event, i)"
         [style.transform]="i === currentIndex ?transform:''"
         [lastProfileIndex]="currentIndex"
-        [profileIndex]="i"></app-card-user>
+        [profileIndex]="i"
+        [profileImages]="profilesImages[i]"></app-card-user>
       </ion-col>
     </ion-row>
   </ion-grid>

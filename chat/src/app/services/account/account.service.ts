@@ -44,7 +44,7 @@ export class AccountService {
   }
 
   private setAccountInfo (data: any) {
-      const buildAccount = new Account(data.id, data.first_name, data.last_name, data.email, data.avatar, data.is_staff, data.is_active )
+      const buildAccount = new Account(data.id, data.first_name, data.last_name, data.email, data.avatar, data.is_staff, data.is_active , [])
       this.account.next(buildAccount)
   }
 

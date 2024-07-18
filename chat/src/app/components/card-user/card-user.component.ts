@@ -11,6 +11,9 @@ export class CardUserComponent implements OnInit, OnDestroy {
   @Input() foreigner!: any;
   @Input() lastProfileIndex: any;
   @Input() profileIndex: any;
+  @Input() profileImages: any;
+
+  swipeDirection: any = null;
 
   private animationEventSource!: Subscription;
   animationType: any = null;
@@ -18,6 +21,9 @@ export class CardUserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+      if (this.profileImages) {
+        this.foreigner.images = this.profileImages
+      }
       this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
         console.log(event);
         if (event) {
@@ -41,4 +47,11 @@ export class CardUserComponent implements OnInit, OnDestroy {
       this.animationEventSource.unsubscribe()
      }
   }
+
+  onTapSide(side: any) {
+    console.log('Tabess 🍼🍼', side);
+    this.swipeDirection = side
+  }
+
+
 }

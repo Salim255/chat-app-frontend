@@ -6,8 +6,8 @@ export class Account {
     private email: string,
     private avatar: string,
     private isStaff: boolean,
-    private isActive: boolean
-
+    private isActive: boolean,
+    public images: string []
   ){}
 
 }

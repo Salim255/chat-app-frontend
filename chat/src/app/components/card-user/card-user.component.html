@@ -1,8 +1,11 @@
 <ion-grid>
   <ion-row>
     <ion-col>
-      <app-profile-slider [profile]="foreigner"></app-profile-slider>
-      <div class="details-section">
+      <app-profile-slider [swipeDirection]="swipeDirection" [profile]="foreigner"></app-profile-slider>
+      <div class="details-section"
+      appTap
+      (tapSide)="onTapSide($event)"
+      >
           <app-user-information [profile]="foreigner">
           </app-user-information>
       </div>

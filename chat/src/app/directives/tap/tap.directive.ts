@@ -7,6 +7,7 @@ export class TapDirective implements OnInit {
 
   @Output() tap = new EventEmitter();
   @Output() doubleTap = new EventEmitter();
+  @Output() tapSide = new EventEmitter<string>()
 
   lastTap = 0;
   tapCount = 0;
@@ -18,11 +19,12 @@ export class TapDirective implements OnInit {
     interval: 250
   }
 
- doubleTapGesture = {
+  doubleTapGesture = {
     name: 'doubleTap',
     enabled: false,
     interval: 300
   }
+
 
   constructor() { }
 
@@ -33,6 +35,11 @@ export class TapDirective implements OnInit {
 
   @HostListener('click', ['$event'])
   handelTaps(e: any) {
+
+    if (e?.view?.innerWidth && e?.clientX) {
+      this.getClientTapSide(e.view.innerWidth, e.clientX)
+    }
+
     const tapTimeStamp = Math.floor(e.timeStamp);
     const isDoubleTap = this.lastTap + this.tapGesture.interval > tapTimeStamp;
 
@@ -43,7 +50,6 @@ export class TapDirective implements OnInit {
 
     this.tapCount++ ;
 
-    console.log(this.tapCount, isDoubleTap , this.doubleTapGesture.enabled);
     if (isDoubleTap && this.doubleTapGesture.enabled) {
       this.emitTaps();
 
@@ -70,4 +76,12 @@ export class TapDirective implements OnInit {
     this.lastTap = 0
   }
 
+
+  getClientTapSide(screenWidth: number, clickPosition: number) {
+    if ((screenWidth / 2) <= clickPosition) {
+      this.tapSide.emit('right')
+    } else {
+      this.tapSide.emit('left')
+    }
+  }
 }
