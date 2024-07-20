@@ -1,0 +1,17 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+      <app-logo slot="start"></app-logo>
+
+    <ion-buttons slot="end">
+     <ion-button>
+        <ion-icon name="notifications"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="onSettings(pageName)"> <ion-icon [name]="displayLeftIcon(pageName)"></ion-icon> </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>

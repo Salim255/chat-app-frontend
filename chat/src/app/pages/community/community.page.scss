@@ -1,14 +1,9 @@
-ion-header {
-  ion-toolbar {
-    --background: #fff;
-    --border-width: 0;
-  }
-}
+
 
 ion-content {
 
   ion-grid {
-    padding: 0;
+
     position: relative;
     ion-row {
 
@@ -20,6 +15,7 @@ ion-content {
           top: 50%;
           transform: translate(-50%, -50%);
           width: 100%;
+          padding: 0 1rem;
         }
      }
     }

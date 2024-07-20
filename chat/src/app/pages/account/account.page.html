@@ -1,8 +1,9 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button>
           <app-logo></app-logo>
+          <ion-text>intimacy</ion-text>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
@@ -14,7 +15,9 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+<app-header [pageName]="'account'" (settings)="onSettings()"></app-header>
 
 <!-- Content -->
 <ion-content [fullscreen]="true">

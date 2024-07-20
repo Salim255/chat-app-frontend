@@ -23,13 +23,11 @@ export class CardUserComponent implements OnInit, OnDestroy {
     private tapService : TapService ) { }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+
       if (this.profileImages) {
         this.foreigner.images = this.profileImages
       }
       this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
-        console.log(event);
         if (event) {
           this.animationType = event
         }
@@ -44,21 +42,16 @@ export class CardUserComponent implements OnInit, OnDestroy {
      else return;
   }
 
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-     if (this.animationEventSource) {
-      this.animationEventSource.unsubscribe()
-     }
-  }
-
   onTapSide(side: any) {
     if (side) {
       const data = {clientId: this.foreigner.id, tapSide: side }
       this.tapService.setTapEventSource(data)
     }
-
   }
 
-
+  ngOnDestroy(): void {
+    if (this.animationEventSource) {
+     this.animationEventSource.unsubscribe()
+    }
+ }
 }
