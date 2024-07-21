@@ -16,7 +16,7 @@ export class AppHeaderComponent implements OnDestroy {
  displayLeftIcon(pageName: string) {
   switch(pageName) {
     case 'community':
-      return 'options-outline';
+      return 'options';
 
     case 'account':
         return 'settings';
