@@ -2,7 +2,7 @@ ion-card {
   margin: 0;
   padding: 0;
   height: 5.5rem;
-  background-image: linear-gradient( #e7fdfd 20%, #90e1ea 98%, var(--ion-color-tertiary) 2%);
+  background-image: linear-gradient(#fff 95%, var(--ion-color-secondary) 5%, var(--ion-color-primary));
 
   ion-card-header{
     display: flex;
@@ -13,7 +13,7 @@ ion-card {
       height: 1.3rem;
       width: 1.3rem;
       &__likes {
-        fill: rgb(49, 166, 205);
+        fill: var(--ion-color-tertiary);
       }
 
       &__boots {
@@ -21,7 +21,7 @@ ion-card {
       }
 
       &__subs {
-        fill: rgb(88, 25, 139);
+        fill: var(--ion-color-primary);
         padding-top: .5rem;
       }
 
@@ -37,9 +37,7 @@ ion-card {
     font-size: 11px;
     line-height: 1.6;
     .content {
-        //background: red;
       ion-text {
-        color: white;
         color: var(--ion-color-secondary);
 
       }

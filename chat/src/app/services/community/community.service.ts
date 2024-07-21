@@ -10,10 +10,11 @@ import { Foreigner } from "src/app/models/foreigner.model";
 })
 export class CommunityService {
   private ENV = environment;
-  noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
+  private noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
   private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
 
-  private likeProfileSource = new BehaviorSubject < string | null> (null)
+  private foreignersListStatusSource = new BehaviorSubject < string | null > (null)
+  private likeProfileSource = new BehaviorSubject < string > ('empty')
 
   constructor(private http: HttpClient){
 
@@ -91,6 +92,14 @@ export class CommunityService {
 
   triggerDislikeProfile(state: string) {
     this.likeProfileSource.next(state)
+  }
+
+  setForeignersListStatus(status: string) {
+      this.foreignersListStatusSource.next(status)
+  }
+
+  get getForeignersListStatus () {
+    return this.foreignersListStatusSource.asObservable()
   }
 
   get getDisLikeProfileState() {

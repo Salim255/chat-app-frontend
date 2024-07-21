@@ -2,7 +2,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-grid>
-    <ion-row>
+    <ion-row >
       <ion-col size-md="6" >
         <app-card-user [ngClass]="{'swipeable': true}" class="red" offset-md="3" *ngFor="let foreigner of foreignersList; let i = index " [foreigner]="foreigner"
         appSwipe
@@ -13,8 +13,13 @@
         [profileImages]="profilesImages[i]"></app-card-user>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="!foreignersListStatus">
+      <ion-col>
+        <app-discover-place-holder></app-discover-place-holder>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
-  <app-profile-action></app-profile-action>
+  <app-profile-action *ngIf="foreignersListStatus"></app-profile-action>
 
 </ion-content>

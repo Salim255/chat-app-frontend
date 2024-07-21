@@ -26,7 +26,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   rotateCounterX= 0;
 
   profilesImages: any;
-
+  foreignersListStatus = false;
   constructor (
      private communityService: CommunityService,
      private animationService: AnimationService,
@@ -37,7 +37,6 @@ export class CommunityPage implements OnInit, OnDestroy {
 
   ngOnInit () {
     this.profilesImages = this.dataService.getImages;
-    console.log(this.profilesImages);
 
     this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
       if (state ===  'skip') {
@@ -51,14 +50,13 @@ export class CommunityPage implements OnInit, OnDestroy {
       this.foreignersList = data;
       if (data) {
         this.setCurrentProfile();
+        this.setForeignersListStatus();
       }
 
     })
   }
 
   ionViewWillEnter () {
-
-
      this.communityService.fetchUsers().subscribe()
   }
 
@@ -74,7 +72,7 @@ export class CommunityPage implements OnInit, OnDestroy {
           console.log("error");
         },
         next: () => {
-          this.foreignersList.pop();
+          this.dropProfileFromForeignersList();
           this.setCurrentProfile();
         }
      })
@@ -98,9 +96,10 @@ export class CommunityPage implements OnInit, OnDestroy {
     const profileListLength = this.getProfilesListLength()
     return this.foreignersList[ profileListLength - 1 ];
   }
+
   skipFriend () {
-    this.foreignersList.pop();
-    this.setCurrentProfile();
+     this.dropProfileFromForeignersList();
+     this.setCurrentProfile();
   }
 
   ngOnDestroy () {
@@ -166,5 +165,22 @@ export class CommunityPage implements OnInit, OnDestroy {
       this.animationService.animationListener('none');
      }
 
+  }
+
+  dropProfileFromForeignersList() {
+    if (this.foreignersList.length > 0) {
+      this.foreignersList.pop();
+      this.setForeignersListStatus();
+    }
+  }
+
+  setForeignersListStatus() {
+    if (this.foreignersList.length > 0) {
+      this.foreignersListStatus = true
+     // this.communityService.setForeignersListStatus('empty');
+    } else {
+      //this.communityService.setForeignersListStatus('full');
+      this.foreignersListStatus = false;
+    }
   }
 }

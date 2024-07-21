@@ -1,13 +1,13 @@
 swiper-container {
-  --swiper-pagination-bullet-inactive-color: #454746;
-  --swiper-pagination-color: var(--ion-color-primary);
+  --swiper-pagination-bullet-inactive-color: #909492;
+  --swiper-pagination-color:  var(--ion-color-primary) ;
   --swiper-pagination-bullet-width: 4.5rem;
-  --swiper-pagination-bullet-height: 0.32rem;
+  --swiper-pagination-bullet-height: 0.20rem;
   --swiper-pagination-bullet-border-radius: 2rem;
   --swiper-pagination-top: -1%;
 
   &::part(bullet-active) {
-    height: 0.32rem;
+    height: 0.20rem;
     width: 4.5rem;
     border-radius: 2rem;
   }

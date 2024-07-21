@@ -12,6 +12,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { NameAgeComponent } from 'src/app/components/card-user/user-information/name-age/name-age.component';
 import { DistanceComponent } from 'src/app/components/card-user/user-information/distance/distance.component';
 import { DirectivesModule } from 'src/app/directives/directives.module';
+import { DiscoverPlaceHolderComponent } from 'src/app/components/discover/place-holder/place-holder.component';
+import { WaveComponent } from 'src/app/components/discover/wave/wave.component';
 
 @NgModule({
 
@@ -23,6 +25,6 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
     SharedModule,
     DirectivesModule
   ],
-  declarations: [CommunityPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent]
+  declarations: [CommunityPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent, DiscoverPlaceHolderComponent, WaveComponent ]
 })
 export class CommunityPageModule {}
