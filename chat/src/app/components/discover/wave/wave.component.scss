@@ -10,17 +10,15 @@
 
   .wave-layer {
      position: absolute;
-     //background: red;
      border-radius: 50%;
-     border:  2px solid var(--ion-color-tertiary);
+     border:  2px solid #91d0f0;
      width: 6.25rem;
      height: 6.25rem;
      opacity: 0;
      animation: waveAnimation 2s infinite;
-
+     background: rgba($color:  #0097b2 , $alpha: 0.5);
     &__1{
       animation-delay: 0s;
-
     }
 
     &__2{
@@ -53,7 +51,15 @@
 
 @keyframes waveAnimation {
   0% {
-    transform: scale(1);
-    opacity: 1;
+    transform: scale(.9);
+    opacity: 0.2;
   }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0;
+ }
 }

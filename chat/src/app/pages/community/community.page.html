@@ -18,6 +18,11 @@
         <app-discover-place-holder></app-discover-place-holder>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="!foreignersListStatus">
+      <ion-col>
+        <ion-text>You are running out profiles</ion-text>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
   <app-profile-action *ngIf="foreignersListStatus"></app-profile-action>
