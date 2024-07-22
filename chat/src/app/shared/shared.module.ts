@@ -13,11 +13,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SliderComponent } from "./profile/slider/slider.component";
 import { AnimationComponent } from "./profile/action/action-animation/animation.component";
 import { AppHeaderComponent } from "./app-header/app-header.component";
+import { NetworkConnectionComponent } from "./network-connection/network-connection.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent  ],
-  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent ],
+  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent  ],
+  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent ],
   imports: [
     IonicModule,
     CommonModule

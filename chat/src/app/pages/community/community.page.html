@@ -1,6 +1,6 @@
 <app-header [pageName]="'community'"></app-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" *ngIf="isConnected">
   <ion-grid>
     <ion-row >
       <ion-col size-md="6" >

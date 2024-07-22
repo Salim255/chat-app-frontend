@@ -5,14 +5,14 @@ import { CommunityService } from 'src/app/services/community/community.service';
 import { Foreigner } from 'src/app/models/foreigner.model';
 import { AnimationService } from 'src/app/services/animation/animation.service';
 import { DataService } from 'src/app/services/data/data.service';
-
+import { NetworkService } from 'src/app/services/network/network.service';
 @Component({
   selector: 'app-community',
   templateUrl: './community.page.html',
   styleUrls: ['./community.page.scss'],
 })
 export class CommunityPage implements OnInit, OnDestroy {
-
+  isConnected: boolean= true;
   private foreignersSource!: Subscription;
   foreignersList: Array < Foreigner >
 
@@ -30,30 +30,46 @@ export class CommunityPage implements OnInit, OnDestroy {
   constructor (
      private communityService: CommunityService,
      private animationService: AnimationService,
-     private dataService: DataService
+     private dataService: DataService,
+     private networkService:  NetworkService
     ) {
     this.foreignersList = []
   }
 
   ngOnInit () {
-    this.profilesImages = this.dataService.getImages;
 
-    this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
-      if (state ===  'skip') {
-        this.skipFriend()
-      } else if (state ===  'like') {
-        this.addFriend();
-      }
-     });
+    this.networkService.getNetworkStatus().subscribe(isConnected => {
+      this.isConnected = isConnected;
 
-    this.foreignersSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
-      this.foreignersList = data;
-      if (data) {
-        this.setCurrentProfile();
-        this.setForeignersListStatus();
+      if (isConnected) {
+        this.profilesImages = this.dataService.getImages;
+
+        this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
+          if (state ===  'skip') {
+            this.skipFriend()
+          } else if (state ===  'like') {
+            this.addFriend();
+          }
+         });
+
+         //
+         this.foreignersSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
+          this.foreignersList = data;
+          if (data) {
+            this.setCurrentProfile();
+            this.setForeignersListStatus();
+          }
+        })
+      } else {
+
       }
+
+
 
     })
+
+
+
   }
 
   ionViewWillEnter () {

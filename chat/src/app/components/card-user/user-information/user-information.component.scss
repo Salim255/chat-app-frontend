@@ -5,6 +5,12 @@ ion-grid {
     padding: 0;
   }
 
+  ion-row:first-child {
+    ion-col {
+      display: flex;
+      justify-content: flex-start;
+    }
+  }
 
   app-tag {
     ::ng-deep ion-badge {
@@ -15,6 +21,7 @@ ion-grid {
       text-transform: capitalize;
       border-radius: 2rem;
       background: #048478;
+
     }
    }
 
