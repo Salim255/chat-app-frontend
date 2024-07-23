@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
+import { createChatInfo } from "src/app/interfaces/chat.interface";
 import { Message } from "src/app/interfaces/message.interface";
 import { AuthService } from "src/app/services/auth/auth.service";
 import { ConversationService } from "src/app/services/conversation/conversation.service";
@@ -36,18 +37,18 @@ export class ActiveChatPage implements OnDestroy {
   ionViewWillEnter () {
 
     // Here we get active conversation
-    this.activeConversationSubscription = this.conversationService.getActiveConversation.subscribe( data =>{
-      this.activeChat = data;
-      this.messagesList = this.activeChat?.messages;
-      //console.log(this.partnerInfo && this.activeChat, this.partnerInfo, this.activeChat, 'Test to read');
-      this.conversationService.setActiveConversationMessages(this.messagesList)
-        });
+    this.activeConversationSubscription = this.conversationService.getActiveConversation.subscribe( data =>
+      {
+            this.activeChat = data;
+            this.messagesList = this.activeChat?.messages;
 
-    // Here we get the partner id
+            this.conversationService.setActiveConversationMessages(this.messagesList);
+
+      });
+
+    // Here we get the partner information
      this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
-        if (partnerInfo) {
-          this.partnerInfo = partnerInfo
-        }
+        this.partnerInfo = partnerInfo
      })
 
      // listen to receiver message delivered event, in case receiver is in current conversation
@@ -70,13 +71,16 @@ export class ActiveChatPage implements OnDestroy {
      }
    }
 
-   createNewChatObs(newChatData: any) {
-    let createChatObs: Observable<any> ;
-    if (!this.partnerInfo.partner_id) {
+  createNewChatObs(message: any) {
+
+    if (!this.partnerInfo?.partner_id) {
       return
     };
 
-    let chatData = { partnerId: this.partnerInfo.partner_id, message: newChatData.message}
+    let createChatObs: Observable<any> ;
+
+    const chatData: createChatInfo = { content: message, toUserId: this.partnerInfo.partner_id, fromUserId: this.userId };
+
     createChatObs = this.conversationService.createConversation(chatData);
 
     createChatObs.subscribe({
@@ -84,28 +88,25 @@ export class ActiveChatPage implements OnDestroy {
         console.log(err)
       },
       next: (res) => {
-        this.conversationService.getActiveConversation.subscribe(data=>{
-
-
-          this.activeChat = data;
+        if (res?.data) {
+          this.activeChat = res.data;
 
           let lastMessage = this.getLastMessage(this.activeChat);
 
           this.pushMessageToMessagesList(lastMessage);
 
+          this.conversationService.setActiveConversation(res.data);
 
-          // Sending this partnerId to be used in fetching  active chat
-          this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.id, newChatData.message)
-
-          // Update
-        })
+           // Sending this partnerId to be used in fetching  active chat
+          this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.id, message)
+        }
       }
     })
   }
 
-   submitMessageObs(data: any) {
+  sendMessageObs(message: any) {
     let sendMessageObs: Observable<any> ;
-
+    const data = {  content: message, fromUserId: this.userId, toUserId: this.partnerInfo.id,  chatId: this.activeChat.id};
     sendMessageObs = this.conversationService.sendMessage(data);
 
     sendMessageObs.subscribe({
@@ -114,10 +115,11 @@ export class ActiveChatPage implements OnDestroy {
       },
       next: (response) => {
 
+
           this.activeChat = response.data[0];
 
           let lastMessage = this.getLastMessage(this.activeChat)
-
+          console.log(this.activeChat);
           this.pushMessageToMessagesList(lastMessage)
           // Sending this partnerId to be used in fetching  active chat
           this.socketIoService.sendMessage(this.activeChat.id, this.userId, this.partnerInfo.partner_id, data.content)
@@ -126,7 +128,11 @@ export class ActiveChatPage implements OnDestroy {
   }
 
   pushMessageToMessagesList(message: Message){
-    this.messagesList.push(message)
+    if (!this.messagesList) {
+      this.messagesList = [ message ];
+    } else {
+      this.messagesList.push(message)
+    }
  }
 
  getLastMessage(activeChat: any) {
@@ -137,24 +143,32 @@ export class ActiveChatPage implements OnDestroy {
    return  null
  }
 
- readMessageEmitter (chatId: number, fromUserId: number,toUserId: number) {
+ readMessageEmitter(chatId: number, fromUserId: number,toUserId: number) {
     this.socketIoService.readMessage(chatId, fromUserId, toUserId)
   }
 
 
+ onSubmit(message: any) {
+     if (!this.activeChat) {
+        this.createNewChatObs(message)
+     } else {
+      this.sendMessageObs(message)
+     }
+  }
+
  ngOnDestroy() {
-  this.partnerInfo =  null ;
+    this.partnerInfo =  null ;
 
-  if (this.comingMessageEvent) {
-      this.comingMessageEvent.unsubscribe()
-  }
+    if (this.comingMessageEvent) {
+        this.comingMessageEvent.unsubscribe()
+    }
 
-  if (this.activeConversationSubscription) {
-    this.activeConversationSubscription.unsubscribe()
-  }
+    if (this.activeConversationSubscription) {
+      this.activeConversationSubscription.unsubscribe()
+    }
 
-  if (this.deliveredEventSubscription) {
-    this.deliveredEventSubscription.unsubscribe()
+    if (this.deliveredEventSubscription) {
+      this.deliveredEventSubscription.unsubscribe()
+    }
   }
-}
 }

@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FriendsPageRoutingModule } from './friends-routing.module';
+import { MatchesPageRoutingModule } from './matches-routing.module';
 
-import { FriendsPage } from './friends.page';
+import { MatchesPage } from './matches.page';
 
-import { CardFriendComponent } from 'src/app/components/card-friend/card-friend.component';
+import { MatchItemComponent } from 'src/app/components/matches/match-item/match-item.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -16,9 +16,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FriendsPageRoutingModule,
+    MatchesPageRoutingModule,
     SharedModule
   ],
-  declarations: [FriendsPage, CardFriendComponent]
+  declarations: [MatchesPage, MatchItemComponent]
 })
-export class FriendsPageModule {}
+export class MatchesPageModule {}

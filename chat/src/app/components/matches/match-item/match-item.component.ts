@@ -7,12 +7,12 @@ import { ConversationService } from 'src/app/services/conversation/conversation.
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
-  selector: 'app-card-friend',
-  templateUrl: './card-friend.component.html',
-  styleUrls: ['./card-friend.component.scss'],
+  selector: 'app-match-item',
+  templateUrl: './match-item.component.html',
+  styleUrls: ['./match-item.component.scss'],
 })
-export class CardFriendComponent {
- @Input() friend!: any;
+export class MatchItemComponent {
+ @Input() match!: any;
  partnerInfo: Partner;
  private userId: any;
 
@@ -29,22 +29,23 @@ export class CardFriendComponent {
   }
 
   openChat () {
-    if (!this.friend?.friend_id) return;
+    if (!this.match?.friend_id) return;
 
-    this.preparePartnerInfo(this.friend);
+    this.preparePartnerInfo(this.match);
 
     let fetchChatObs: Observable<any>;
 
-    fetchChatObs = this.conversationService.fetchChatByUsers(this.friend?.friend_id);
+    fetchChatObs = this.conversationService.fetchChatByUsers(this.match?.friend_id);
 
     fetchChatObs.subscribe({
       error: () => {
         console.error()
       },
-      next: () => {
-          this.conversationService.setPartnerInfo(this.partnerInfo);
+      next: (chat) => {
+          console.log(chat.data, 'Hello chat🐈');
 
-          this.router.navigate(['./tabs/active-chat'], { queryParams: { partner: this.friend?.friend_id } });
+          this.conversationService.setPartnerInfo(this.partnerInfo);
+          this.router.navigate(['./tabs/active-chat'], { queryParams: { partner: this.match?.friend_id } });
       }
     })
   }
@@ -55,6 +56,7 @@ export class CardFriendComponent {
     } else {
       this.partnerInfo.partner_id = data.user_id;
     };
+
     this.partnerInfo.avatar = data.avatar;
     this.partnerInfo.last_name = data.last_name;
     this.partnerInfo.first_name = data.last_name;

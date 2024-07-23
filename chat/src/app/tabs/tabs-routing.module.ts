@@ -21,18 +21,14 @@ const routes: Routes = [
       loadChildren: () => import('../pages/community/community.module').then((m)  => m.CommunityPageModule)
      },
      {
-      path: 'friends',
-      loadChildren: () => import('../pages/friends/friends.module').then((m) => m.FriendsPageModule)
+      path: 'matches',
+      loadChildren: () => import('../pages/matches/matches.module').then((m) => m.MatchesPageModule)
      },
      {
       path: 'account',
       loadChildren: () => import('../pages/account/account.module').then( (m) => m.AccountPageModule)
      }
     ]
-  },
-  {
-    path: 'active-conversation',
-    loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
   },
   {
     path: 'active-chat',

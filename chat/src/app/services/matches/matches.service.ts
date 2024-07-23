@@ -4,12 +4,13 @@ import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
 import { Friend } from 'src/app/models/friend.model';
+
 @Injectable({
   providedIn: 'root'
 })
-export class FriendsService {
+export class MatchesService {
   private ENV = environment;
-  private friendsArraySource = new BehaviorSubject <Array<Friend>> ([])
+  private matchesArraySource = new BehaviorSubject <Array<Friend>> ([])
   constructor(private http: HttpClient) { }
 
   fetchFriends(){
@@ -35,12 +36,12 @@ export class FriendsService {
           }
         });
       }), tap( response => {
-        this.friendsArraySource.next(response.data)
+        this.matchesArraySource.next(response.data)
       })
     )
   }
 
-  get getFriendsArray () {
-    return this.friendsArraySource.asObservable()
+  get getMatchesArray () {
+    return this.matchesArraySource.asObservable()
   }
 }

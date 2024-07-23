@@ -1,0 +1,18 @@
+<app-header [pageName]="'matches'"></app-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+          <app-search-bar></app-search-bar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list *ngFor="let match of matchesArray" >
+            <app-match-item [match]="match" ></app-match-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

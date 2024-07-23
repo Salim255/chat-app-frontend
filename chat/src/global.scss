@@ -38,5 +38,9 @@
 
 
 ion-toolbar {
-  --background: var(--ion-color-tertiary);
+ --background:  var(--ion-background-color);
+}
+
+ion-content {
+  --background: var(--ion-background-color);
 }

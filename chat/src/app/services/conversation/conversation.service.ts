@@ -5,6 +5,7 @@ import { Preferences } from "@capacitor/preferences";
 import { BehaviorSubject, from, map, pipe, switchMap, tap } from "rxjs";
 import { Conversation } from "src/app/models/activeConversation.model";
 import { Partner } from "src/app/interfaces/partner.interface";
+import { createChatInfo } from "src/app/interfaces/chat.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class ConversationService {
 
     }
 
-  createConversation (data: any) {
+  createConversation (data: createChatInfo) {
     return from(Preferences.get({key: 'authData'})).pipe(
       map( (storedData) => {
           if (!storedData || !storedData.value ) {
@@ -37,28 +38,30 @@ export class ConversationService {
 
           return token;
       }), switchMap( (token) => {
-          return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {
-            partnerId: data.partnerId,
-            content: data.message
-         }, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-         })
-      } ), tap( (response) => {
-        this.setActiveConversation(response.data[0])
-
-      })
+          return this.http.post<any>(`${this.ENV.apiUrl}/chats`,
+            data,
+             {
+              headers:
+              {
+                Authorization: `Bearer ${token}`
+              }
+            }
+        )
+      } )
     )
   }
 
   setActiveConversation(conversation: Conversation) {
-    const buildActiveChat = new Conversation(conversation.id, conversation.created_at, conversation.updated_at, conversation.messages, conversation.users);
-    this.activeConversationSource.next(buildActiveChat)
+    if (!conversation) {
+      this.activeConversationSource.next(null);
+    } else {
+      const buildActiveChat = new Conversation(conversation.id, conversation.created_at, conversation.updated_at, conversation.messages, conversation.users);
+      this.activeConversationSource.next(buildActiveChat)
+    }
   }
 
   setConversations (chats: any) {
-     this.conversationsSource.next(chats)
+      this.conversationsSource.next(chats);
   }
 
   setPartnerInfo(data: Partner) {
@@ -194,10 +197,6 @@ export class ConversationService {
         )
       }),
       tap ( (response) => {
-        if (!response.data) {
-          this.activeConversationSource.next(null)
-          return
-        }
         this.setActiveConversation(response.data)
       })
     )
