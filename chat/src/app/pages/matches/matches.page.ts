@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Friend } from 'src/app/models/friend.model';
+import { Match } from 'src/app/models/friend.model';
 import { MatchesService } from 'src/app/services/matches/matches.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { MatchesService } from 'src/app/services/matches/matches.service';
 
 export class MatchesPage implements OnInit, OnDestroy {
   private matchesSource!: Subscription;
-  matchesArray: Array < Friend >;
+  matchesArray: Array < Match >;
 
   constructor(private matchesService: MatchesService) {
     this.matchesArray = []
@@ -25,7 +25,7 @@ export class MatchesPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter () {
-    this.matchesService.fetchFriends().subscribe( );
+    this.matchesService.fetchMatches().subscribe( );
   }
 
   ngOnDestroy() {

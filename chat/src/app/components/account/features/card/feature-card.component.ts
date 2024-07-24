@@ -6,15 +6,11 @@ import { Component, Input, OnInit } from "@angular/core";
   styleUrls: ['./feature-card.component.scss']
 })
 
-export class FeatureCardComponent implements OnInit{
+export class FeatureCardComponent {
   @Input() category!: string
   constructor() {}
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log('hello');
-  }
+
 
   getCardCategoryStyle( category: string) {
      return `card card__${category}`

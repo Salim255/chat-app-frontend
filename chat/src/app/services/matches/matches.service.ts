@@ -3,17 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
-import { Friend } from 'src/app/models/friend.model';
+import { Match } from 'src/app/models/friend.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesService {
   private ENV = environment;
-  private matchesArraySource = new BehaviorSubject <Array<Friend>> ([])
+  private matchesArraySource = new BehaviorSubject <Array<Match>> ([])
   constructor(private http: HttpClient) { }
 
-  fetchFriends(){
+  fetchMatches(){
     return from(Preferences.get({key: 'authData'})).pipe(
       map((storedData) => {
         if (!storedData || !storedData.value) {
@@ -36,6 +36,8 @@ export class MatchesService {
           }
         });
       }), tap( response => {
+        //console.log(response);
+
         this.matchesArraySource.next(response.data)
       })
     )

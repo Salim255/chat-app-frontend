@@ -2,7 +2,7 @@ import { Component,  Input} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
-import { Friend } from 'src/app/models/friend.model';
+import { Match } from 'src/app/models/friend.model';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -50,7 +50,7 @@ export class MatchItemComponent {
     })
   }
 
-  preparePartnerInfo (data: Friend) {
+  preparePartnerInfo (data: Match) {
     if (this.userId === data.user_id) {
       this.partnerInfo.partner_id = data.friend_id;
     } else {

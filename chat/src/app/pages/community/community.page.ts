@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { first, Observable, Subscription, take } from 'rxjs';
 import { CommunityService } from 'src/app/services/community/community.service';
 import { Foreigner } from 'src/app/models/foreigner.model';
 import { AnimationService } from 'src/app/services/animation/animation.service';
@@ -46,26 +46,22 @@ export class CommunityPage implements OnInit, OnDestroy {
 
         this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
           if (state ===  'skip') {
-            this.skipFriend()
+            this.skipFriend();
           } else if (state ===  'like') {
             this.addFriend();
+            this.likeActionSource.unsubscribe();
           }
          });
 
          //
-         this.foreignersSource = this.communityService.      getNoConnectedFriendsArray.subscribe( (data )=> {
+         this.foreignersSource = this.communityService.getNoConnectedFriendsArray.subscribe( (data )=> {
           this.foreignersList = data;
           if (data) {
             this.setCurrentProfile();
             this.setForeignersListStatus();
           }
         })
-      } else {
-
       }
-
-
-
     })
 
 
@@ -90,6 +86,8 @@ export class CommunityPage implements OnInit, OnDestroy {
         next: () => {
           this.dropProfileFromForeignersList();
           this.setCurrentProfile();
+          this.likeActionSource.unsubscribe();
+
         }
      })
     }
@@ -116,6 +114,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   skipFriend () {
      this.dropProfileFromForeignersList();
      this.setCurrentProfile();
+     this.likeActionSource.unsubscribe();
   }
 
   ngOnDestroy () {

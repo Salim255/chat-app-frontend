@@ -1,4 +1,4 @@
-export class Friend {
+export class Match {
   constructor (
     private id: number,
     public friend_id: number,

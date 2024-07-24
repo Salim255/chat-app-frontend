@@ -74,6 +74,10 @@ export class CommunityService {
             Authorization: `Bearer ${token}`
           }
         })
+      }),
+      tap(res => {
+        console.log(res);
+
       })
     )
   }
@@ -82,7 +86,8 @@ export class CommunityService {
      this.displayedProfileSource.next(data);
   }
 
-  triggerLikeProfile(state: string) {
+  triggerLikeProfile(state: any) {
+    console.log(state, "Hello");
     this.likeProfileSource.next(state)
   }
 
@@ -90,7 +95,8 @@ export class CommunityService {
     return this.likeProfileSource.asObservable()
   }
 
-  triggerDislikeProfile(state: string) {
+  triggerDislikeProfile(state: any) {
+    console.log(state, "Hello");
     this.likeProfileSource.next(state)
   }
 

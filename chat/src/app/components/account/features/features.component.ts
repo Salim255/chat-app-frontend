@@ -7,11 +7,8 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ['./features.component.scss']
 })
 
-export class FeaturesComponent implements OnInit {
+export class FeaturesComponent {
 
   constructor(){}
 
-  ngOnInit(){
-   console.log('Hello World 🏜️🏜️');
-  }
 }

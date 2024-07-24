@@ -14,7 +14,6 @@ export class TabsPage  {
 
   setCurrentTab(event: any) {
     this.selectedTab = this.tabs.getSelected();
-    console.log(this.selectedTab);
     if (this.selectedTab === 'community') this.showActionBtn =true
     else this.showActionBtn = false;
   }
