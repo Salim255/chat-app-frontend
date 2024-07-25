@@ -148,6 +148,8 @@ export class CommunityPage implements OnInit, OnDestroy {
   onSwipe(event: any, index: number) {
     this.currentIndex = index;
 
+
+
     if (event.dirX === 'right') {
       this.counterX += 1;
       if (this.rotateCounterX< 7) {
@@ -178,6 +180,7 @@ export class CommunityPage implements OnInit, OnDestroy {
       this.rotateCounterY = 0;
       this.rotateCounterX = 0;
       this.animationService.animationListener('none');
+      this.likeWithHorizontalSwipe(event)
      }
 
   }
@@ -197,5 +200,24 @@ export class CommunityPage implements OnInit, OnDestroy {
       //this.communityService.setForeignersListStatus('full');
       this.foreignersListStatus = false;
     }
+  }
+
+  likeWithHorizontalSwipe(event: any){
+    const clientCurrent = event.currentX;
+    const clientStart = event.startX
+    if ( clientCurrent  < (clientStart / 2) ) {
+      this.skipFriend();
+    } else  if ( clientStart  < ( clientCurrent / 2)) {
+        this.addFriend();
+    }
+
+  }
+
+  likeWithVerticalSwipe(event: any) {
+    const deviceWidth = event.event.view.
+    innerWidth;
+    const deviceHeight = event.event.view.
+    innerHeight;
+
   }
 }

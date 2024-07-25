@@ -71,6 +71,12 @@ export class SwipeDirective implements OnInit  {
   }
 
   private onMove(event: any) {
+
+
+
+
+
+
     if (this.swipeGesture.enable) {
       this.handleMoving('moving', event)
     }

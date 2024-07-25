@@ -1,8 +1,9 @@
-ion-item {
- --padding-start: 0;
+div {
+  display: flex;
   ion-icon{
     color: var(--ion-color-primary);
     font-size: 1.5rem;
+    align-self: center;
   }
   ion-text {
     font-weight: bolder;
@@ -13,5 +14,6 @@ ion-item {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 1.8rem;
+
   }
 }

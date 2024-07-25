@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 
 @Component({
   selector: 'app-header',
@@ -6,13 +6,18 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from "@angular/core
   styleUrls: ['./app-header.component.scss']
 })
 
-export class AppHeaderComponent implements OnDestroy {
+export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
 
   @Input() pageName:any = null;
   constructor(){}
 
+ ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+  console.log(this.pageName);
 
+ }
  displayLeftIcon(pageName: string) {
   switch(pageName) {
     case 'community':
@@ -22,10 +27,13 @@ export class AppHeaderComponent implements OnDestroy {
         return 'settings';
 
     case 'friends' :
-      return 'shield'
+      return 'shield';
 
     case 'conversations':
       return 'shield';
+
+    case 'auth':
+      return ;
 
     default:
       return
@@ -37,6 +45,8 @@ export class AppHeaderComponent implements OnDestroy {
     this.settings.emit()
   }
  }
+
+
 
  ngOnDestroy(): void {
    this.pageName = null;
