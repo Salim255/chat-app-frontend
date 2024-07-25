@@ -2,16 +2,21 @@
   <ion-row>
     <ion-col>
       <app-profile-slider [profile]="foreigner"></app-profile-slider>
-      <div class="details-section"
+      <div
+      class="details-section"
       appTap
       (tapSide)="onTapSide($event)"
       >
-          <app-user-information [profile]="foreigner">
+          <app-user-information
+          *ngIf="!hidingTapStatus"
+          [profile]="foreigner">
           </app-user-information>
       </div>
     </ion-col>
   </ion-row>
-  <ion-row [ngClass]="getAnimationStyle(animationType)" *ngIf="lastProfileIndex === profileIndex" >
+  <ion-row
+  [ngClass]="getAnimationStyle(animationType)"
+  *ngIf="lastProfileIndex === profileIndex" >
     <ion-col >
       <app-animation ></app-animation>
     </ion-col>

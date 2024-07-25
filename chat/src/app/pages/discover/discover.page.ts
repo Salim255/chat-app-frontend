@@ -1,23 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { first, Observable, Subscription, take } from 'rxjs';
-import { CommunityService } from 'src/app/services/community/community.service';
+import { Observable, Subscription} from 'rxjs';
+import { DiscoverService } from 'src/app/services/discover/discover.service';
 import { Foreigner } from 'src/app/models/foreigner.model';
 import { AnimationService } from 'src/app/services/animation/animation.service';
 import { DataService } from 'src/app/services/data/data.service';
 import { NetworkService } from 'src/app/services/network/network.service';
+import { TapService } from 'src/app/services/tap/tap.service';
+
 @Component({
-  selector: 'app-community',
-  templateUrl: './community.page.html',
-  styleUrls: ['./community.page.scss'],
+  selector: 'app-discover',
+  templateUrl: './discover.page.html',
+  styleUrls: ['./discover.page.scss'],
 })
-export class CommunityPage implements OnInit, OnDestroy {
+
+export class DiscoverPage implements OnInit, OnDestroy {
   isConnected: boolean= true;
   private foreignersSource!: Subscription;
   foreignersList: Array < Foreigner >
 
   private likeActionSource!: Subscription;
   private disLikeActionSource!: Subscription;
+  private tapHidingStatusSourceSubscription!: Subscription;
+  hidingTapStatus: boolean = false;
   transform: any = null;
   currentIndex:any= null;
   counterX:any = -50;
@@ -28,10 +32,11 @@ export class CommunityPage implements OnInit, OnDestroy {
   profilesImages: any;
   foreignersListStatus = false;
   constructor (
-     private communityService: CommunityService,
+     private discoverService: DiscoverService,
      private animationService: AnimationService,
      private dataService: DataService,
-     private networkService:  NetworkService
+     private networkService:  NetworkService,
+     private tapService: TapService
     ) {
     this.foreignersList = []
   }
@@ -44,7 +49,7 @@ export class CommunityPage implements OnInit, OnDestroy {
       if (isConnected) {
         this.profilesImages = this.dataService.getImages;
 
-        this.likeActionSource = this.communityService.getLikeProfileState.subscribe(state => {
+        this.likeActionSource = this.discoverService.getLikeProfileState.subscribe(state => {
           if (state ===  'skip') {
             this.skipFriend();
           } else if (state ===  'like') {
@@ -54,12 +59,20 @@ export class CommunityPage implements OnInit, OnDestroy {
          });
 
          //
-         this.foreignersSource = this.communityService.getNoConnectedFriendsArray.subscribe( (data )=> {
+         this.foreignersSource = this.discoverService.getNoConnectedFriendsArray.subscribe( (data )=> {
           this.foreignersList = data;
           if (data) {
             this.setCurrentProfile();
             this.setForeignersListStatus();
           }
+        });
+
+        //
+
+        this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+          console.log(status);
+          this.hidingTapStatus = status;
+          this.tapHidingStatusSourceSubscription.unsubscribe();
         })
       }
     })
@@ -69,7 +82,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter () {
-     this.communityService.fetchUsers().subscribe()
+     this.discoverService.fetchUsers().subscribe()
   }
 
   addFriend(){
@@ -77,7 +90,7 @@ export class CommunityPage implements OnInit, OnDestroy {
 
     if (foreigner?.id) {
       let addFriendObs: Observable<any>
-      addFriendObs = this.communityService.addFriend(foreigner.id);
+      addFriendObs = this.discoverService.addFriend(foreigner.id);
 
       addFriendObs.subscribe({
         error: () => {
@@ -97,7 +110,7 @@ export class CommunityPage implements OnInit, OnDestroy {
     if (this.foreignersList?.length > 0 ) {
          const currentProfile = this.getCurrentProfile();
          if (currentProfile) {
-           this.communityService.setDisplayedProfile(currentProfile)
+           this.discoverService.setDisplayedProfile(currentProfile)
          }
     }
   }
@@ -117,17 +130,7 @@ export class CommunityPage implements OnInit, OnDestroy {
      this.likeActionSource.unsubscribe();
   }
 
-  ngOnDestroy () {
-    if (this.foreignersSource) {
-      this.foreignersSource.unsubscribe()
-    }
-    if (this.likeActionSource) {
-      this.likeActionSource.unsubscribe()
-    }
-    if (this.disLikeActionSource) {
-      this.disLikeActionSource.unsubscribe()
-    }
-  }
+
 
   onTap(event: any){
         console.log('tap: ', event);
@@ -148,7 +151,7 @@ export class CommunityPage implements OnInit, OnDestroy {
   onSwipe(event: any, index: number) {
     this.currentIndex = index;
 
-
+     if (this.hidingTapStatus) return
 
     if (event.dirX === 'right') {
       this.counterX += 1;
@@ -219,5 +222,20 @@ export class CommunityPage implements OnInit, OnDestroy {
     const deviceHeight = event.event.view.
     innerHeight;
 
+  }
+
+  ngOnDestroy () {
+    if (this.foreignersSource) {
+      this.foreignersSource.unsubscribe()
+    }
+    if (this.likeActionSource) {
+      this.likeActionSource.unsubscribe()
+    }
+    if (this.disLikeActionSource) {
+      this.disLikeActionSource.unsubscribe()
+    }
+    if (this.tapHidingStatusSourceSubscription) {
+      this.tapHidingStatusSourceSubscription.unsubscribe();
+    }
   }
 }

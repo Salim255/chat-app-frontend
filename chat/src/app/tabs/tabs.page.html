@@ -1,7 +1,7 @@
 
-<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)">
+<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)" >
 
-  <ion-tab-bar slot="bottom" >
+  <ion-tab-bar slot="bottom"  *ngIf="!hidingTapStatus">
     <ion-tab-button tab="community">
       <ion-icon name="heart"></ion-icon>
     </ion-tab-button>
@@ -19,4 +19,5 @@
     </ion-tab-button>
 
   </ion-tab-bar>
+  <app-profile-action *ngIf="hidingTapStatus" class="profile-action"></app-profile-action>
 </ion-tabs>

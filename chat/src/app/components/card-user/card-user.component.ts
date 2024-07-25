@@ -16,22 +16,29 @@ export class CardUserComponent implements OnInit, OnDestroy {
 
 
   private animationEventSource!: Subscription;
+  private tapHidingStatusSourceSubscription!: Subscription;
+  hidingTapStatus: boolean = false;
   animationType: any = null;
+
   constructor (
     private renderer: Renderer2,
     private animationService: AnimationService,
     private tapService : TapService ) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
       if (this.profileImages) {
         this.foreigner.images = this.profileImages
       }
+
+      this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe( status => {
+          this.hidingTapStatus = status
+      });
+
       this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
         if (event) {
           this.animationType = event
         }
-
       })
   }
 
@@ -52,6 +59,9 @@ export class CardUserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.animationEventSource) {
      this.animationEventSource.unsubscribe()
+    }
+    if (this.tapHidingStatusSourceSubscription) {
+      this.tapHidingStatusSourceSubscription.unsubscribe();
     }
  }
 }

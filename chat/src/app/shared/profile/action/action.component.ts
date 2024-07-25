@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Foreigner } from "src/app/models/foreigner.model";
-import { CommunityService } from "src/app/services/community/community.service";
+import { DiscoverService } from "src/app/services/discover/discover.service";
 
 @Component({
   selector: "app-profile-action",
@@ -15,22 +15,22 @@ export class ActionComponent implements OnInit, OnDestroy {
 
   private foreignersListStatusSource!: Subscription;
 
-  constructor(private communityService: CommunityService) {
+  constructor(private discoverService: DiscoverService) {
 
   }
 
   ngOnInit(): void {
-     this.foreignersListStatusSource = this.communityService.getForeignersListStatus.subscribe(status => {
+     this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
         this.foreignersListStatus = status
      })
 
   }
   onSkip () {
-     this.communityService.triggerDislikeProfile('skip')
+     this.discoverService.triggerDislikeProfile('skip')
   }
 
   onAddFriend () {
-    this.communityService.triggerLikeProfile('like')
+    this.discoverService.triggerLikeProfile('like')
   }
 
   ngOnDestroy(): void {

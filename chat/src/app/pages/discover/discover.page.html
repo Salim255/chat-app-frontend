@@ -25,6 +25,6 @@
     </ion-row>
   </ion-grid>
 
-  <app-profile-action *ngIf="foreignersListStatus"></app-profile-action>
+  <app-profile-action *ngIf="foreignersListStatus && !hidingTapStatus"></app-profile-action>
 
 </ion-content>

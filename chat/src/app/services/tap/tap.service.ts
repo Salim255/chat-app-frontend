@@ -12,13 +12,21 @@ export interface TapEventData {
 })
 
 export class TapService {
-
+  private hideTapStatusSource = new BehaviorSubject <boolean>(false);
   private tapEventSource = new BehaviorSubject <any>(null);
 
   constructor() {}
 
   setTapEventSource(data: TapEventData) {
     this.tapEventSource.next(data)
+  }
+
+  setTapHidingStatus(status: boolean){
+      this.hideTapStatusSource.next(status)
+  }
+
+  get getHidingTapStatus() {
+    return  this.hideTapStatusSource.asObservable();
   }
 
   get getTapEventType() {

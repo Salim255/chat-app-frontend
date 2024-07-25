@@ -8,7 +8,7 @@ import { Foreigner } from "src/app/models/foreigner.model";
 @Injectable({
   providedIn: 'root'
 })
-export class CommunityService {
+export class DiscoverService {
   private ENV = environment;
   private noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
   private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;

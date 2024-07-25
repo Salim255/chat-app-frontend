@@ -15,7 +15,7 @@ const routes: Routes = [
      },
      {
       path: 'community',
-      loadChildren: () => import('../pages/community/community.module').then((m)  => m.CommunityPageModule)
+      loadChildren: () => import('../pages/discover/discover.module').then((m)  => m.DiscoverPageModule)
      },
      {
       path: 'matches',
