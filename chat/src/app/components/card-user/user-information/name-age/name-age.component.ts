@@ -14,6 +14,6 @@ export class NameAgeComponent {
 
   onViewProfile(){
     //this.router.navigate(['/tabs/profile'])
-    this.tapService.setTapHidingStatus(true)
+    this.tapService.setTapHidingStatus('hide')
  }
 }

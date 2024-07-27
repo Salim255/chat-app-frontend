@@ -1,7 +1,10 @@
 import { Component, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { AnimationService } from 'src/app/services/animation/animation.service';
 import { TapService } from 'src/app/services/tap/tap.service';
+
+
+export type displayTap =  'show' | 'hide';
 
 @Component({
   selector: 'app-card-user',
@@ -17,7 +20,7 @@ export class CardUserComponent implements OnInit, OnDestroy {
 
   private animationEventSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
-  hidingTapStatus: boolean = false;
+  hidingTapStatus: any;
   animationType: any = null;
 
   constructor (
@@ -31,7 +34,9 @@ export class CardUserComponent implements OnInit, OnDestroy {
         this.foreigner.images = this.profileImages
       }
 
-      this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe( status => {
+      this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.pipe(take(1)).subscribe( status => {
+
+
           this.hidingTapStatus = status
       });
 

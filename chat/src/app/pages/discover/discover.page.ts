@@ -7,6 +7,8 @@ import { DataService } from 'src/app/services/data/data.service';
 import { NetworkService } from 'src/app/services/network/network.service';
 import { TapService } from 'src/app/services/tap/tap.service';
 
+export type displayTap =  'show' | 'hide';
+
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.page.html',
@@ -21,7 +23,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private likeActionSource!: Subscription;
   private disLikeActionSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
-  hidingTapStatus: boolean = false;
+
+  hidingTapStatus: displayTap= 'hide' ;
+
   transform: any = null;
   currentIndex:any= null;
   counterX:any = -50;
@@ -66,23 +70,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
             this.setForeignersListStatus();
           }
         });
-
-        //
-
-        this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
-          console.log(status);
-          this.hidingTapStatus = status;
-          this.tapHidingStatusSourceSubscription.unsubscribe();
-        })
       }
     })
-
-
-
   }
 
   ionViewWillEnter () {
-     this.discoverService.fetchUsers().subscribe()
+     this.discoverService.fetchUsers().subscribe();
+     this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
+      this.hidingTapStatus = status;
+    })
   }
 
   addFriend(){

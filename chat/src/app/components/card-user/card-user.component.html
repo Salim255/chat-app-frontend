@@ -8,7 +8,7 @@
       (tapSide)="onTapSide($event)"
       >
           <app-user-information
-          *ngIf="!hidingTapStatus"
+          *ngIf="hidingTapStatus==='show'"
           [profile]="foreigner">
           </app-user-information>
       </div>

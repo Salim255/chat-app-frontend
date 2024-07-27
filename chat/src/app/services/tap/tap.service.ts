@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
+export type displayTap =  'show' | 'hide';
 export type tapSide = 'left' | 'right';
 export interface TapEventData {
   clientId: number,
@@ -12,7 +13,7 @@ export interface TapEventData {
 })
 
 export class TapService {
-  private hideTapStatusSource = new BehaviorSubject <boolean>(false);
+  private hideTapStatusSource = new BehaviorSubject <displayTap>('show');
   private tapEventSource = new BehaviorSubject <any>(null);
 
   constructor() {}
@@ -21,7 +22,7 @@ export class TapService {
     this.tapEventSource.next(data)
   }
 
-  setTapHidingStatus(status: boolean){
+  setTapHidingStatus(status: displayTap){
       this.hideTapStatusSource.next(status)
   }
 

@@ -14,6 +14,7 @@ import { DistanceComponent } from 'src/app/components/card-user/user-information
 import { DirectivesModule } from 'src/app/directives/directives.module';
 import { DiscoverPlaceHolderComponent } from 'src/app/components/discover/place-holder/place-holder.component';
 import { WaveComponent } from 'src/app/components/discover/wave/wave.component';
+import { AboutMeComponent } from 'src/app/components/profile/about-me/about-me.component';
 
 @NgModule({
 
@@ -25,6 +26,6 @@ import { WaveComponent } from 'src/app/components/discover/wave/wave.component';
     SharedModule,
     DirectivesModule
   ],
-  declarations: [DiscoverPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent, DiscoverPlaceHolderComponent, WaveComponent ]
+  declarations: [DiscoverPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent, DiscoverPlaceHolderComponent, WaveComponent, AboutMeComponent ]
 })
 export class DiscoverPageModule {}

@@ -18,6 +18,11 @@
         <app-discover-place-holder></app-discover-place-holder>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="hidingTapStatus" >
+      <ion-col>
+        <app-profile-about-me></app-profile-about-me>
+      </ion-col>
+    </ion-row>
     <ion-row *ngIf="!foreignersListStatus">
       <ion-col>
         <ion-text>You are running out of profiles</ion-text>
@@ -25,6 +30,6 @@
     </ion-row>
   </ion-grid>
 
-  <app-profile-action *ngIf="foreignersListStatus && !hidingTapStatus"></app-profile-action>
+  <app-profile-action *ngIf="foreignersListStatus && hidingTapStatus==='show'"></app-profile-action>
 
 </ion-content>

@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
 import { Foreigner } from "src/app/models/foreigner.model";
 import { DiscoverService } from "src/app/services/discover/discover.service";
+import { TapService } from "src/app/services/tap/tap.service";
 
 @Component({
   selector: "app-profile-action",
@@ -13,24 +14,37 @@ export class ActionComponent implements OnInit, OnDestroy {
   @Input() profile!: Foreigner;
   foreignersListStatus: any ;
 
+  private tapStatusSourceSubscription!: Subscription;
   private foreignersListStatusSource!: Subscription;
 
-  constructor(private discoverService: DiscoverService) {
+  constructor(private discoverService: DiscoverService, private tapService: TapService) {
 
   }
 
   ngOnInit(): void {
      this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
         this.foreignersListStatus = status
-     })
+     });
 
   }
+
+  ionViewWillEnter () {
+
+ }
+
   onSkip () {
-     this.discoverService.triggerDislikeProfile('skip')
+     this.discoverService.triggerDislikeProfile('skip');
+     this.setTapHidingStatus();
+
   }
 
   onAddFriend () {
-    this.discoverService.triggerLikeProfile('like')
+    this.discoverService.triggerLikeProfile('like');
+    this.setTapHidingStatus()
+  }
+
+  setTapHidingStatus() {
+    this.tapService.setTapHidingStatus('show')
   }
 
   ngOnDestroy(): void {
