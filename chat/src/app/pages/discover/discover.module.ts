@@ -15,6 +15,13 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
 import { DiscoverPlaceHolderComponent } from 'src/app/components/discover/place-holder/place-holder.component';
 import { WaveComponent } from 'src/app/components/discover/wave/wave.component';
 import { AboutMeComponent } from 'src/app/components/profile/about-me/about-me.component';
+import { LookingForComponent } from 'src/app/components/profile/looking-for/looking-for.component';
+import { EssentialsComponent } from 'src/app/components/profile/essentials/essentials.component';
+import { blockComponent } from 'src/app/components/profile/security/block-profile/block.component';
+import { ReportComponent } from 'src/app/components/profile/security/report-profile/report.component';
+import { ProfileComponent } from 'src/app/components/profile/proifle.component';
+
+
 
 @NgModule({
 
@@ -26,6 +33,6 @@ import { AboutMeComponent } from 'src/app/components/profile/about-me/about-me.c
     SharedModule,
     DirectivesModule
   ],
-  declarations: [DiscoverPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent, DiscoverPlaceHolderComponent, WaveComponent, AboutMeComponent ]
+  declarations: [DiscoverPage,CardUserComponent, UserInformationComponent, NameAgeComponent, DistanceComponent, DiscoverPlaceHolderComponent, WaveComponent, AboutMeComponent, ProfileComponent, LookingForComponent, EssentialsComponent, blockComponent, ReportComponent ]
 })
 export class DiscoverPageModule {}

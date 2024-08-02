@@ -20,11 +20,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private foreignersSource!: Subscription;
   foreignersList: Array < Foreigner >
 
+  activeProfile : any;
   private likeActionSource!: Subscription;
   private disLikeActionSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
 
-  hidingTapStatus: displayTap= 'hide' ;
+  hidingTapStatus: displayTap= 'show' ;
 
   transform: any = null;
   currentIndex:any= null;
@@ -78,6 +79,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
      this.discoverService.fetchUsers().subscribe();
      this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
       this.hidingTapStatus = status;
+      console.log(this.hidingTapStatus);
+
     })
   }
 

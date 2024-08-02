@@ -8,6 +8,7 @@ import { Component, Input } from "@angular/core";
 })
 export class UserInformationComponent {
   @Input() profile: any;
+
   constructor () { }
 
 

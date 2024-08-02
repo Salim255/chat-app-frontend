@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 import { AnimationService } from 'src/app/services/animation/animation.service';
 import { TapService } from 'src/app/services/tap/tap.service';
@@ -16,15 +16,16 @@ export class CardUserComponent implements OnInit, OnDestroy {
   @Input() lastProfileIndex: any;
   @Input() profileIndex: any;
   @Input() profileImages: any;
+  @Input() hidingTapStatus: any;
 
 
   private animationEventSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
-  hidingTapStatus: any;
+
   animationType: any = null;
 
   constructor (
-    private renderer: Renderer2,
+
     private animationService: AnimationService,
     private tapService : TapService ) { }
 
@@ -34,19 +35,27 @@ export class CardUserComponent implements OnInit, OnDestroy {
         this.foreigner.images = this.profileImages
       }
 
+
       this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.pipe(take(1)).subscribe( status => {
-
-
-          this.hidingTapStatus = status
-      });
+        this.hidingTapStatus = status;
+        console.log('====================================');
+        console.log( this.hidingTapStatus,'heyyys');
+        console.log('====================================');
+    });
 
       this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
         if (event) {
           this.animationType = event
         }
       })
-  }
+   }
 
+
+  ionViewWillEnter () {
+    console.log('====================================');
+    console.log("My love");
+    console.log('====================================');
+  }
 
   getAnimationStyle(animationType: string) {
      if (animationType === 'like') return 'animation-section animation-section__like';
