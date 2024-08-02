@@ -4,13 +4,13 @@
 
     <ion-buttons slot="end" >
      <ion-button>
-        <ion-icon name="notifications"></ion-icon>
+        <ion-icon [name]="displayLeftIcon(pageName)"></ion-icon>
       </ion-button>
     </ion-buttons>
 
     <ion-buttons slot="end" >
       <ion-button (click)="onSettings(pageName)">
-         <ion-icon [name]="displayLeftIcon(pageName)"></ion-icon>
+         <ion-icon [name]="displayRightIcon(pageName)"></ion-icon>
       </ion-button>
     </ion-buttons>
 

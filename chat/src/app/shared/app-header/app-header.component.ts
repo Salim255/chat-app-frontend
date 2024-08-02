@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
-
+import { Subscription } from "rxjs";
+import { TapService } from "src/app/services/tap/tap.service";
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
@@ -10,18 +11,27 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
 
   @Input() pageName:any = null;
-  constructor(){}
+  hidingTapStatus:any;
+  private tapStatusSourceSubscription!: Subscription;
+
+  constructor(private tapService: TapService){}
 
  ngOnInit(): void {
-  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-  //Add 'implements OnInit' to the class.
-  console.log(this.pageName);
+  this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+    console.log(status);
+    this.hidingTapStatus = status
 
+   })
  }
- displayLeftIcon(pageName: string) {
+
+ displayRightIcon(pageName: string) {
   switch(pageName) {
-    case 'community':
-      return 'options';
+    case 'discover':
+      if (this.hidingTapStatus === 'hide') {
+        return 'eye-off'
+      } else {
+        return 'options';
+      }
 
     case 'account':
         return 'settings';
@@ -40,6 +50,20 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
  }
 
+ displayLeftIcon(pageName: string) {
+  switch(pageName) {
+    case 'discover':
+      if (this.hidingTapStatus === 'hide') {
+           return ''
+      } else {
+        return  'notifications';
+      }
+
+    default:
+      return  'notifications';
+  }
+ }
+
  onSettings(pageName: string) {
   if (pageName === 'account') {
     this.settings.emit()
@@ -50,5 +74,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
  ngOnDestroy(): void {
    this.pageName = null;
+   if (this.tapStatusSourceSubscription) {
+    this.tapStatusSourceSubscription.unsubscribe();
+  }
  }
 }

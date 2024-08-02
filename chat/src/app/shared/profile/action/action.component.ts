@@ -13,7 +13,7 @@ import { TapService } from "src/app/services/tap/tap.service";
 export class ActionComponent implements OnInit, OnDestroy {
   @Input() profile!: Foreigner;
   foreignersListStatus: any ;
-
+  hidingTapStatus:any;
   private tapStatusSourceSubscription!: Subscription;
   private foreignersListStatusSource!: Subscription;
 
@@ -26,6 +26,11 @@ export class ActionComponent implements OnInit, OnDestroy {
         this.foreignersListStatus = status
      });
 
+     this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+      console.log(status);
+      this.hidingTapStatus = status
+
+     })
   }
 
   ionViewWillEnter () {
@@ -50,6 +55,10 @@ export class ActionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.foreignersListStatusSource) {
       this.foreignersListStatusSource.unsubscribe()
+    }
+
+    if (this.tapStatusSourceSubscription) {
+      this.tapStatusSourceSubscription.unsubscribe();
     }
   }
 }
