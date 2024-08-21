@@ -1,14 +1,17 @@
 ion-grid {
 
   ion-row {
-    ion-col {
+     ion-col {
       text-align: center;
-
-      /* ::ng-deep app-button {
-        ion-button {
-          //--background: red;
-        }
-      } */
+     }
+  }
+  ion-row:first-child {
+    margin-bottom: 6rem;
+    ion-col {
+      display: flex;
+      justify-content: center;
     }
   }
+
 }
+

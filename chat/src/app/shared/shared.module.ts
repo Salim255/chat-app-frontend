@@ -15,13 +15,17 @@ import { AnimationComponent } from "./profile/action/action-animation/animation.
 import { AppHeaderComponent } from "./app-header/app-header.component";
 import { NetworkConnectionComponent } from "./network-connection/network-connection.component";
 import { AppButtonComponent } from "./app-button/app-button.component";
+import { AccountAvatarComponent } from "./account-avatar/account-avatar.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent  ],
+  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent ,
+    AccountAvatarComponent
+   ],
   exports:
   [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent,
-    AppButtonComponent
+    AppButtonComponent,
+    AccountAvatarComponent
    ],
   imports:
   [

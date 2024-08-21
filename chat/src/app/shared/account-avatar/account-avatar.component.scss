@@ -1,0 +1,56 @@
+.container {
+  position: relative;
+  height: 10rem;
+  width: 16rem;
+  ion-avatar {
+    height: 4rem;
+    width: 4rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+  }
+
+  .layer {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   border-radius: 50%;
+   &__1 {
+    height: 4.3rem;
+    width: 4.3rem;
+    z-index: 4;
+    background: rgb(255, 255, 255);
+   }
+
+   &__2 {
+    height: 5.5rem;
+    width: 5.5rem;
+    z-index: 3;
+    background: rgb(49, 87, 98);
+   }
+   &__3 {
+    height: 6rem;
+    width: 6rem;
+    z-index: 2;
+    background: rgb(87, 162, 183);
+   }
+   &__4 {
+    background: rgb(186, 232, 233);
+    height: 8.3rem;
+    width: 8.3rem;
+    z-index: 1;
+   }
+   &__5 {
+    border: 1px solid rgb(87, 162, 183);
+    height: 8.4rem;
+    width: 8.4rem;
+    z-index: .5;
+   }
+  }
+}
+
+
+
