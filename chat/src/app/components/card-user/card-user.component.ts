@@ -15,8 +15,10 @@ export class CardUserComponent implements OnInit, OnDestroy {
   @Input() foreigner!: any;
   @Input() lastProfileIndex: any;
   @Input() profileIndex: any;
-  @Input() profileImages: any;
+  @Input()   profileImages: any;
   @Input() hidingTapStatus: any;
+
+
 
 
   private animationEventSource!: Subscription;
@@ -30,17 +32,11 @@ export class CardUserComponent implements OnInit, OnDestroy {
     private tapService : TapService ) { }
 
     ngOnInit(): void {
-
       if (this.profileImages) {
         this.foreigner.images = this.profileImages
       }
-
-
       this.tapHidingStatusSourceSubscription = this.tapService.getHidingTapStatus.pipe(take(1)).subscribe( status => {
         this.hidingTapStatus = status;
-        console.log('====================================');
-        console.log( this.hidingTapStatus,'heyyys');
-        console.log('====================================');
     });
 
       this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
@@ -51,11 +47,6 @@ export class CardUserComponent implements OnInit, OnDestroy {
    }
 
 
-  ionViewWillEnter () {
-    console.log('====================================');
-    console.log("My love");
-    console.log('====================================');
-  }
 
   getAnimationStyle(animationType: string) {
      if (animationType === 'like') return 'animation-section animation-section__like';
@@ -69,6 +60,8 @@ export class CardUserComponent implements OnInit, OnDestroy {
       this.tapService.setTapEventSource(data)
     }
   }
+
+
 
   ngOnDestroy(): void {
     if (this.animationEventSource) {

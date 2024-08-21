@@ -6,7 +6,12 @@ ion-tabs {
     border: none;
   }
 
-  app-profile-action {
-    margin-bottom: 2rem;
+  .profile-action {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.005), rgba(12, 12, 12, 1));
+    height: 5rem;
+    app-profile-action {
+      padding-bottom: 1rem;
+    }
   }
 }
+

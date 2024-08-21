@@ -4,6 +4,7 @@ ion-grid {
   padding: 0;
   padding-top: 5rem;
   position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
   ion-row {
     ion-col {
       margin: 0;

@@ -1,17 +1,25 @@
 <app-header [pageName]="'matches'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
+  <ion-grid *ngIf="!isEmpty">
     <ion-row>
       <ion-col>
           <app-search-bar></app-search-bar>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row >
       <ion-col>
         <ion-list *ngFor="let match of matchesArray" >
             <app-match-item [match]="match" ></app-match-item>
         </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="isEmpty" class="matches-place-holder">
+    <ion-row>
+      <ion-col size="12">
+        <app-match-place-holder></app-match-place-holder>
       </ion-col>
     </ion-row>
   </ion-grid>

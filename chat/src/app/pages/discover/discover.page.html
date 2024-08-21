@@ -1,24 +1,26 @@
-<app-header [pageName]="'discover'"></app-header>
+<app-header [pageName]="'discover'" [viewedProfile]="viewedProfile"></app-header>
 
 <ion-content [fullscreen]="true" *ngIf="isConnected">
   <ion-grid>
     <ion-row  *ngIf="hidingTapStatus==='show'">
       <ion-col size-md="6" >
-        <app-card-user [ngClass]="{'swipeable': true}"  offset-md="3" *ngFor="let foreigner of foreignersList; let i = index " [foreigner]="foreigner"
+        <app-card-user [ngClass]="{'swipeable': true}"  offset-md="3" *ngFor="let foreigner of foreignersList; let i = index "
+        [foreigner]="foreigner"
         appSwipe
         (swipe)="onSwipe($event, i)"
         [style.transform]="i === currentIndex ?transform:''"
         [lastProfileIndex]="currentIndex"
         [profileIndex]="i"
         [profileImages]="profilesImages[i]"
-        [hidingTapStatus]="hidingTapStatus"></app-card-user>
+        [hidingTapStatus]="hidingTapStatus"
+        (click)="setClickedProfile(foreigner, profilesImages[i], i)"
+        ></app-card-user>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="hidingTapStatus==='hide'">
       <ion-col>
        <app-profile
-        [profileImages]="profilesImages[0]"
-        [foreigner]="foreignersList[0]"
+        [foreigner]="viewedProfile"
         ></app-profile>
       </ion-col>
     </ion-row>

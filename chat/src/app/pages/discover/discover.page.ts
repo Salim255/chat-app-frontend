@@ -20,7 +20,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private foreignersSource!: Subscription;
   foreignersList: Array < Foreigner >
 
-  activeProfile : any;
+  viewedProfile : any;
+  private viewedProfileSubscription!: Subscription;
   private likeActionSource!: Subscription;
   private disLikeActionSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
@@ -71,6 +72,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
             this.setForeignersListStatus();
           }
         });
+
+        //
+        this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
+          this.viewedProfile = profile
+         })
       }
     })
   }
@@ -121,6 +127,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
   getCurrentProfile() {
     const profileListLength = this.getProfilesListLength()
     return this.foreignersList[ profileListLength - 1 ];
+  }
+
+  setClickedProfile(foreigner: any, profilesImages: any, index: number) {
+    console.log(foreigner, profilesImages, index);
   }
 
   skipFriend () {
@@ -235,6 +245,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
     }
     if (this.tapHidingStatusSourceSubscription) {
       this.tapHidingStatusSourceSubscription.unsubscribe();
+    }
+    if (this.viewedProfileSubscription) {
+      this.viewedProfileSubscription.unsubscribe()
     }
   }
 }

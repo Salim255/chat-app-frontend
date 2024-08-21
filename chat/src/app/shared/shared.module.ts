@@ -14,12 +14,17 @@ import { SliderComponent } from "./profile/slider/slider.component";
 import { AnimationComponent } from "./profile/action/action-animation/animation.component";
 import { AppHeaderComponent } from "./app-header/app-header.component";
 import { NetworkConnectionComponent } from "./network-connection/network-connection.component";
+import { AppButtonComponent } from "./app-button/app-button.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent  ],
-  exports: [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent ],
-  imports: [
+  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent  ],
+  exports:
+  [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent,
+    AppButtonComponent
+   ],
+  imports:
+  [
     IonicModule,
     CommonModule
   ]

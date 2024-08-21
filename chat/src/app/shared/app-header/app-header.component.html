@@ -1,7 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar >
-    <app-logo    ></app-logo>
-
+    <app-logo  *ngIf="hidingTapStatus === 'show'"></app-logo>
+    <ion-text  *ngIf="hidingTapStatus === 'hide'" class="user-name">
+      {{
+        viewedProfile.first_name
+      }}, 31
+    </ion-text>
     <ion-buttons slot="end" >
      <ion-button>
         <ion-icon [name]="displayLeftIcon(pageName)"></ion-icon>
@@ -9,9 +13,11 @@
     </ion-buttons>
 
     <ion-buttons slot="end" >
-      <ion-button (click)="onSettings(pageName)">
-         <ion-icon [name]="displayRightIcon(pageName)"></ion-icon>
-      </ion-button>
+        <ion-icon
+         [name]="displayRightIcon(pageName)"
+          [ngClass]="setRightIconCss(pageName)"
+          (click)="onRightBtn(pageName)">
+        </ion-icon>
     </ion-buttons>
 
   </ion-toolbar>

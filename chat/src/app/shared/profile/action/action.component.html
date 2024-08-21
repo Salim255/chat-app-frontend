@@ -1,7 +1,7 @@
-<ion-grid >
+<ion-grid  >
   <ion-row>
     <ion-col class="btns" >
-      <div class="btns__undo">
+      <div class="btns__undo" *ngIf=" hidingTapStatus !== 'hide' ">
         <app-action-btn [btnType]="'undo'"></app-action-btn>
       </div>
      <div class="btns__dislike">
@@ -13,7 +13,7 @@
       <div class="btns__stars">
         <app-action-btn (click)="onAddFriend()" [btnType]="'like'"></app-action-btn>
       </div>
-      <div class="btns__boost">
+      <div class="btns__boost" *ngIf=" hidingTapStatus !== 'hide' ">
         <app-action-btn [btnType]="'boost'"></app-action-btn>
       </div>
     </ion-col>

@@ -19,5 +19,9 @@
     </ion-tab-button>
 
   </ion-tab-bar>
-  <app-profile-action *ngIf="hidingTapStatus==='hide'" class="profile-action"></app-profile-action>
+
+  <ion-tab-bar *ngIf="hidingTapStatus==='hide'" class="profile-action">
+    <app-profile-action  ></app-profile-action>
+  </ion-tab-bar>
+
 </ion-tabs>

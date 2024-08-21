@@ -10,6 +10,7 @@ import { MatchesPage } from './matches.page';
 
 import { MatchItemComponent } from 'src/app/components/matches/match-item/match-item.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatchPlaceHolderComponent } from 'src/app/components/matches/place-holder/match-place-holder.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatchesPageRoutingModule,
     SharedModule
   ],
-  declarations: [MatchesPage, MatchItemComponent]
+  declarations: [MatchesPage, MatchItemComponent,  MatchPlaceHolderComponent]
 })
 export class MatchesPageModule {}
