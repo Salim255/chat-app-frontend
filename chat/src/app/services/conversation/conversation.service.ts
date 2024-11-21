@@ -17,6 +17,7 @@ export class ConversationService {
   private partnerInfoSource = new BehaviorSubject<any | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject<any | null> (null);
 
+
   constructor(private http: HttpClient) {
 
     }

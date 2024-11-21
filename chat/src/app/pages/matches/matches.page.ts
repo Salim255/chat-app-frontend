@@ -12,7 +12,7 @@ import { MatchesService } from 'src/app/services/matches/matches.service';
 export class MatchesPage implements OnInit, OnDestroy {
   private matchesSource!: Subscription;
   matchesArray: Array < Match >;
-  isEmpty: boolean = true;
+  isEmpty: boolean = false;
   constructor(private matchesService: MatchesService) {
     this.matchesArray = []
   }

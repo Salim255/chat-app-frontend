@@ -16,7 +16,6 @@ import { FeaturesComponent } from 'src/app/components/account/features/features.
 import { FeatureCardComponent } from 'src/app/components/account/features/card/feature-card.component';
 import { FeatureCardHeaderComponent } from 'src/app/components/account/features/card/feature-card-header/feature-cared-header.component';
 import { DetailsComponent } from 'src/app/components/account/features/card/details/details.component';
-
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 

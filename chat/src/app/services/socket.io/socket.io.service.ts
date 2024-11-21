@@ -96,7 +96,7 @@ export class SocketIoService {
 
   onMessageSent() {
     this.socket.on('message_sent', (data) => {
-      //console.log(data, "Hello Data, We need to treat this message 🚨🚨🚨");
+      console.log(data, "To alert sender 🚨🚨🚨");
     });
   }
 
@@ -110,7 +110,9 @@ export class SocketIoService {
       this.comingTypingSource.next(data.status);
     })
   }
+
   onNewMessage() {
+    console.log('new_message');
     this.socket.on('new_message', (data) => {
       console.log(data, "Hello Data, We need to treat this message 🚨🚨🚨 1");
       // Dealing with delivered message
@@ -129,7 +131,10 @@ export class SocketIoService {
   }
   onMessageDelivered() {
     //console.log("Hello from message delivered");
+    console.log( 'develryde to me');
     this.socket.on('message_delivered_with_modify_fetch_messages', (data) => {
+
+
       // Run the code that modify sent messages to delivered
       let setToDelivered: Observable <any> ;
       setToDelivered = this.conversationService.updateMessagesStatus(data.chatId, 'delivered');

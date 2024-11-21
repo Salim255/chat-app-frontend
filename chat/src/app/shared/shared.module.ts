@@ -16,16 +16,19 @@ import { AppHeaderComponent } from "./app-header/app-header.component";
 import { NetworkConnectionComponent } from "./network-connection/network-connection.component";
 import { AppButtonComponent } from "./app-button/app-button.component";
 import { AccountAvatarComponent } from "./account-avatar/account-avatar.component";
+import { AppPlaceHolderComponent } from "./app-place-holder/app-place-holder.component";
+import { AppWaveComponent } from "./app-wave/app-wave.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent ,
-    AccountAvatarComponent
+    AccountAvatarComponent, AppPlaceHolderComponent,
+    AppWaveComponent
    ],
   exports:
   [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent,
-    AppButtonComponent,
-    AccountAvatarComponent
+    AppButtonComponent, AccountAvatarComponent, AppPlaceHolderComponent,
+    AppWaveComponent
    ],
   imports:
   [

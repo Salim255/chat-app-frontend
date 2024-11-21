@@ -1,12 +1,20 @@
 <app-header [pageName]="'conversations'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
+  <ion-grid *ngIf="!isEmpty">
     <ion-row>
       <ion-col>
         <ion-list *ngFor="let conversation of conversations" >
             <app-conversation [conversation]="conversation"></app-conversation>
         </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid  *ngIf="isEmpty">
+    <ion-row  class="matches-place-holder">
+      <ion-col size="12">
+        <app-place-holder></app-place-holder>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -8,14 +8,16 @@ import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
 import { LogoutComponent } from 'src/app/components/settings/logout/logout.component';
+import { SharedModule } from "../../shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SettingsPageRoutingModule
-  ],
+    SettingsPageRoutingModule,
+    SharedModule
+],
   declarations: [SettingsPage, LogoutComponent]
 })
 export class SettingsPageModule {}

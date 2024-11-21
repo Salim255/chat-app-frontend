@@ -21,10 +21,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   constructor(private tapService: TapService, private discoverService: DiscoverService){}
 
  ngOnInit(): void {
-  console.log(this.viewedProfile, "heloooooo👺👺");
-
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
-    console.log(status);
     this.hidingTapStatus = status
 
    });
@@ -54,6 +51,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     case 'conversations':
       return 'shield';
 
+    case 'matches':
+        return 'shield';
     case 'auth':
       return ;
 

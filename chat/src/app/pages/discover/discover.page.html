@@ -3,8 +3,8 @@
 <ion-content [fullscreen]="true" *ngIf="isConnected">
   <ion-grid>
     <ion-row  *ngIf="hidingTapStatus==='show'">
-      <ion-col size-md="6" >
-        <app-card-user [ngClass]="{'swipeable': true}"  offset-md="3" *ngFor="let foreigner of foreignersList; let i = index "
+      <ion-col >
+        <app-card-user [ngClass]="{'swipeable': true}"  *ngFor="let foreigner of foreignersList; let i = index "
         [foreigner]="foreigner"
         appSwipe
         (swipe)="onSwipe($event, i)"

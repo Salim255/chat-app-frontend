@@ -1,0 +1,12 @@
+ion-grid {
+  height: 100vh;
+  ion-row {
+    ion-col {
+     text-align: center;
+    }
+ }
+  ion-row:first-child {
+    margin-top: 5rem;
+    height: 30%;
+  }
+}

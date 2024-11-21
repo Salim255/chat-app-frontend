@@ -11,12 +11,16 @@ import { ConversationService } from 'src/app/services/conversation/conversation.
 export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;
   conversations!: Array<Conversation> ;
+  isEmpty: Boolean = true ;
   constructor(private conversationService: ConversationService) { }
 
   ngOnInit() {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
       if(chats){
         this.conversations = chats;
+        if (this.conversations?.length !== 0) {
+          this.isEmpty = false
+        }
       }
     })
   }
