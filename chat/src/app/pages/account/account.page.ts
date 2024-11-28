@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { AccountService } from 'src/app/services/account/account.service';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
-import { AuthService } from 'src/app/services/auth/auth.service';
+
 
 register();
 

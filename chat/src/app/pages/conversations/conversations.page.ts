@@ -18,8 +18,11 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
       if(chats){
         this.conversations = chats;
+
         if (this.conversations?.length !== 0) {
           this.isEmpty = false
+        } else {
+          this.isEmpty = true;
         }
       }
     })

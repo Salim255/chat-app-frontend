@@ -231,6 +231,8 @@ export class ConversationService {
         })
       )
   }
+
+  //
   updateMessagesStatus (chatId: number, messageStatus: string) {
     return from (Preferences.get({key: 'authData'}))
       .pipe (

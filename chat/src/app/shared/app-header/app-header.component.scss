@@ -5,10 +5,14 @@ ion-header {
     padding-left: .7rem;
     padding-right: .7rem;
 
-    ion-icon {
-      fill: var(--ion-text-color-1);
-      font-size: 2rem;
+    ion-buttons {
+      ion-icon {
+        fill: var(--ion-text-color-1);
+        font-size: 1.8rem;
+        margin-left: .5rem;
+      }
     }
+
     .btn {
       &__eye {
         font-size: 2.5rem;
@@ -22,10 +26,6 @@ ion-header {
       text-transform: capitalize;
     }
 
-    ion-button {
-      padding: 0;
-      margin: 0;
-    }
   }
 }
 

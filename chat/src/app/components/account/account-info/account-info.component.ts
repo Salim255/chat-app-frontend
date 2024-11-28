@@ -17,10 +17,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.accountInfoSource = this.accountService.getAccount.subscribe(data => {
       if (data) this.accountData = data
-
+        console.log(data, "Hello data");
      })
   }
-
 
   onEditProfile(){
       this.router.navigate(['/tabs/edit-profile'])
