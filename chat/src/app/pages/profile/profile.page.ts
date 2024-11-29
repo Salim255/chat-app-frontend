@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { Foreigner } from 'src/app/models/foreigner.model';
+import { Foreigner } from '../../models/foreigner.model';
 import { DiscoverService } from 'src/app/services/discover/discover.service';
 
 @Component({

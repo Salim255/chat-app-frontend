@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { Foreigner } from "../../../models/foreigner.model";
 import { DiscoverService } from "src/app/services/discover/discover.service";
 import { TapService } from "src/app/services/tap/tap.service";
 
