@@ -4,3 +4,10 @@ ion-header {
     --border-width: 0;
   }
 }
+
+ion-content {
+  position: relative;
+  .matches-place-holder {
+
+  }
+}

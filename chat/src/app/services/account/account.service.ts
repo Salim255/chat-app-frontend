@@ -10,8 +10,10 @@ import { Account } from 'src/app/models/account.model';
 })
 export class AccountService {
   private ENV = environment ;
-  private account = new BehaviorSubject <Account | null> (null)
-  constructor(private http: HttpClient) { }
+  private account = new BehaviorSubject <Account | null> (null);
+
+  constructor(private http: HttpClient) {
+   }
 
   fetchAccount(){
     return from(Preferences.get({key: 'authData'})).pipe(
@@ -44,7 +46,7 @@ export class AccountService {
   }
 
   private setAccountInfo (data: any) {
-      const buildAccount = new Account(data.id, data.first_name, data.last_name, data.email, data.avatar, data.is_staff, data.is_active )
+      const buildAccount = new Account(data.id, data.first_name, data.last_name, data.email, data.avatar, data.is_staff, data.is_active , [])
       this.account.next(buildAccount)
   }
 

@@ -1,0 +1,14 @@
+ion-button {
+  border-radius: 2rem;
+  font-weight: bold;
+  color: #f7fffffd;
+  font-size: 1rem;
+  padding: .4rem 0;
+  text-transform: capitalize;
+  width: 60%;
+  background: linear-gradient(
+      to right bottom,
+      rgba(#2ed4f1, 1),
+      rgba(#0c0c0c, 1)
+      );
+}

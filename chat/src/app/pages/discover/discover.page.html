@@ -1,0 +1,43 @@
+<app-header [pageName]="'discover'" [viewedProfile]="viewedProfile"></app-header>
+
+<ion-content [fullscreen]="true" *ngIf="isConnected">
+  <ion-grid>
+    <ion-row  *ngIf="hidingTapStatus==='show'">
+      <ion-col >
+        <app-card-user [ngClass]="{'swipeable': true}"  *ngFor="let foreigner of foreignersList; let i = index "
+        [foreigner]="foreigner"
+        appSwipe
+        (swipe)="onSwipe($event, i)"
+        [style.transform]="i === currentIndex ?transform:''"
+        [lastProfileIndex]="currentIndex"
+        [profileIndex]="i"
+        [profileImages]="profilesImages[i]"
+        [hidingTapStatus]="hidingTapStatus"
+        (click)="setClickedProfile(foreigner, profilesImages[i], i)"
+        ></app-card-user>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="hidingTapStatus==='hide'">
+      <ion-col>
+       <app-profile
+        [foreigner]="viewedProfile"
+        ></app-profile>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!foreignersListStatus">
+      <ion-col>
+        <app-discover-place-holder></app-discover-place-holder>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!foreignersListStatus">
+      <ion-col>
+        <ion-text>You are running out of profiles</ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <app-profile-action *ngIf="foreignersListStatus && hidingTapStatus==='show'"></app-profile-action>
+
+</ion-content>

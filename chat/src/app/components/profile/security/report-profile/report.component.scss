@@ -1,5 +1,5 @@
 ion-item {
-  --background: rgb(40, 45, 45);
+  --background: none;
   border-radius: .7rem;
   color: #fff;
   ion-button {
@@ -8,5 +8,6 @@ ion-item {
     width: 100%;
     font-size: 1.3rem;
     font-weight: bold;
+    color: var(--ion-color-secondary);
   }
 }

@@ -1,20 +1,6 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button>
-          <app-logo></app-logo>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button>  <ion-icon name="shield"></ion-icon> </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button (click)="onSettings()">
-        <ion-icon name="settings" ></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+
+
+<app-header [pageName]="'account'" (settings)="onSettings()"></app-header>
 
 <!-- Content -->
 <ion-content [fullscreen]="true">
@@ -24,6 +10,7 @@
            <app-account-info></app-account-info>
         </ion-col>
       </ion-row>
+
       <!-- Shopping cards sections -->
       <ion-row>
         <ion-col >
@@ -32,7 +19,6 @@
       </ion-row>
 
       <!-- App features section -->
-
       <ion-row>
         <ion-col>
           <app-features></app-features>

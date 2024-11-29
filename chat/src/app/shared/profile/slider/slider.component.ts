@@ -1,20 +1,58 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
+import { Subscription } from "rxjs";
+import { TapService } from "src/app/services/tap/tap.service";
+
 
 @Component({
   selector: "app-profile-slider",
   templateUrl: "./slider.component.html",
   styleUrls: ["./slider.component.scss"]
 })
-export class SliderComponent {
+export class SliderComponent implements OnInit, OnDestroy{
   @Input() profile: any;
-  swiperModules= [IonicSlides];
-  presentationData = ["https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D", "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D", "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D", "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjR8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D"];
-  constructor () {
+  @Input() swipeDirection: any;
+  @ViewChild('swiperContainer', {static: false} ) swiperContainer: any;
 
+  swiperModules= [IonicSlides];
+  presentationData:any ;
+
+  private tapEventSource!: Subscription ;
+
+  constructor (private tapService: TapService) {
+
+  }
+
+  ngOnInit(): void {
+    if (this.profile) {
+      this.presentationData = this.profile.images
+    }
+
+    this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
+      if (data?.tapSide && data?.clientId === this.profile?.id) {
+        this.onSwipe(data.tapSide)
+      }
+    })
+  }
+
+  onSwipe(swipeDirection: string) {
+     if (swipeDirection === 'right') {
+      this.swiperContainer.
+        nativeElement.swiper.slideNext();
+     } else if (swipeDirection === 'left') {
+      this.swiperContainer.
+      nativeElement.swiper.slidePrev();
+     }
   }
 
   onSlideChange(event: any){
 
   }
+
+  ngOnDestroy(): void {
+    if (this.tapEventSource) {
+      this.tapEventSource.unsubscribe()
+    }
+  }
+
 }

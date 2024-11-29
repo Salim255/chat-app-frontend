@@ -35,8 +35,13 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+@import "./theme/typography/typography";
 
 
 ion-toolbar {
-  --background: var(--ion-color-tertiary);
+ --background:  var(--ion-background-color);
+}
+
+ion-content {
+  --background: var(--ion-background-color);
 }

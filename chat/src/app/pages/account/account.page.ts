@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { AccountService } from 'src/app/services/account/account.service';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
+
 
 register();
 
@@ -11,30 +11,17 @@ register();
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage {
 
-  constructor(private accountService: AccountService, private router: Router) { }
+  constructor(
+     private accountService: AccountService,
+     private router: Router ) { }
 
-  ngOnInit() {
-    let accountOb: Observable<any> ;
-     accountOb = this.accountService.fetchAccount();
-     accountOb.subscribe({
-      error: (err) => {
-        console.log(err);
-
-      },
-      next: (res) => {
-        console.log('====================================');
-        console.log(res);
-        console.log('====================================');
-      }
-     })
+  ionViewWillEnter () {
+    this.accountService.fetchAccount().subscribe();
   }
 
   onSettings() {
-    console.log('====================================');
-    console.log("Hello Salim");
-    console.log('====================================');
     this.router.navigate(["./tabs/settings"])
   }
 

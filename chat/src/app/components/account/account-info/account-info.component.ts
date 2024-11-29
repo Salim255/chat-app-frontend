@@ -15,13 +15,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   constructor (private router: Router, private accountService: AccountService ) {}
 
   ngOnInit() {
-    console.log('Hello World');
     this.accountInfoSource = this.accountService.getAccount.subscribe(data => {
-      console.log('====================================');
-      console.log(data);
-      console.log('====================================');
       if (data) this.accountData = data
-
+        console.log(data, "Hello data");
      })
   }
 

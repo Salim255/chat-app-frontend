@@ -11,17 +11,12 @@ export class CardComponent implements OnChanges, OnInit {
   @Input() content!: string;
   @Input() logo!: string;
   constructor(private cdRef: ChangeDetectorRef){}
+
   ngOnInit() {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     console.log('Hello world');
-
-
-
   }
+
   ngOnChanges(changes: SimpleChanges) {
-
-
    this.cdRef.detectChanges();
   }
 

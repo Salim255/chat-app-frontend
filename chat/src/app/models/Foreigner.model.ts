@@ -7,6 +7,7 @@ export class Foreigner {
     public last_name: string,
     private avatar: string,
     private is_staff: boolean,
+    public images: string []
   ) {}
 
 }

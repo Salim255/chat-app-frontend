@@ -32,14 +32,18 @@ export class ConversationComponent  implements OnChanges {
 
   ngOnChanges (changes: SimpleChanges): void {
     if(this.conversation.messages){
-      let messagesSize = this.conversation.messages.length;
+     let messagesSize = this.conversation.messages.length;
      this.setLastMessage(this.conversation.messages[messagesSize - 1].content);
       this.getPartnerInfo(this.conversation.users);
     }
   }
 
   openChat () {
+    console.log(this.conversation, "🥰🥰");
     if (this.conversation && this.partnerInfo.partner_id) {
+
+
+
       this.conversationService.setActiveConversation(this.conversation);
       this.conversationService.getActiveConversation.subscribe((conversation) => {
         if (conversation ) {

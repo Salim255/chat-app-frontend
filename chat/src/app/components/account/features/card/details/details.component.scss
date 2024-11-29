@@ -26,12 +26,16 @@ ion-grid {
       font-weight: bold;
     }
 
+
     ion-col:not(:first-child) {
+
       div:first-child {
         text-align: right;
+        text-transform: capitalize;
       }
       div:not(:first-child) {
         display: flex;
+
         ion-icon {
           margin-left: auto;
         }

@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit} from "@angular/core";
+import { Subscription } from "rxjs";
 import { Foreigner } from "src/app/models/foreigner.model";
-import { CommunityService } from "src/app/services/community/community.service";
+import { DiscoverService } from "src/app/services/discover/discover.service";
+import { TapService } from "src/app/services/tap/tap.service";
 
 @Component({
   selector: "app-profile-action",
@@ -8,19 +10,55 @@ import { CommunityService } from "src/app/services/community/community.service";
   styleUrls: ["./action.component.scss"]
 })
 
-export class ActionComponent {
+export class ActionComponent implements OnInit, OnDestroy {
   @Input() profile!: Foreigner;
+  foreignersListStatus: any ;
+  hidingTapStatus:any;
+  private tapStatusSourceSubscription!: Subscription;
+  private foreignersListStatusSource!: Subscription;
 
-
-  constructor(private communityService: CommunityService) {
+  constructor(private discoverService: DiscoverService, private tapService: TapService) {
 
   }
 
+  ngOnInit(): void {
+     this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
+        this.foreignersListStatus = status
+     });
+
+     this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+      console.log(status);
+      this.hidingTapStatus = status
+
+     })
+  }
+
+  ionViewWillEnter () {
+
+ }
+
   onSkip () {
-     this.communityService.triggerDislikeProfile('skip')
+     this.discoverService.triggerDislikeProfile('skip');
+     this.setTapHidingStatus();
+
   }
 
   onAddFriend () {
-    this.communityService.triggerLikeProfile('like')
+    this.discoverService.triggerLikeProfile('like');
+    this.setTapHidingStatus()
+  }
+
+  setTapHidingStatus() {
+    this.tapService.setTapHidingStatus('show')
+  }
+
+  ngOnDestroy(): void {
+    if (this.foreignersListStatusSource) {
+      this.foreignersListStatusSource.unsubscribe()
+    }
+
+    if (this.tapStatusSourceSubscription) {
+      this.tapStatusSourceSubscription.unsubscribe();
+    }
   }
 }

@@ -1,21 +1,6 @@
-ion-grid {
-
-  ion-row {
-    //background: green;
-    ion-col {
-      --padding-start: 0px;
-      --padding-end: 0px;
-    }
-    ion-col:not(:last-child) {
-  }
-}
+ion-col {
+  --padding-start: 0px;
+  --padding-end: 0px;
 }
 
-::ng-deep app-shopping-card {
-  /* Your styles here */
-  ion-card {
 
-
-  }
-
-}
