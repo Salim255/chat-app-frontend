@@ -32,6 +32,7 @@ export class SocketIoService {
       transports: ['websocket', 'polling'],
       withCredentials: true // Ensure credentials are sent with the request
     }); */
+    //
 
     this.socket = io('https://chat-app-backend-duj2.onrender.com',  {
       transports: ['websocket', 'polling'],
