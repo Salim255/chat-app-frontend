@@ -28,7 +28,12 @@ export class SocketIoService {
     });
 
     // Establish connection
-    this.socket = io('http://localhost:4003',  {
+ /*    this.socket = io('http://localhost:4003',  {
+      transports: ['websocket', 'polling'],
+      withCredentials: true // Ensure credentials are sent with the request
+    }); */
+
+    this.socket = io('https://chat-app-backend-duj2.onrender.com',  {
       transports: ['websocket', 'polling'],
       withCredentials: true // Ensure credentials are sent with the request
     });

@@ -1,12 +1,9 @@
-ion-item {
-  --background: var(--ion-color-primary);
-  text-align: center;
-  border-radius: .2rem;
-  ion-button {
-    width: 100%;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    text-transform: capitalize;
+ion-grid {
+
+  ion-row {
+
+    ion-col {
+        text-align: center;
+    }
   }
 }
