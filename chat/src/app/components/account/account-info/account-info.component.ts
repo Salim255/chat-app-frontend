@@ -21,6 +21,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
      })
   }
 
+
   onEditProfile(){
       this.router.navigate(['/tabs/edit-profile'])
   }

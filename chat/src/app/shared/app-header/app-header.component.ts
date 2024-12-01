@@ -28,8 +28,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
    this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
     this.viewedProfile = profile;
-    console.log(profile, "Hello");
-
    })
  }
 
@@ -89,7 +87,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
  }
  onRightBtn(pageName: string) {
-  console.log('Hello on right btn action', pageName);
   if (pageName === 'account') {
     this.settings.emit();
   }

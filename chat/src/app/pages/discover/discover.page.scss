@@ -17,15 +17,7 @@ ion-content {
      }
     }
 
-    ion-row:nth-child(2) {
-      position: fixed;
-      left: 50%;
-      top: 58%;
-      transform: translate(-50%, -50%);
-    }
-
     ion-row:last-child {
-      //margin-top: 4rem;
       ion-col {
         text-align: center;
         color: rgb(74, 74, 74);

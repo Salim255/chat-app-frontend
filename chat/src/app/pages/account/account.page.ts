@@ -17,7 +17,7 @@ export class AccountPage {
      private accountService: AccountService,
      private router: Router ) { }
 
-  ionViewWillEnter () {
+  ngOnInit(): void {
     this.accountService.fetchAccount().subscribe();
   }
 
