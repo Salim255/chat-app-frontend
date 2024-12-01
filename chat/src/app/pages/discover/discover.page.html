@@ -31,11 +31,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row *ngIf="!foreignersListStatus">
-      <ion-col>
-        <ion-text>You are running out of profiles</ion-text>
-      </ion-col>
-    </ion-row>
+
   </ion-grid>
 
   <app-profile-action *ngIf="foreignersListStatus && hidingTapStatus==='show'"></app-profile-action>

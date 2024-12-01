@@ -10,5 +10,10 @@ ion-content {
   --background: var(--ion-background-color);
   ion-grid {
     margin-top: 1rem;
+    position: fixed;
+    left: 50%;
+    top: 60%;
+    transform: translate(-50%, -50%);
+    width: 100%;
   }
 }
