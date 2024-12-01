@@ -36,8 +36,6 @@ export class MatchesService {
           }
         });
       }), tap( response => {
-        //console.log(response);
-
         this.matchesArraySource.next(response.data)
       })
     )
