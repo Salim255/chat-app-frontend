@@ -25,13 +25,12 @@
       </ion-col>
     </ion-row>
 
+    <!-- Place holder  -->
     <ion-row *ngIf="!foreignersListStatus">
       <ion-col>
-        <app-discover-place-holder></app-discover-place-holder>
+         <app-place-holder [pageName]="'discover'"></app-place-holder>
       </ion-col>
     </ion-row>
-
-
   </ion-grid>
 
   <app-profile-action *ngIf="foreignersListStatus && hidingTapStatus==='show'"></app-profile-action>

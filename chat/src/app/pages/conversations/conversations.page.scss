@@ -5,13 +5,3 @@ ion-header {
   }
 }
 
-ion-content {
-  position: relative;
-  .matches-place-holder {
-    position: fixed;
-    left: 50%;
-    top: 58%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-  }
-}
