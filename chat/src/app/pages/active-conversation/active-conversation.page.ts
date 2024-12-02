@@ -8,12 +8,12 @@ import { ConversationService } from "src/app/features/conversations/services/con
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({
-  selector: 'app-active-chat',
-  templateUrl: './active-chat.page.html',
-  styleUrls: ['./active-chat.page.scss']
+  selector: 'app-active-conversation',
+  templateUrl: './active-conversation.page.html',
+  styleUrls: ['./active-conversation.page.scss']
 })
 
-export class ActiveChatPage implements OnDestroy {
+export class ActiveConversationPage implements OnDestroy {
 
   private typingSubscription!: Subscription;
   private comingMessageEvent!: Subscription;

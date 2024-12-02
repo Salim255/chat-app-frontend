@@ -28,8 +28,8 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'active-chat',
-    loadChildren: () => import('../pages/active-chat/active-chat.Module').then( (m) => m.ActiveChatPageModule)
+    path: 'active-conversation',
+    loadChildren: () => import('../pages/active-conversation/active-conversation.Module').then( (m) => m.ActiveConversationPageModule)
   }
   ,
   {

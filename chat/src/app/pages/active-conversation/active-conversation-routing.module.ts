@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { ActiveChatPage } from "./active-chat.page";
+import { ActiveConversationPage } from "./active-conversation.page";
 
 const routes: Routes = [
   {
     path: '',
-    component: ActiveChatPage,
+    component: ActiveConversationPage,
     children:
     [
       {
@@ -27,6 +27,6 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 
-export class ActiveChatPageRoutingModule {
+export class ActiveConversationPageRoutingModule {
 
 }
