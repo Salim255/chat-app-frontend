@@ -8,8 +8,8 @@
   align-items: center;
 
   ion-avatar {
-    height: 4rem;
-    width: 4rem;
+    height: 6rem;
+    width: 6rem;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -43,14 +43,14 @@
     }
 
     &__4{
-      width: 9.625rem;
-      height: 9.625rem;
+      width: 10.625rem;
+      height: 10.625rem;
       animation-delay: 1.2s;
     }
 
     &__5{
-      width: 10.85rem;
-      height: 10.85rem;
+      width: 16.85rem;
+      height: 16.85rem;
       animation-delay: 1.6s;
     }
   }

@@ -1,7 +1,7 @@
 ion-grid {
   position: fixed;
     left: 50%;
-    top: 58%;
+    top: 60%;
     transform: translate(-50%, -50%);
     width: 90%;
 
@@ -15,7 +15,6 @@ ion-grid {
   ion-row:nth-child(even) {
       ion-col {
         display: flex;
-
         ion-text {
           margin: auto;
           text-align: left;
@@ -23,8 +22,8 @@ ion-grid {
         }
       }
   }
-
   ion-row:last-child {
+    padding-top: .5rem;
       ion-col {
         text-align: center;
       }

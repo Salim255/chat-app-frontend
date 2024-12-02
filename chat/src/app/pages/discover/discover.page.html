@@ -8,7 +8,7 @@
         [foreigner]="foreigner"
         appSwipe
         (swipe)="onSwipe($event, i)"
-        [style.transform]="i === currentIndex ?transform:''"
+        [style.transform]="i === currentIndex ? transform : '' "
         [lastProfileIndex]="currentIndex"
         [profileIndex]="i"
         [profileImages]="profilesImages[i]"
@@ -33,6 +33,5 @@
     </ion-row>
   </ion-grid>
 
-  <app-profile-action *ngIf="foreignersListStatus && hidingTapStatus==='show'"></app-profile-action>
-
+  <app-profile-action  ></app-profile-action>
 </ion-content>

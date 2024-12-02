@@ -12,6 +12,7 @@ import { TapService } from "src/app/services/tap/tap.service";
 
 export class ActionComponent implements OnInit, OnDestroy {
   @Input() profile!: Foreigner;
+
   foreignersListStatus: any ;
   hidingTapStatus:any;
   private tapStatusSourceSubscription!: Subscription;
@@ -27,15 +28,10 @@ export class ActionComponent implements OnInit, OnDestroy {
      });
 
      this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
-      console.log(status);
       this.hidingTapStatus = status
 
      })
   }
-
-  ionViewWillEnter () {
-
- }
 
   onSkip () {
      this.discoverService.triggerDislikeProfile('skip');
