@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
 import { Partner } from 'src/app/interfaces/partner.interface';
 
 @Component({
-  selector: 'app-conversation',
-  templateUrl: './conversation.component.html',
-  styleUrls: ['./conversation.component.scss'],
+  selector: 'app-conversation-item',
+  templateUrl: './conversation-item.component.html',
+  styleUrls: ['./conversation-item.component.scss'],
 })
 export class ConversationComponent  implements OnChanges {
   @Input() conversation!: Conversation;
