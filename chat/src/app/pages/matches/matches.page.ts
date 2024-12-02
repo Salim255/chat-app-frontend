@@ -11,6 +11,7 @@ import { MatchesService } from 'src/app/services/matches/matches.service';
 
 export class MatchesPage implements OnInit, OnDestroy {
   private matchesSource!: Subscription;
+  placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
   matchesArray: Array < Match >;
   isEmpty: boolean = false;
   constructor(private matchesService: MatchesService) {
