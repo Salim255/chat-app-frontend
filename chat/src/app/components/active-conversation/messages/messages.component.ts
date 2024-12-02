@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
-import { AuthService } from "src/app/services/auth/auth.service";
+import { AuthService } from "src/app/core/services/auth/auth.service";
 @Component({
   selector: 'app-chat-messages',
   templateUrl: './messages.component.html',

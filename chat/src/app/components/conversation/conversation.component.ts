@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Conversation } from 'src/app/models/activeConversation.model';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
 
 import { Router } from '@angular/router';

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { Match } from 'src/app/models/friend.model';
 import { ConversationService } from 'src/app/services/conversation/conversation.service';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-match-item',

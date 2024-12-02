@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { createChatInfo } from "src/app/interfaces/chat.interface";
 import { Message } from "src/app/interfaces/message.interface";
-import { AuthService } from "src/app/services/auth/auth.service";
+import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ConversationService } from "src/app/services/conversation/conversation.service";
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 

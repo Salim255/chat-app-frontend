@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable} from 'rxjs';
 import { ConversationService } from '../conversation/conversation.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../core/services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'

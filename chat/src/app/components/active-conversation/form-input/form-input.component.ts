@@ -3,7 +3,7 @@ import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
 
 
-import { AuthService } from "src/app/services/auth/auth.service";
+import { AuthService } from "src/app/core/services/auth/auth.service";
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({

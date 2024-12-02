@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, output } from "@angular/core";
 import { NgForm } from '@angular/forms';
 import { Observable } from "rxjs";
 import { AuthPost } from "src/app/interfaces/auth.interface";
-import { AuthService } from "src/app/services/auth/auth.service";
+import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Router } from "@angular/router";
 
 @Component({

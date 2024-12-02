@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { environment } from '../../../environments/environment';
-import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
+import { environment } from '../../../../environments/environment';
+import { AuthPost, AuthResponse } from '../../../interfaces/auth.interface';
 import { User } from 'src/app/models/user.model';
 import { BehaviorSubject, from, map, tap } from 'rxjs';
 
