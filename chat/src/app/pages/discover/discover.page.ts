@@ -85,14 +85,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
      this.discoverService.fetchUsers().subscribe();
      this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
       this.hidingTapStatus = status;
-      console.log(this.hidingTapStatus);
-
     })
   }
 
   addFriend(){
     const foreigner =  this.getCurrentProfile();
-
     if (foreigner?.id) {
       let addFriendObs: Observable<any>
       addFriendObs = this.discoverService.addFriend(foreigner.id);
@@ -160,7 +157,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   onSwipe(event: any, index: number) {
     this.currentIndex = index;
 
-     if (this.hidingTapStatus) return
+     if (!this.hidingTapStatus) return
 
     if (event.dirX === 'right') {
       this.counterX += 1;
@@ -169,6 +166,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
       }
       this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
       this.animationService.animationListener('like');
+
+
 
     } else if (event.dirX === 'left') {
       this.counterX -= 1;
