@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
-import { Account } from "src/app/models/account.model";
-import { AccountService } from "src/app/services/account/account.service";
+import { Account } from "src/app/features/account/models/account.model";
+import { AccountService } from "src/app/features/account/services/account.service";
 @Component({
   selector: 'app-account-info',
   templateUrl: './account-info.component.html',

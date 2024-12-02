@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ConversationService } from 'src/app/services/conversation/conversation.service';
+import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 @Component({
   selector: 'app-messages',

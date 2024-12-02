@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AccountService } from 'src/app/services/account/account.service';
+import { AccountService } from 'src/app/features/account/services/account.service';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 

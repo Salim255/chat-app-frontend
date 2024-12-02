@@ -3,7 +3,7 @@ import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject,from, map, switchMap, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Account } from 'src/app/models/account.model';
+import { Account } from 'src/app/features/account/models/account.model';
 
 @Injectable({
   providedIn: 'root'

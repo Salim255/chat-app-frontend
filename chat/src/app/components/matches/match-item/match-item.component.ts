@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { Match } from 'src/app/models/friend.model';
-import { ConversationService } from 'src/app/services/conversation/conversation.service';
+import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({

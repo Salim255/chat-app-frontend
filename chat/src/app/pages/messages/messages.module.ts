@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { MessagesPageRoutingModule } from './messages-routing.module';
 
 import { MessagesPage } from './messages.page';
-import { MessagesComponent } from 'src/app/components/active-conversation/messages/messages.component';
-import { TypingComponent } from 'src/app/components/active-conversation/typing/typing.component';
+import { MessagesComponent } from 'src/app/features/active-conversation/components/messages/messages.component';
+import { TypingComponent } from 'src/app/features/active-conversation/components/typing/typing.component';
 
 @NgModule({
   imports: [

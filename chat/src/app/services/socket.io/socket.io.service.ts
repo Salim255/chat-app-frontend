@@ -3,7 +3,7 @@ import { io, Socket } from 'socket.io-client';
 
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable} from 'rxjs';
-import { ConversationService } from '../conversation/conversation.service';
+import { ConversationService } from '../../features/conversations/services/conversations.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 
 @Injectable({
