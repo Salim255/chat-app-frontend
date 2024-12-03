@@ -7,14 +7,15 @@
       appTap
       (tapSide)="onTapSide($event)"
       >
-          <app-user-information
+        <app-profile-coordination
           *ngIf="hidingTapStatus==='show'"
           [profile]="foreigner"
           >
-          </app-user-information>
+        </app-profile-coordination>
       </div>
     </ion-col>
   </ion-row>
+
   <ion-row
   [ngClass]="getAnimationStyle(animationType)"
   *ngIf="lastProfileIndex === profileIndex" >

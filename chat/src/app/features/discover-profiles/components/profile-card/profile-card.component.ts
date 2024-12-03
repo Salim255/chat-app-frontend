@@ -7,11 +7,11 @@ import { TapService } from 'src/app/services/tap/tap.service';
 export type displayTap =  'show' | 'hide';
 
 @Component({
-  selector: 'app-card-user',
-  templateUrl: './card-user.component.html',
-  styleUrls: ['./card-user.component.scss'],
+  selector: 'app-profile-card',
+  templateUrl: './profile-card.component.html',
+  styleUrls: ['./profile-card.component.scss'],
 })
-export class CardUserComponent implements OnInit, OnDestroy {
+export class ProfileCardComponent implements OnInit, OnDestroy {
   @Input() foreigner!: any;
   @Input() lastProfileIndex: any;
   @Input() profileIndex: any;
@@ -55,6 +55,7 @@ export class CardUserComponent implements OnInit, OnDestroy {
   }
 
   onTapSide(side: any) {
+
     if (side) {
       const data = {clientId: this.foreigner.id, tapSide: side }
       this.tapService.setTapEventSource(data)

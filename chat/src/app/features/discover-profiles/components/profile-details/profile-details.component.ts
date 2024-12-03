@@ -1,12 +1,12 @@
-import { Component, input, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  selector: 'app-profile-details',
+  templateUrl: './profile-details.component.html',
+  styleUrls: ['./profile-details.component.scss']
 })
 
-export class ProfileComponent implements OnInit {
+export class ProfileDetailsComponent implements OnInit {
   @Input() profileImages: any;
   @Input() foreigner: any;
 

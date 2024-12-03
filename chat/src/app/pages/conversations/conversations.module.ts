@@ -18,6 +18,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ConversationsPageRoutingModule,
     SharedModule
   ],
-  declarations: [ConversationsPage, ConversationComponent]
+  declarations: [ ConversationsPage, ConversationComponent ]
 })
 export class ConversationsPageModule {}

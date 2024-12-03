@@ -155,11 +155,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
 
   onSwipe(event: any, index: number) {
+
     this.currentIndex = index;
 
-     if (!this.hidingTapStatus) return
+    if (!this.hidingTapStatus) return
 
     if (event.dirX === 'right') {
+
       this.counterX += 1;
       if (this.rotateCounterX< 7) {
         this.rotateCounterX += 0.3
