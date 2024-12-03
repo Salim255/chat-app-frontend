@@ -5,10 +5,10 @@ import { ConversationService } from 'src/app/features/conversations/services/con
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 @Component({
   selector: 'app-messages',
-  templateUrl: './messages.page.html',
-  styleUrls: ['./messages.page.scss'],
+  templateUrl: './active-conversation-messages.page.html',
+  styleUrls: ['./active-conversation-messages.page.scss'],
 })
-export class MessagesPage implements OnInit, OnDestroy {
+export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
   private messagesSource!: Subscription;
   private typingSubscription!: Subscription;

@@ -10,7 +10,7 @@ const routes: Routes = [
     [
       {
        path: 'messages',
-       loadChildren: () => import('../messages/messages-routing.module').then((m) => m.MessagesPageRoutingModule)
+       loadChildren: () => import('./active-conversation-messages/active-conversation-messages-routing.module').then((m) => m.MessagesPageRoutingModule)
       },
       {
         path: '',

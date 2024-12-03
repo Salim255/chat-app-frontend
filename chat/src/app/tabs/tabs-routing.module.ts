@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'active-conversation',
-    loadChildren: () => import('../pages/active-conversation/active-conversation.Module').then( (m) => m.ActiveConversationPageModule)
+    loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
   }
   ,
   {

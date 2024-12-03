@@ -28,6 +28,6 @@ import { ProfileDetailsComponent } from "./components/profile-details/profile-de
    ]
 })
 
-export class DiscoverProfilesModule {
+export class DiscoverProfilesFeatureModule {
 
 }

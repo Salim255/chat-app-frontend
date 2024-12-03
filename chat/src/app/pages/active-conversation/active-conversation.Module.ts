@@ -2,11 +2,11 @@ import { NgModule } from "@angular/core";
 import { ActiveConversationPageRoutingModule } from "./active-conversation-routing.module";
 import { IonicModule } from "@ionic/angular";
 import { ActiveConversationPage } from "./active-conversation.page";
-import { ActiveConversationModule } from "src/app/features/active-conversation/active-conversation.module";
+import { ActiveConversationFeatureModule } from "src/app/features/active-conversation/active-conversation-feature.module";
 
 
 @NgModule({
-  imports: [IonicModule, ActiveConversationPageRoutingModule, ActiveConversationModule],
+  imports: [IonicModule, ActiveConversationPageRoutingModule, ActiveConversationFeatureModule ],
   declarations: [ActiveConversationPage ]
 })
 export class ActiveConversationPageModule {

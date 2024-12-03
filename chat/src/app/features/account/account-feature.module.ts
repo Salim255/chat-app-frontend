@@ -22,6 +22,6 @@ exports: [ AccountInfoComponent, ShoppingCardsComponent,
   CardComponent, FeaturesComponent, FeatureCardComponent,
   FeatureCardHeaderComponent, DetailsComponent ]
 })
-export class AccountModule {
+export class AccountFeatureModule {
 
 }

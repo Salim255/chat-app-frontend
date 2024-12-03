@@ -11,6 +11,6 @@ import { FormsModule } from "@angular/forms";
   declarations: [ headerComponent, FormInputComponent ]
 })
 
-export class ActiveConversationModule {
+export class ActiveConversationFeatureModule {
 
 }

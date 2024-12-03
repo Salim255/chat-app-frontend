@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { AccountPageRoutingModule } from './account-routing.module';
 import { AccountPage } from './account.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { AccountModule } from 'src/app/features/account/account.module';
+import { AccountFeatureModule } from 'src/app/features/account/account-feature.module';
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import { AccountModule } from 'src/app/features/account/account.module';
     IonicModule,
     AccountPageRoutingModule,
     SharedModule,
-    AccountModule
+    AccountFeatureModule
   ],
   declarations: [ AccountPage ]
 })

@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MessagesPageRoutingModule } from './messages-routing.module';
+import { MessagesPageRoutingModule } from './active-conversation-messages-routing.module';
 
-import { MessagesPage } from './messages.page';
+import { ActiveConversationMessagesPage } from './active-conversation-messages.page';
+
 import { MessagesComponent } from 'src/app/features/active-conversation/components/messages/messages.component';
 import { TypingComponent } from 'src/app/features/active-conversation/components/typing/typing.component';
 
@@ -17,6 +18,6 @@ import { TypingComponent } from 'src/app/features/active-conversation/components
     IonicModule,
     MessagesPageRoutingModule,
   ],
-  declarations: [MessagesPage,MessagesComponent, TypingComponent]
+  declarations: [ActiveConversationMessagesPage, MessagesComponent, TypingComponent]
 })
 export class MessagesPageModule {}
