@@ -28,21 +28,17 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'active-chat',
-    loadChildren: () => import('../pages/active-chat/active-chat.Module').then( (m) => m.ActiveChatPageModule)
+    path: 'active-conversation',
+    loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
   }
   ,
   {
     path: 'edit-profile',
-    loadChildren: () => import('../pages/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('../pages/profile/profile.module').then( (m) => m.ProfilePageModule)
+    loadChildren: () => import('../pages/account/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
   },
   {
     path: 'settings',
-    loadChildren: () => import('../pages/settings/settings.module').then( (m) => m.SettingsPageModule)
+    loadChildren: () => import('../pages/account/settings/settings.module').then((m) => m.SettingsPageModule)
   }
 ];
 

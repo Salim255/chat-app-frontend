@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {  Subscription } from 'rxjs';
 import { Conversation } from 'src/app/models/activeConversation.model';
-import { ConversationService } from 'src/app/services/conversation/conversation.service';
+import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 
 @Component({
   selector: 'app-conversations',

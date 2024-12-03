@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthPost } from 'src/app/interfaces/auth.interface';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 
 @Component({
