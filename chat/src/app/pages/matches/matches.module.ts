@@ -8,7 +8,7 @@ import { MatchesPageRoutingModule } from './matches-routing.module';
 
 import { MatchesPage } from './matches.page';
 
-import { MatchItemComponent } from 'src/app/components/matches/match-item/match-item.component';
+import { MatchesFeatureModule } from 'src/app/features/matches/matches-feature.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 
@@ -18,8 +18,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     MatchesPageRoutingModule,
-    SharedModule
+    SharedModule,
+    MatchesFeatureModule
   ],
-  declarations: [MatchesPage, MatchItemComponent,]
+  declarations: [MatchesPage]
 })
 export class MatchesPageModule {}

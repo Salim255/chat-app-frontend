@@ -8,6 +8,6 @@ import { MatchItemComponent } from "./components/match-item/match-item.component
   declarations: [ MatchItemComponent ]
 })
 
-export class MatchesModule {
+export class MatchesFeatureModule {
 
 }

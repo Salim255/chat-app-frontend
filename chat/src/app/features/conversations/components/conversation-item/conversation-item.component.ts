@@ -11,7 +11,7 @@ import { Partner } from 'src/app/interfaces/partner.interface';
   templateUrl: './conversation-item.component.html',
   styleUrls: ['./conversation-item.component.scss'],
 })
-export class ConversationComponent  implements OnChanges {
+export class ConversationItemComponent  implements OnChanges {
   @Input() conversation!: Conversation;
   lastMessage: any ;
   partnerInfo: Partner;
