@@ -8,7 +8,7 @@ import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
 import { LogoutComponent } from 'src/app/components/settings/logout/logout.component';
-import { SharedModule } from "../../shared/shared.module";
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [

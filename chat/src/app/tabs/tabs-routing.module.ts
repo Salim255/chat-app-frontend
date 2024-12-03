@@ -34,7 +34,7 @@ const routes: Routes = [
   ,
   {
     path: 'edit-profile',
-    loadChildren: () => import('../pages/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
+    loadChildren: () => import('../pages/account/edit-profile/edit-profile.module').then( (m) => m.EditProfilePageModule )
   },
   {
     path: 'profile',
@@ -42,7 +42,7 @@ const routes: Routes = [
   },
   {
     path: 'settings',
-    loadChildren: () => import('../pages/settings/settings.module').then( (m) => m.SettingsPageModule)
+    loadChildren: () => import('../pages/account/settings/settings.module').then((m) => m.SettingsPageModule)
   }
 ];
 
