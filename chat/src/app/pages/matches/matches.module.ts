@@ -21,6 +21,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     SharedModule,
     MatchesFeatureModule
   ],
-  declarations: [MatchesPage]
+  declarations: [ MatchesPage ]
 })
 export class MatchesPageModule {}
