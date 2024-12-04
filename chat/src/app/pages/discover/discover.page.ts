@@ -2,12 +2,19 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { Foreigner } from '../../models/foreigner.model';
-import { AnimationService } from 'src/app/services/animation/animation.service';
+
 import { DataService } from 'src/app/services/data/data.service';
 import { NetworkService } from 'src/app/services/network/network.service';
 import { TapService } from 'src/app/services/tap/tap.service';
 
-export type displayTap =  'show' | 'hide';
+type DisplayTap =  'show' | 'hide';
+
+type SwipeStatus = 'pending' | 'confirmed' | 'rejected';
+
+interface SwipeState {
+    left: SwipeStatus,
+    right: SwipeStatus
+}
 
 @Component({
   selector: 'app-discover',
@@ -26,7 +33,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private disLikeActionSource!: Subscription;
   private tapHidingStatusSourceSubscription!: Subscription;
 
-  hidingTapStatus: displayTap= 'show' ;
+  hidingTapStatus: DisplayTap= 'show' ;
 
   transform: any = null;
   currentIndex:any= null;
@@ -37,9 +44,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   profilesImages: any;
   foreignersListStatus = false;
+  swipeState: SwipeState = {
+    left: 'confirmed',
+    right: 'confirmed',
+  };
   constructor (
      private discoverService: DiscoverService,
-     private animationService: AnimationService,
      private dataService: DataService,
      private networkService:  NetworkService,
      private tapService: TapService
@@ -90,6 +100,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   addFriend(){
     const foreigner =  this.getCurrentProfile();
+    this.updateSwipeStatus('right', 'pending' );
     if (foreigner?.id) {
       let addFriendObs: Observable<any>
       addFriendObs = this.discoverService.addFriend(foreigner.id);
@@ -97,12 +108,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
       addFriendObs.subscribe({
         error: () => {
           console.log("error");
+          this.updateSwipeStatus('right', 'rejected' );
         },
         next: () => {
           this.dropProfileFromForeignersList();
           this.setCurrentProfile();
           this.likeActionSource.unsubscribe();
-
+          this.updateSwipeStatus('right', 'confirmed' );
         }
      })
     }
@@ -166,9 +178,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
       if (this.rotateCounterX< 7) {
         this.rotateCounterX += 0.3
       }
-      this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
-      this.animationService.animationListener('like');
 
+      if ( this.swipeState.left !== "pending" &&  this.swipeState.right !== "pending") {
+        this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
+      }
 
 
     } else if (event.dirX === 'left') {
@@ -176,8 +189,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
       if (this.rotateCounterY < 7) {
         this.rotateCounterY += 0.3;
       }
-       this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`;
-       this.animationService.animationListener('dislike');
+
+       if ( this.swipeState.left !== "pending" &&  this.swipeState.right !== "pending") {
+         this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`;
+       }
     } else if (event.dirY === 'up') {
       this.counterY--;
       this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
@@ -192,7 +207,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
       this.counterY = -50;
       this.rotateCounterY = 0;
       this.rotateCounterX = 0;
-      this.animationService.animationListener('none');
       this.likeWithHorizontalSwipe(event)
      }
 
@@ -217,21 +231,36 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   likeWithHorizontalSwipe(event: any){
     const clientCurrent = event.currentX;
-    const clientStart = event.startX
-    if ( clientCurrent  < (clientStart / 2) ) {
-      this.skipFriend();
-    } else  if ( clientStart  < ( clientCurrent / 2)) {
-        this.addFriend();
-    }
+    const clientStart = event.startX;
+    const screenWidth = window.innerWidth;
+    const quarterScreen = screenWidth / 4;
 
+    const swipeDistance = clientCurrent - clientStart ;
+
+
+    /* if ( clientCurrent  > (clientStart / 3) ) {
+      console.log("Skip", clientCurrent , (clientStart / 4) );
+
+      this.skipFriend();
+
+    } else  if ( clientStart  < ( clientCurrent / 3)) {
+        this.addFriend();
+        console.log("add", clientCurrent , (clientStart / 4) );
+    } */
+
+    if (swipeDistance > quarterScreen) {
+      this.addFriend();
+    } else if (swipeDistance < -quarterScreen) {
+      this.skipFriend();
+    }
   }
 
-  likeWithVerticalSwipe(event: any) {
-    const deviceWidth = event.event.view.
-    innerWidth;
-    const deviceHeight = event.event.view.
-    innerHeight;
-
+  updateSwipeStatus(direction: 'left' | 'right' , status: SwipeStatus) {
+    this.swipeState[direction] =  status;
+    console.log('====================================');
+    console.log(this.swipeState);
+    console.log('====================================');
+    return;
   }
 
   ngOnDestroy () {

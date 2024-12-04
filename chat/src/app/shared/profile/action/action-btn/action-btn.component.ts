@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { AnimationService } from "src/app/services/animation/animation.service";
+
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 
 @Component({
@@ -15,17 +15,11 @@ export class ActionBtnComponent implements OnInit, OnDestroy {
   private foreignersListStatusSource!: Subscription;
   foreignersListStatus: any ;
   private animationEventSource!: Subscription;
-  constructor(private animationService: AnimationService, private discoverService: DiscoverService) {
+  constructor( private discoverService: DiscoverService) {
 
    }
 
    ngOnInit() {
-    this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
-      if (event) {
-        this.animationType =  event
-      }
-     })
-
      this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
       this.foreignersListStatus = status;
    });

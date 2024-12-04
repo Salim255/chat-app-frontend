@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
-import { AnimationService } from 'src/app/services/animation/animation.service';
+
 import { TapService } from 'src/app/services/tap/tap.service';
 
 
@@ -27,8 +27,6 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
   animationType: any = null;
 
   constructor (
-
-    private animationService: AnimationService,
     private tapService : TapService ) { }
 
     ngOnInit(): void {
@@ -39,20 +37,9 @@ export class ProfileCardComponent implements OnInit, OnDestroy {
         this.hidingTapStatus = status;
     });
 
-      this.animationEventSource = this.animationService.getAnimation.subscribe(event => {
-        if (event) {
-          this.animationType = event
-        }
-      })
+
    }
 
-
-
-  getAnimationStyle(animationType: string) {
-     if (animationType === 'like') return 'animation-section animation-section__like';
-     else if (animationType === 'dislike') return 'animation-section animation-section__dislike';
-     else return;
-  }
 
   onTapSide(side: any) {
 

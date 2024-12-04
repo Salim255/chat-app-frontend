@@ -11,7 +11,7 @@ import { BadgeComponent } from "./native-components/badge/badge.component";
 import { ActionBtnComponent } from "./profile/action/action-btn/action-btn.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SliderComponent } from "./profile/slider/slider.component";
-import { AnimationComponent } from "./profile/action/action-animation/animation.component";
+
 import { AppHeaderComponent } from "./app-header/app-header.component";
 import { NetworkConnectionComponent } from "./network-connection/network-connection.component";
 import { AppButtonComponent } from "./app-button/app-button.component";
@@ -22,13 +22,14 @@ import { AppWaveComponent } from "./app-wave/app-wave.component";
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent,
-    CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent,
-     AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent
+    CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent
   , AppPlaceHolderComponent,
     AppWaveComponent
    ],
   exports:
-  [TagComponent, ActionComponent,SearchBarComponent, LogoComponent, CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AnimationComponent, AppHeaderComponent,  NetworkConnectionComponent,
+  [TagComponent, ActionComponent,SearchBarComponent, LogoComponent,
+    CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent,
+      AppHeaderComponent,  NetworkConnectionComponent,
     AppButtonComponent, AppPlaceHolderComponent,
     AppWaveComponent
    ],
