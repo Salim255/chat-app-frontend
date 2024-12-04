@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Preferences } from "@capacitor/preferences";
 import { BehaviorSubject, from, map, pipe, switchMap, tap } from "rxjs";
-import { Conversation } from "src/app/models/activeConversation.model";
+import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { createChatInfo } from "src/app/interfaces/chat.interface";
 

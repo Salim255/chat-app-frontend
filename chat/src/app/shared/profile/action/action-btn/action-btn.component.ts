@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AnimationService } from "src/app/services/animation/animation.service";
-import { DiscoverService } from "src/app/services/discover/discover.service";
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 
 @Component({
   selector: 'app-action-btn',

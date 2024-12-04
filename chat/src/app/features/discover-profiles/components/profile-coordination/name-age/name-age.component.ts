@@ -1,6 +1,6 @@
 import { Component, Input} from "@angular/core";
 import { TapService } from "src/app/services/tap/tap.service";
-import { DiscoverService } from "src/app/services/discover/discover.service";
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
   selector: 'app-name-age',
   templateUrl: './name-age.component.html',

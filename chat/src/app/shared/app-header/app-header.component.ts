@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
-import { DiscoverService } from "src/app/services/discover/discover.service";
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',

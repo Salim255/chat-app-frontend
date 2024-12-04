@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Match } from 'src/app/models/friend.model';
-import { MatchesService } from 'src/app/services/matches/matches.service';
+import { MatchesService } from 'src/app/features/matches/services/matches.service';
 
 @Component({
   selector: 'app-matches',

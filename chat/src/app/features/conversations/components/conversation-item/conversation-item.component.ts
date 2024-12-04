@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { Conversation } from 'src/app/models/activeConversation.model';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 

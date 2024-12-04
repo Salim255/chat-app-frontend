@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription} from 'rxjs';
-import { DiscoverService } from 'src/app/services/discover/discover.service';
+import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { Foreigner } from '../../models/foreigner.model';
 import { AnimationService } from 'src/app/services/animation/animation.service';
 import { DataService } from 'src/app/services/data/data.service';

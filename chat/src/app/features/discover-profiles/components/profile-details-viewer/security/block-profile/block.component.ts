@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { DiscoverService } from "src/app/services/discover/discover.service";
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
   selector: "app-block-profile",
   templateUrl: "./block.component.html",
