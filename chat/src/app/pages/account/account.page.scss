@@ -7,13 +7,27 @@ ion-header {
 }
 
 ion-content {
-  --background: var(--ion-background-color);
+ --background: #fff;
   ion-grid {
-    margin-top: 1rem;
     position: fixed;
     left: 50%;
-    top: 60%;
-    transform: translate(-50%, -50%);
+    top: 0%;
+    transform: translate(-50%, 0%);
     width: 100%;
+    margin: 0;
+    padding: 0;
+
+    ion-row:first-child {
+      background: var(--ion-background-color);
+      border-bottom-left-radius: 50%;
+      border-bottom-right-radius: 50%;
+      transform: scale(1.6);
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      padding-bottom: 1rem;
+      padding-top: 10rem;
+
+    }
   }
 }
