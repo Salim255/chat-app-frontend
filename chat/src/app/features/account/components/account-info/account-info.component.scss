@@ -81,7 +81,7 @@ ion-grid {
         display: flex;
         justify-content: center;
         div {
-          margin: 1rem;
+          margin:  0 1rem;
           font-size: .5rem;
           display: flex;
           flex-direction: column;
@@ -93,7 +93,7 @@ ion-grid {
           }
         }
         div:nth-of-type(even) {
-          height: 4rem;
+          height: 3.5rem;
           ion-button {
             margin-top: auto;
           }
