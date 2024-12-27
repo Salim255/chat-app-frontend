@@ -55,7 +55,7 @@ ion-grid {
     text-align: center;
     ion-col {
       ion-text {
-        font-size: 1.5rem;
+        font-size: 1rem;
         font-weight: bold;
         text-transform: capitalize;
       }
@@ -63,9 +63,6 @@ ion-grid {
       .location-container{
         display: flex;
         justify-content: center;
-        ion-icon {
-          margin-right: .2rem;
-        }
         span {
           font-size: .5rem;
           font-weight: bold;
