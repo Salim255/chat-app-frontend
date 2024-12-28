@@ -39,6 +39,10 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('../pages/account/settings/settings.module').then((m) => m.SettingsPageModule)
+  },
+  {
+    path: 'view-profile',
+    loadChildren: () => import('../pages/profile-viewer/profile-viewer.module').then((m) => m.ProfileViewerPageModule)
   }
 ];
 
