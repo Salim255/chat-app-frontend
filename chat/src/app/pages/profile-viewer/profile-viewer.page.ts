@@ -1,27 +1,34 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
-import { Foreigner } from "src/app/models/foreigner.model";
+
 @Component({
   selector: 'app-view-profile',
   templateUrl: './profile-viewer.page.html',
   styleUrls: ['./profile-viewer.page.scss']
 })
 
-export class ProfileViewerPage implements OnInit{
+export class ProfileViewerPage implements OnInit, OnDestroy{
     profileToDisplay:any ;
+    private profileToDisplaySubscription!: Subscription
     constructor(private profileViewerService: ProfileViewerService){
 
     }
 
-    ngOnInit(): void {
-      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-      //Add 'implements OnInit' to the class.
-        this.profileViewerService.getProfileToDisplay.subscribe(profile => {
+    ngOnInit() {
+      this.profileToDisplaySubscription =  this.profileViewerService.getProfileToDisplay.subscribe(profile => {
           this.profileToDisplay = profile;
-
           console.log('====================================');
-          console.log(this.profileToDisplay);
+          console.log(this.profileToDisplay, "Profile do Display");
           console.log('====================================');
         })
+    }
+
+    ngOnDestroy() {
+      //Called once, before the instance is destroyed.
+      //Add 'implements OnDestroy' to the class.
+      if (this.profileToDisplaySubscription) {
+        this.profileToDisplaySubscription.unsubscribe();
+      }
     }
 }

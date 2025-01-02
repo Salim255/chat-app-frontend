@@ -3,7 +3,7 @@
     <app-logo  *ngIf="hidingTapStatus === 'show'"></app-logo>
     <ion-text  *ngIf="hidingTapStatus === 'hide'" class="user-name">
       {{
-        viewedProfile.first_name
+        viewedProfile?.first_name
       }}, 31
     </ion-text>
 

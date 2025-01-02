@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
@@ -7,7 +7,7 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
   styleUrls: ["./block.component.scss"]
 })
 export class blockComponent implements OnInit, OnDestroy {
-  profile: any;
+  @Input() profile: any;
   private viewedProfileSubscription!: Subscription;
   constructor(private discoverService : DiscoverService ){
 
@@ -15,10 +15,8 @@ export class blockComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-     this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
-      this.profile = profile
-     })
+    console.log("Hello from block profile");
+
   }
 
   ngOnDestroy(): void {

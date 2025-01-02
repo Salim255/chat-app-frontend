@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
-import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
@@ -12,24 +12,27 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
 
   @Input() pageName:any = null;
-  @Input() viewedProfile: any;
+  viewedProfile: any;
 
   hidingTapStatus:any;
   private viewedProfileSubscription!: Subscription;
   private tapStatusSourceSubscription!: Subscription;
 
-  constructor(private tapService: TapService, private discoverService: DiscoverService){}
+  constructor(private tapService: TapService,
+    private profileViewerService: ProfileViewerService ){}
 
  ngOnInit(): void {
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
-    this.hidingTapStatus = status
-
+    this.hidingTapStatus = status;
    });
 
-   this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
-    this.viewedProfile = profile;
+   this.viewedProfileSubscription = this.profileViewerService.getProfileToDisplay.subscribe(profile => {
+      console.log(profile, "hello from here ");
+      this.viewedProfile = profile;
    })
+
  }
+
 
  displayRightIcon(pageName: string) {
   switch(pageName) {

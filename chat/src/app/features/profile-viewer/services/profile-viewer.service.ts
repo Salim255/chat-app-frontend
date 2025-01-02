@@ -12,6 +12,8 @@ export class ProfileViewerService {
   constructor(){}
 
   setProfileToDisplay (profile: Foreigner) {
+    console.log(profile, "Hello from profile from profile service");
+
     this.profileToDisplaySource.next(profile);
  }
  get getProfileToDisplay() {

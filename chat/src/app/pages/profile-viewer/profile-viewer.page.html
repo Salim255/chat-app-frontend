@@ -1,4 +1,4 @@
-<app-header [pageName]="'profile-viewer'" [viewedProfile]="profileToDisplay" ></app-header>
+ <app-header [pageName]="'profile-viewer'"  ></app-header>
 
 <ion-grid>
   <ion-row>
@@ -8,23 +8,23 @@
   </ion-row>
   <ion-row>
     <ion-col>
-      <app-profile-looking-for></app-profile-looking-for>
+     <app-profile-looking-for></app-profile-looking-for>
     </ion-col>
   </ion-row>
 
   <ion-row>
     <ion-col>
-      <app-profile-essentials></app-profile-essentials>
+       <app-profile-essentials></app-profile-essentials>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-      <app-block-profile></app-block-profile>
+       <app-block-profile [profile]="profileToDisplay"></app-block-profile>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-        <app-report-profile></app-report-profile>
+        <app-report-profile  [profile]="profileToDisplay"></app-report-profile>
     </ion-col>
   </ion-row>
 </ion-grid>
