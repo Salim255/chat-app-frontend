@@ -5,7 +5,9 @@ import { Partner } from 'src/app/interfaces/partner.interface';
 import { Match } from 'src/app/models/friend.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-
+import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
+import { TapService } from 'src/app/services/tap/tap.service';
+import { Foreigner } from 'src/app/models/foreigner.model';
 @Component({
   selector: 'app-match-item',
   templateUrl: './match-item.component.html',
@@ -16,7 +18,8 @@ export class MatchItemComponent {
  partnerInfo: Partner;
  private userId: any;
 
-  constructor (private router: Router, private conversationService: ConversationService, private authService: AuthService) {
+  constructor (private router: Router, private conversationService: ConversationService,
+     private authService: AuthService) {
     this.partnerInfo = {
       partner_id: null ,
       avatar: null,
@@ -49,6 +52,8 @@ export class MatchItemComponent {
       }
     })
   }
+
+
 
   preparePartnerInfo (data: Match) {
     if (this.userId === data.user_id) {

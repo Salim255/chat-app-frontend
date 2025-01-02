@@ -11,7 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 import { DirectivesModule } from 'src/app/directives/directives.module';
 
-import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
+ import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
 
 @NgModule({
 
@@ -22,6 +22,7 @@ import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profile
     SharedModule,
     DirectivesModule,
     DiscoverProfilesFeatureModule
+
   ],
   declarations: [ DiscoverPage ]
 })

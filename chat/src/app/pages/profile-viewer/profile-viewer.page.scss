@@ -1,0 +1,25 @@
+ion-grid {
+  margin: 0;
+  padding: 0;
+  ion-row:first-child {
+  ion-col {
+    margin: 0;
+    padding: 0;
+  }
+  }
+
+ ion-row {
+  ion-col {
+    ::ng-deep app-card-user {
+      ion-grid {
+        margin: 0;
+        padding: 0;
+        ion-row:last-child {
+          margin-top:1rem;
+        }
+      }
+
+    }
+  }
+ }
+}
