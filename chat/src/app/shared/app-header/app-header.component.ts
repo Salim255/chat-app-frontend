@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angu
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
+import { NavController } from "@ionic/angular";
+
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
@@ -19,7 +21,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   private tapStatusSourceSubscription!: Subscription;
 
   constructor(private tapService: TapService,
-    private profileViewerService: ProfileViewerService ){}
+    private profileViewerService: ProfileViewerService,
+    private navController: NavController ){}
 
  ngOnInit(): void {
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
@@ -27,7 +30,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
    });
 
    this.viewedProfileSubscription = this.profileViewerService.getProfileToDisplay.subscribe(profile => {
-      console.log(profile, "hello from here ");
       this.viewedProfile = profile;
    })
 
@@ -56,7 +58,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         return 'shield';
     case 'auth':
       return ;
-
+    case 'profile-viewer':
+      return 'close-outline'
     default:
       return
   }
@@ -70,7 +73,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       } else {
         return  '';
       }
-
     default:
       return  'notifications';
   }
@@ -98,6 +100,13 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     if (this.hidingTapStatus === 'hide') {
       this.tapService.setTapHidingStatus('show')
     }
+  }
+
+  if (pageName === 'profile-viewer') {
+      if (this.hidingTapStatus === 'hide') {
+        this.tapService.setTapHidingStatus('show')
+      }
+      this.navController.back();
   }
  }
 

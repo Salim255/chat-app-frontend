@@ -9,7 +9,7 @@
 
 
     <ion-buttons slot="end" >
-      <ion-icon [name]="displayLeftIcon(pageName)"></ion-icon>
+      <ion-icon *ngIf="pageName !== 'profile-viewer'" [name]="displayLeftIcon(pageName)"></ion-icon>
         <ion-icon
          [name]="displayRightIcon(pageName)"
           [ngClass]="setRightIconCss(pageName)"
