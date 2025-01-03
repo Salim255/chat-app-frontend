@@ -1,0 +1,17 @@
+
+<ion-grid>
+  <ion-row>
+    <ion-col sizeMd="6" offsetMd="3" >
+      <app-profile-slider [profile]="profileToDisplay"></app-profile-slider>
+      <div
+      class="details-section"
+      appTap
+      >
+        <app-profile-coordination
+          [profile]="profileToDisplay"
+          >
+        </app-profile-coordination>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -1,7 +1,10 @@
 <ion-grid>
   <ion-row>
     <ion-col sizeMd="6" offsetMd="3" >
-      <app-profile-slider [profile]="foreigner"></app-profile-slider>
+      <app-profile-images-card [profileToDisplay]="foreigner">
+    </app-profile-images-card>
+
+      <!-- <app-profile-slider [profile]="foreigner"></app-profile-slider>
       <div
       class="details-section"
       appTap
@@ -12,8 +15,9 @@
           [profile]="foreigner"
           >
         </app-profile-coordination>
-      </div>
+      </div> -->
     </ion-col>
   </ion-row>
+
 </ion-grid>
 

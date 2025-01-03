@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
-
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
   selector: 'app-view-profile',
   templateUrl: './profile-viewer.page.html',
@@ -11,7 +11,9 @@ import { ProfileViewerService } from "src/app/features/profile-viewer/services/p
 export class ProfileViewerPage implements OnInit, OnDestroy{
     profileToDisplay:any ;
     private profileToDisplaySubscription!: Subscription
-    constructor(private profileViewerService: ProfileViewerService){
+    constructor(private profileViewerService: ProfileViewerService,
+      private discoverService : DiscoverService
+    ){
 
     }
 
