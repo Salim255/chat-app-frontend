@@ -1,6 +1,6 @@
 <app-header [pageName]="'discover'" ></app-header>
 
-<ion-content [fullscreen]="true" *ngIf="isConnected">
+<ion-content [fullscreen]="true" *ngIf="isConnected" [scrollY]="false">
   <ion-grid>
     <ion-row  *ngIf="hidingTapStatus==='show'">
       <ion-col >
