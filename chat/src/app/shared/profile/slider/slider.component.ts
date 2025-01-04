@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
-
+import { DataService } from "src/app/services/data/data.service";
 
 @Component({
   selector: "app-profile-slider",
@@ -19,13 +19,21 @@ export class SliderComponent implements OnInit, OnDestroy{
 
   private tapEventSource!: Subscription ;
 
-  constructor (private tapService: TapService) {
+  constructor (private tapService: TapService, private dataService: DataService) {
 
   }
 
   ngOnInit(): void {
     if (this.profile) {
-      this.presentationData = this.profile.images
+      if (this.profile?.images?.length > 0) {
+        this.presentationData = this.profile.images
+      }
+      else {
+        this.presentationData = this.dataService.getImages[0]
+      }
+
+      console.log(this.presentationData);
+
     }
 
     this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
