@@ -2,10 +2,10 @@
 ion-grid {
   margin: 0;
   padding: 0;
-  padding-top: 5rem;
-  position: relative;
-  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+
   ion-row {
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
     ion-col {
       margin: 0;
       padding: 0;
