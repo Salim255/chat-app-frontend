@@ -16,14 +16,15 @@ swiper-container {
     ion-grid {
       margin: 0;
       padding: 0;
-
+      width: 100%;
+      height: 100%;
       ion-row {
-
         ion-col {
           margin: 0;
           padding: 0;
           img {
-            height: 70vh;
+            height: auto;
+            width: 100%;
             object-fit: contain;
             object-position: top;
             border-radius: 1rem;
