@@ -1,10 +1,16 @@
-ion-grid {
-  //height: 100vh;
-  ion-row:first-child {
-    ion-col {
-      margin: 0;
-      padding: 0;
+ion-content {
+  height: 100%;
+  overflow: hidden;
+  ion-grid {
+    margin: 0;
+    padding: 0;
+    ion-row:first-child {
+      ion-col {
+        margin: 0;
+        padding: 0;
+      }
     }
-  }
 
+  }
 }
+

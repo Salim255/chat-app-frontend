@@ -1,6 +1,6 @@
-
-
 ion-content {
+  height: 100%;
+  overflow: hidden;
   ion-grid {
     position: relative;
     ion-row {
@@ -11,8 +11,7 @@ ion-content {
           top: 50%;
           transform: translate(-50%, -50%);
           width: 100%;
-          padding: 0 .5rem;
-          padding-top: 1rem;
+          //padding: 0 .5rem;
         }
      }
     }

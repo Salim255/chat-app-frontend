@@ -44,4 +44,11 @@ ion-toolbar {
 
 ion-content {
   --background: var(--ion-background-color);
+ // --overflow: hidden; /* Prevent overflow and scrollbar */
+}
+
+@media (hover: hover) {
+  ::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar for webkit-based browsers */
+  }
 }
