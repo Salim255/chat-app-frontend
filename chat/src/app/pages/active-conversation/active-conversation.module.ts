@@ -3,10 +3,11 @@ import { ActiveConversationPageRoutingModule } from "./active-conversation-routi
 import { IonicModule } from "@ionic/angular";
 import { ActiveConversationPage } from "./active-conversation.page";
 import { ActiveConversationFeatureModule } from "src/app/features/active-conversation/active-conversation-feature.module";
+import { SharedModule } from "../../shared/shared.module";
 
 
 @NgModule({
-  imports: [IonicModule, ActiveConversationPageRoutingModule, ActiveConversationFeatureModule ],
+  imports: [IonicModule, ActiveConversationPageRoutingModule, ActiveConversationFeatureModule, SharedModule],
   declarations: [ActiveConversationPage ]
 })
 export class ActiveConversationPageModule {

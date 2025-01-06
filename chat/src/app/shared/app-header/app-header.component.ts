@@ -14,6 +14,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
 
   @Input() pageName:any = null;
+  @Input() partnerInfo: any;
   viewedProfile: any;
 
   hidingTapStatus:any;
@@ -35,7 +36,14 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
  }
 
-
+ showAppLogo() {
+    switch(this.pageName) {
+      case 'active-conversation':
+        return false;
+      default:
+        return true;
+    }
+  }
  displayRightIcon(pageName: string) {
   switch(pageName) {
     case 'discover':
@@ -59,7 +67,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     case 'auth':
       return ;
     case 'profile-viewer':
-      return 'close-outline'
+      return 'close-outline';
+    case 'active-conversation':
+        return 'ellipsis-horizontal-outline';
     default:
       return
   }
