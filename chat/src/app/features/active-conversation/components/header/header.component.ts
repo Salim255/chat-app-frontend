@@ -31,11 +31,9 @@ export class headerComponent implements OnInit {
   //
   onDisplayProfile(profile: Foreigner) {
     this.tapService.setTapHidingStatus('hide');
-    console.log('====================================');
-    console.log("hello");
-    console.log('====================================');
     //this.discoverService.setDisplayedProfile(profile)
     this.profileViewerService.setProfileToDisplay(profile)
-    this.router.navigate(['./tabs/view-profile']);
+    this.profileViewerService.openProfileViewerModal();
+    //this.router.navigate(['./tabs/view-profile']);
   }
 }

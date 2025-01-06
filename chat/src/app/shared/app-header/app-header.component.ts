@@ -116,7 +116,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       if (this.hidingTapStatus === 'hide') {
         this.tapService.setTapHidingStatus('show')
       }
-      this.navController.back();
+      //this.navController.back();
+      this.profileViewerService.closeModal();
   }
  }
 

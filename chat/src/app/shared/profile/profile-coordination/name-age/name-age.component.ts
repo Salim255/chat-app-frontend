@@ -17,9 +17,10 @@ export class NameAgeComponent {
     private profileViewerService: ProfileViewerService) { }
 
   onViewProfile(){
-    //this.tapService.setTapHidingStatus('hide');
+    this.tapService.setTapHidingStatus('hide');
     //this.discoverService.setDisplayedProfile(this.profile);
     this.profileViewerService.setProfileToDisplay(this.profile);
-    this.router.navigate(['./tabs/view-profile']);
+    //this.router.navigate(['./tabs/view-profile']);
+    this.profileViewerService.openProfileViewerModal();
  }
 }

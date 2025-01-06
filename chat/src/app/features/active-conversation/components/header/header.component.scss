@@ -6,12 +6,14 @@ ion-header {
     ion-item {
       display: flex;
       justify-content: center;
+      --background: transparent;
       ion-avatar {
         height: 3rem;
         width: 3rem;
         flex: 1;
         display: flex;
         justify-content: center;
+
         gap: 1rem;
         img {
           object-position: top;
@@ -23,6 +25,7 @@ ion-header {
           font-size: 1.3rem;
           font-weight: bold;
           align-self: center;
+          text-transform: capitalize;
         }
       }
     }
