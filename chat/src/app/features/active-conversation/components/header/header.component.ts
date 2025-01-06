@@ -16,12 +16,8 @@ export class headerComponent implements OnInit {
     private tapService: TapService, private profileViewerService: ProfileViewerService ) {}
 
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log('====================================');
+  ngOnInit() {
     console.log(this.partnerInfo, "heyyy");
-    console.log('====================================');
   }
   onBackArrow () {
     this.router.navigate(['./tabs/conversations']);

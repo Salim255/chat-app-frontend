@@ -47,6 +47,13 @@ ion-content {
  // --overflow: hidden; /* Prevent overflow and scrollbar */
 }
 
+ion-modal {
+  --height: 100%;
+  --width: 100%;
+  --border-radius: 0px;
+}
+
+
 @media (hover: hover) {
   ::-webkit-scrollbar {
     display: none; /* Hides the scrollbar for webkit-based browsers */
