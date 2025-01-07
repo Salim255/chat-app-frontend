@@ -3,13 +3,13 @@ ion-content {
   ion-grid {
     position: relative;
     ion-row {
+      height: 100vh;
       ion-col{
         app-profile-card{
-          position: fixed;
+          position: absolute;
           left: 50%;
-          top: 50%;
+          top: 40%;
           transform: translate(-50%, -50%);
-          width: 100%;
         }
      }
     }
@@ -19,17 +19,11 @@ ion-content {
         text-align: center;
         color: rgb(74, 74, 74);
         font-size: 1rem;
-
       }
     }
   }
 
- /*  app-profile-action{
-    position: fixed;
-    left: 50%;
-    bottom: 0%;
-    transform: translate(-50%, 0%);
-  } */
+
 }
 
 
