@@ -1,10 +1,7 @@
 ion-content {
-  height: 100vh;
-  overflow: hidden;
-  --background-color: green;
+
   ion-grid {
     position: relative;
-    height: 100%;
     ion-row {
       ion-col{
         app-profile-card{
@@ -35,19 +32,4 @@ ion-content {
   } */
 }
 
-
-ion-modal {
-  --height: 4rem ;
-  margin-bottom: 2rem;
-  margin-top: 45rem;
-}
-
-
-ion-modal::part(backdrop) {
-  opacity: 1;
-  background: transparent;
-}
-ion-modal::part(content) {
-  background: transparent;
-}
 
