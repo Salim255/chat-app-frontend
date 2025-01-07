@@ -1,0 +1,105 @@
+//MEDIA QUERY MANAGER
+
+@mixin respond($breakpoint) {
+  @if $breakpoint == bp-extra-large {
+    @media only screen and (max-width: 160em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-xx-large {
+    @media only screen and (max-width: 140rem) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-x-large {
+    @media only screen and (max-width: 120rem) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-laptop-x-large {
+    @media only screen and (max-width: 90em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-laptop-large {
+    @media only screen and (max-width: 80em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-laptop-md  {
+    @media only screen and (max-width: 70em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-laptop-sm  {
+    @media only screen and (max-width: 60em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-tablet-large {
+    @media only screen and (max-width: 55em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-tablet-md {
+    @media only screen and (max-width: 48em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-tablet-sm {
+    @media only screen and (max-width: 38em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-mobile-large {
+    @media only screen and (max-width: 26.5em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-mobile-medium {
+    @media only screen and (max-width: 23em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == bp-mobile-small {
+    @media only screen and (max-width: 20em) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-height($breakpoint) {
+  @if $breakpoint == small-phone {
+    //0-620
+
+    @media only screen and (min-height: 0em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == medium-phone {
+    //721>/16>
+    @media (min-height: 45em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == large-phone {
+    //823>/16>
+    @media (min-height: 51.4em) {
+      @content;
+    }
+  }
+}
