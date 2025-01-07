@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { NavController } from "@ionic/angular";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -23,7 +24,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
   constructor(private tapService: TapService,
     private profileViewerService: ProfileViewerService,
-    private navController: NavController ){}
+    private navController: NavController, private router: Router ){}
 
  ngOnInit(): void {
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
@@ -116,8 +117,10 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       if (this.hidingTapStatus === 'hide') {
         this.tapService.setTapHidingStatus('show')
       }
-      //this.navController.back();
+
       this.profileViewerService.closeModal();
+      this.router.navigateByUrl('/tabs/community')
+
   }
  }
 
