@@ -1,28 +1,25 @@
 
 ion-grid {
-
+  height: 100%;
+  position: relative;
   ion-row {
-
-
     ion-col {
-      position: relative;
 
       .details-section {
         position: absolute;
-
-        top:  50%;
+        width: 100%;
+        height: 100%;
+        bottom: 0%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, 0%);
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
-      /*   background: linear-gradient(to bottom,
-          rgba(0, 0, 0, 0) 50%,
-          rgb(0, 0, 0) 100%); */
-          background-color: red;
         z-index: 1;
+        background: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0) 50%,
+          rgb(0, 0, 0) 100%);
+
         display: flex;
-        overflow: hidden;
-       // width: 100%;
         app-profile-coordination {
           margin-top: auto;
           margin-bottom: 3rem;
