@@ -3,6 +3,7 @@ ion-content {
 
   ion-grid {
     position: relative;
+    pointer-events: none;
     ion-row:first-child {
       ion-col {
         app-profile-card {

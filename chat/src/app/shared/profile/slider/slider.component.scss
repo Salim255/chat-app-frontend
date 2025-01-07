@@ -88,6 +88,8 @@ swiper-container {
            margin-bottom: 5rem;
            margin-top: auto;
            width: 100%;
+           z-index: 10000;
+           pointer-events: auto;
            @include respond(bp-tablet-sm) {
               @include respond-height(small-phone) {
                 //top: 20%;

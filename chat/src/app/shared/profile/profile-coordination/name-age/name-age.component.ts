@@ -15,6 +15,9 @@ export class NameAgeComponent {
     private profileViewerService: ProfileViewerService) { }
 
   onViewProfile(){
+    console.log('====================================');
+    console.log("We are on view profile");
+    console.log('====================================');
     this.tapService.setTapHidingStatus('hide');
     this.profileViewerService.setProfileToDisplay(this.profile);
     this.profileViewerService.openProfileViewerModal();
