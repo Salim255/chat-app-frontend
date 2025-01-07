@@ -12,7 +12,16 @@
           </ion-col>
         </ion-row>
       </ion-grid> -->
-      <img [src]="item"/>
+      <div class="container">
+         <img [src]="item"/>
+         <div >
+          <app-profile-coordination
+            [profile]="profile"
+            >
+          </app-profile-coordination>
+        </div>
+      </div>
+
   </swiper-slide>
 </swiper-container>
 

@@ -4,7 +4,9 @@ ion-grid {
   position: relative;
   ion-row {
     ion-col {
+      app-profile-slider {
 
+      }
       .details-section {
         position: absolute;
         width: 100%;
@@ -15,9 +17,9 @@ ion-grid {
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
         z-index: 1;
-        background: linear-gradient(to bottom,
+     /*    background: linear-gradient(to bottom,
           rgba(0, 0, 0, 0) 50%,
-          rgb(0, 0, 0) 100%);
+          rgb(0, 0, 0) 100%); */
 
         display: flex;
         app-profile-coordination {
