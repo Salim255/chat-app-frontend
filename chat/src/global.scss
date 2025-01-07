@@ -53,6 +53,17 @@ ion-modal {
  --border-radius: 0px;
 }
 
+ion-grid {
+  margin: 0;
+  padding: 0;
+  ion-row {
+    ion-col {
+      margin: 0;
+      padding: 0;
+       }
+  }
+
+}
 
 @media (hover: hover) {
   ::-webkit-scrollbar {
