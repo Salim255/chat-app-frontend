@@ -5,10 +5,11 @@ ion-grid {
 
   ion-row {
     position: relative;
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+
     ion-col {
       margin: 0;
       padding: 0;
+
       .details-section {
         position: absolute;
         width: 100%;
@@ -19,12 +20,13 @@ ion-grid {
         border-bottom-left-radius: 1rem;
         border-bottom-right-radius: 1rem;
         z-index: 1;
-
+        overflow: hidden;
         background: linear-gradient(to bottom,
           rgba(0, 0, 0, 0) 50%,
           rgb(0, 0, 0) 100%);
 
         display: flex;
+
         app-profile-coordination {
           margin-top: auto;
           margin-bottom: 3rem;

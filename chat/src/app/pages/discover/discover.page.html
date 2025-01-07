@@ -2,7 +2,7 @@
 
 <ion-content [fullscreen]="true" *ngIf="isConnected" [scrollY]="false">
   <ion-grid>
-    <ion-row  *ngIf="hidingTapStatus==='show'">
+     <ion-row  *ngIf="hidingTapStatus==='show'">
       <ion-col >
         <app-profile-card [ngClass]="{'swipeable': true}"  *ngFor="let foreigner of foreignersList; let i = index "
         [foreigner]="foreigner"
@@ -33,6 +33,11 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+<!--   <app-profile-action  *ngIf="foreignersListStatus && hidingTapStatus==='show'" ></app-profile-action> -->
 
-  <app-profile-action  *ngIf="foreignersListStatus && hidingTapStatus==='show'" ></app-profile-action>
+<!--  <ion-modal #modal  isOpen="true" handle="false" [initialBreakpoint]="1" [breakpoints]="[1]"  >
+  <ng-template>
+      <app-profile-action></app-profile-action>
+  </ng-template>
+</ion-modal> -->
 </ion-content>
