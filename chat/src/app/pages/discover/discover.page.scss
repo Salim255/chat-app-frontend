@@ -1,8 +1,10 @@
 ion-content {
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
+  --background-color: green;
   ion-grid {
     position: relative;
+    height: 100%;
     ion-row {
       ion-col{
         app-profile-card{
@@ -25,13 +27,27 @@ ion-content {
     }
   }
 
-  app-profile-action{
+ /*  app-profile-action{
     position: fixed;
     left: 50%;
     bottom: 0%;
     transform: translate(-50%, 0%);
-  }
+  } */
 }
 
 
+ion-modal {
+  --height: 4rem ;
+  margin-bottom: 2rem;
+  margin-top: 45rem;
+}
+
+
+ion-modal::part(backdrop) {
+  opacity: 1;
+  background: transparent;
+}
+ion-modal::part(content) {
+  background: transparent;
+}
 

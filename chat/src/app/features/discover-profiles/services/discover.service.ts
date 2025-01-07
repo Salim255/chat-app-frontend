@@ -5,6 +5,7 @@ import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Preferences } from "@capacitor/preferences";
 import { Foreigner } from "src/app/models/foreigner.model";
 
+
 @Injectable({
   providedIn: 'root'
 })
