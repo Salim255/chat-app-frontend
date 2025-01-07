@@ -1,3 +1,5 @@
+@import "../../../../../theme/queries";
+
 .btn {
   border-radius: 50%;
   background: #dbdada;
@@ -29,6 +31,15 @@
       width: 3rem;
       transform: translate(-50%, -50%);
     }
+    @include respond-height(small-phone) {
+      height: 3.5rem;
+      width: 3.5rem;
+      ion-icon {
+        height: 2rem;
+        width: 2rem;
+        transform: translate(-50%, -50%);
+      }
+    }
   }
 
   &__boost, &__stars , &__undo  {
@@ -39,6 +50,16 @@
       width: 2.2rem;
       transform: translate(-50%, -50%);
     }
+
+    @include respond-height(small-phone) {
+      height: 2.5rem;
+      width: 2.5rem;
+      ion-icon {
+        height: 1.2rem;
+        width: 1.2rem;
+        transform: translate(-50%, -50%);
+      }
+    }
   }
 
   &__undo {
@@ -48,11 +69,7 @@
     }
   }
 
-
-
 }
 
-.btn2 {
-  background: red;
-}
+
 
