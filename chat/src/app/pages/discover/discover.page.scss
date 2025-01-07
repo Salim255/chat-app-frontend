@@ -2,28 +2,25 @@ ion-content {
 
   ion-grid {
     position: relative;
-    ion-row {
-      height: 100vh;
-      ion-col{
-        app-profile-card{
-          position: absolute;
+    ion-row:first-child {
+      ion-col {
+        app-profile-card {
+          position: fixed;
           left: 50%;
-          top: 40%;
+          top: 60%;
           transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
         }
-     }
+      }
     }
-
     ion-row:last-child {
       ion-col {
         text-align: center;
         color: rgb(74, 74, 74);
         font-size: 1rem;
+
       }
     }
   }
-
-
 }
-
-

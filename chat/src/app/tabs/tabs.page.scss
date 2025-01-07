@@ -1,11 +1,17 @@
 
 ion-tabs {
   position: relative;
-  //height: 3rem;
+
   ion-tab {
     background: transparent;
+    position: absolute;
+    bottom: 2%;
+    left: 50%;
+    z-index: 100;
+    transform: translate(-50%, -50%);
   }
   ion-tab-bar {
+    padding-top: 1.5rem;
     --background: var(--ion-background-color-2);
     border: none;
   }
