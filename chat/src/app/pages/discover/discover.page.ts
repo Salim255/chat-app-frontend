@@ -138,9 +138,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     return this.foreignersList[ profileListLength - 1 ];
   }
 
-  setClickedProfile(foreigner: any, profilesImages: any, index: number) {
-    console.log(foreigner, profilesImages, index);
-  }
+ 
 
   skipFriend () {
      this.dropProfileFromForeignersList();

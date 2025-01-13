@@ -3,9 +3,12 @@ ion-item {
   --padding-end: 4px;
   --inner-padding-start: 0;
   --inner-padding-end: 0;
+  --background: var(--ion-background-color-2);
+
   form{
     border-radius: 1rem;
-    background: rgb(220, 218, 218);
+    background: var(--ion-background-color);
+
     display:  flex;
     width: 100%;
     padding: .5rem;

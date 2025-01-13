@@ -4,6 +4,7 @@ ion-content {
   ion-grid {
     position: relative;
     pointer-events: none;
+
     ion-row:first-child {
       ion-col {
         app-profile-card {
@@ -17,7 +18,7 @@ ion-content {
             top: 10%;
           }
           @include respond-height(small-phone) {
-            top: 65%;
+            top: 67%;
           }
           transform: translate(-50%, -50%);
           width: 100%;

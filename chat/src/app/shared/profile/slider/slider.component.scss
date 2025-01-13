@@ -21,7 +21,7 @@ swiper-container {
         width: 100%;
         object-fit: contain;
         object-position: top;
-        border-radius: 1rem;
+        border-radius: 10px;
 
         @include respond(bp-extra-large) {
           height: 38rem;
@@ -43,13 +43,15 @@ swiper-container {
         @include respond(bp-mobile-large) {
           height: 40rem;
 
-          @include respond-height(small-phone) {
-            height: 30rem;
-            object-fit: cover;
-          }
+
 
           @include respond-height(large-phone) {
             height: 40rem;
+          }
+
+          @include respond-height(small-phone) {
+            height: 35rem;
+            object-fit: cover;
           }
         }
         @include respond(bp-mobile-medium) {
@@ -83,7 +85,7 @@ swiper-container {
          height: 100%;
 
          display: flex;
-         border-radius: 1rem;
+         border-radius: 10px;
          app-profile-coordination {
            margin-bottom: 5rem;
            margin-top: auto;
@@ -99,8 +101,6 @@ swiper-container {
          }
        }
     }
-    //
-
   }
 }
 
