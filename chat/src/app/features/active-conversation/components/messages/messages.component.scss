@@ -1,40 +1,49 @@
-div {
-  position: relative;
-  padding-top: 3rem;
   ion-list{
-    padding-top: 1rem;
+    padding-top: 5rem;
     ion-item {
       margin: .3rem 0;
-      ion-text{
+      .message {
         max-width: 80%;
         display: inline;
-        padding: .4rem ;
-        padding-bottom: 1.5rem;
+        padding: 0 .6rem ;
+        padding-top: .4rem;
+
         border-radius: .6rem;
         position: relative;
-        .message {
-          position: absolute;
-          right: 1%;
-          bottom: 1%;
-          height: 1.3rem;
-          width: 1.3rem;
+        &__sender{
+          background: #B8E6F2;
+          color: #004D5A;
+        }
+        &__receiver {
+          background: #F1F1F1;
+          color: #333333;
+        }
+
+        .message-status {
+          display: flex;
+          width: 100%;
+          gap: 2px;
+          p {
+           margin-left: auto;
+           color: #757575;
+           font-size: 11px;
+          }
+          ion-icon {
+            align-self: center;
+            width: 1rem;
+          }
           &__read {
             color: #1f91e0;
+
+          }
+          &__delivered {
+
           }
           &__sent {
             color: #9ca1a3;
           }
         }
       }
-      .sender{
-        background: rgb(242 230 79);
-
-      }
-      .receiver {
-        background: rgb(222 222 222);
-      }
-
-
     }
 
   }
@@ -42,4 +51,4 @@ div {
   .typing{
     margin-bottom: 4rem;
   }
-}
+
