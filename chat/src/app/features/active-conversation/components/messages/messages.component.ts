@@ -8,7 +8,7 @@ import { AuthService } from "src/app/core/services/auth/auth.service";
 export class MessagesComponent implements OnInit, OnChanges{
   @Input() messagesList: any;
   userId: any;
-
+  date?: Date
   constructor(private authService: AuthService) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
@@ -19,6 +19,7 @@ export class MessagesComponent implements OnInit, OnChanges{
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     console.log( "hello");
+
   }
 
   ngOnChanges(changes: SimpleChanges) {

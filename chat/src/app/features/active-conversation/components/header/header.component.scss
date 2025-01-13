@@ -2,7 +2,17 @@ ion-header {
 
 
   ion-toolbar {
-    padding: 1rem 0rem;
+    padding-top: 4rem;
+    padding-bottom: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+
+    ion-buttons {
+      ion-icon {
+        color: var(--ion-text-color-1);
+      }
+    }
+
     ion-item {
       display: flex;
       justify-content: center;
@@ -26,13 +36,16 @@ ion-header {
           font-weight: bold;
           align-self: center;
           text-transform: capitalize;
+          color: var(--ion-text-color-1);
         }
       }
     }
 
+
     ion-buttons:last-child {
       ion-icon {
         margin-right: .5rem;
+        fill: var(--ion-text-color-1);
       }
     }
   }
