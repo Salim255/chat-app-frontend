@@ -7,4 +7,6 @@
 export const environment = {
   production: true,
   apiUrl: "https://chat-app-backend-duj2.onrender.com/api/v1",
+  mapBaseUrl: "https://api.opencagedata.com/geocode/v1/json",
+  mapApiKey: "d5adeba61c104499a2bfb61f2d2c898d"
 };
