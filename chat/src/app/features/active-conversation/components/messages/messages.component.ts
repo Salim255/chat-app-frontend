@@ -8,7 +8,7 @@ import { AuthService } from "src/app/core/services/auth/auth.service";
 export class MessagesComponent implements OnInit, OnChanges{
   @Input() messagesList: any;
   userId: any;
-  date?: Date
+  date?: Date;
   constructor(private authService: AuthService) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;

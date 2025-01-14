@@ -7,7 +7,7 @@
        {{ message.content }}
        <div class="message-status" >
         <p>
-            17:54
+          {{ message.updated_at | date: 'HH:mm' }}
         </p>
         <ion-icon size="small" [name]="getMessageStatus(message.status)" *ngIf="message?.from_user_id === userId" [ngClass]="[message.status === 'read' ? 'message-status message-status__read': 'message-status message-status__sent']"></ion-icon>
        </div>
