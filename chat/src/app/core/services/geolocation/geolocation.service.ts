@@ -34,7 +34,7 @@ export class GeolocationService {
 
   async getUserCurrentLocation() {
 
-    // Check permission
+    // Check location permission
     const permission = await this.requestPermissions();
 
     if (!permission) {

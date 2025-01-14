@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+  <!-- Camera permission -->
+  <key>NSCameraUsageDescription</key>
+  <string>(Privacy - Camera Usage Description)</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>(Privacy - Photo Library Additions Usage Description)</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string> (Privacy - Photo Library Usage Description)</string>
+  <!-- Location permission -->
   <key>NSLocationWhenInUseUsageDescription</key>
   <string>We need your location to provide location-based services.</string>
   <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

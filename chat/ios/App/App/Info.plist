@@ -1,6 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <plist version="1.0">
     <dict>
+        <key>NSCameraUsageDescription</key>
+        <string>(Privacy - Camera Usage Description)</string>
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>(Privacy - Photo Library Additions Usage Description)</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string> (Privacy - Photo Library Usage Description)</string>
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>We need your location to provide location-based services.</string>
         <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
