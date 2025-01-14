@@ -26,8 +26,21 @@ export class GeolocationService {
     }
   }
 
+  async requestPermissions() {
+      const permissions = await Geolocation.requestPermissions();
+      console.log('Permissions:', permissions);
+      return permissions
+  }
 
   async getUserCurrentLocation() {
+
+    // Check permission
+    const permission = await this.requestPermissions();
+
+    if (!permission) {
+      return
+    }
+
     try {
       // Get user's coordinates
       const position = await Geolocation.getCurrentPosition();
