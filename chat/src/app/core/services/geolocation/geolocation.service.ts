@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Geolocation } from '@capacitor/geolocation';
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable} from "rxjs";
 import { environment } from "src/environments/environment";
+
 
 type Coordinates = {
   latitude: number,
@@ -51,6 +52,7 @@ export class GeolocationService {
 
   getCityByCoordinates(coordinates: Coordinates): Observable<any>{
     // OpenCage API BaseUrl
+    //console.log(this.env.mapKey);
     const url = `${this.ENV.mapBaseUrl}?q=${coordinates.latitude},++${coordinates.longitude}&key=${this.ENV.mapApiKey}&language=en&pretty=1`
     return  this.http.get(url);
   }
