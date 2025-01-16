@@ -1,22 +1,21 @@
-import { Component,  Input} from '@angular/core';
+import { Component,  Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { Match } from 'src/app/models/friend.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
-import { TapService } from 'src/app/services/tap/tap.service';
-import { Foreigner } from 'src/app/models/foreigner.model';
+
 @Component({
   selector: 'app-match-item',
   templateUrl: './match-item.component.html',
   styleUrls: ['./match-item.component.scss'],
 })
-export class MatchItemComponent {
- @Input() match!: any;
- partnerInfo: Partner;
- private userId: any;
+export class MatchItemComponent implements OnInit {
+  @Input() match!: any;
+  partnerInfo: Partner;
+  private userId: any;
+  defaultImage = 'assets/images/default-profile.jpg';
 
   constructor (private router: Router, private conversationService: ConversationService,
      private authService: AuthService) {
@@ -31,10 +30,17 @@ export class MatchItemComponent {
     });
   }
 
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    if (this.match) {
+      this.setItemImage();
+      this.preparePartnerInfo(this.match);
+    }
+  }
+
   openChat () {
     if (!this.match?.friend_id) return;
-
-    this.preparePartnerInfo(this.match);
 
     let fetchChatObs: Observable<any>;
 
@@ -46,14 +52,11 @@ export class MatchItemComponent {
       },
       next: (chat) => {
           console.log(chat.data, 'Hello chat🐈');
-
           this.conversationService.setPartnerInfo(this.partnerInfo);
           this.router.navigate(['./tabs/active-conversation'], { queryParams: { partner: this.match?.friend_id } });
       }
     })
   }
-
-
 
   preparePartnerInfo (data: Match) {
     if (this.userId === data.user_id) {
@@ -65,5 +68,12 @@ export class MatchItemComponent {
     this.partnerInfo.avatar = data.avatar;
     this.partnerInfo.last_name = data.last_name;
     this.partnerInfo.first_name = data.last_name;
+  }
+
+  setItemImage () {
+    if (this.match?.avatar) {
+      const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.match?.avatar}`;
+      this.defaultImage = accountAvatar
+    }
   }
 }
