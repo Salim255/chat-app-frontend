@@ -64,7 +64,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
       this.isConnected = isConnected;
 
       if (isConnected) {
-        this.profilesImages = this.dataService.getImages;
+
 
         this.likeActionSource = this.discoverService.getLikeProfileState.subscribe(state => {
           if (state ===  'skip') {
