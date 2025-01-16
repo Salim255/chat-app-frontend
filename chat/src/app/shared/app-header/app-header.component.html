@@ -8,12 +8,14 @@
     </ion-text>
 
     <ion-buttons slot="end" >
-      <ion-icon *ngIf="pageName !== 'profile-viewer'" [name]="displayLeftIcon(pageName)"></ion-icon>
+      <ion-icon *ngIf="pageName !== 'profile-viewer' && takingPictureStatus !== 'Pending' " [name]="displayLeftIcon(pageName)"></ion-icon>
         <ion-icon
          [name]="displayRightIcon(pageName)"
           [ngClass]="setRightIconCss(pageName)"
-          (click)="onRightBtn(pageName)">
+          (click)="onRightBtn(pageName)"
+          *ngIf="takingPictureStatus !== 'Pending' ">
         </ion-icon>
+        <ion-text role="button" (click)="onSavePicture()"  *ngIf="takingPictureStatus === 'Pending'">Done</ion-text>
     </ion-buttons>
 
   </ion-toolbar>

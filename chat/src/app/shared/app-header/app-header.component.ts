@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angu
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
-import { NavController } from "@ionic/angular";
 import { Router } from "@angular/router";
+import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
 
 @Component({
   selector: 'app-header',
@@ -22,9 +22,12 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   private viewedProfileSubscription!: Subscription;
   private tapStatusSourceSubscription!: Subscription;
 
+  private takingPictureStateSourceSubscription!: Subscription;
+  takingPictureStatus: TakingPictureStatus = 'Off';
+
   constructor(private tapService: TapService,
     private profileViewerService: ProfileViewerService,
-    private navController: NavController, private router: Router ){}
+    private photoService: PhotoService, private router: Router ){}
 
  ngOnInit(): void {
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
@@ -35,6 +38,14 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       this.viewedProfile = profile;
    })
 
+   this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(status => {
+    if (status === 'Pending') {
+      this.takingPictureStatus = status;
+    } else {
+      this.takingPictureStatus = status
+    }
+  }
+   )
  }
 
  showAppLogo() {
@@ -124,6 +135,11 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
  }
 
+  onSavePicture() {
+    this.photoService.setTakingPictureStatus('Success');
+    console.log('Photo saved successfully');
+  }
+
  ngOnDestroy(): void {
    this.pageName = null;
    if (this.tapStatusSourceSubscription) {
@@ -132,6 +148,10 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
   if (this.viewedProfileSubscription) {
     this.viewedProfileSubscription.unsubscribe()
+  }
+
+  if (this.takingPictureStateSourceSubscription) {
+    this.takingPictureStateSourceSubscription.unsubscribe();
   }
  }
 }

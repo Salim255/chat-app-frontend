@@ -1,13 +1,16 @@
 import { Injectable } from "@angular/core";
-import { Camera, CameraDirection, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Camera, CameraResultType } from '@capacitor/camera';
+import { BehaviorSubject } from "rxjs";
 
 
+export type  TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class PhotoService {
+  private takingPictureStateSource = new BehaviorSubject<TakingPictureStatus>('Off');
   constructor(){}
 
   async requestCameraPermissions() {
@@ -35,7 +38,7 @@ export class PhotoService {
       //console.log('Base64 string:', image.base64String); // Image in Base64 format
       // Call the method to process the image
       //this.processImage(image)
-
+      this.setTakingPictureStatus('Pending');
       return image.base64String
     }
     //this.prepareFormDataForBase64(image.base64String);
@@ -94,6 +97,14 @@ export class PhotoService {
     // await this.uploadToBackend(formData);
   }
 
+  setTakingPictureStatus(status: TakingPictureStatus) {
+    // Set the status of the image capture process
+    // This can be used to to sure confirm and save the image
+    this.takingPictureStateSource.next(status);
+  }
+  get getTakingPictureStatus() {
+    return this.takingPictureStateSource.asObservable();
+  }
   onTakePicture() {
     this.takePicture();
   }
