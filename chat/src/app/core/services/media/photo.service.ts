@@ -7,7 +7,7 @@ import { Camera, CameraDirection, CameraResultType, CameraSource, Photo } from '
   providedIn: 'root'
 })
 
-export class MediaService {
+export class PhotoService {
   constructor(){}
 
   async requestCameraPermissions() {
@@ -30,12 +30,22 @@ export class MediaService {
       promptLabelPhoto:"Please upload a photo of yourself"
     });
 
-    if (image) {
+    if (image?.base64String) {
       //console.log('Image captured:', image);
       //console.log('Base64 string:', image.base64String); // Image in Base64 format
       // Call the method to process the image
-      this.processImage(image)
+      //this.processImage(image)
+
+      return image.base64String
     }
+    //this.prepareFormDataForBase64(image.base64String);
+     return null;
+  }
+
+  prepareFormDataForBase64(base64Image: string): FormData {
+    const formData = new FormData();
+    formData.append('image', base64Image); // Append the Base64 string directly
+    return formData;
   }
 
   async processImage(photo: any) {
