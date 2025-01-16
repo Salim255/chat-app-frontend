@@ -16,6 +16,7 @@ export class ConversationItemComponent  implements OnChanges {
   lastMessage: any ;
   partnerInfo: Partner;
   private userId: any;
+  partnerImage: string = 'assets/images/default-profile.jpg';
 
   constructor (private authService: AuthService, private conversationService: ConversationService, private router: Router ) {
     this.authService.userId.subscribe( data =>{
@@ -30,16 +31,20 @@ export class ConversationItemComponent  implements OnChanges {
     }
    }
 
+
   ngOnChanges (changes: SimpleChanges): void {
     if(this.conversation.messages){
-     let messagesSize = this.conversation.messages.length;
-     this.setLastMessage(this.conversation.messages[messagesSize - 1].content);
+      let messagesSize = this.conversation.messages.length;
+      this.setLastMessage(this.conversation.messages[messagesSize - 1].content);
       this.getPartnerInfo(this.conversation.users);
+      if (this.partnerInfo?.avatar?.length > 0) {
+        const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
+        this.partnerImage = partnerAvatar;
+      }
     }
   }
 
   openChat () {
-    console.log(this.conversation, "🥰🥰");
     if (this.conversation && this.partnerInfo.partner_id) {
 
 
