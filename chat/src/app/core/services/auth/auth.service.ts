@@ -4,7 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
-import { BehaviorSubject, from, map, tap } from 'rxjs';
+import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
 
 
 @Injectable({
@@ -125,6 +125,39 @@ export class AuthService implements OnDestroy {
         return !!userToReturn
       })
     )
+  }
+
+  updateMe (userData: any) {
+    return from(Preferences.get({key: 'authData'})).pipe(
+      map((storedData) => {
+        if (!storedData || !storedData.value) {
+          return null
+        }
+
+        const parseData = JSON.parse(storedData.value) as {
+          _token: string;
+          userId: string;
+          tokenExpirationDate: string;
+        }
+
+        let token = parseData._token;
+
+        return token;
+      }),
+      switchMap((token) => {
+        return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }),
+      tap((response) => {
+          console.log('====================================');
+          console.log('Response:', response);
+          console.log('====================================');
+      })
+    )
+    //return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData)
   }
 
   ngOnDestroy () {

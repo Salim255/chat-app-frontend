@@ -21,6 +21,9 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   photoPreview: string | ArrayBuffer | null = null;
   defaultImage = 'assets/images/default-profile.jpg';
 
+  /* private takingPictureStateSourceSubscription!: Subscription;
+  takingPictureStatus: TakingPictureStatus = 'Off'; */
+
   constructor (private router: Router, private accountService: AccountService,
     private geolocationService: GeolocationService, private photoService: PhotoService
    ) {}
@@ -97,5 +100,6 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
     if (this.userLocationSource) {
       this.userLocationSource.unsubscribe()
     }
+
   }
 }

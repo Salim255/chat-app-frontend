@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Camera, CameraResultType } from '@capacitor/camera';
+import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { BehaviorSubject } from "rxjs";
-
+import { AuthService } from "../auth/auth.service";
 
 export type  TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
@@ -11,7 +11,9 @@ export type  TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
 export class PhotoService {
   private takingPictureStateSource = new BehaviorSubject<TakingPictureStatus>('Off');
-  constructor(){}
+  private takenPictureSource: Photo | null =  null;
+
+  constructor(private authService: AuthService){}
 
   async requestCameraPermissions() {
     const permissionStatus = await Camera.requestPermissions();
@@ -39,16 +41,11 @@ export class PhotoService {
       // Call the method to process the image
       //this.processImage(image)
       this.setTakingPictureStatus('Pending');
+      this.takenPictureSource = image;
       return image.base64String
     }
     //this.prepareFormDataForBase64(image.base64String);
      return null;
-  }
-
-  prepareFormDataForBase64(base64Image: string): FormData {
-    const formData = new FormData();
-    formData.append('image', base64Image); // Append the Base64 string directly
-    return formData;
   }
 
   async processImage(photo: any) {
@@ -64,6 +61,7 @@ export class PhotoService {
     // Log the blob to see its details
     //console.log("Convert Image Blob",  imageBlob)
     this.prepareFormData(imageBlob)
+    return imageBlob;
   }
 
   base64ToBlob(base64Data: string, contentType: string): Blob {
@@ -87,21 +85,43 @@ export class PhotoService {
     const formData = new FormData();
 
     // Append the image blob to the form data, setting the field name as file
-    const fileName = `${Date.now()}-image-.jpg`
-    formData.append('file', imageBlob, fileName );
+    const fileName = `${Date.now()}-image.jpg`
+    formData.append('photo', imageBlob, fileName );
 
     // At this point, the image is ready to be sent to the backend
     console.log(formData);
 
     // Call the method to upload this FormData (this part will be handled later)
     // await this.uploadToBackend(formData);
+    return formData;
   }
 
-  setTakingPictureStatus(status: TakingPictureStatus) {
+  async setTakingPictureStatus(status: TakingPictureStatus) {
     // Set the status of the image capture process
     // This can be used to to sure confirm and save the image
+    if (status === 'Success') {
+      if (this.takenPictureSource) {
+        //const formData = this.prepareFormDataForBase64(this.takenPictureSource);
+        const imageBlob =  await this.processImage(this.takenPictureSource);
+        if (imageBlob) {
+          const formData = await this.prepareFormData(imageBlob);
+          this.authService.updateMe(formData).subscribe({
+            next: (response) => {
+              console.log('====================================');
+              console.log('Photo uploaded:', response);
+              console.log('====================================');
+            },
+            error: (error) => {
+              console.error('Error uploading photo:', error);
+            }
+          });
+        }
+      }
+
+    }
     this.takingPictureStateSource.next(status);
   }
+
   get getTakingPictureStatus() {
     return this.takingPictureStateSource.asObservable();
   }
