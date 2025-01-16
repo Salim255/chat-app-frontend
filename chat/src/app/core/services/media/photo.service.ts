@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Camera, CameraResultType, Photo } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { BehaviorSubject } from "rxjs";
 import { AuthService } from "../auth/auth.service";
 import { AccountService } from "src/app/features/account/services/account.service";
@@ -27,12 +27,23 @@ export class PhotoService {
       return;
     }
 
-    const image = await Camera.getPhoto({
+   /*  const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
       webUseInput: true,
       resultType: CameraResultType.Base64,
       promptLabelPhoto:"Please upload a photo of yourself"
+    }); */
+
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      webUseInput: true,
+      resultType: CameraResultType.Base64, // Ensures the result is returned as Base64
+      source: CameraSource.Prompt, // Gives the user the choice to take a photo or pick one
+      promptLabelPhoto: "Choose from library", // Label for the "Choose from library" option
+      promptLabelPicture: "Take a photo", // Label for the "Take a photo" option
+      promptLabelCancel: "Cancel", // Label for the "Cancel" option
     });
 
     if (image?.base64String) {

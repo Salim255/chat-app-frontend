@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {  Subscription } from 'rxjs';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
+import { AccountService } from 'src/app/features/account/services/account.service';
 
 @Component({
   selector: 'app-conversations',
@@ -12,7 +13,9 @@ export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;
   conversations!: Array<Conversation> ;
   isEmpty: Boolean = true ;
-  constructor(private conversationService: ConversationService) { }
+  constructor(private conversationService: ConversationService,
+    private accountService: AccountService
+  ) { }
 
   ngOnInit() {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
@@ -30,6 +33,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   ionViewWillEnter () {
     this.conversationService.fetchConversations().subscribe();
+    this.accountService.fetchAccount().subscribe();
   }
 
  ngOnDestroy () {

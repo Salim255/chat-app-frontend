@@ -29,7 +29,6 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
     this.accountInfoSource = this.accountService.getAccount.subscribe(data => {
       if (data) this.accountData = data;
-      console.log('Account data:', this.accountData);
      })
      this.userLocationSource =  this.geolocationService.getLocation.subscribe(userLocation => {
         this.userLocation = userLocation

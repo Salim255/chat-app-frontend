@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Match } from 'src/app/models/friend.model';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
-
+import { AccountService } from 'src/app/features/account/services/account.service';
 @Component({
   selector: 'app-matches',
   templateUrl: './matches.page.html',
@@ -14,7 +14,7 @@ export class MatchesPage implements OnInit, OnDestroy {
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
   matchesArray: Array < Match >;
   isEmpty: boolean = false;
-  constructor(private matchesService: MatchesService) {
+  constructor(private matchesService: MatchesService, private accountService: AccountService) {
     this.matchesArray = []
   }
 
@@ -32,6 +32,7 @@ export class MatchesPage implements OnInit, OnDestroy {
 
   ionViewWillEnter () {
     this.matchesService.fetchMatches().subscribe( );
+    this.accountService.fetchAccount().subscribe();
   }
 
   ngOnDestroy() {
