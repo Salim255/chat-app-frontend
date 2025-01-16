@@ -21,9 +21,6 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   photoPreview: string | ArrayBuffer | null = null;
   defaultImage = 'assets/images/default-profile.jpg';
 
-  /* private takingPictureStateSourceSubscription!: Subscription;
-  takingPictureStatus: TakingPictureStatus = 'Off'; */
-
   constructor (private router: Router, private accountService: AccountService,
     private geolocationService: GeolocationService, private photoService: PhotoService
    ) {}
@@ -32,6 +29,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
     this.accountInfoSource = this.accountService.getAccount.subscribe(data => {
       if (data) this.accountData = data;
+      console.log('Account data:', this.accountData);
      })
      this.userLocationSource =  this.geolocationService.getLocation.subscribe(userLocation => {
         this.userLocation = userLocation
@@ -91,6 +89,14 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
     this.photoPreview = null;
   }
 
+  setAccountImage() {
+     if (this.accountData?.avatar?.length > 0) {
+      const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.accountData.avatar}`;
+       return  accountAvatar;
+     } else {
+       return this.defaultImage;
+     }
+  }
 
   ngOnDestroy() {
     if (this.accountInfoSource) {

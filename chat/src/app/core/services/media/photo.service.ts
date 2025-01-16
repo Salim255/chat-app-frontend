@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { BehaviorSubject } from "rxjs";
 import { AuthService } from "../auth/auth.service";
-
+import { AccountService } from "src/app/features/account/services/account.service";
 export type  TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class PhotoService {
   private takingPictureStateSource = new BehaviorSubject<TakingPictureStatus>('Off');
   private takenPictureSource: Photo | null =  null;
 
-  constructor(private authService: AuthService){}
+  constructor(private authService: AuthService, private accountService: AccountService){}
 
   async requestCameraPermissions() {
     const permissionStatus = await Camera.requestPermissions();
@@ -110,6 +110,8 @@ export class PhotoService {
               console.log('====================================');
               console.log('Photo uploaded:', response);
               console.log('====================================');
+              //this.authService.fetchAccount().subscribe();
+              this.accountService.fetchAccount().subscribe();
             },
             error: (error) => {
               console.error('Error uploading photo:', error);
