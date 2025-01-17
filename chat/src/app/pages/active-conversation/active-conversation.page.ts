@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { createChatInfo } from "src/app/interfaces/chat.interface";
-import { Message } from "src/app/interfaces/message.interface";
+import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
+import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({
@@ -20,40 +20,37 @@ export class ActiveConversationPage implements OnDestroy {
   private activeConversationSubscription!: Subscription;
   private deliveredEventSubscription!: Subscription;
 
-  userId: any;
-  partnerInfo: any;
-  activeChat: any;
-  messagesList: any;
+  private userId: any;
+  private partnerInfo: any;
+  private activeChat: any;
+  private messagesList: any;
   typingState: boolean = false;
 
 
-  constructor(private conversationService: ConversationService, private router: Router, private authService: AuthService, private socketIoService: SocketIoService){
+  constructor(private conversationService: ConversationService,
+     private authService: AuthService, private socketIoService: SocketIoService,
+    private activeConversationService: ActiveConversationService){
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
   }
 
-
   ionViewWillEnter () {
-
     // Here we get active conversation
-    this.activeConversationSubscription = this.conversationService.getActiveConversation.subscribe( data =>
+    this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe( data =>
       {
-            this.activeChat = data;
-            this.messagesList = this.activeChat?.messages;
-
-            this.conversationService.setActiveConversationMessages(this.messagesList);
-
+        this.activeChat = data;
+        this.messagesList = this.activeChat?.messages;
+        this.activeConversationService.setActiveConversationMessages(this.messagesList);
       });
 
     // Here we get the partner information
-     this.conversationService.getPartnerInfo.subscribe( partnerInfo => {
-        this.partnerInfo = partnerInfo
+     this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
+       this.partnerInfo = partnerInfo
      })
 
      // listen to receiver message delivered event, in case receiver is in current conversation
      this.deliveredEventSubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe((data:any) => {
-
       if (data) {
         const {chatId, toUserId, fromUserId} = data
         if (chatId && toUserId && fromUserId) {
@@ -71,7 +68,7 @@ export class ActiveConversationPage implements OnDestroy {
      }
    }
 
-  createNewChatObs(message: any) {
+  createNewChatObs(message: string) {
 
     if (!this.partnerInfo?.partner_id) {
       return
@@ -114,10 +111,7 @@ export class ActiveConversationPage implements OnDestroy {
         console.log(err);
       },
       next: (response) => {
-
-
           this.activeChat = response.data[0];
-
           let lastMessage = this.getLastMessage(this.activeChat)
           console.log(this.activeChat);
           this.pushMessageToMessagesList(lastMessage)
@@ -148,7 +142,7 @@ export class ActiveConversationPage implements OnDestroy {
   }
 
 
- onSubmit(message: any) {
+ onSubmit(message: string) {
      if (!this.activeChat) {
         this.createNewChatObs(message)
      } else {
@@ -170,5 +164,10 @@ export class ActiveConversationPage implements OnDestroy {
     if (this.deliveredEventSubscription) {
       this.deliveredEventSubscription.unsubscribe()
     }
+    console.log('destroying active conversation')
+    this.activeConversationService.setActiveConversation(null);
+    this.activeConversationService.setPartnerInfo(null);
+    // Destroy the active conversation source
+    //this.conversationService.destroyActiveConversation();
   }
 }

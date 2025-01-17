@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
+
 @Component({
   selector: 'app-messages',
   templateUrl: './active-conversation-messages.page.html',
@@ -15,7 +16,9 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
 
   typingState = false;
   messagesList:any;
-  constructor(private conversationService: ConversationService, private socketIoService: SocketIoService) { }
+  constructor( private socketIoService: SocketIoService,
+    private activeConversationService: ActiveConversationService
+  ) { }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngAfterViewChecked() {
@@ -23,8 +26,8 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    this.messagesSource = this.conversationService.getActiveChatMessages.subscribe(messages => {
+    //getActiveConversationMessages
+    this.messagesSource = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
      this.messagesList = messages
     })
   }
@@ -58,6 +61,7 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
       this.typingSubscription.unsubscribe();
     }
 
+    this.activeConversationService.setActiveConversationMessages(null);
   }
 
 }

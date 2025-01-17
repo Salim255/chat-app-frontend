@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Preferences } from "@capacitor/preferences";
-import { BehaviorSubject, from, map, pipe, switchMap, tap } from "rxjs";
-import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
+import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { createChatInfo } from "src/app/interfaces/chat.interface";
+import { Conversation } from "../../active-conversation/models/active-conversation.model";
 
 @Injectable({
   providedIn: 'root'
@@ -260,21 +260,15 @@ export class ConversationService {
       )
   }
 
-  get getActiveConversation () {
-    return this.activeConversationSource.asObservable()
-  }
 
   get getConversations () {
     return this.conversationsSource.asObservable()
   }
 
-  get getPartnerInfo (){
-    return this.partnerInfoSource.asObservable();
-  }
-
   get getActiveChatMessages() {
     return this.activeChatMessagesListSource.asObservable()
   }
+
   subtractToken (storedData: any) {
     const parseData = JSON.parse(storedData.value) as {
       _token: string;
