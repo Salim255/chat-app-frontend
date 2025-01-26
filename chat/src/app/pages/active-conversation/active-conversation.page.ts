@@ -49,7 +49,7 @@ export class ActiveConversationPage implements OnDestroy {
 
   ionViewWillEnter () {
     // Here we get active conversation
-    this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe( data =>
+    this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe(data =>
       {
         if (data && data?.messages) {
           this.activeChat = data;
@@ -61,14 +61,13 @@ export class ActiveConversationPage implements OnDestroy {
 
     // Here we get the partner information
      this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
-
-      if (partnerInfo) {
-        this.partnerInfo = partnerInfo
-      }
+        if (partnerInfo) {
+          this.partnerInfo = partnerInfo
+        }
      })
 
      // listen to receiver message delivered event, in case receiver is in current conversation
-     this.deliveredEventSubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe((data:any) => {
+     this.deliveredEventSubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(data => {
       if (data) {
         const {chatId, toUserId, fromUserId} = data
         if (chatId && toUserId && fromUserId) {
@@ -101,12 +100,13 @@ export class ActiveConversationPage implements OnDestroy {
   createNewChatObs(data: CreateChatInfo) {
 
     if (!this.partnerInfo?.partner_id) {
+      // Treat error
       return
     };
 
     let createChatObs: Observable<any> ;
 
-    createChatObs = this.conversationService.createConversation(data);
+    createChatObs = this.activeConversationService.createConversation(data);
 
     createChatObs.subscribe({
       error: (err) => {
@@ -114,13 +114,11 @@ export class ActiveConversationPage implements OnDestroy {
       },
       next: (res) => {
         this.activeChat = res.data;
-
         if (this.activeChat ) {
           let lastMessage = this.getLastMessage(this.activeChat);
-
           this.pushMessageToMessagesList(lastMessage);
 
-         // this.conversationService.setActiveConversation(res.data);
+          // this.conversationService.setActiveConversation(res.data);
           this.activeConversationService.setActiveConversation(res.data)
            // Sending this partnerId to be used in fetching active chat
           if (this.userId && this.partnerInfo?.partner_id && this.activeChat.id) {
@@ -133,7 +131,6 @@ export class ActiveConversationPage implements OnDestroy {
 
             this.socketIoService.sendMessage(createMessageData)
           }
-
         }
       }
     })
@@ -208,10 +205,7 @@ export class ActiveConversationPage implements OnDestroy {
     if (this.deliveredEventSubscription) {
       this.deliveredEventSubscription.unsubscribe()
     }
-    console.log('destroying active conversation')
     this.activeConversationService.setActiveConversation(null);
     this.activeConversationService.setPartnerInfo(null);
-    // Destroy the active conversation source
-    //this.conversationService.destroyActiveConversation();
   }
 }

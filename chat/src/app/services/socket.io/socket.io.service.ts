@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-
-import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable} from 'rxjs';
 import { ConversationService } from '../../features/conversations/services/conversations.service';
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { CreateMessageData, ReadDeliveredMassage } from 'src/app/pages/active-conversation/active-conversation.page';
 
@@ -20,7 +19,9 @@ export class SocketIoService {
   private comingTypingSource = new BehaviorSubject < any > (null) ;
   private deliveredEventSource = new BehaviorSubject< any > (null) ;
 
-  constructor(private conversationService: ConversationService, private authService: AuthService) {
+  constructor(private conversationService: ConversationService, private authService: AuthService,
+    private activeConversationService: ActiveConversationService
+  ) {
 
     this.authService.userId.subscribe( data =>{
       this.userId = data;
@@ -233,9 +234,9 @@ export class SocketIoService {
 
 fetchCurrentConversation ( chatId: number) {
   let activeChatObs: Observable <any>;
-  activeChatObs = this.conversationService.fetchChatByChatId(chatId);
+  activeChatObs = this.activeConversationService.fetchChatByChatId(chatId);
 
- activeChatObs.subscribe({
+  activeChatObs.subscribe({
    error: (err) =>{
      console.log('====================================');
      console.log(err);

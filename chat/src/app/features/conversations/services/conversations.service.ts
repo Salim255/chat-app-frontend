@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Preferences } from "@capacitor/preferences";
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
-import { CreateChatInfo } from "src/app/interfaces/chat.interface";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 
 @Injectable({
@@ -11,90 +10,17 @@ import { Conversation } from "../../active-conversation/models/active-conversati
 })
 export class ConversationService {
   private ENV = environment;
-  private activeConversationSource = new BehaviorSubject<Conversation | null > (null);
+
   private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
-  private activeChatMessagesListSource = new BehaviorSubject<any | null> (null);
 
 
   constructor(private http: HttpClient) {
 
     }
 
-  createConversation (data: CreateChatInfo) {
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map( (storedData) => {
-          if (!storedData || !storedData.value ) {
-            return null
-          };
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-
-          let token = parseData._token;
-
-          return token;
-      }), switchMap( (token) => {
-          return this.http.post<any>(`${this.ENV.apiUrl}/chats`,
-            data,
-             {
-              headers:
-              {
-                Authorization: `Bearer ${token}`
-              }
-            }
-        )
-      } )
-    )
-  }
-
-  setActiveConversation(conversation: Conversation) {
-    if (!conversation) {
-      this.activeConversationSource.next(null);
-    } else {
-      const buildActiveChat = new Conversation(conversation.id, conversation.created_at, conversation.updated_at, conversation.messages, conversation.users);
-      this.activeConversationSource.next(buildActiveChat)
-    }
-  }
 
   setConversations (chats: any) {
       this.conversationsSource.next(chats);
-  }
-
-  //
-  fetchChatByChatId(chatId: number) {
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map( ( storedData ) => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-        let token = parseData._token;
-
-        return token;
-        }
-      ),
-      switchMap( (token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-           }
-        )
-      }),
-      tap( (response) => {
-        this.setActiveConversation(response.data[0])
-
-      })
-    )
   }
 
   fetchConversations () {
@@ -126,7 +52,6 @@ export class ConversationService {
       tap ( (response) => {
         if (response) {
           if (response.data) {
-            //this.activeConversationSource.s
             this.setConversations(response.data)
           }
         }
@@ -197,9 +122,6 @@ export class ConversationService {
     return this.conversationsSource.asObservable()
   }
 
-  get getActiveChatMessages() {
-    return this.activeChatMessagesListSource.asObservable()
-  }
 
   subtractToken (storedData: any) {
     const parseData = JSON.parse(storedData.value) as {
@@ -212,7 +134,4 @@ export class ConversationService {
     return token;
   }
 
- setActiveConversationMessages(messagesList: any){
-    this.activeChatMessagesListSource.next(messagesList)
- }
 }
