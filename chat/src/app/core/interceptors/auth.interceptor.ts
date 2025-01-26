@@ -15,6 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+
     // Fetch token from Capacitor Preferences
     return from(Preferences.get({ key: 'authData' })).pipe(
       switchMap((storedData) => {

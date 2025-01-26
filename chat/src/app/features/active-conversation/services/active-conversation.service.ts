@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
+import { BehaviorSubject, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
-import { Preferences } from "@capacitor/preferences";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
@@ -24,100 +23,22 @@ export class ActiveConversationService {
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map( (storedData) => {
-          if (!storedData || !storedData.value ) {
-            return null
-          };
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-
-          let token = parseData._token;
-
-          return token;
-      }), switchMap( (token) => {
-          return this.http.post<any>(`${this.ENV.apiUrl}/chats`,
-            data,
-             {
-              headers:
-              {
-                Authorization: `Bearer ${token}`
-              }
-            }
-        )
-      } )
-    )
+    return this.http.post<any>(`${this.ENV.apiUrl}/chats`, data)
   }
 
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number) {
-    return from (Preferences.get({key: 'authData'}))
-    .pipe(
-      map ( (storedData) => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-
-        let token = parseData._token;
-        return token;
-      }),
-      switchMap ( (token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-         }
-        )
-      }),
-      tap ( (response) => {
-         this.setActiveConversation(response.data)
-      })
-    )
+    return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`).pipe(tap((response) => {
+      this.setActiveConversation(response.data)
+    }))
   }
 
   // We use this function to update the current conversation with receiving  new message
   // This trigged by socket.js service
   fetchChatByChatId(chatId: number) {
-      return from(Preferences.get({key: 'authData'})).pipe(
-        map( ( storedData ) => {
-          if (!storedData || !storedData.value) {
-            return null;
-          }
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-          let token = parseData._token;
-
-          return token;
-          }
-        ),
-        switchMap( (token) => {
-          return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-             }
-          )
-        }),
-        tap( (response) => {
-          this.setActiveConversation(response.data[0]);
-        })
-      )
+     return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`).pipe(tap((response) => {
+       this.setActiveConversation(response.data[0]);
+     }))
   }
 
   // Here we set the active conversation
@@ -130,37 +51,12 @@ export class ActiveConversationService {
     }
   }
 
-
   // Here we send a message to a current conversation
   sendMessage(data: CreateMessageData) {
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map( ( storedData ) => {
-          if (!storedData || !storedData.value) {
-            return null;
-          }
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-          let token = parseData._token;
-
-          return token;
-      }),
-      switchMap( (token) => {
-        return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-         }
-      )
-      }),tap( () => {
-        // To trigger conversations in conversations page
-        this.conversationService.fetchConversations();
-      })
-    )
+    return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data).pipe(tap(() => {
+      //To trigger conversations in conversations page
+      this.conversationService.fetchConversations();
+    }))
   }
 
   // Here we set conversation's partner information
