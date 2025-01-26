@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
 import { AuthService } from "src/app/core/services/auth/auth.service";
@@ -15,20 +15,15 @@ import { Subscription } from "rxjs";
 export class FormInputComponent implements OnInit, OnDestroy  {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitObs = new EventEmitter<any>();
-  @Output() createNewChatObs = new EventEmitter<string>();
-  @Output() typingListener = new EventEmitter<any>();
 
   private toUserId: number | null = null;
 
   message: string = '';
-  private userId: any;
   private partnerInfoSubscription!: Subscription;
-  constructor(private authService: AuthService, private socketIoService: SocketIoService,
+  constructor(private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService
   ){
-    this.authService.userId.subscribe( data =>{
-      this.userId = data;
-    });
+
   }
 
   ngOnInit() {
@@ -55,6 +50,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
+
     this.submitObs.emit(this.message);
     f.reset();
   }
@@ -63,5 +59,6 @@ export class FormInputComponent implements OnInit, OnDestroy  {
     if (this.partnerInfoSubscription) {
       this.partnerInfoSubscription.unsubscribe();
     }
+    this.toUserId = null;
   }
 }

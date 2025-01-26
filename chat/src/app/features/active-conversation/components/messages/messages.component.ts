@@ -1,32 +1,33 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AuthService } from "src/app/core/services/auth/auth.service";
+import { Message } from "../../interfaces/message.interface";
+import { ActiveConversationService } from "../../services/active-conversation.service";
+import { Subscription } from "rxjs";
+
 @Component({
   selector: 'app-chat-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit, OnChanges{
-  @Input() messagesList: any;
-  userId: any;
-  date?: Date;
-  constructor(private authService: AuthService) {
+export class MessagesComponent implements OnInit,OnDestroy{
+  messagesList: Message [] | null = null;
+  userId: number | null = null;
+  date: Date | null = null;
+  private messagesSourceSubscription!: Subscription;
+
+  constructor(private authService: AuthService, private activeConversationService: ActiveConversationService) {
     this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
   }
 
   ngOnInit() {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log( "hello");
+    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+      this.messagesList = messages
+     })
 
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    console.log( "hello");
-  }
   getMessageStatus(messageStatus: string) {
     switch(messageStatus) {
       case 'read':
@@ -38,5 +39,9 @@ export class MessagesComponent implements OnInit, OnChanges{
     }
   }
 
-
+  ngOnDestroy(): void {
+    if (this.messagesSourceSubscription) {
+      this.messagesSourceSubscription.unsubscribe();
+    }
+  }
 }

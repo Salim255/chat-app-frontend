@@ -5,6 +5,8 @@ import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable} from 'rxjs';
 import { ConversationService } from '../../features/conversations/services/conversations.service';
 import { AuthService } from '../../core/services/auth/auth.service';
+import { CreateMessageData, ReadDeliveredMassage } from 'src/app/pages/active-conversation/active-conversation.page';
+
 
 @Injectable({
   providedIn: 'root'
@@ -96,8 +98,8 @@ export class SocketIoService {
     this.socket.emit('user_typing', { toUserId, status })
   }
 
-  sendMessage(chatId: string, fromUserId: string, toUserId: string, message: string) {
-    this.socket.emit('send_message', { chatId, fromUserId, toUserId, message });
+  sendMessage(createMessageData: CreateMessageData) {
+    this.socket.emit('send_message', createMessageData);
   }
 
   onMessageSent() {
@@ -173,8 +175,8 @@ export class SocketIoService {
     })
   }
 
-  readMessage(chatId: number,  fromUserId: number, toUserId: number,) {
-    this.socket.emit('read_message', { chatId , toUserId, fromUserId });
+  readMessage(data: ReadDeliveredMassage) {
+    this.socket.emit('read_message', data);
   }
 
   onMessageRead() {
@@ -240,8 +242,7 @@ fetchCurrentConversation ( chatId: number) {
      console.log('====================================');
    },
    next: (res) => {
-     console.log(res);
-
+     //console.log(res);
    }
  })
   }

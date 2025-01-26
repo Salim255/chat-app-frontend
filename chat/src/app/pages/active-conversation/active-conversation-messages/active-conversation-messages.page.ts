@@ -11,7 +11,7 @@ import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 })
 export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
-  private messagesSource!: Subscription;
+  private messagesSourceSubscription!: Subscription;
   private typingSubscription!: Subscription;
 
   typingState = false;
@@ -27,7 +27,7 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     //getActiveConversationMessages
-    this.messagesSource = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
      this.messagesList = messages
     })
   }
@@ -54,8 +54,8 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    if (this.messagesSource) {
-      this.messagesSource.unsubscribe()
+    if (this.messagesSourceSubscription) {
+      this.messagesSourceSubscription.unsubscribe()
     }
     if (this.typingSubscription) {
       this.typingSubscription.unsubscribe();

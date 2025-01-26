@@ -6,6 +6,8 @@ import { Message } from "../interfaces/message.interface";
 import { Preferences } from "@capacitor/preferences";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
+import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
+import { ConversationService } from "../../conversations/services/conversations.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,7 @@ export class ActiveConversationService {
   private activeConversationSource = new BehaviorSubject< Conversation | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject< Message[] | null> (null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private conversationService: ConversationService) { }
 
 
   fetchChatByPartnerID (partnerId: number) {
@@ -62,6 +64,40 @@ export class ActiveConversationService {
     }
   }
 
+
+  //
+  sendMessage(data: CreateMessageData) {
+    return from(Preferences.get({key: 'authData'})).pipe(
+      map( ( storedData ) => {
+          if (!storedData || !storedData.value) {
+            return null;
+          }
+
+          const parseData = JSON.parse(storedData.value) as {
+            _token: string;
+            userId: string;
+            tokenExpirationDate: string;
+          }
+          let token = parseData._token;
+
+          return token;
+      }),
+      switchMap( (token) => {
+        return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+         }
+      )
+      }),tap( () => {
+        // To trigger conversations in conversations page
+        this.conversationService.fetchConversations();
+      })
+  )
+}
+
+
   setPartnerInfo(data: Partner | null) {
     this.partnerInfoSource.next(data)
   }
@@ -80,4 +116,5 @@ export class ActiveConversationService {
   get getActiveConversation () {
     return this.activeConversationSource.asObservable()
   }
+
 }

@@ -2,9 +2,7 @@ import { Component,  Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
-// import { Match } from 'src/app/models/friend.model';
-import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 
 @Component({
@@ -17,8 +15,7 @@ export class MatchItemComponent implements OnInit {
   partnerInfo: Partner;
   defaultImage = 'assets/images/default-profile.jpg';
 
-  constructor (private router: Router, private conversationService: ConversationService,
-     private authService: AuthService, private activeConversationService: ActiveConversationService) {
+  constructor (private router: Router,private activeConversationService: ActiveConversationService) {
     this.partnerInfo = {
       partner_id: null ,
       avatar: null,
@@ -40,6 +37,7 @@ export class MatchItemComponent implements OnInit {
 
     let fetchChatObs: Observable<any>;
 
+    // Here weather there are a chat with the current partner
     fetchChatObs = this.activeConversationService.fetchChatByPartnerID(this.match?.partner_id);
 
     fetchChatObs.subscribe({
