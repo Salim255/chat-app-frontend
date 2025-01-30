@@ -45,6 +45,10 @@ export class SocketIoService {
 
     this.authService.userId.subscribe( data =>{
       this.userId = data;
+      if (this.socket?.connected && this.userId) {
+        this.registerUser(this.userId);
+        this.broadcastingUserOnline();
+      }
     });
 
     // Establish connection
@@ -66,8 +70,16 @@ export class SocketIoService {
       this.socket.on('Welcome', (data) => {
         console.log(data, 'welcome');
       })
-
     })
+    // Listen to reconnect to server event
+    this.socket.on('reconnect', () => {
+      console.log('Reconnected to server 💥💥');
+      if (this.userId) {
+        this.registerUser(this.userId);
+        this.broadcastingUserOnline();
+      }
+    });
+
   }
 
   // 1

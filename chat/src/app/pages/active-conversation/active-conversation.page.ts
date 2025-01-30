@@ -120,19 +120,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           this.onSendMessageEmitter(lastMessage);
           this.pushMessageToMessagesList(lastMessage);
 
-          //this.conversationService.setActiveConversation(res.data);
           this.activeConversationService.setActiveConversation(res.data)
-           // Sending this partnerId to be used in fetching active chat
-          if (this.userId && this.partnerInfo?.partner_id && this.activeChat.id) {
-            const createMessageData: CreateMessageData = {
-              chatId: this.activeChat.id,
-              fromUserId: this.userId,
-              toUserId: this.partnerInfo?.partner_id,
-              content: data.content
-            };
-
-            //====this.socketIoService.sendMessage(createMessageData)
-          }
         }
       }
     })
@@ -159,9 +147,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           // Trigger "send-message" emitter
           this.onSendMessageEmitter(lastMessage);
 
-          this.pushMessageToMessagesList(lastMessage)
-          // Sending this partnerId to be used in fetching  active chat
-         //==== this.socketIoService.sendMessage(data)
+          this.pushMessageToMessagesList(lastMessage);
       }
     })
   }
@@ -173,7 +159,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       this.messagesList.push(message)
     }
  }
-   // Update the message status in the UI
+   // Update the message status
    private updateMessageStatus(deliveredMessage: Message) {
     const index = this.messagesList.findIndex((msg) => msg.id === deliveredMessage.id);
     if (index !== -1) {
@@ -204,9 +190,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
    }
  }
 
- /* fetchMessagesByChatID(chat) {
-
- } */
  onSubmit(message: string) {
      if (!this.activeChat && this.userId && this.partnerInfo?.partner_id) {
         const createChatData: CreateChatInfo = { content: message, toUserId: this.partnerInfo.partner_id, fromUserId: this.userId };

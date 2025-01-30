@@ -15,7 +15,8 @@ import { Subscription } from "rxjs";
 export class FormInputComponent implements OnInit, OnDestroy  {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitObs = new EventEmitter<any>();
-
+  private typingTimeout = 2000;
+  private typingTimer: string | null = null;  // Timer variable
   private toUserId: number | null = null;
 
   message: string = '';
