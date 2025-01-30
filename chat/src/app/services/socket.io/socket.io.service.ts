@@ -140,6 +140,10 @@ export class SocketIoService {
    })
   }
 
+  // 8
+  userLeftChatRoomEmitter() {
+    this.socket.emit('leave-room', { roomId: this.currentRoomId, userId: this.userId})
+  }
   get getConversationRoomId() {
     return this.roomIdSource.asObservable();
   }

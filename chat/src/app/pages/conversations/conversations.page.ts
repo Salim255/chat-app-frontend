@@ -32,7 +32,6 @@ export class ConversationsPage implements OnInit, OnDestroy {
     })
 
     this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
-
        if (message) {
         this.updateChatWithReceivedMessage(message)
        }
@@ -49,17 +48,16 @@ export class ConversationsPage implements OnInit, OnDestroy {
   }
 
   updateChatWithReceivedMessage(message: Message) {
-
     // Find the conversation by its ID
     const chatIndex = this.conversations.findIndex(chat => chat.id === message.chat_id);
     const conversation = this.conversations[chatIndex] ;
 
-    if (!conversation.messages ) {
+    if (!conversation?.messages ) {
       return;
     }
+
     // Check for a message with the message.id
     const messageIndex = this.conversations[chatIndex]?.messages?.findIndex(msg => msg.id === message.id);
-    const existingMessage = conversation.messages.find(msg => msg.id === message.id);
 
     if (messageIndex === -1) {
       // Add the message immutably
@@ -72,15 +70,15 @@ export class ConversationsPage implements OnInit, OnDestroy {
     } else {
        // Add the message immutably
       // Update the message status
-      const updateDMessages = conversation.messages.map((msg, index) => {
-        index = messageIndex ? message : msg
-      })
+
+      const updateDMessages = conversation.messages.map((msg, index) =>
+        index === messageIndex ? message : msg
+      )
 
       this.conversations[chatIndex] = {
         ...conversation,
         messages: updateDMessages
       }
-
     }
   }
 

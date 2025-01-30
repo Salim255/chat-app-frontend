@@ -4,6 +4,7 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
+import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 
@@ -19,17 +20,18 @@ export class headerComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router, private discoverService: DiscoverService,
     private tapService: TapService, private profileViewerService: ProfileViewerService,
-    private activeConversationService: ActiveConversationService ) {
+    private activeConversationService: ActiveConversationService, private socketIoService: SocketIoService ) {
     }
 
 
   onBackArrow () {
     // Clean up the active conversation and navigate to the conversations page
+    this.router.navigateByUrl('/tabs/conversations');
     this.activeConversationService.setActiveConversation(null);
     this.activeConversationService.setPartnerInfo(null);
     this.partnerImage = 'assets/images/default-profile.jpg';
     this.partnerInfo = null;
-    this.router.navigateByUrl('/tabs/conversations');
+    this.socketIoService.userLeftChatRoomEmitter();
   }
 
   ngOnInit(): void {
