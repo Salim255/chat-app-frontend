@@ -22,8 +22,6 @@ export class MatchesPage implements OnInit, OnDestroy {
   ngOnInit () {
     this.partnerSourceSubscription = this. matchesService.getMatchesArray
       .subscribe(data => {
-        console.log(data);
-
           this.matchesArray = data;
           if (this.matchesArray.length > 0) {
             this.isEmpty = false

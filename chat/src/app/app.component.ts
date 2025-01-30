@@ -22,7 +22,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private socketIoService: SocketIoService
   ) {
-
   }
 
   ngOnInit () {

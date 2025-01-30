@@ -34,9 +34,8 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
 
   ionViewWillEnter () {
     this.typingState = false;
-
     // Here we listen to partner typing event
-    this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
+   /* === this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
         if (status) {
           // If data = true, then we set typing to true
           this.typingState = status
@@ -44,7 +43,7 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
           // If data = false, then we set typing to false
           this.typingState = status
         }
-      })
+      }) */
    }
 
   scrollToBottom() {

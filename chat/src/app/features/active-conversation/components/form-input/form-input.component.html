@@ -3,7 +3,6 @@
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <ion-textarea #inputArea ngModel name="message" required [(ngModel)]="message"
     (ngModelChange)="onTextChange($event)"
-
     rows="1">
     </ion-textarea>
     <ion-button type="submit" fill="clear" size="small" [disabled]="!f.valid" >send</ion-button>

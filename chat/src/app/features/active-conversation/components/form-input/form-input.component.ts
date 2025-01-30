@@ -37,11 +37,11 @@ export class FormInputComponent implements OnInit, OnDestroy  {
    onTextChange(text: any) {
     if (!text || text.length === 0) {
       if (this.toUserId) {
-        this.socketIoService.onTyping(this.toUserId, false);
+       // ===this.socketIoService.onTyping(this.toUserId, false);
       }
     } else if (text.length > 0 && this.toUserId) {
       // If text not "", user is typing
-      this.socketIoService.onTyping(this.toUserId, true);
+      //===this.socketIoService.onTyping(this.toUserId, true);
 
     }
    }

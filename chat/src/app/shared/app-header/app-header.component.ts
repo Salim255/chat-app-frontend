@@ -125,19 +125,16 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
 
   if (pageName === 'profile-viewer') {
-      if (this.hidingTapStatus === 'hide') {
+    if (this.hidingTapStatus === 'hide') {
         this.tapService.setTapHidingStatus('show')
-      }
-
-      this.profileViewerService.closeModal();
-      this.router.navigateByUrl('/tabs/community')
-
+    }
+    this.profileViewerService.closeModal();
+    this.router.navigateByUrl('/tabs/community')
   }
  }
 
   onSavePicture() {
     this.photoService.setTakingPictureStatus('Success');
-    console.log('Photo saved successfully');
   }
 
  ngOnDestroy(): void {
