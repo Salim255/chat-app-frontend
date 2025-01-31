@@ -6,6 +6,7 @@ import { ActiveConversationService } from 'src/app/features/active-conversation/
 import { AuthService } from '../../core/services/auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 
 
 export type JoinRomData = {
@@ -31,20 +32,18 @@ export class SocketIoService {
   private socket!: Socket;
   private userId: any;
   private ENV = environment;
-  private receivedMessageEventSource = new BehaviorSubject < any > (null) ;
-  private comingTypingSource = new BehaviorSubject < any > (null) ;
+
   private readMessageSubject = new BehaviorSubject < Message | null > (null) ;
   private   deliveredMessageSubject = new BehaviorSubject < Message | null > (null) ;
   private messageDeliveredToReceiverSubject = new BehaviorSubject < Message | null > (null) ;
   private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
-  private partnerConnectionStatusSubject = new BehaviorSubject <ConnectionStatus>('offline');
+  private partnerConnectionStatusSubject = new BehaviorSubject <User | null>(null);
 
 
 
   private roomIdSource = new BehaviorSubject < string  | null> (null);
 
-  constructor(private conversationService: ConversationService, private authService: AuthService,
-    private activeConversationService: ActiveConversationService
+  constructor( private authService: AuthService
   ) {
 
     this.authService.userId.subscribe( data =>{
@@ -64,7 +63,6 @@ export class SocketIoService {
 
     // Listen to connect to server event
     this.socket.on('connect', () => {
-      console.log('Connected to server 💥💥');
       if (this.userId) {
         this.registerUser(this.userId);
       }
@@ -82,9 +80,9 @@ export class SocketIoService {
       // Listen to partner disconnection
       this.listenToPartnerDisconnectionOffline();
     })
+
     // Listen to reconnect to server event
     this.socket.on('reconnect', () => {
-      console.log('Reconnected to server 💥💥');
       if (this.userId) {
         this.registerUser(this.userId);
         this.broadcastingUserOnline();
@@ -100,19 +98,19 @@ export class SocketIoService {
 
   // 2, Listen to user connection
   broadcastingUserOnline() {
-     this.socket.on('user-online', (userId ) => {
-      console.log(userId, "hello aprnere", this.userId)
-        if (userId) {
-          this.partnerConnectionStatusSubject.next('online');
+     this.socket.on('user-online', ( updatedUser ) => {
+        if (updatedUser) {
+          this.partnerConnectionStatusSubject.next(updatedUser);
         }
      })
   }
 
   // 3, Listen to user disconnection
   listenToPartnerDisconnectionOffline() {
-    this.socket.on('user-offline', ( ) => {
-      console.log("hello disconnected")
-      this.partnerConnectionStatusSubject.next('offline');
+    this.socket.on('user-offline', (updatedUser ) => {
+      if (updatedUser) {
+        this.partnerConnectionStatusSubject.next(updatedUser);
+      }
      })
   }
 
@@ -121,14 +119,13 @@ export class SocketIoService {
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
     this.roomIdSource.next(this.currentRoomId);
-    console.log(`Joined room: ${this.currentRoomId}`);
+
     // Trigger join-room event
     this.socket.emit('join-room', usersData)
   }
 
   // 5 emit the "send-message" event
   sentMessageEmitter(messageEmitterDada: SendMessageEmitterData) {
-      console.log(messageEmitterDada)
       // 2) Trigger emitter
       this.socket.emit('send-message', messageEmitterDada)
   }
@@ -145,7 +142,6 @@ export class SocketIoService {
   // 7, Listen to message delivery by sender to connected receiver
   messageDeliveredListener() {
     this.socket.on('message-delivered', (deliveredMessage) => {
-      console.log(deliveredMessage)
         if (deliveredMessage) {
           this.deliveredMessageSubject.next(deliveredMessage);
         }
@@ -155,7 +151,6 @@ export class SocketIoService {
   // 8, Listen to message delivery inside receiver client
   updateReceiverMessagesListener() {
    this.socket.on('message-delivered-to-receiver', (receivedMessage) => {
-      console.log(receivedMessage)
       if (receivedMessage) {
         this.messageDeliveredToReceiverSubject.next(receivedMessage)
       }

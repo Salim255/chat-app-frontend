@@ -5,7 +5,7 @@
       <ion-icon size="large" role="button" name="chevron-back-outline"  (click)="onBackArrow()"></ion-icon>
     </ion-buttons>
 
-    <ion-item lines="none" [style.--status-color-dimension]="partnerConnectionStatus === 'online'? '.7rem': '0'">
+    <ion-item lines="none" [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
         <ion-avatar>
           <div >
             <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" [src]="partnerImage" />

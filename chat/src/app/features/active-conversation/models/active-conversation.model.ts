@@ -3,6 +3,7 @@ export type User =  {
   user_id: number;
   last_name: string;
   first_name: string;
+  connection_status: string;
 }
 
 export class Conversation {

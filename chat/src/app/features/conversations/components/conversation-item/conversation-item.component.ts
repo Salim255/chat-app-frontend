@@ -29,7 +29,8 @@ export class ConversationItemComponent implements OnInit {
       partner_id: null ,
       avatar: null,
       first_name: null,
-      last_name: null
+      last_name: null,
+      connection_status: null
     }
    }
 
@@ -42,6 +43,7 @@ export class ConversationItemComponent implements OnInit {
       this.setLastMessage(lastMessage );
 
       if (this.conversation?.users) {
+        console.log(this.conversation?.users)
         this.setPartnerInfo(this.conversation.users);
       }
 
@@ -75,13 +77,14 @@ export class ConversationItemComponent implements OnInit {
   // Here we are filtering the users to get the partner info
   setPartnerInfo (users: User[]): void {
     let partner =   users.filter((user: User) => user.user_id !== this.userId);
-    if (!partner) {
+    if (!partner[0]) {
       return;
     }
-    this.partnerInfo.partner_id = partner[0]?.user_id;
-    this.partnerInfo.avatar = partner[0]?.avatar;
-    this.partnerInfo.last_name = partner[0]?.last_name;
-    this.partnerInfo.first_name = partner[0]?.last_name;
+    this.partnerInfo.partner_id = partner[0].user_id;
+    this.partnerInfo.avatar = partner[0].avatar;
+    this.partnerInfo.last_name = partner[0].last_name;
+    this.partnerInfo.first_name = partner[0].last_name;
+    this.partnerInfo.connection_status = partner[0].connection_status;
   }
 
 }

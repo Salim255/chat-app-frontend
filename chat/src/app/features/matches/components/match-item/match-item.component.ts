@@ -20,7 +20,8 @@ export class MatchItemComponent implements OnInit {
       partner_id: null ,
       avatar: null,
       first_name: null,
-      last_name: null
+      last_name: null,
+      connection_status: null
     }
   }
 
@@ -56,6 +57,7 @@ export class MatchItemComponent implements OnInit {
     this.partnerInfo.avatar = data.avatar;
     this.partnerInfo.last_name = data.last_name;
     this.partnerInfo.first_name = data.last_name;
+    this.partnerInfo.connection_status = data.connection_status;
   }
 
   setItemImage () {

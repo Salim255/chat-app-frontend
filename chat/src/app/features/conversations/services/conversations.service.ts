@@ -111,12 +111,9 @@ export class ConversationService {
         }),
         tap ( (response) => {
           console.log(response, "Hello from updated messages");
-        }
-
-        )
+        })
       )
   }
-
 
   get getConversations () {
     return this.conversationsSource.asObservable()

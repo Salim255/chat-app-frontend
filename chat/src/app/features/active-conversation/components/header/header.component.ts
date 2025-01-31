@@ -39,6 +39,7 @@ export class headerComponent implements OnInit, OnDestroy {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.partnerInfoSubscription  = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
+
       this.partnerInfo = partnerInfo;
       if (this.partnerInfo && this.partnerInfo.avatar) {
         if (this.partnerInfo.avatar.length > 0) {
@@ -48,9 +49,9 @@ export class headerComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.socketIoService.getPartnerConnectionStatusSubject.subscribe(connectionStatus => {
-       if (connectionStatus) {
-        this.partnerConnectionStatus = connectionStatus;
+    this.socketIoService.getPartnerConnectionStatusSubject.subscribe(updatedUser => {
+       if (updatedUser && this.partnerInfo) {
+         this.partnerInfo.connection_status = updatedUser.connection_status;
        }
     })
   }
