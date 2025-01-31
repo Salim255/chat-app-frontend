@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject} from 'rxjs';
-import { ConversationService } from '../../features/conversations/services/conversations.service';
-import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
