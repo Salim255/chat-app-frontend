@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
+
 @Component({
   selector: 'app-messages',
   templateUrl: './active-conversation-messages.page.html',
@@ -10,12 +11,14 @@ import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 })
 export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
-  private messagesSource!: Subscription;
+  private messagesSourceSubscription!: Subscription;
   private typingSubscription!: Subscription;
 
-  typingState = false;
+  typingState: boolean = false;;
   messagesList:any;
-  constructor(private conversationService: ConversationService, private socketIoService: SocketIoService) { }
+  constructor( private socketIoService: SocketIoService,
+    private activeConversationService: ActiveConversationService
+  ) { }
 
   // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
   ngAfterViewChecked() {
@@ -23,17 +26,24 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    this.messagesSource = this.conversationService.getActiveChatMessages.subscribe(messages => {
+    //getActiveConversationMessages
+    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
      this.messagesList = messages
+    });
+
+    this.socketIoService.getUserTypingStatus.subscribe(typingStatus => {
+      if (typingStatus) {
+        this.typingState = typingStatus
+      } else {
+        this.typingState = false
+      }
     })
   }
 
   ionViewWillEnter () {
     this.typingState = false;
-
     // Here we listen to partner typing event
-    this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
+   /* === this.typingSubscription = this.socketIoService.getComingTypingEvent.subscribe((status) => {
         if (status) {
           // If data = true, then we set typing to true
           this.typingState = status
@@ -41,7 +51,7 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
           // If data = false, then we set typing to false
           this.typingState = status
         }
-      })
+      }) */
    }
 
   scrollToBottom() {
@@ -51,13 +61,14 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    if (this.messagesSource) {
-      this.messagesSource.unsubscribe()
+    if (this.messagesSourceSubscription) {
+      this.messagesSourceSubscription.unsubscribe()
     }
     if (this.typingSubscription) {
       this.typingSubscription.unsubscribe();
     }
 
+    this.activeConversationService.setActiveConversationMessages(null);
   }
 
 }

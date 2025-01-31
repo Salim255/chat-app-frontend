@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { GeolocationService } from 'src/app/core/services/geolocation/geolocation.service';
 import { Subscription } from 'rxjs';
-import { MediaService } from 'src/app/core/services/media/media.service';
+
 
 register();
 
@@ -17,8 +17,8 @@ export class AccountPage implements OnInit, OnDestroy {
   private userLocationSubscription!: Subscription;
   constructor(
      private accountService: AccountService,
-     private router: Router, private geolocationService: GeolocationService ,
-     private mediaService: MediaService) { }
+     private router: Router, private geolocationService: GeolocationService
+     ) { }
 
   ngOnInit(): void {
     this.accountService.fetchAccount().subscribe();
@@ -26,7 +26,6 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter () {
-    this.mediaService.onTakePicture();
     this.geolocationService.getLocation.subscribe();
     this.accountService.fetchAccount().subscribe();
     this.currentUserLocation();

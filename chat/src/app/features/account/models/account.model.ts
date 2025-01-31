@@ -4,7 +4,7 @@ export class Account {
     public firstName: string,
     public lastName: string,
     private email: string,
-    private avatar: string,
+    public avatar: string,
     private isStaff: boolean,
     private isActive: boolean,
     public images: string []

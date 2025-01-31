@@ -10,5 +10,4 @@ export class Match {
     public avatar: string,
     private is_staff: boolean,
   ) {}
-
 }

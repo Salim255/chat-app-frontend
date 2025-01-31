@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Match } from 'src/app/models/friend.model';
-import { MatchesService } from 'src/app/features/matches/services/matches.service';
 
+import { Partner } from 'src/app/interfaces/partner.interface';
+import { MatchesService } from 'src/app/features/matches/services/matches.service';
+import { AccountService } from 'src/app/features/account/services/account.service';
 @Component({
   selector: 'app-matches',
   templateUrl: './matches.page.html',
@@ -10,16 +11,16 @@ import { MatchesService } from 'src/app/features/matches/services/matches.servic
 })
 
 export class MatchesPage implements OnInit, OnDestroy {
-  private matchesSource!: Subscription;
+  private partnerSourceSubscription!: Subscription;
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
-  matchesArray: Array < Match >;
+  matchesArray: Array < Partner >;
   isEmpty: boolean = false;
-  constructor(private matchesService: MatchesService) {
+  constructor(private matchesService: MatchesService, private accountService: AccountService) {
     this.matchesArray = []
   }
 
   ngOnInit () {
-    this.matchesSource = this. matchesService.getMatchesArray
+    this.partnerSourceSubscription = this. matchesService.getMatchesArray
       .subscribe(data => {
           this.matchesArray = data;
           if (this.matchesArray.length > 0) {
@@ -32,11 +33,12 @@ export class MatchesPage implements OnInit, OnDestroy {
 
   ionViewWillEnter () {
     this.matchesService.fetchMatches().subscribe( );
+    this.accountService.fetchAccount().subscribe();
   }
 
   ngOnDestroy() {
-    if (this.matchesSource) {
-      this.matchesSource.unsubscribe();
+    if (this.partnerSourceSubscription) {
+      this.partnerSourceSubscription.unsubscribe();
     }
   }
 

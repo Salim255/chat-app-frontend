@@ -6,6 +6,7 @@ import { Foreigner } from '../../models/foreigner.model';
 import { DataService } from 'src/app/services/data/data.service';
 import { NetworkService } from 'src/app/services/network/network.service';
 import { TapService } from 'src/app/services/tap/tap.service';
+import { AccountService } from 'src/app/features/account/services/account.service';
 
 type DisplayTap =  'show' | 'hide';
 
@@ -52,7 +53,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
      private discoverService: DiscoverService,
      private dataService: DataService,
      private networkService:  NetworkService,
-     private tapService: TapService
+     private tapService: TapService, private accountService: AccountService
     ) {
     this.foreignersList = []
   }
@@ -63,7 +64,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
       this.isConnected = isConnected;
 
       if (isConnected) {
-        this.profilesImages = this.dataService.getImages;
+
 
         this.likeActionSource = this.discoverService.getLikeProfileState.subscribe(state => {
           if (state ===  'skip') {
@@ -96,6 +97,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
      this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
       this.hidingTapStatus = status;
     })
+
+    this.accountService.fetchAccount().subscribe();
   }
 
   addFriend(){
@@ -138,7 +141,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     return this.foreignersList[ profileListLength - 1 ];
   }
 
- 
+
 
   skipFriend () {
      this.dropProfileFromForeignersList();

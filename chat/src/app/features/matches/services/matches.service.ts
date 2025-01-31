@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
-import { Match } from 'src/app/models/friend.model';
+import { Partner } from 'src/app/interfaces/partner.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesService {
   private ENV = environment;
-  private matchesArraySource = new BehaviorSubject <Array<Match>> ([])
+  private matchesArraySource = new BehaviorSubject <Array <Partner> > ([])
   constructor(private http: HttpClient) { }
 
   fetchMatches(){

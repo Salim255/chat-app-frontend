@@ -5,9 +5,11 @@
       <ion-icon size="large" role="button" name="chevron-back-outline"  (click)="onBackArrow()"></ion-icon>
     </ion-buttons>
 
-    <ion-item lines="none">
+    <ion-item lines="none" [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
         <ion-avatar>
-          <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww" />
+          <div >
+            <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" [src]="partnerImage" />
+          </div>
           <ion-label > {{partnerInfo?.first_name}} </ion-label>
         </ion-avatar>
     </ion-item>

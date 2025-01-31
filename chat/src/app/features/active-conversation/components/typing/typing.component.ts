@@ -1,6 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { Component, Input} from "@angular/core";
 
 @Component({
   selector: 'app-typing',
@@ -11,4 +9,5 @@ import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 export class TypingComponent  {
   @Input() typingState: any;
   constructor(){}
+
 }

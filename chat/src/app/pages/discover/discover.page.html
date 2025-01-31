@@ -13,7 +13,6 @@
             [style.transform]="i === currentIndex ? transform : '' "
             [lastProfileIndex]="currentIndex"
             [profileIndex]="i"
-            [profileImages]="profilesImages[i]"
             [hidingTapStatus]="hidingTapStatus"
             ></app-profile-card>
         </ion-col>
@@ -25,11 +24,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-<!--   <app-profile-action  *ngIf="foreignersListStatus && hidingTapStatus==='show'" ></app-profile-action> -->
-
-<!--  <ion-modal #modal  isOpen="true" handle="false" [initialBreakpoint]="1" [breakpoints]="[1]"  >
-  <ng-template>
-      <app-profile-action></app-profile-action>
-  </ng-template>
-</ion-modal> -->
 </ion-content>

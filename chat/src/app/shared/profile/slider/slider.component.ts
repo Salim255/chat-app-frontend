@@ -15,7 +15,9 @@ export class SliderComponent implements OnInit, OnDestroy{
   @ViewChild('swiperContainer', {static: false} ) swiperContainer: any;
 
   swiperModules= [IonicSlides];
-  presentationData:any ;
+  presentationData: string[] = [];
+
+  defaultImage = 'assets/images/default-profile.jpg';
 
   private tapEventSource!: Subscription ;
 
@@ -24,16 +26,18 @@ export class SliderComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+
     if (this.profile) {
       if (this.profile?.images?.length > 0) {
         this.presentationData = this.profile.images
       }
-      else {
-        this.presentationData = this.dataService.getImages[0]
+      else  if (this.profile?.avatar?.length > 0) {
+        const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.profile?.avatar}`;
+        this.presentationData = [ accountAvatar ];
+
+      } else  {
+        this.presentationData.push(this.defaultImage)
       }
-
-      console.log(this.presentationData);
-
     }
 
     this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {

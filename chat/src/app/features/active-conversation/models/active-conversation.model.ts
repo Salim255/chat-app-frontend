@@ -1,10 +1,18 @@
+export type User =  {
+  avatar: string;
+  user_id: number;
+  last_name: string;
+  first_name: string;
+  connection_status: string;
+}
+
 export class Conversation {
   constructor(
-    public id: number,
-    public created_at: string,
-    public updated_at: string,
-    public messages: any [],
-    public users: any []
+    public id: number | null,
+    public created_at: string | null,
+    public updated_at: string | null,
+    public messages: any [] | null,
+    public users: User [] | null
   ){}
 
 }

@@ -1,6 +1,7 @@
 export interface Partner {
-  partner_id: any;
-  avatar: any;
-  first_name: any;
-  last_name: any;
+  partner_id: number | null;
+  avatar: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  connection_status: string | null;
 }

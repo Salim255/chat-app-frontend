@@ -1,11 +1,10 @@
 
-<app-active-conversation-header [partnerInfo]="partnerInfo"></app-active-conversation-header>
-
+<app-active-conversation-header ></app-active-conversation-header>
 
  <ion-router-outlet> </ion-router-outlet>
 
  <ion-item lines="none">
-    <app-form-input [chatId]="activeChat?.id" [toUserId]="partnerInfo?.partner_id" (createNewChatObs)="createNewChatObs($event)" (submitObs)="onSubmit($event)"></app-form-input>
+    <app-form-input  (submitObs)="onSubmit($event)"></app-form-input>
  </ion-item>
 
 

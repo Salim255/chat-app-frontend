@@ -1,69 +1,69 @@
-import { Component,  Input} from '@angular/core';
+import { Component,  Input, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
-import { Match } from 'src/app/models/friend.model';
-import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
-import { TapService } from 'src/app/services/tap/tap.service';
-import { Foreigner } from 'src/app/models/foreigner.model';
+
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
+
 @Component({
   selector: 'app-match-item',
   templateUrl: './match-item.component.html',
   styleUrls: ['./match-item.component.scss'],
 })
-export class MatchItemComponent {
- @Input() match!: any;
- partnerInfo: Partner;
- private userId: any;
+export class MatchItemComponent implements OnInit {
+  @Input() match: Partner | null = null;
+  partnerInfo: Partner;
+  defaultImage = 'assets/images/default-profile.jpg';
 
-  constructor (private router: Router, private conversationService: ConversationService,
-     private authService: AuthService) {
+  constructor (private router: Router,private activeConversationService: ActiveConversationService) {
     this.partnerInfo = {
       partner_id: null ,
       avatar: null,
       first_name: null,
-      last_name: null
-    },
-    this.authService.userId.subscribe( data =>{
-      this.userId = data;
-    });
+      last_name: null,
+      connection_status: null
+    }
+  }
+
+  ngOnInit(): void {
+    if (this.match) {
+      this.setItemImage();
+      this.preparePartnerInfo(this.match);
+    }
   }
 
   openChat () {
-    if (!this.match?.friend_id) return;
 
-    this.preparePartnerInfo(this.match);
+    if (!this.match?.partner_id) return;
 
     let fetchChatObs: Observable<any>;
 
-    fetchChatObs = this.conversationService.fetchChatByUsers(this.match?.friend_id);
+    // Here weather there are a chat with the current partner
+    fetchChatObs = this.activeConversationService.fetchChatByPartnerID(this.match?.partner_id);
 
     fetchChatObs.subscribe({
       error: () => {
         console.error()
       },
       next: (chat) => {
-          console.log(chat.data, 'Hello chat🐈');
-
-          this.conversationService.setPartnerInfo(this.partnerInfo);
-          this.router.navigate(['./tabs/active-conversation'], { queryParams: { partner: this.match?.friend_id } });
+        this.activeConversationService.setPartnerInfo(this.partnerInfo);
+        this.router.navigate(['./tabs/active-conversation'], { queryParams: { partner: this.match?.partner_id } });
       }
     })
   }
 
-
-
-  preparePartnerInfo (data: Match) {
-    if (this.userId === data.user_id) {
-      this.partnerInfo.partner_id = data.friend_id;
-    } else {
-      this.partnerInfo.partner_id = data.user_id;
-    };
-
+  preparePartnerInfo (data: Partner) {
+    this.partnerInfo.partner_id = data.partner_id;
     this.partnerInfo.avatar = data.avatar;
     this.partnerInfo.last_name = data.last_name;
     this.partnerInfo.first_name = data.last_name;
+    this.partnerInfo.connection_status = data.connection_status;
+  }
+
+  setItemImage () {
+    if (this.match?.avatar) {
+      const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.match?.avatar}`;
+      this.defaultImage = accountAvatar
+    }
   }
 }

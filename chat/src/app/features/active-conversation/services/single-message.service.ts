@@ -5,5 +5,9 @@ import { Injectable } from "@angular/core";
 })
 
 export class SingleMessageService {
+  constructor(){}
 
+  onSubmit(message: string) {
+
+ }
 }
