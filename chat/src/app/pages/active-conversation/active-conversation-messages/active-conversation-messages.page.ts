@@ -14,7 +14,7 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   private messagesSourceSubscription!: Subscription;
   private typingSubscription!: Subscription;
 
-  typingState = false;
+  typingState: boolean = false;;
   messagesList:any;
   constructor( private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService
@@ -29,6 +29,14 @@ export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
     //getActiveConversationMessages
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
      this.messagesList = messages
+    });
+
+    this.socketIoService.getUserTypingStatus.subscribe(typingStatus => {
+      if (typingStatus) {
+        this.typingState = typingStatus
+      } else {
+        this.typingState = false
+      }
     })
   }
 

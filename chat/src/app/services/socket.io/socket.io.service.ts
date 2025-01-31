@@ -34,10 +34,11 @@ export class SocketIoService {
   private ENV = environment;
 
   private readMessageSubject = new BehaviorSubject < Message | null > (null) ;
-  private   deliveredMessageSubject = new BehaviorSubject < Message | null > (null) ;
+  private deliveredMessageSubject = new BehaviorSubject < Message | null > (null) ;
   private messageDeliveredToReceiverSubject = new BehaviorSubject < Message | null > (null) ;
   private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
   private partnerConnectionStatusSubject = new BehaviorSubject <User | null>(null);
+  private userTypingStatusSubject = new BehaviorSubject <boolean> (false)
 
 
 
@@ -88,6 +89,12 @@ export class SocketIoService {
         this.broadcastingUserOnline();
       }
     });
+
+    //=========userStopTypingListener
+    this.userStopTypingListener();
+
+    //==========userStartTypingListener
+    this.userStartTypingListener();
 
   }
 
@@ -169,6 +176,44 @@ export class SocketIoService {
         }
     })
  }
+
+  // 11, User typing emitter
+  userTyping(toUserId: number) {
+    this.getConversationRoomId.subscribe(roomId => {
+      if (roomId) {
+        this.socket.emit('user-typing', { roomId,  toUserId, typingStatus: 'typing' } )
+      }
+    })
+  }
+
+  // 12, User stop typing emitter
+  userStopTyping(toUserId: number){
+    this.getConversationRoomId.subscribe(roomId => {
+      if (roomId) {
+        this.socket.emit('user-stop-typing', { roomId,  toUserId, typingStatus: 'stop-typing' })
+      }
+    })
+  }
+
+  // 13, User stopt typing listener
+  userStopTypingListener() {
+    this.socket.on('notify-user-stop-typing', status => {
+      if (status) {
+        this.userTypingStatusSubject.next(false);
+      }
+    })
+  }
+
+  // 14, User start typing listener
+  userStartTypingListener() {
+    this.socket.on('notify-user-typing', status => {
+      console.log(status)
+      if (status) {
+        this.userTypingStatusSubject.next(true);
+      }
+    })
+  }
+
   get getConversationRoomId() {
     return this.roomIdSource.asObservable();
   }
@@ -191,6 +236,10 @@ export class SocketIoService {
 
   get getPartnerConnectionStatusSubject() {
       return this.partnerConnectionStatusSubject.asObservable();
+  }
+
+  get getUserTypingStatus() {
+    return this.userTypingStatusSubject.asObservable();
   }
 
 }

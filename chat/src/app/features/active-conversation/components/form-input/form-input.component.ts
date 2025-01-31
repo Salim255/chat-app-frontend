@@ -1,11 +1,14 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
-import { AuthService } from "src/app/core/services/auth/auth.service";
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 
+export type UserTypingData = {
+  userId: number;
+  roomId: number;
+}
 @Component({
   selector: 'app-form-input',
   templateUrl: './form-input.component.html',
@@ -15,12 +18,15 @@ import { Subscription } from "rxjs";
 export class FormInputComponent implements OnInit, OnDestroy  {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitObs = new EventEmitter<any>();
+  isTyping: boolean = false;
   private typingTimeout = 2000;
-  private typingTimer: string | null = null;  // Timer variable
+  private typingTimer: ReturnType<typeof setTimeout> | null = null; // Timer for "stop typing"
+  private isTypingDebounced = false;
   private toUserId: number | null = null;
 
   message: string = '';
   private partnerInfoSubscription!: Subscription;
+
   constructor(private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService
   ){
@@ -33,21 +39,41 @@ export class FormInputComponent implements OnInit, OnDestroy  {
         this.toUserId = partnerInfo?.partner_id;
       }
     })
+
   }
 
    onTextChange(text: any) {
-    if (!text || text.length === 0) {
-      if (this.toUserId) {
-       // ===this.socketIoService.onTyping(this.toUserId, false);
+      // Debouncing: Emit "typing" only once until the user stops typing
+      if (!this.isTypingDebounced  && this.toUserId) {
+          this.socketIoService.userTyping(this.toUserId);
+          this.isTypingDebounced = true;
       }
-    } else if (text.length > 0 && this.toUserId) {
-      // If text not "", user is typing
-      //===this.socketIoService.onTyping(this.toUserId, true);
 
-    }
+      // Clear the timer on each input event and set a new one
+      if (this.typingTimer) {
+          clearTimeout(this.typingTimer);
+      }
+
+      // Start a timer to trigger "stop typing" after inactivity
+      this.typingTimer = setTimeout(() => {
+        this.stopTyping();
+      }, this.typingTimeout);
    }
 
+   stopTyping(): void {
+      if (this.typingTimeout) {
+        clearTimeout(this.typingTimeout);
+        this.typingTimer = null;
+      }
+
+      this.isTypingDebounced = false;
+      if (this.toUserId) {
+        this.socketIoService.userStopTyping(this.toUserId);
+      }
+
+   }
   onSubmit (f: NgForm) {
+    this.stopTyping();
     if (!f.valid || this.message.trim().length === 0) {
       return
     }
