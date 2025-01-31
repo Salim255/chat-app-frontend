@@ -3,7 +3,6 @@ import { Observable, Subscription } from "rxjs";
 import { CreateChatInfo } from "src/app/interfaces/chat.interface";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
-import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
 import { SendMessageEmitterData, SocketIoService } from "src/app/services/socket.io/socket.io.service";
 import { Partner } from "src/app/interfaces/partner.interface";
@@ -41,7 +40,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   typingState: boolean = false;
 
 
-  constructor(private conversationService: ConversationService,
+  constructor(
      private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService){
     this.authService.userId.subscribe( data =>{
@@ -61,6 +60,15 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
             this.updateMessageStatus(deliveredMessage);
           }
       })
+
+      this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+          console.log(messages, )
+          // Update chat messages
+          if (messages && messages?.length > 0) {
+            this.updateMessagesAfterPartnerJoinedRoom(messages);
+          }
+      })
+
       this.socketIoService.messageReadListener();
       this.socketIoService.messageDeliveredListener();
   }
@@ -87,7 +95,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
          }
         }
      })
-
 
      // Getting roomId from socket.service
      this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
@@ -159,8 +166,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       this.messagesList.push(message)
     }
  }
-   // Update the message status
-   private updateMessageStatus(deliveredMessage: Message) {
+  // Update the message status
+  private updateMessageStatus(deliveredMessage: Message) {
     const index = this.messagesList.findIndex((msg) => msg.id === deliveredMessage.id);
     if (index !== -1) {
       this.messagesList[index].status = deliveredMessage.status; // Update the message status
@@ -168,6 +175,15 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       this.messagesList.push(deliveredMessage);
     }
   }
+
+  private updateMessagesAfterPartnerJoinedRoom(updatedMessages: Message []) {
+    // Update the chat messages list
+    updatedMessages.map((msg) =>{
+      this.updateMessageStatus(msg)
+     }
+    );
+  }
+
 
  getLastMessage(activeChat: Conversation) {
    if (activeChat?.messages) {

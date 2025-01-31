@@ -34,6 +34,7 @@ export class SocketIoService {
   private readMessageSubject = new BehaviorSubject< Message | null > (null) ;
   private   deliveredMessageSubject = new BehaviorSubject< Message | null > (null) ;
   private messageDeliveredToReceiverSubject = new BehaviorSubject< Message | null > (null) ;
+  private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
 
 
 
@@ -70,6 +71,9 @@ export class SocketIoService {
       this.socket.on('Welcome', (data) => {
         console.log(data, 'welcome');
       })
+
+      // Listen to partner join room to update messages
+      this.partnerJoinedRoom();
     })
     // Listen to reconnect to server event
     this.socket.on('reconnect', () => {
@@ -140,10 +144,18 @@ export class SocketIoService {
    })
   }
 
-  // 8
+  // 8, Emit user left ChatRoom
   userLeftChatRoomEmitter() {
     this.socket.emit('leave-room', { roomId: this.currentRoomId, userId: this.userId})
   }
+  // 9, Listen to partner-joined-room
+  partnerJoinedRoom() {
+    this.socket.on('partner-joined-room', (updatedMessagesToRead) => {
+        if (updatedMessagesToRead) {
+          this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(updatedMessagesToRead);
+        }
+    })
+ }
   get getConversationRoomId() {
     return this.roomIdSource.asObservable();
   }
@@ -158,6 +170,10 @@ export class SocketIoService {
 
   get getMessageDeliveredToReceiver() {
      return this.messageDeliveredToReceiverSubject.asObservable();
+  }
+
+  get getUpdatedMessagesToReadAfterPartnerJoinedRoom() {
+    return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
   }
 
 }
