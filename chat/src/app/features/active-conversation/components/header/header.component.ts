@@ -4,7 +4,7 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { ConnectionStatus, SocketIoService } from "src/app/services/socket.io/socket.io.service";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 
@@ -17,6 +17,7 @@ export class headerComponent implements OnInit, OnDestroy {
   partnerInfo: Partner | null = null;
   private partnerInfoSubscription!: Subscription;
   partnerImage = 'assets/images/default-profile.jpg';
+  partnerConnectionStatus: ConnectionStatus = "offline";
 
   constructor(private router: Router, private discoverService: DiscoverService,
     private tapService: TapService, private profileViewerService: ProfileViewerService,
@@ -45,6 +46,12 @@ export class headerComponent implements OnInit, OnDestroy {
           this.partnerImage = partnerAvatar;
         }
       }
+    })
+
+    this.socketIoService.getPartnerConnectionStatusSubject.subscribe(connectionStatus => {
+       if (connectionStatus) {
+        this.partnerConnectionStatus = connectionStatus;
+       }
     })
   }
   // It's function that responsible of viewing details of the clicked profile

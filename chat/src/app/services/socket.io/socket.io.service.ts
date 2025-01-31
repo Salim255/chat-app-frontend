@@ -20,6 +20,8 @@ export type SendMessageEmitterData = {
   toUserId: number;
 }
 
+export type ConnectionStatus = 'online' | 'offline';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,12 +31,13 @@ export class SocketIoService {
   private socket!: Socket;
   private userId: any;
   private ENV = environment;
-  private receivedMessageEventSource = new BehaviorSubject< any > (null) ;
+  private receivedMessageEventSource = new BehaviorSubject < any > (null) ;
   private comingTypingSource = new BehaviorSubject < any > (null) ;
-  private readMessageSubject = new BehaviorSubject< Message | null > (null) ;
-  private   deliveredMessageSubject = new BehaviorSubject< Message | null > (null) ;
-  private messageDeliveredToReceiverSubject = new BehaviorSubject< Message | null > (null) ;
+  private readMessageSubject = new BehaviorSubject < Message | null > (null) ;
+  private   deliveredMessageSubject = new BehaviorSubject < Message | null > (null) ;
+  private messageDeliveredToReceiverSubject = new BehaviorSubject < Message | null > (null) ;
   private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
+  private partnerConnectionStatusSubject = new BehaviorSubject <ConnectionStatus>('offline');
 
 
 
@@ -64,8 +67,6 @@ export class SocketIoService {
       console.log('Connected to server 💥💥');
       if (this.userId) {
         this.registerUser(this.userId);
-
-        this.broadcastingUserOnline();
       }
       // Listen to sever welcome event
       this.socket.on('Welcome', (data) => {
@@ -74,6 +75,12 @@ export class SocketIoService {
 
       // Listen to partner join room to update messages
       this.partnerJoinedRoom();
+
+      // Listen to partner connection
+      this.broadcastingUserOnline();
+
+      // Listen to partner disconnection
+      this.listenToPartnerDisconnectionOffline();
     })
     // Listen to reconnect to server event
     this.socket.on('reconnect', () => {
@@ -91,14 +98,25 @@ export class SocketIoService {
     this.socket.emit('registerUser',  userId )
   }
 
-  // 2
+  // 2, Listen to user connection
   broadcastingUserOnline() {
      this.socket.on('user-online', (userId ) => {
-      console.log(userId)
+      console.log(userId, "hello aprnere", this.userId)
+        if (userId) {
+          this.partnerConnectionStatusSubject.next('online');
+        }
      })
   }
 
-  // 3 Emit the "join-room" event to create/join a chat room
+  // 3, Listen to user disconnection
+  listenToPartnerDisconnectionOffline() {
+    this.socket.on('user-offline', ( ) => {
+      console.log("hello disconnected")
+      this.partnerConnectionStatusSubject.next('offline');
+     })
+  }
+
+  // 4 Emit the "join-room" event to create/join a chat room
   userJoinChatRoom(usersData: JoinRomData) {
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
@@ -108,14 +126,14 @@ export class SocketIoService {
     this.socket.emit('join-room', usersData)
   }
 
-  // 4 emit the "send-message" event
+  // 5 emit the "send-message" event
   sentMessageEmitter(messageEmitterDada: SendMessageEmitterData) {
       console.log(messageEmitterDada)
       // 2) Trigger emitter
       this.socket.emit('send-message', messageEmitterDada)
   }
 
-  // 5, Listen to message read
+  // 6, Listen to message read
   messageReadListener() {
     this.socket.on('message-read', (readMessage) => {
         if (readMessage) {
@@ -124,7 +142,7 @@ export class SocketIoService {
     } )
   }
 
-  // 6, Listen to message delivery by sender to connected receiver
+  // 7, Listen to message delivery by sender to connected receiver
   messageDeliveredListener() {
     this.socket.on('message-delivered', (deliveredMessage) => {
       console.log(deliveredMessage)
@@ -134,7 +152,7 @@ export class SocketIoService {
     })
   }
 
-  // 7, Listen to message delivery inside receiver client
+  // 8, Listen to message delivery inside receiver client
   updateReceiverMessagesListener() {
    this.socket.on('message-delivered-to-receiver', (receivedMessage) => {
       console.log(receivedMessage)
@@ -144,11 +162,11 @@ export class SocketIoService {
    })
   }
 
-  // 8, Emit user left ChatRoom
+  // 9, Emit user left ChatRoom
   userLeftChatRoomEmitter() {
     this.socket.emit('leave-room', { roomId: this.currentRoomId, userId: this.userId})
   }
-  // 9, Listen to partner-joined-room
+  // 10, Listen to partner-joined-room
   partnerJoinedRoom() {
     this.socket.on('partner-joined-room', (updatedMessagesToRead) => {
         if (updatedMessagesToRead) {
@@ -174,6 +192,10 @@ export class SocketIoService {
 
   get getUpdatedMessagesToReadAfterPartnerJoinedRoom() {
     return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
+  }
+
+  get getPartnerConnectionStatusSubject() {
+      return this.partnerConnectionStatusSubject.asObservable();
   }
 
 }

@@ -25,18 +25,37 @@ ion-header {
         justify-content: center;
 
         gap: 1rem;
-        img {
-          object-position: top;
-          height: 3rem;
-          width: 3rem;
-          object-fit: cover;
+        div {
+          img {
+            object-position: top;
+            height: 3rem;
+            width: 3rem;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+          position: relative;
+
+          &::after {
+            content: "";
+            height: var(--status-color-dimension);
+            width: var(--status-color-dimension);
+            position: absolute;
+            left: 50%;
+            bottom: -20%;
+            transform: translate(-50%, -50%);
+            background-color:  #4CAF50;
+            border-radius: 50%;
+            outline: 2px solid var(--ion-background-color);
+          }
         }
+
         ion-label {
           font-size: 1.3rem;
           font-weight: bold;
           align-self: center;
           text-transform: capitalize;
           color: var(--ion-text-color-1);
+
         }
       }
     }
