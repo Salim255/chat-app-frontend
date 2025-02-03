@@ -70,6 +70,7 @@ export class AuthService implements OnDestroy {
       })
     )
   }
+
   private autoLogout (duration: number) {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);

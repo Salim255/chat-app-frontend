@@ -27,12 +27,9 @@ export class headerComponent implements OnInit, OnDestroy {
 
   onBackArrow () {
     // Clean up the active conversation and navigate to the conversations page
-    this.router.navigateByUrl('/tabs/conversations');
-    this.activeConversationService.setActiveConversation(null);
-    this.activeConversationService.setPartnerInfo(null);
     this.partnerImage = 'assets/images/default-profile.jpg';
-    this.partnerInfo = null;
     this.socketIoService.userLeftChatRoomEmitter();
+    this.router.navigateByUrl('/tabs/conversations');
   }
 
   ngOnInit(): void {

@@ -8,7 +8,7 @@ import { environment } from "src/environments/environment";
 import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
 import { CreateChatInfo } from "src/app/interfaces/chat.interface";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,7 @@ export class ActiveConversationService {
   private activeConversationSource = new BehaviorSubject< Conversation | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject< Message[] | null> (null);
 
-  constructor(private http: HttpClient, private conversationService: ConversationService,
-    private socketIoService: SocketIoService
+  constructor(private http: HttpClient, private conversationService: ConversationService
   ) { }
 
   // A function that create a new conversation
@@ -46,10 +45,10 @@ export class ActiveConversationService {
 
   // Here we set the active conversation
   setActiveConversation(conversation: Conversation | null) {
-    if (!conversation || !conversation.id) {
+    if (!conversation?.id) {
       this.activeConversationSource.next(null);
     } else {
-      const builtActiveChat = new Conversation(conversation.id, conversation.created_at, conversation.updated_at, conversation.messages, conversation.users);
+      const builtActiveChat = {...conversation }; // Immutable copy
       this.activeConversationSource.next(builtActiveChat)
     }
   }

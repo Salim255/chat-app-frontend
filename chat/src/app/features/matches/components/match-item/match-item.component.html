@@ -2,6 +2,6 @@
   <ion-avatar slot="start" >
     <img alt="Silhouette of a person's head" [src]="defaultImage" />
   </ion-avatar>
-  <ion-label>{{match?.first_name}} {{match?.last_name}}</ion-label>
-  <ion-button (click)="openChat()">chat</ion-button>
+  <ion-label>{{partnerInfo.first_name}} {{partnerInfo.last_name}}</ion-label>
+  <ion-button (click)="onOpenChat()">chat</ion-button>
 </ion-item>

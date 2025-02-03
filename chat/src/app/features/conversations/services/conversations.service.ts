@@ -10,14 +10,9 @@ import { Conversation } from "../../active-conversation/models/active-conversati
 })
 export class ConversationService {
   private ENV = environment;
-
   private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
 
-
-  constructor(private http: HttpClient) {
-
-    }
-
+  constructor(private http: HttpClient) {}
 
   setConversations (chats: any) {
       this.conversationsSource.next(chats);
