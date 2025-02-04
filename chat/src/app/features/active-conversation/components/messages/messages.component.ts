@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
+import { MessageService } from "../../services/message.service";
+import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({
   selector: 'app-chat-messages',
@@ -10,26 +12,35 @@ import { Subscription } from "rxjs";
   styleUrls: ['./messages.component.scss']
 })
 export class MessagesComponent implements OnInit{
-  messagesList: Message [] | null = null;
+  messagesList: Message [] = [];
   userId: number | null = null;
   private userIdSubscription!: Subscription;
   date: Date | null = null;
   private messagesSourceSubscription!: Subscription;
 
-  constructor(private authService: AuthService, private activeConversationService: ActiveConversationService) {
+  constructor(private authService: AuthService,
+    private activeConversationService: ActiveConversationService,
+    private messageService: MessageService, private socketIoService : SocketIoService ) {
 
   }
 
   ngOnInit() {
 
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+      if( !messages)  return;
       this.messagesList = messages;
-      console.log( "hello messages", this.messagesList);
      });
 
      this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
+
+    this.socketIoService.getReadMessage.subscribe(message => {
+      if (message) {
+        this.messageService.updateMessageStatus(this.messagesList, message);
+        console.log(this.messagesList, "From UPDDD")
+      }
+    })
   }
 
   getMessageStatus(messageStatus: string) {
