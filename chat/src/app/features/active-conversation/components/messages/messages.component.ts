@@ -9,23 +9,27 @@ import { Subscription } from "rxjs";
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit,OnDestroy{
+export class MessagesComponent implements OnInit{
   messagesList: Message [] | null = null;
   userId: number | null = null;
+  private userIdSubscription!: Subscription;
   date: Date | null = null;
   private messagesSourceSubscription!: Subscription;
 
   constructor(private authService: AuthService, private activeConversationService: ActiveConversationService) {
-    this.authService.userId.subscribe( data =>{
-      this.userId = data;
-    });
+
   }
 
   ngOnInit() {
-    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-      this.messagesList = messages
-     })
 
+    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+      this.messagesList = messages;
+      console.log( "hello messages", this.messagesList);
+     });
+
+     this.userIdSubscription = this.authService.userId.subscribe( data =>{
+      this.userId = data;
+    });
   }
 
   getMessageStatus(messageStatus: string) {
@@ -39,9 +43,4 @@ export class MessagesComponent implements OnInit,OnDestroy{
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.messagesSourceSubscription) {
-      this.messagesSourceSubscription.unsubscribe();
-    }
-  }
 }

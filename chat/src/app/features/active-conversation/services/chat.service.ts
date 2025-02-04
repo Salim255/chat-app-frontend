@@ -10,8 +10,7 @@ import { MessageService } from './message.service';
 })
 export class ChatService {
   constructor(
-    private activeConversationService: ActiveConversationService,
-    private messageService: MessageService
+    private activeConversationService: ActiveConversationService
   ) {}
 
   createNewChat(data: CreateChatInfo): Observable<any> {

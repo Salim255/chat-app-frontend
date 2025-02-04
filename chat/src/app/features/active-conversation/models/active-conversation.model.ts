@@ -1,3 +1,5 @@
+import { Message } from "../interfaces/message.interface";
+
 export type User =  {
   avatar: string;
   user_id: number;
@@ -11,7 +13,7 @@ export class Conversation {
     public id: number | null,
     public created_at: string | null,
     public updated_at: string | null,
-    public messages: any [] | null,
+    public messages: Message [] | null,
     public users: User [] | null
   ){}
 

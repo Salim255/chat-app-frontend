@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Observable, Subject, Subscription } from "rxjs";
-import { CreateChatInfo } from "src/app/interfaces/chat.interface";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
@@ -10,13 +9,19 @@ import { Conversation } from "src/app/features/active-conversation/models/active
 import { JoinRomData } from "src/app/services/socket.io/socket.io.service";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
-import { Router } from "@angular/router";
+
 
 export type CreateMessageData = {
   chatId: number;
   fromUserId: number;
   toUserId: number;
   content: string
+}
+
+export type CreateChatInfo = {
+  content: string;
+  fromUserId: number;
+  toUserId: number
 }
 
 export type ReadDeliveredMessage = Omit<CreateMessageData, 'content'>
@@ -33,11 +38,11 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private conversationRoomIdSubscription!: Subscription;
   private conversationRoomId: string | null = null;
   private userIdSubscription!: Subscription;
-
+  private partnerInfoSubscription!: Subscription;
   private userId: number | null = null;
   private partnerInfo: Partner | null = null;
   private activeChat: Conversation | null = null;
-  private messagesList: Message [] = [] ;
+  messagesList: Message [] = [] ;
 
   typingState: boolean = false;
 
@@ -49,7 +54,14 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   }
   ngOnInit(): void {
-      this.socketIoService.getReadMessage.subscribe(message => {
+
+
+       // Getting roomId from socket.service
+       this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
+          this.conversationRoomId = roomId;
+       })
+
+       this.socketIoService.getReadMessage.subscribe(message => {
         if (message) {
           this.messageService.updateMessageStatus(this.messagesList, message);
         }
@@ -68,55 +80,15 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           }
       })
 
-      this.userIdSubscription = this.authService.userId.subscribe( data =>{
-        this.userId = data;
-      });
-
-      // Here we get active conversation
-      this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe(data =>
-        {
-          if (data && data?.messages) {
-              this.activeChat = data;
-              if (!this.activeChat?.messages) return;
-              this.messagesList = [...this.messagesList, ...this.activeChat?.messages ];
-              this.activeConversationService.setActiveConversationMessages(this.messagesList);
-          }
-        });
-
-      // Here we get the partner information
-       this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
-          if (partnerInfo) {
-            this.partnerInfo = partnerInfo;
-            if (!(this.partnerInfo.partner_id && this.userId))  return;
-
-            const usersData: JoinRomData = {
-                fromUserId: this.userId,
-                toUserId: this.partnerInfo?.partner_id
-              };
-            this.socketIoService.userJoinChatRoom(usersData);
-
-          }
-       })
-
-       // Getting roomId from socket.service
-       this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
-          this.conversationRoomId = roomId;
-       })
-
       this.socketIoService.messageReadListener();
       this.socketIoService.messageDeliveredListener();
   }
 
 
   createNewChatObs(data: CreateChatInfo) {
-    if (!this.partnerInfo?.partner_id) {
-      return
-    };
-
     this.chatService.createNewChat(data).subscribe({
       next: (res) => {
-        this.activeChat = res.data;
-        this.handleNewMessage();
+          console.log(res)
       },
       error: (err) => {
         console.log(err)
@@ -125,6 +97,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   sendMessageObs(message: string) {
+    console.log("PartneriD: ",this.partnerInfo?.partner_id, 'UserID: ',this.userId, this.activeChat?.id)
     if (!(this.partnerInfo?.partner_id && this.userId && this.activeChat?.id) ) {
       return
     }
@@ -136,10 +109,11 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
        toUserId: this.partnerInfo.partner_id,
        chatId: this.activeChat?.id
     };
-
+    //console.log(data, "hello data")
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
-        this.activeChat = response.data;
+        this.activeChat = response.data[0];
+        console.log( this.activeChat?.messages)
         this.handleNewMessage();
       },
       error: (err) => {
@@ -168,7 +142,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
            toUserId: this.partnerInfo.partner_id,
            fromUserId: this.userId
            };
-
+           console.log(createChatData, "create chate")
         this.createNewChatObs(createChatData);
      } else  {
       this.sendMessageObs(message)
@@ -181,23 +155,67 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     const messages: Message [] = [...this.activeChat?.messages];
 
     let lastMessage = this.messageService.getLastMessage(messages);
-
     if (!lastMessage) return;
 
-    this.messageService.addMessageToMessagesList(this.messagesList, lastMessage);
+    const updatedMessage = [...messages];
+    //this.messagesList = updatedMessage;
+    //this.messageService.addMessageToMessagesList(this.messagesList, lastMessage);
+    this.activeConversationService.setActiveConversationMessages(updatedMessage);
+    console.log(updatedMessage, "hello from updated list")
 
     // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
 
- ngOnDestroy() {
-    this.partnerInfo =  null ;
-    this.activeConversationService.setActiveConversation(null);
-    this.activeConversationService.setPartnerInfo(null);
+  ionViewWillEnter() {
+
+    this.userIdSubscription = this.authService.userId.subscribe( data =>{
+      this.userId = data;
+    });
+
+    // Here we get active conversation
+    this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe(data =>
+      {
+        //console.log(this.messagesList)
+        if (data && data?.messages ) {
+            this.activeChat = data;
+            this.messagesList = data?.messages;
+            console.log(this.messagesList, "hello💥💥")
+            //this.activeConversationService.setActiveConversationMessages(this.messagesList);
+        }
+
+    });
+
+    // Here we get the partner information
+     this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
+        if (partnerInfo) {
+          this.partnerInfo = partnerInfo;
+          if (!(this.partnerInfo.partner_id && this.userId))  return;
+
+          const usersData: JoinRomData = {
+              fromUserId: this.userId,
+              toUserId: this.partnerInfo?.partner_id
+            };
+          this.socketIoService.userJoinChatRoom(usersData);
+        }
+     })
+  }
+
+
+  ionViewWillLeave() {
+    console.log("Leaving page, cleaning up...");
+    this.cleanUp();
+  }
+
+  private cleanUp() {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.conversationRoomIdSubscription) this.conversationRoomIdSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+    if (this.partnerInfoSubscription) this.partnerInfoSubscription.unsubscribe();
+  }
+  ngOnDestroy() {
+    this.cleanUp();
   }
 }

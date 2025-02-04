@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
-import { CreateChatInfo } from "src/app/interfaces/chat.interface";
+import { CreateChatInfo } from "src/app/pages/active-conversation/active-conversation.page";
 
 
 @Injectable({
@@ -25,7 +25,11 @@ export class ActiveConversationService {
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
-    return this.http.post<any>(`${this.ENV.apiUrl}/chats`, data)
+    return this.http.post<any>(`${this.ENV.apiUrl}/chats`, data).pipe(tap((response) => {
+        if (response.data) {
+          this.setActiveConversation(response.data)
+        }
+    }))
   }
 
   // Function that fetch conversation by partner ID
@@ -49,7 +53,8 @@ export class ActiveConversationService {
       this.activeConversationSource.next(null);
     } else {
       const builtActiveChat = {...conversation }; // Immutable copy
-      this.activeConversationSource.next(builtActiveChat)
+      this.activeConversationSource.next(builtActiveChat);
+      this.setActiveConversationMessages(builtActiveChat.messages);
     }
   }
 
@@ -67,7 +72,7 @@ export class ActiveConversationService {
   }
 
   // Here we set active conversation's messages
-  setActiveConversationMessages(messagesList: Message[] | null) {
+  setActiveConversationMessages(messagesList: Message [] | null) {
     this.activeChatMessagesListSource.next(messagesList)
   }
 

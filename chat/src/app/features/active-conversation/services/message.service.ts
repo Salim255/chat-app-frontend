@@ -25,9 +25,11 @@ export class MessageService {
     return messages;
   }
 
-  addMessageToMessagesList(messages: Message[], message: Message): Message[] {
-    return [...messages, message];
-  }
+ /*  addMessageToMessagesList(messages: Message[], message: Message) {
+
+
+    this.activeConversationService.setActiveConversationMessages(updatedMessage);
+  } */
 
   getLastMessage(messages: Message[]): Message | null {
     return messages.length > 0 ? messages[messages.length - 1] : null;
