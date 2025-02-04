@@ -28,7 +28,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'active-conversation',
+    path: 'active-conversation/:userId',
     loadChildren: () => import('../pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule)
   }
   ,

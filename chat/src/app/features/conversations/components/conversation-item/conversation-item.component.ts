@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth/auth.service';;
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 
@@ -6,85 +6,82 @@ import { Router } from '@angular/router';
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Subscription } from 'rxjs';
+import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 @Component({
   selector: 'app-conversation-item',
   templateUrl: './conversation-item.component.html',
   styleUrls: ['./conversation-item.component.scss'],
 })
-export class ConversationItemComponent implements OnInit {
-  @Input() conversation: Conversation = new Conversation( null, null, null, null, null);
+
+export class ConversationItemComponent implements OnInit, OnDestroy {
+  @Input() conversation!: Conversation ;
   lastMessage: string | null = null;
-  partnerInfo: Partner ;
+  partnerInfo: Partner | null  = null;
   private userId: number | null = null;
+  private userIdSubscription!: Subscription;
+
   partnerImage: string = 'assets/images/default-profile.jpg';
 
   constructor (private authService: AuthService,
-     private router: Router, private activeConversationService: ActiveConversationService) {
-    this.authService.userId.subscribe( data =>{
+     private router: Router, private activeConversationService: ActiveConversationService) {}
+
+  ngOnInit(): void {
+    if (!this.conversation) {
+      this.conversation = new Conversation( null, null, null, null, null);
+    }
+
+    this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
 
-    this.partnerInfo = {
-      partner_id: null ,
-      avatar: null,
-      first_name: null,
-      last_name: null,
-      connection_status: null
-    }
-   }
+    if( !this.conversation?.messages?.length  || !this.conversation?.users ) return ;
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    if(this.conversation && this.conversation?.messages){
-      let messagesSize = this.conversation?.messages.length;
-      const lastMessage = this.conversation?.messages[messagesSize - 1].content;
-      this.setLastMessage(lastMessage );
-
-      if (this.conversation?.users) {
-        console.log(this.conversation?.users)
-        this.setPartnerInfo(this.conversation.users);
-      }
-
-      if (this.partnerInfo?.avatar && this.partnerInfo?.avatar.length > 0) {
-        const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
-        this.partnerImage = partnerAvatar;
-      }
-    }
+    this.setLastMessage(this.conversation.messages );
+    this.setPartnerInfo(this.conversation.users);
   }
 
   // Here we are setting the active conversation and navigating to the active conversation
   onOpenChat (): void {
-    if (this.conversation && this.partnerInfo?.partner_id) {
-      this.activeConversationService.setActiveConversation(this.conversation);
-      this.activeConversationService.getActiveConversation.subscribe((conversation) => {
-        if (conversation) {
-          if (this.partnerInfo.partner_id) {
-            this.activeConversationService.setPartnerInfo(this.partnerInfo);
-            this.router.navigate(['tabs/active-conversation'], { queryParams: { partner: this.partnerInfo.partner_id }, replaceUrl: true });
-          }
-        }
-      })
-    }
+    if (!this.conversation || !this.partnerInfo?.partner_id) return;
+
+    this.activeConversationService.setPartnerInfo(this.partnerInfo);
+    this.activeConversationService.setActiveConversation(this.conversation);
+
+    this.router.navigate([`tabs/active-conversation/${this.partnerInfo.partner_id}`], {
+      queryParams: { partner: this.partnerInfo.partner_id },
+      replaceUrl: true });
   }
 
   // Here we are setting the last message
-  setLastMessage (message: string): void {
-    this.lastMessage = message;
+  setLastMessage (messages: Message []): void {
+    let messagesSize = messages.length;
+    this.lastMessage = messages[messagesSize - 1].content;
   }
 
   // Here we are filtering the users to get the partner info
   setPartnerInfo (users: User[]): void {
-    let partner =   users.filter((user: User) => user.user_id !== this.userId);
-    if (!partner[0]) {
+    let partner =   users.find((user: User) => user.user_id !== this.userId);
+    if (!partner) {
       return;
     }
-    this.partnerInfo.partner_id = partner[0].user_id;
-    this.partnerInfo.avatar = partner[0].avatar;
-    this.partnerInfo.last_name = partner[0].last_name;
-    this.partnerInfo.first_name = partner[0].last_name;
-    this.partnerInfo.connection_status = partner[0].connection_status;
+
+    this.partnerInfo = {
+        partner_id: partner?.user_id,
+        avatar: partner.avatar,
+        last_name: partner.last_name,
+        first_name: partner.first_name,
+        connection_status: partner.connection_status
+      }
+
+    if (this.partnerInfo?.avatar && this.partnerInfo?.avatar.length > 0) {
+        const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
+        this.partnerImage = partnerAvatar;
+      }
   }
 
+  ngOnDestroy(): void {
+    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+  }
 }

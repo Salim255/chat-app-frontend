@@ -27,19 +27,16 @@ export class headerComponent implements OnInit, OnDestroy {
 
   onBackArrow () {
     // Clean up the active conversation and navigate to the conversations page
-    this.router.navigateByUrl('/tabs/conversations');
-    this.activeConversationService.setActiveConversation(null);
-    this.activeConversationService.setPartnerInfo(null);
     this.partnerImage = 'assets/images/default-profile.jpg';
-    this.partnerInfo = null;
     this.socketIoService.userLeftChatRoomEmitter();
+    this.router.navigateByUrl('/tabs/conversations');
   }
 
   ngOnInit(): void {
+
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.partnerInfoSubscription  = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
-
       this.partnerInfo = partnerInfo;
       if (this.partnerInfo && this.partnerInfo.avatar) {
         if (this.partnerInfo.avatar.length > 0) {
@@ -71,11 +68,5 @@ export class headerComponent implements OnInit, OnDestroy {
     if ( this.partnerInfoSubscription ){
       this.partnerInfoSubscription.unsubscribe();
     }
-
-    // Clean up the active conversation and navigate to the conversations page
-    this.activeConversationService.setActiveConversation(null);
-    this.activeConversationService.setPartnerInfo(null);
-    this.partnerImage = 'assets/images/default-profile.jpg';
-    this.partnerInfo = null;
   }
 }
