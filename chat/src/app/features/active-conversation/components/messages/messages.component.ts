@@ -38,9 +38,22 @@ export class MessagesComponent implements OnInit{
     this.socketIoService.getReadMessage.subscribe(message => {
       if (message) {
         this.messageService.updateMessageStatus(this.messagesList, message);
-        console.log(this.messagesList, "From UPDDD")
       }
     })
+
+    this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+      // Update chat messages
+      if (messages && messages.length > 0) {
+        this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
+      }
+    })
+
+    this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
+      if (deliveredMessage) {
+        this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
+      }
+    })
+
   }
 
   getMessageStatus(messageStatus: string) {

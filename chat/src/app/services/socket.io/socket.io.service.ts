@@ -78,6 +78,10 @@ export class SocketIoService {
 
       // Listen to partner disconnection
       this.listenToPartnerDisconnectionOffline();
+
+      // ========== ====== ========
+      this.messageReadListener();
+      this.messageDeliveredListener();
     })
 
     // Listen to reconnect to server event

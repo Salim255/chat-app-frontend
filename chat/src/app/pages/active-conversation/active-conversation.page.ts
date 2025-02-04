@@ -54,34 +54,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   }
   ngOnInit(): void {
-
-
        // Getting roomId from socket.service
        this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
           this.conversationRoomId = roomId;
        })
-
-       this.socketIoService.getReadMessage.subscribe(message => {
-        if (message) {
-          this.messageService.updateMessageStatus(this.messagesList, message);
-        }
-      })
-
-      this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
-          if (deliveredMessage) {
-            this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
-          }
-      })
-
-      this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
-          // Update chat messages
-          if (messages && messages.length > 0) {
-            this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
-          }
-      })
-
-      this.socketIoService.messageReadListener();
-      this.socketIoService.messageDeliveredListener();
   }
 
 
@@ -97,7 +73,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   sendMessageObs(message: string) {
-    console.log("PartneriD: ",this.partnerInfo?.partner_id, 'UserID: ',this.userId, this.activeChat?.id)
+
     if (!(this.partnerInfo?.partner_id && this.userId && this.activeChat?.id) ) {
       return
     }
@@ -109,7 +85,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
        toUserId: this.partnerInfo.partner_id,
        chatId: this.activeChat?.id
     };
-    //console.log(data, "hello data")
+
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         this.activeChat = response.data[0];
@@ -142,7 +118,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
            toUserId: this.partnerInfo.partner_id,
            fromUserId: this.userId
            };
-           console.log(createChatData, "create chate")
         this.createNewChatObs(createChatData);
      } else  {
       this.sendMessageObs(message)
@@ -155,20 +130,16 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     const messages: Message [] = [...this.activeChat?.messages];
 
     let lastMessage = this.messageService.getLastMessage(messages);
+
     if (!lastMessage) return;
 
     const updatedMessage = [...messages];
-    //this.messagesList = updatedMessage;
-    //this.messageService.addMessageToMessagesList(this.messagesList, lastMessage);
     this.activeConversationService.setActiveConversationMessages(updatedMessage);
-    console.log(updatedMessage, "hello from updated list")
-
     // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
 
   ionViewWillEnter() {
-
     this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
@@ -176,18 +147,14 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     // Here we get active conversation
     this.activeConversationSubscription = this.activeConversationService.getActiveConversation.subscribe(data =>
       {
-        //console.log(this.messagesList)
         if (data && data?.messages ) {
             this.activeChat = data;
-            this.messagesList = data?.messages;
-            console.log(this.messagesList, "hello💥💥")
-            //this.activeConversationService.setActiveConversationMessages(this.messagesList);
         }
 
     });
 
     // Here we get the partner information
-     this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
+    this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId))  return;
@@ -198,12 +165,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
             };
           this.socketIoService.userJoinChatRoom(usersData);
         }
-     })
+    })
   }
 
-
   ionViewWillLeave() {
-    console.log("Leaving page, cleaning up...");
     this.cleanUp();
   }
 
