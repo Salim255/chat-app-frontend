@@ -209,7 +209,6 @@ export class SocketIoService {
   // 14, User start typing listener
   userStartTypingListener() {
     this.socket.on('notify-user-typing', status => {
-      console.log(status)
       if (status) {
         this.userTypingStatusSubject.next(true);
       }

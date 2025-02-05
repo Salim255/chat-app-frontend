@@ -11,7 +11,7 @@ import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit{
+export class MessagesComponent implements OnInit, OnDestroy{
   messagesList: Message [] = [];
   userId: number | null = null;
   private userIdSubscription!: Subscription;
@@ -19,8 +19,7 @@ export class MessagesComponent implements OnInit{
   private messagesSourceSubscription!: Subscription;
 
   constructor(private authService: AuthService,
-    private activeConversationService: ActiveConversationService,
-    private messageService: MessageService, private socketIoService : SocketIoService ) {
+    private activeConversationService: ActiveConversationService) {
 
   }
 
@@ -28,7 +27,6 @@ export class MessagesComponent implements OnInit{
 
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
       if (messages )  this.messagesList = messages;
-      console.log(this.messagesList, "messages compo..💥💥")
      });
 
      this.userIdSubscription = this.authService.userId.subscribe( data =>{
@@ -48,5 +46,10 @@ export class MessagesComponent implements OnInit{
         return 'checkmark-outline'
     }
   }
-
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
+    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+  }
 }

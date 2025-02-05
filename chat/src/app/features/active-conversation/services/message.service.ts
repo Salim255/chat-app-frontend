@@ -8,11 +8,13 @@ import { Observable } from "rxjs";
 
 export class MessageService {
   constructor(private activeConversationService: ActiveConversationService) {}
+
   updateMessageStatus(messages: Message[], deliveredMessage: Message): Message[] {
     const index = messages.findIndex((msg) => msg.id === deliveredMessage.id);
     if (index !== -1) {
       messages[index].status = deliveredMessage.status;
     } else {
+
       messages.push(deliveredMessage);
     }
     return messages;

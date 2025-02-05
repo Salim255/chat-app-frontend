@@ -73,7 +73,8 @@ export class ActiveConversationService {
 
   // Here we set active conversation's messages
   setActiveConversationMessages(messagesList: Message [] | null) {
-    this.activeChatMessagesListSource.next(messagesList)
+    console.log( messagesList, "Hello handler 💥💥💥")
+    this.activeChatMessagesListSource.next(messagesList);
   }
 
   get getActiveConversationMessages() {
