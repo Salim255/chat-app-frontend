@@ -143,7 +143,7 @@ export class SocketIoService {
   messageReadListener() {
     this.socket.on('message-read', (readMessage) => {
         if (readMessage) {
-          this.readMessageSubject.next(readMessage);
+          this.setReadMessageSource(readMessage);
         }
     } )
   }
@@ -152,7 +152,7 @@ export class SocketIoService {
   messageDeliveredListener() {
     this.socket.on('message-delivered', (deliveredMessage) => {
         if (deliveredMessage) {
-          this.deliveredMessageSubject.next(deliveredMessage);
+          this.setDeliveredMessage(deliveredMessage);
         }
     })
   }
@@ -174,7 +174,7 @@ export class SocketIoService {
   partnerJoinedRoom() {
     this.socket.on('partner-joined-room', (updatedMessagesToRead) => {
         if (updatedMessagesToRead) {
-          this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(updatedMessagesToRead);
+          this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
         }
     })
  }
@@ -209,7 +209,6 @@ export class SocketIoService {
   // 14, User start typing listener
   userStartTypingListener() {
     this.socket.on('notify-user-typing', status => {
-      console.log(status)
       if (status) {
         this.userTypingStatusSubject.next(true);
       }
@@ -223,9 +222,15 @@ export class SocketIoService {
   get getReadMessage() {
     return this.readMessageSubject.asObservable();
   }
+  setReadMessageSource(readMessage: Message | null) {
+    this.readMessageSubject.next(readMessage);
+  }
 
   get getDeliveredMessage() {
     return this.deliveredMessageSubject.asObservable();
+  }
+  setDeliveredMessage(message: Message | null) {
+      this.deliveredMessageSubject.next(message)
   }
 
   get getMessageDeliveredToReceiver() {
@@ -234,6 +239,9 @@ export class SocketIoService {
 
   get getUpdatedMessagesToReadAfterPartnerJoinedRoom() {
     return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
+  }
+  setUpdatedMessagesToReadAfterPartnerJoinedRoom(messages: Message [] | null) {
+    this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(messages);
   }
 
   get getPartnerConnectionStatusSubject() {

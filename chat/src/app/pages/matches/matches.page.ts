@@ -14,12 +14,13 @@ import { AccountService } from 'src/app/features/account/services/account.servic
 export class MatchesPage implements OnInit, OnDestroy {
   private partnerSourceSubscription!: Subscription;
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
-  matchesArray: Array < Partner >;
+  matchesArray: Partner [] = [];
   isEmpty: boolean = false;
 
-  constructor(private matchesService: MatchesService, private accountService: AccountService) {
-    this.matchesArray = []
-  }
+  constructor(
+    private matchesService: MatchesService,
+    private accountService: AccountService,
+    ) {}
 
   ngOnInit () {
     this.partnerSourceSubscription = this. matchesService.getMatchesArray
@@ -34,8 +35,14 @@ export class MatchesPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
   }
 
-  ngOnDestroy() {
+  ionViewWillLeave() {
+    this.cleanUp();
+  }
+  cleanUp(){
     if (this.partnerSourceSubscription) this.partnerSourceSubscription.unsubscribe();
+  }
+  ngOnDestroy() {
+    this.cleanUp();
   }
 
 }

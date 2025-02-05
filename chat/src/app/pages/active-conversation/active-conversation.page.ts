@@ -39,10 +39,11 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private conversationRoomId: string | null = null;
   private userIdSubscription!: Subscription;
   private partnerInfoSubscription!: Subscription;
+  private activeRoomMessagesSubscription!: Subscription ;
   private userId: number | null = null;
-  private partnerInfo: Partner | null = null;
+  partnerInfo: Partner | null = null;
   private activeChat: Conversation | null = null;
-  messagesList: Message [] = [] ;
+  private messagesList: Message [] = [] ;
 
   typingState: boolean = false;
 
@@ -54,17 +55,21 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   }
   ngOnInit(): void {
-       // Getting roomId from socket.service
-       this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
+    // Getting roomId from socket.service
+    this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
           this.conversationRoomId = roomId;
-       })
+    })
+
+    this.activeRoomMessagesSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+      if (messages )  this.messagesList = messages;
+    })
   }
 
 
   createNewChatObs(data: CreateChatInfo) {
     this.chatService.createNewChat(data).subscribe({
       next: (res) => {
-          console.log(res)
+          this.handleNewMessage();
       },
       error: (err) => {
         console.log(err)
@@ -89,7 +94,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         this.activeChat = response.data[0];
-        console.log( this.activeChat?.messages)
+
         this.handleNewMessage();
       },
       error: (err) => {
@@ -166,6 +171,28 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           this.socketIoService.userJoinChatRoom(usersData);
         }
     })
+
+    // Socket ========
+    this.socketIoService.getReadMessage.subscribe(message => {
+      if (message) {
+        this.messageService.updateMessageStatus(this.messagesList, message);
+        this.activeConversationService.setActiveConversationMessages(this.messagesList);
+      }
+    })
+
+    this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+      // Update chat messages
+      if (messages && messages.length > 0) {
+        this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
+      }
+    })
+
+    this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
+      if (deliveredMessage) {
+        this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
+        this.activeConversationService.setActiveConversationMessages(this.messagesList);
+      }
+    })
   }
 
   ionViewWillLeave() {
@@ -179,6 +206,17 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.conversationRoomIdSubscription) this.conversationRoomIdSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
     if (this.partnerInfoSubscription) this.partnerInfoSubscription.unsubscribe();
+    if (this.activeRoomMessagesSubscription) this.activeRoomMessagesSubscription.unsubscribe();
+
+    this.activeConversationService.setPartnerInfo(null);
+    this.activeConversationService.setActiveConversation(null);
+    this.activeConversationService.setActiveConversationMessages(null);
+
+    // Socket
+    this.socketIoService.setReadMessageSource(null);
+    this.socketIoService.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
+    this.socketIoService.setDeliveredMessage(null);
+
   }
   ngOnDestroy() {
     this.cleanUp();

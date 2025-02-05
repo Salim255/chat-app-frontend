@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
@@ -11,7 +11,7 @@ import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss']
 })
-export class MessagesComponent implements OnInit{
+export class MessagesComponent implements OnInit, OnDestroy{
   messagesList: Message [] = [];
   userId: number | null = null;
   private userIdSubscription!: Subscription;
@@ -19,42 +19,22 @@ export class MessagesComponent implements OnInit{
   private messagesSourceSubscription!: Subscription;
 
   constructor(private authService: AuthService,
-    private activeConversationService: ActiveConversationService,
-    private messageService: MessageService, private socketIoService : SocketIoService ) {
+    private activeConversationService: ActiveConversationService) {
 
   }
 
   ngOnInit() {
 
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-      if( !messages)  return;
-      this.messagesList = messages;
+      if (messages )  this.messagesList = messages;
      });
 
      this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
 
-    this.socketIoService.getReadMessage.subscribe(message => {
-      if (message) {
-        this.messageService.updateMessageStatus(this.messagesList, message);
-      }
-    })
-
-    this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
-      // Update chat messages
-      if (messages && messages.length > 0) {
-        this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
-      }
-    })
-
-    this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
-      if (deliveredMessage) {
-        this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
-      }
-    })
-
   }
+
 
   getMessageStatus(messageStatus: string) {
     switch(messageStatus) {
@@ -66,5 +46,10 @@ export class MessagesComponent implements OnInit{
         return 'checkmark-outline'
     }
   }
-
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
+    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+  }
 }
