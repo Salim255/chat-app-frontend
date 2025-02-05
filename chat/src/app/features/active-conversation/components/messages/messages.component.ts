@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
@@ -27,34 +27,16 @@ export class MessagesComponent implements OnInit{
   ngOnInit() {
 
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-      if( !messages)  return;
-      this.messagesList = messages;
+      if (messages )  this.messagesList = messages;
+      console.log(this.messagesList, "messages compo..💥💥")
      });
 
      this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
 
-    this.socketIoService.getReadMessage.subscribe(message => {
-      if (message) {
-        this.messageService.updateMessageStatus(this.messagesList, message);
-      }
-    })
-
-    this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
-      // Update chat messages
-      if (messages && messages.length > 0) {
-        this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
-      }
-    })
-
-    this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
-      if (deliveredMessage) {
-        this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
-      }
-    })
-
   }
+
 
   getMessageStatus(messageStatus: string) {
     switch(messageStatus) {

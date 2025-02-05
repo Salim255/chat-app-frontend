@@ -40,7 +40,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private userIdSubscription!: Subscription;
   private partnerInfoSubscription!: Subscription;
   private userId: number | null = null;
-  private partnerInfo: Partner | null = null;
+  partnerInfo: Partner | null = null;
   private activeChat: Conversation | null = null;
   messagesList: Message [] = [] ;
 
@@ -65,6 +65,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.chatService.createNewChat(data).subscribe({
       next: (res) => {
           console.log(res)
+          this.handleNewMessage();
       },
       error: (err) => {
         console.log(err)
@@ -166,6 +167,26 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           this.socketIoService.userJoinChatRoom(usersData);
         }
     })
+
+    // Socket ========
+    this.socketIoService.getReadMessage.subscribe(message => {
+      if (message) {
+        this.messageService.updateMessageStatus(this.messagesList, message);
+      }
+    })
+
+    this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+      // Update chat messages
+      if (messages && messages.length > 0) {
+        this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
+      }
+    })
+
+    this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
+      if (deliveredMessage) {
+        this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
+      }
+    })
   }
 
   ionViewWillLeave() {
@@ -173,12 +194,23 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private cleanUp() {
+    console.log("leave active conversation")
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.conversationRoomIdSubscription) this.conversationRoomIdSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
     if (this.partnerInfoSubscription) this.partnerInfoSubscription.unsubscribe();
+
+    this.activeConversationService.setPartnerInfo(null);
+    this.activeConversationService.setActiveConversation(null);
+    this.activeConversationService.setActiveConversationMessages(null);
+
+    // Socket
+    this.socketIoService.setReadMessageSource(null);
+    this.socketIoService.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
+    this.socketIoService.setDeliveredMessage(null);
+
   }
   ngOnDestroy() {
     this.cleanUp();
