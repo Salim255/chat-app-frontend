@@ -3,9 +3,10 @@ import { Subscription } from "rxjs";
 import { AccountService } from "src/app/features/account/services/account.service";
 
 @Component({
-  selector: 'app-wave',
-  templateUrl: './app-wave.component.html',
-  styleUrls: ['./app-wave.component.scss']
+    selector: 'app-wave',
+    templateUrl: './app-wave.component.html',
+    styleUrls: ['./app-wave.component.scss'],
+    standalone: false
 })
 export class AppWaveComponent implements OnInit, OnDestroy {
   accountAvatar: string  = 'assets/images/default-profile.jpg';

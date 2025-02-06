@@ -3,9 +3,10 @@ import { Subscription } from 'rxjs';
 import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 
 @Component({
-  selector: 'app-messages',
-  templateUrl: './active-conversation-messages.page.html',
-  styleUrls: ['./active-conversation-messages.page.scss'],
+    selector: 'app-messages',
+    templateUrl: './active-conversation-messages.page.html',
+    styleUrls: ['./active-conversation-messages.page.scss'],
+    standalone: false
 })
 export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
   private typingSubscription!: Subscription;

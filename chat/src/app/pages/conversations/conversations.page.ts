@@ -7,9 +7,10 @@ import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 @Component({
-  selector: 'app-conversations',
-  templateUrl: './conversations.page.html',
-  styleUrls: ['./conversations.page.scss'],
+    selector: 'app-conversations',
+    templateUrl: './conversations.page.html',
+    styleUrls: ['./conversations.page.scss'],
+    standalone: false
 })
 export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;

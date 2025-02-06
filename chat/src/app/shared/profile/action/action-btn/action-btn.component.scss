@@ -1,4 +1,4 @@
-@import "../../../../../theme/queries";
+@use "../../../../../theme/queries" as *;
 
 .btn {
   border-radius: 50%;

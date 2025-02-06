@@ -9,9 +9,10 @@ import { Subscription } from 'rxjs';
 register();
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.page.html',
-  styleUrls: ['./account.page.scss'],
+    selector: 'app-account',
+    templateUrl: './account.page.html',
+    styleUrls: ['./account.page.scss'],
+    standalone: false
 })
 export class AccountPage implements OnInit, OnDestroy {
   private userLocationSubscription!: Subscription;

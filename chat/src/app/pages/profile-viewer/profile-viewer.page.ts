@@ -3,9 +3,10 @@ import { Subscription } from "rxjs";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
-  selector: 'app-view-profile',
-  templateUrl: './profile-viewer.page.html',
-  styleUrls: ['./profile-viewer.page.scss']
+    selector: 'app-view-profile',
+    templateUrl: './profile-viewer.page.html',
+    styleUrls: ['./profile-viewer.page.scss'],
+    standalone: false
 })
 
 export class ProfileViewerPage implements OnInit, OnDestroy{

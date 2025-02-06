@@ -1,7 +1,8 @@
 import { Directive, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appTap]'
+    selector: '[appTap]',
+    standalone: false
 })
 export class TapDirective implements OnInit {
 

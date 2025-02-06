@@ -6,9 +6,10 @@ import { MatchesService } from 'src/app/features/matches/services/matches.servic
 import { AccountService } from 'src/app/features/account/services/account.service';
 
 @Component({
-  selector: 'app-matches',
-  templateUrl: './matches.page.html',
-  styleUrls: ['./matches.page.scss'],
+    selector: 'app-matches',
+    templateUrl: './matches.page.html',
+    styleUrls: ['./matches.page.scss'],
+    standalone: false
 })
 
 export class MatchesPage implements OnInit, OnDestroy {

@@ -1,7 +1,8 @@
 import { Directive, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appPress]'
+    selector: '[appPress]',
+    standalone: false
 })
 export class PressDirective implements OnInit {
   @Output() press = new EventEmitter();

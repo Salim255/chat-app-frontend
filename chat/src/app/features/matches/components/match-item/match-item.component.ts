@@ -5,9 +5,10 @@ import { Partner } from 'src/app/interfaces/partner.interface';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 
 @Component({
-  selector: 'app-match-item',
-  templateUrl: './match-item.component.html',
-  styleUrls: ['./match-item.component.scss'],
+    selector: 'app-match-item',
+    templateUrl: './match-item.component.html',
+    styleUrls: ['./match-item.component.scss'],
+    standalone: false
 })
 export class MatchItemComponent implements OnInit {
   @Input() partnerInfo!: Partner ;

@@ -4,8 +4,8 @@
 
  export const environment = {
   production: true,
-  apiUrl: "http://localhost:4003/api/v1",
-  socketUrl: "http://localhost:4003",
+  apiUrl: "http://192.168.1.14:4003/api/v1",
+  socketUrl: "http://192.168.1.14:4003",
   mapBaseUrl: "https://api.opencagedata.com/geocode/v1/json",
   mapApiKey: "d5adeba61c104499a2bfb61f2d2c898d"
 };

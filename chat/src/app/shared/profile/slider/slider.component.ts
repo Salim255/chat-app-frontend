@@ -5,9 +5,10 @@ import { TapService } from "src/app/services/tap/tap.service";
 import { DataService } from "src/app/services/data/data.service";
 
 @Component({
-  selector: "app-profile-slider",
-  templateUrl: "./slider.component.html",
-  styleUrls: ["./slider.component.scss"]
+    selector: "app-profile-slider",
+    templateUrl: "./slider.component.html",
+    styleUrls: ["./slider.component.scss"],
+    standalone: false
 })
 export class SliderComponent implements OnInit, OnDestroy{
   @Input() profile: any;

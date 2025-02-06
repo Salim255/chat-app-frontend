@@ -27,9 +27,10 @@ export type CreateChatInfo = {
 export type ReadDeliveredMessage = Omit<CreateMessageData, 'content'>
 
 @Component({
-  selector: 'app-active-conversation',
-  templateUrl: './active-conversation.page.html',
-  styleUrls: ['./active-conversation.page.scss']
+    selector: 'app-active-conversation',
+    templateUrl: './active-conversation.page.html',
+    styleUrls: ['./active-conversation.page.scss'],
+    standalone: false
 })
 
 export class ActiveConversationPage implements OnInit, OnDestroy {

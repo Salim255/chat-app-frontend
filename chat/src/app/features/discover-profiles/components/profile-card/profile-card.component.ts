@@ -7,9 +7,10 @@ import { TapService } from 'src/app/services/tap/tap.service';
 export type displayTap =  'show' | 'hide';
 
 @Component({
-  selector: 'app-profile-card',
-  templateUrl: './profile-card.component.html',
-  styleUrls: ['./profile-card.component.scss'],
+    selector: 'app-profile-card',
+    templateUrl: './profile-card.component.html',
+    styleUrls: ['./profile-card.component.scss'],
+    standalone: false
 })
 export class ProfileCardComponent implements OnInit, OnDestroy {
   @Input() foreigner!: any;

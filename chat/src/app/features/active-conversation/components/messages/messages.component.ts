@@ -7,9 +7,10 @@ import { MessageService } from "../../services/message.service";
 import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
 
 @Component({
-  selector: 'app-chat-messages',
-  templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.scss']
+    selector: 'app-chat-messages',
+    templateUrl: './messages.component.html',
+    styleUrls: ['./messages.component.scss'],
+    standalone: false
 })
 export class MessagesComponent implements OnInit, OnDestroy{
   messagesList: Message [] = [];

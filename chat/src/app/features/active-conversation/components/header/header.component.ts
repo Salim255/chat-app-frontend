@@ -9,9 +9,10 @@ import { Partner } from "src/app/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-active-conversation-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-active-conversation-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: false
 })
 export class headerComponent implements OnInit, OnDestroy {
   @Input() partnerInfo: Partner | null = null;

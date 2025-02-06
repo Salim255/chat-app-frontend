@@ -2,7 +2,8 @@ import { Directive, ElementRef, EventEmitter, OnInit, Output } from '@angular/co
 import { GestureConfig, GestureController } from '@ionic/angular';
 
 @Directive({
-  selector: '[appSwipe]'
+    selector: '[appSwipe]',
+    standalone: false
 })
 export class SwipeDirective implements OnInit  {
   @Output() swipe = new EventEmitter<any>();

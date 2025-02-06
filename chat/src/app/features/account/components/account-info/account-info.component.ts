@@ -7,9 +7,10 @@ import { GeolocationService } from "src/app/core/services/geolocation/geolocatio
 import { PhotoService } from "src/app/core/services/media/photo.service";
 
 @Component({
-  selector: 'app-account-info',
-  templateUrl: './account-info.component.html',
-  styleUrls: ['./account-info.component.scss']
+    selector: 'app-account-info',
+    templateUrl: './account-info.component.html',
+    styleUrls: ['./account-info.component.scss'],
+    standalone: false
 })
 
 export class AccountInfoComponent implements OnInit, OnDestroy {

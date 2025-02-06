@@ -7,9 +7,10 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.page.html',
-  styleUrls: ['./auth.page.scss'],
+    selector: 'app-auth',
+    templateUrl: './auth.page.html',
+    styleUrls: ['./auth.page.scss'],
+    standalone: false
 })
 export class AuthPage {
  autMode: boolean =  true;

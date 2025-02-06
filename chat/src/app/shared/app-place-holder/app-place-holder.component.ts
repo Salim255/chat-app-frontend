@@ -2,9 +2,10 @@ import { Component, Input} from "@angular/core";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-place-holder',
-  templateUrl: './app-place-holder.component.html',
-  styleUrls: ['./app-place-holder.component.scss']
+    selector: 'app-place-holder',
+    templateUrl: './app-place-holder.component.html',
+    styleUrls: ['./app-place-holder.component.scss'],
+    standalone: false
 })
 export class AppPlaceHolderComponent {
     @Input() pageName: any;

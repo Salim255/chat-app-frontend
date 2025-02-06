@@ -5,9 +5,10 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
 import { TapService } from "src/app/services/tap/tap.service";
 
 @Component({
-  selector: "app-profile-action",
-  templateUrl: "./action.component.html",
-  styleUrls: ["./action.component.scss"]
+    selector: "app-profile-action",
+    templateUrl: "./action.component.html",
+    styleUrls: ["./action.component.scss"],
+    standalone: false
 })
 
 export class ActionComponent implements OnInit, OnDestroy {

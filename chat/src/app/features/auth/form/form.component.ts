@@ -6,9 +6,10 @@ import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-auth-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+    selector: 'app-auth-form',
+    templateUrl: './form.component.html',
+    styleUrls: ['./form.component.scss'],
+    standalone: false
 })
 
 export class FormComponent {

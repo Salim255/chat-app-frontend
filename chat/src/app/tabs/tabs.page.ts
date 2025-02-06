@@ -6,9 +6,10 @@ import { Subscription } from 'rxjs';
 export type displayTap =  'show' | 'hide';
 
 @Component({
-  selector: 'app-tabs',
-  templateUrl: './tabs.page.html',
-  styleUrls: ['./tabs.page.scss'],
+    selector: 'app-tabs',
+    templateUrl: './tabs.page.html',
+    styleUrls: ['./tabs.page.scss'],
+    standalone: false
 })
 export class TabsPage implements OnInit, OnDestroy  {
   selectedTab: any;

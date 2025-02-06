@@ -14,7 +14,8 @@ export interface Gesture {
 }
 
 @Directive({
-  selector: '[appGesture]'
+    selector: '[appGesture]',
+    standalone: false
 })
 export class GestureDirective implements OnInit {
   @Input() gestureOpts!: Gesture[];

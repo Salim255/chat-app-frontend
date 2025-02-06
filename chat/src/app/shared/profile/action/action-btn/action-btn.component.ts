@@ -4,9 +4,10 @@ import { Subscription } from "rxjs";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 
 @Component({
-  selector: 'app-action-btn',
-  templateUrl: './action-btn.component.html',
-  styleUrls: ['./action-btn.component.scss']
+    selector: 'app-action-btn',
+    templateUrl: './action-btn.component.html',
+    styleUrls: ['./action-btn.component.scss'],
+    standalone: false
 })
 
 export class ActionBtnComponent implements OnInit, OnDestroy {

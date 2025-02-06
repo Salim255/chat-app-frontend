@@ -10,9 +10,10 @@ export type UserTypingData = {
   roomId: number;
 }
 @Component({
-  selector: 'app-form-input',
-  templateUrl: './form-input.component.html',
-  styleUrls: ['./form-input.component.scss']
+    selector: 'app-form-input',
+    templateUrl: './form-input.component.html',
+    styleUrls: ['./form-input.component.scss'],
+    standalone: false
 })
 
 export class FormInputComponent implements OnInit, OnDestroy  {

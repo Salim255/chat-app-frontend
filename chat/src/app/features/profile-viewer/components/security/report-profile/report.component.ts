@@ -3,9 +3,10 @@ import { Subscription } from "rxjs";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 
 @Component({
-  selector: "app-report-profile",
-  templateUrl: "./report.component.html",
-  styleUrls: ["./report.component.scss"]
+    selector: "app-report-profile",
+    templateUrl: "./report.component.html",
+    styleUrls: ["./report.component.scss"],
+    standalone: false
 })
 export class ReportComponent implements OnInit, OnDestroy {
 

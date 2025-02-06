@@ -10,9 +10,10 @@ import { Subscription } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 @Component({
-  selector: 'app-conversation-item',
-  templateUrl: './conversation-item.component.html',
-  styleUrls: ['./conversation-item.component.scss'],
+    selector: 'app-conversation-item',
+    templateUrl: './conversation-item.component.html',
+    styleUrls: ['./conversation-item.component.scss'],
+    standalone: false
 })
 
 export class ConversationItemComponent implements OnInit, OnDestroy {

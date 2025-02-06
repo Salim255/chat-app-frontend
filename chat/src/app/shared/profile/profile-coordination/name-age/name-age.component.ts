@@ -2,9 +2,10 @@ import { Component, Input} from "@angular/core";
 import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 @Component({
-  selector: 'app-name-age',
-  templateUrl: './name-age.component.html',
-styleUrls: ['./name-age.component.scss']
+    selector: 'app-name-age',
+    templateUrl: './name-age.component.html',
+    styleUrls: ['./name-age.component.scss'],
+    standalone: false
 })
 
 export class NameAgeComponent {
