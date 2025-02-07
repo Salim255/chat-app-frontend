@@ -1,0 +1,37 @@
+ion-content{
+  --background: linear-gradient(to bottom, var(  --ion-color-primary),  var(--ion-color-secondary));
+
+  .custom-grid {
+    height: 100vh; // Make grid take full viewport height
+    padding: 0 1rem;
+  .row-logo {
+    height: 15%;
+    padding-top: 4rem;
+    text-align: center;
+  }
+
+  .row-intro {
+    height: 20%;
+    text-align: center;
+  }
+
+  .row-terms {
+    height: 50%;
+    display: flex;
+    align-items:flex-end;
+    justify-content: center;
+    text-align: center;
+
+  }
+
+  .row-button {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  }
+
+}

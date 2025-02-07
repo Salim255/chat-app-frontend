@@ -26,18 +26,18 @@ export class MatchItemComponent implements OnInit {
 
   onOpenChat () {
     if (!this.partnerInfo?.partner_id) return;
-
+    this.activeConversationService.setPartnerInfo(this.partnerInfo);
     // Check if there are a chat with the this partner
-     this.activeConversationService.fetchChatByPartnerID(this.partnerInfo?.partner_id)
+    this.activeConversationService.fetchChatByPartnerID(this.partnerInfo.partner_id)
     .subscribe({
       next: () => {
-        this.activeConversationService.setPartnerInfo(this.partnerInfo);
-        this.router.navigate([`./tabs/active-conversation/${this.partnerInfo?.partner_id}`],
-          { queryParams: { partner: this.partnerInfo?.partner_id } });
+        this.router.navigate([`./tabs/active-conversation/${this.partnerInfo.partner_id}`],
+          { queryParams: { partner: this.partnerInfo?.partner_id }, replaceUrl: true });
       },
       error: () => {
         console.error()
       }
     })
+
   }
 }

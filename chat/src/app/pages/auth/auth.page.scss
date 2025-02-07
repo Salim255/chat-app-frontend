@@ -1,9 +1,13 @@
 ion-header {
+   height: 100vh;
+   --padding-bottom: 2rem;
+   --background: red;
 
   ion-toolbar {
     margin-top: 2rem;
     --background: var(--ion-background-color);
     --border-width: 0;
+    height: 6rem;
 
       div {
         display: flex;
@@ -30,6 +34,7 @@ ion-header {
 
   }
 }
+
 
 
 

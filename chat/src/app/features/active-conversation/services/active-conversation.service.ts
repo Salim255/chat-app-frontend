@@ -35,7 +35,11 @@ export class ActiveConversationService {
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number) {
     return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`).pipe(tap((response) => {
-      this.setActiveConversation(response.data)
+      if (response?.data !== undefined) {
+        this.setActiveConversation(response.data);
+      } else {
+        this.setActiveConversation(null); // Or handle it differently
+      }
     }))
   }
 
@@ -43,7 +47,11 @@ export class ActiveConversationService {
   // This trigged by socket.js service
   fetchChatByChatId(chatId: number) {
      return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`).pipe(tap((response) => {
-       this.setActiveConversation(response.data[0]);
+      if (response?.data !== undefined && response.data.length > 0) {
+        this.setActiveConversation(response.data);
+      } else {
+        this.setActiveConversation(null); // Or handle it differently
+      }
      }))
   }
 
@@ -73,7 +81,6 @@ export class ActiveConversationService {
 
   // Here we set active conversation's messages
   setActiveConversationMessages(messagesList: Message [] | null) {
-    console.log( messagesList, "Hello handler 💥💥💥")
     this.activeChatMessagesListSource.next(messagesList);
   }
 

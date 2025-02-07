@@ -9,6 +9,10 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'landing-page',
+    loadChildren: () => import('./core/pages/landing/app-landing.module').then( m => m.AppLandingPageModule)
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule)
   },

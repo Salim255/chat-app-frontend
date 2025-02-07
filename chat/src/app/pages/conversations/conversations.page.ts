@@ -22,26 +22,37 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
-      if(chats){
-        this.conversations = chats;
-        this.isEmpty = chats.length === 0 ;
-      }
-    })
+
+    this.subscribeToConversations();
 
     this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
        if (message) {
         this.updateChatWithReceivedMessage(message)
        }
-
     })
 
     this.socketIoService.updateReceiverMessagesListener();
   }
 
   ionViewWillEnter () {
+    if (!this.conversationsSource || this.conversationsSource.closed) {
+        this.subscribeToConversations();
+    }
     this.conversationService.fetchConversations().subscribe();
     this.accountService.fetchAccount().subscribe();
+  }
+
+  ionViewWillLeave () {
+    this.cleanUp();
+  }
+
+  private subscribeToConversations() {
+    this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
+      if(chats){
+        this.conversations = chats;
+        this.isEmpty = chats.length === 0 ;
+      }
+    })
   }
 
   updateChatWithReceivedMessage(message: Message) {
@@ -75,8 +86,11 @@ export class ConversationsPage implements OnInit, OnDestroy {
     }
   }
 
-
- ngOnDestroy () {
+  private cleanUp() {
     this.conversationsSource.unsubscribe();
- }
+  }
+
+  ngOnDestroy () {
+    this.cleanUp();
+  }
 }

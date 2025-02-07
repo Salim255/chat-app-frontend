@@ -3,8 +3,7 @@ import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
-import { MessageService } from "../../services/message.service";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+
 
 @Component({
     selector: 'app-chat-messages',
@@ -25,7 +24,6 @@ export class MessagesComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-
     this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
       if (messages )  this.messagesList = messages;
      });
@@ -35,7 +33,6 @@ export class MessagesComponent implements OnInit, OnDestroy{
     });
 
   }
-
 
   getMessageStatus(messageStatus: string) {
     switch(messageStatus) {
@@ -48,8 +45,6 @@ export class MessagesComponent implements OnInit, OnDestroy{
     }
   }
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
   }

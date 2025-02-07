@@ -10,7 +10,7 @@ import { Partner } from 'src/app/interfaces/partner.interface';
 })
 export class MatchesService {
   private ENV = environment;
-  private matchesArraySource = new BehaviorSubject <Array <Partner> > ([])
+  private matchesArraySource = new BehaviorSubject <Partner [] | null > (null)
   constructor(private http: HttpClient) { }
 
   fetchMatches(){
@@ -36,12 +36,17 @@ export class MatchesService {
           }
         });
       }), tap( response => {
-        this.matchesArraySource.next(response.data)
+        console.log(response.data)
+        this.setMatchArray(response.data)
       })
     )
   }
 
   get getMatchesArray () {
-    return this.matchesArraySource.asObservable()
+    return this.matchesArraySource.asObservable();
+  }
+
+  setMatchArray(matchesArray: Partner [] | null) {
+    this.matchesArraySource.next(matchesArray);
   }
 }

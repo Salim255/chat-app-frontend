@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
-import { AccountService } from 'src/app/features/account/services/account.service';
 
 @Component({
     selector: 'app-matches',
@@ -19,29 +18,43 @@ export class MatchesPage implements OnInit, OnDestroy {
   isEmpty: boolean = false;
 
   constructor(
-    private matchesService: MatchesService,
-    private accountService: AccountService,
+    private matchesService: MatchesService
     ) {}
 
   ngOnInit () {
-    this.partnerSourceSubscription = this. matchesService.getMatchesArray
-      .subscribe(data => {
-          this.matchesArray = data;
-          this.isEmpty = this.matchesArray?.length === 0 ;
-      });
+    this.subscribeToMatches();
   }
 
   ionViewWillEnter () {
-    this.matchesService.fetchMatches().subscribe( );
-    this.accountService.fetchAccount().subscribe();
+    if (!this.partnerSourceSubscription || this.partnerSourceSubscription.closed) {
+      this.subscribeToMatches();
+    }
+    this.matchesService.fetchMatches().subscribe();
   }
 
   ionViewWillLeave() {
     this.cleanUp();
   }
-  cleanUp(){
+
+  private cleanUp(){
     if (this.partnerSourceSubscription) this.partnerSourceSubscription.unsubscribe();
+    this.matchesArray = []
   }
+
+  private subscribeToMatches() {
+    this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe({
+      next: (data) => {
+        console.log("Data received:", data);
+        if (data) {
+          this.matchesArray = data;
+          this.isEmpty = this.matchesArray.length === 0;
+        }
+
+      },
+      error: (err) => console.error("Subscription error:", err)
+    });
+  }
+
   ngOnDestroy() {
     this.cleanUp();
   }
