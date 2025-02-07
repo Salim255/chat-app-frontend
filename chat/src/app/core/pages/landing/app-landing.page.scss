@@ -1,18 +1,28 @@
 ion-content{
-  --background: linear-gradient(to bottom, var(  --ion-color-primary),  var(--ion-color-secondary));
-
   .custom-grid {
-    height: 100vh; // Make grid take full viewport height
+    height: 100vh;
     padding: 0 1rem;
   .row-logo {
     height: 15%;
     padding-top: 4rem;
-    text-align: center;
+    ion-col {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+    /*   ::ng-deep app-logo div {
+    } */
+    }
   }
 
   .row-intro {
-    height: 20%;
-    text-align: center;
+    height: 10%;
+    ion-col {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      //color: var(--ion-background-color);
+    }
   }
 
   .row-terms {
@@ -21,17 +31,25 @@ ion-content{
     align-items:flex-end;
     justify-content: center;
     text-align: center;
-
+    padding-bottom: 1rem;
+    ion-text {
+      font-size: .7rem;
+      font-weight: bold;
+    }
   }
 
   .row-button {
     height: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    ion-col {
+      display: flex;
+      flex-direction: column;
+      padding-top: 1rem;
+      gap: .5rem;
+    }
   }
 
   }
 
 }
+
+
