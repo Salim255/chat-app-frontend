@@ -1,5 +1,16 @@
 <ion-content [fullscreen]="true">
-  <app-auth-form > </app-auth-form>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-icon role="button" (click)="customBack()" name="chevron-back-outline"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+     <ion-col>
+      <app-auth-form > </app-auth-form>
+     </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 

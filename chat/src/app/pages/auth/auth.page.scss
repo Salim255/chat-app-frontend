@@ -1,40 +1,32 @@
-ion-header {
-   height: 100vh;
-   --padding-bottom: 2rem;
-   --background: red;
+ion-content {
+  ion-grid {
+    height: 100vh;
 
-  ion-toolbar {
-    margin-top: 2rem;
-    --background: var(--ion-background-color);
-    --border-width: 0;
-    height: 6rem;
+    ion-row:first-child {
+      ion-col {
+        height: 10%;
+        padding-top: 4rem;
 
-      div {
-        display: flex;
-        justify-content: center;
-        ion-icon{
-          color: var(--ion-color-primary);
-          font-size: 2.5rem;
-          align-self: center;
-        }
-        ion-text {
-          font-weight: bolder;
-          align-self: center;
-          font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-          font-style: oblique;
-          background: linear-gradient(to right, var(--ion-color-primary),  var(--ion-color-secondary));
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-size: 3rem;
-
+        ion-icon {
+          font-size: 2rem;
+          padding: 0 .5rem;
         }
       }
+    }
+    ion-row:last-child {
+      height: 70%;
+      padding: 0 1rem;
+      ion-col {
+        display: flex;
+        flex-direction: column;
+        app-auth-form  {
+          margin-top: auto;
+        }
 
-
+      }
+    }
   }
 }
-
 
 
 
