@@ -7,6 +7,8 @@ import { User } from 'src/app/core/models/user.model';
 import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
 
 
+export type AuthMod = 'create' | 'sign-in';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,6 +16,7 @@ import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
 export class AuthService implements OnDestroy {
   private ENV = environment;
   private user = new BehaviorSubject <User | null> (null);
+  private authModeSource = new BehaviorSubject < AuthMod | null> (null);
   activeLogoutTimer: any;
 
   constructor (private http: HttpClient) {
@@ -21,7 +24,6 @@ export class AuthService implements OnDestroy {
   }
 
   authenticate (mode: string, userInput: AuthPost) {
-
       return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {
@@ -161,10 +163,16 @@ export class AuthService implements OnDestroy {
     //return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData)
   }
 
+  setAuthMode(authMode: AuthMod ) {
+    console.log(authMode)
+      this.authModeSource.next(authMode);
+  }
+  get getAuthMode() {
+    return this.authModeSource.asObservable();
+  }
   ngOnDestroy () {
    if (this.activeLogoutTimer) {
     clearTimeout(this.activeLogoutTimer)
    }
-
   }
 }

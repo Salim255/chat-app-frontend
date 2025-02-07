@@ -23,8 +23,8 @@
     </ion-row>
     <ion-row class="row-button">
       <ion-col>
-       <app-button [btnText]="'Create account'"></app-button>
-       <app-button [btnText]="'Sign in'"></app-button>
+       <app-button [btnText]="'Create account'" (click)="onCreate()"></app-button>
+       <app-button [btnText]="'Sign in'" (click)="onSignIn()"></app-button>
       </ion-col>
     </ion-row>
   </ion-grid>
