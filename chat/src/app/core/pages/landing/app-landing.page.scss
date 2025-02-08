@@ -1,4 +1,5 @@
 ion-content{
+  --background: linear-gradient(to bottom, var(--ion-color-cyan-5), var( --ion-color-cyan-6));
   .custom-grid {
     height: 100vh;
     padding: 0 1rem;
@@ -10,8 +11,18 @@ ion-content{
       display: flex;
       justify-content: center;
 
-    /*   ::ng-deep app-logo div {
-    } */
+    ::ng-deep app-logo div {
+      ion-icon {
+        color: var(--ion-color-grey-1);
+      }
+
+      ion-text {
+        background: linear-gradient(to right, var(--ion-color-grey-1), var(--ion-color-grey-2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
     }
   }
 
@@ -21,7 +32,7 @@ ion-content{
       align-items: center;
       display: flex;
       justify-content: center;
-      //color: var(--ion-background-color);
+      color: var( --ion-color-grey-1);
     }
   }
 
@@ -35,16 +46,27 @@ ion-content{
     ion-text {
       font-size: .7rem;
       font-weight: bold;
+      color: var( --ion-color-grey-3);
     }
   }
 
   .row-button {
     height: 10%;
     ion-col {
-      display: flex;
-      flex-direction: column;
-      padding-top: 1rem;
-      gap: .5rem;
+      & {
+        display: flex;
+        flex-direction: column;
+        padding-top: 1rem;
+        gap: .5rem;
+      }
+
+      ::ng-deep app-button {
+        ion-button {
+          --background: none;
+          background:  var( --ion-color-grey-2);
+          color: var(--ion-color-grey-7);
+        }
+      }
     }
   }
 

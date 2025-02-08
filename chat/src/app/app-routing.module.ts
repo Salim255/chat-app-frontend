@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule)
+    loadChildren: () => import('./core/pages/auth/auth.module').then(m => m.AuthPageModule)
   },
   {
     path: 'tabs',

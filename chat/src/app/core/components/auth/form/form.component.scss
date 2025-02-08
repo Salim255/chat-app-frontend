@@ -4,4 +4,9 @@ form {
     --padding-start: 0;
     --inner-padding-end: 0;
   }
+  ion-grid {
+    ion-row:last-child {
+        padding-top: 1rem;
+    }
+  }
 }

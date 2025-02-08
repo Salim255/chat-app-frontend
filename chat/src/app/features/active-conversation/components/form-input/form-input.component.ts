@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { SocketIoService } from "src/app/core/services/socket.io/socket.io.service";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 

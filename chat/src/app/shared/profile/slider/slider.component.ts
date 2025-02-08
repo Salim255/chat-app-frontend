@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/services/tap/tap.service";
-import { DataService } from "src/app/services/data/data.service";
 
 @Component({
     selector: "app-profile-slider",
@@ -22,7 +21,7 @@ export class SliderComponent implements OnInit, OnDestroy{
 
   private tapEventSource!: Subscription ;
 
-  constructor (private tapService: TapService, private dataService: DataService) {
+  constructor (private tapService: TapService) {
 
   }
 

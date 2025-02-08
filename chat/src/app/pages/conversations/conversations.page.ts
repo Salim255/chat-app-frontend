@@ -3,7 +3,7 @@ import {  Subscription } from 'rxjs';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
+import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 @Component({

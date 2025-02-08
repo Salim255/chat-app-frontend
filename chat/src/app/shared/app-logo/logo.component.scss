@@ -1,5 +1,6 @@
 div {
   display: flex;
+
   ion-icon{
     color: var(--ion-color-primary);
     font-size: 1.5rem;
@@ -13,6 +14,7 @@ div {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    align-self: center;
     font-size: 1.8rem;
 
   }

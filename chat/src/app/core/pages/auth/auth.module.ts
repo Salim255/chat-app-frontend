@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { AuthPageRoutingModule } from './auth-routing.module';
-
 import { AuthPage } from './auth.page';
-import { SharedModule } from "../../shared/shared.module";
-import { FormComponent } from 'src/app/features/auth/form/form.component';
+import { SharedModule } from "../../../shared/shared.module";
+import { FormComponent } from 'src/app/core/components/auth/form/form.component';
 
 @NgModule({
   imports: [

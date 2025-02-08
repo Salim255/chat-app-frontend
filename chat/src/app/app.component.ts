@@ -3,7 +3,7 @@ import { AuthService } from './core/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
-import { SocketIoService } from './services/socket.io/socket.io.service';
+import { SocketIoService } from './core/services/socket.io/socket.io.service';
 import { StatusBar, StatusBarStyle } from '@capacitor/status-bar';
 
 register();

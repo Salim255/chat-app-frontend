@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SocketIoService } from 'src/app/services/socket.io/socket.io.service';
+import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 
 @Component({
     selector: 'app-messages',

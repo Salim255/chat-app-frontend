@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Observable, Subject, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
-import { SendMessageEmitterData, SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { SendMessageEmitterData, SocketIoService, JoinRomData } from "src/app/core/services/socket.io/socket.io.service";
 import { Partner } from "src/app/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
-import { JoinRomData } from "src/app/services/socket.io/socket.io.service";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
 

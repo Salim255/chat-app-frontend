@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject} from 'rxjs';
-import { AuthService } from '../../core/services/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';

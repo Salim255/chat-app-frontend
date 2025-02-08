@@ -14,7 +14,6 @@ export class NetworkService {
     this.initializeNetworkListener();
   }
 
-
   private initializeNetworkListener() {
     Network.addListener('networkStatusChange', status => {
        this.networkStatusSource.next(status.connected);

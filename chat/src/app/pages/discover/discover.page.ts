@@ -3,8 +3,7 @@ import { Observable, Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { Foreigner } from '../../models/foreigner.model';
 
-import { DataService } from 'src/app/services/data/data.service';
-import { NetworkService } from 'src/app/services/network/network.service';
+import { NetworkService } from 'src/app/core/services/network/network.service';
 import { TapService } from 'src/app/services/tap/tap.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 
@@ -52,7 +51,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   };
   constructor (
      private discoverService: DiscoverService,
-     private dataService: DataService,
      private networkService:  NetworkService,
      private tapService: TapService, private accountService: AccountService
     ) {
