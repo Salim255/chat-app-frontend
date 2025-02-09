@@ -16,17 +16,16 @@ export class SettingsPage implements OnInit {
     { label: 'Version 1.0.0', component: null, logo: true },
     { label: '', component: ['Delete Account'], logo: false }
   ];
+
   constructor (private navController: NavController, private authService:  AuthService) { }
 
   ngOnInit () {
     console.log("Hello Salim");
 
   }
-
   onBackArrow () {
     this.navController.back()
   }
-
   onLogout () {
     this.authService.logout()
   }

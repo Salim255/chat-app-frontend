@@ -4,6 +4,8 @@ import { TapService } from "src/app/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { Router } from "@angular/router";
 import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
+import { Partner } from "src/app/interfaces/partner.interface";
+import { NavController } from "@ionic/angular";
 
 @Component({
     selector: 'app-header',
@@ -14,23 +16,32 @@ import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/p
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
+  @Input() pageName: string | null = null;
+  @Input() partnerInfo!: Partner;
 
-  @Input() pageName:any = null;
-  @Input() partnerInfo: any;
-  viewedProfile: any;
-
-  hidingTapStatus:any;
+  // Subscriptions
   private viewedProfileSubscription!: Subscription;
   private tapStatusSourceSubscription!: Subscription;
-
   private takingPictureStateSourceSubscription!: Subscription;
+
+  // States
+  viewedProfile: any;
+  hidingTapStatus:any;
   takingPictureStatus: TakingPictureStatus = 'Off';
 
   constructor(private tapService: TapService,
     private profileViewerService: ProfileViewerService,
-    private photoService: PhotoService, private router: Router ){}
+    private photoService: PhotoService, private router: Router,
+    private navController: NavController ){}
 
  ngOnInit(): void {
+
+  // Subscribe to service
+  this.subscribeToServices();
+ }
+
+ private subscribeToServices(): void {
+
   this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
     this.hidingTapStatus = status;
    });
@@ -39,33 +50,31 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       this.viewedProfile = profile;
    })
 
-   this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(status => {
-    if (status === 'Pending') {
+   this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(status =>
+    {
       this.takingPictureStatus = status;
-    } else {
-      this.takingPictureStatus = status
-    }
-  }
-   )
+    });
  }
 
- showAppLogo() {
-    switch(this.pageName) {
-      case 'active-conversation':
-        return false;
-      default:
-        return true;
-    }
-  }
- displayRightIcon(pageName: string) {
-  switch(pageName) {
-    case 'discover':
-      if (this.hidingTapStatus === 'hide') {
-        return 'eye-off'
-      } else {
-        return 'options';
-      }
+ // Unsubscribe from all services
+ private unsubscribeFromServices(): void {
+    this.pageName = null;
+    this.tapStatusSourceSubscription?.unsubscribe();
+    this.viewedProfileSubscription?.unsubscribe()
+    this.takingPictureStateSourceSubscription?.unsubscribe();
 
+ }
+
+ // Determine if the logo should be shown
+ showAppLogo() {
+    return this.pageName !== 'active-conversation';
+  }
+
+ // Determine right con based on the current page name
+ displayRightIcon(pageName: string | null): string | undefined {
+  switch( pageName  ) {
+    case 'discover':
+      return this.hidingTapStatus === 'hide' ? 'eye-off' : 'options';
     case 'account':
         return 'settings';
 
@@ -88,68 +97,51 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
  }
 
- displayLeftIcon(pageName: string) {
+ // Determine left icon based on the current page  name
+ displayLeftIcon(pageName: string | null): string {
+  if (pageName === 'discover' && this.hidingTapStatus === 'hide') return '';
+  return 'notifications';
+ }
+
+
+ // Set css class for right icon
+ setRightIconCss(pageName: string | null): string {
+  if (pageName === 'discover' && this.hidingTapStatus === 'hide') return 'btn btn__eye'
+  return '';
+ }
+
+ // Handle button clicks for right button
+ onRightBtn(pageName: string | null): void {
   switch(pageName) {
+    case 'account':
+      this.settings.emit();
+      break;
     case 'discover':
       if (this.hidingTapStatus === 'hide') {
-           return ''
-      } else {
-        return  '';
-      }
-    default:
-      return  'notifications';
-  }
- }
-
-
- setRightIconCss(pageName: string) {
-  switch(pageName){
-    case 'discover':
-      if (this.hidingTapStatus === 'hide') {
-        return 'btn btn__eye'
-      } else {
-        return ''
-      }
-    default:
-      return ''
-  }
- }
- onRightBtn(pageName: string) {
-  if (pageName === 'account') {
-    this.settings.emit();
-  }
-
-  if (pageName === 'discover') {
-    if (this.hidingTapStatus === 'hide') {
-      this.tapService.setTapHidingStatus('show')
-    }
-  }
-
-  if (pageName === 'profile-viewer') {
-    if (this.hidingTapStatus === 'hide') {
         this.tapService.setTapHidingStatus('show')
-    }
-    this.profileViewerService.closeModal();
-    this.router.navigateByUrl('/tabs/community')
+      }
+      break;
+    case 'profile-viewer':
+      if (this.hidingTapStatus === 'hide') {
+        this.tapService.setTapHidingStatus('show')
+        }
+      this.profileViewerService.closeModal();
+      this.router.navigateByUrl('/tabs/community');
+      break;
+    default:
+      return;
   }
  }
 
-  onSavePicture() {
+// Back to account page
+
+
+ // Handle the save picture action
+ onSavePicture(): void {
     this.photoService.setTakingPictureStatus('Success');
   }
 
  ngOnDestroy(): void {
-   this.pageName = null;
-   if (this.tapStatusSourceSubscription) {
-    this.tapStatusSourceSubscription.unsubscribe();
-  }
-
-  if (this.viewedProfileSubscription) {
-    this.viewedProfileSubscription.unsubscribe()
-  }
-
-  if (this.takingPictureStateSourceSubscription) {
-    this.takingPictureStateSourceSubscription.unsubscribe();
-  }
+      this.unsubscribeFromServices();
  }
 }

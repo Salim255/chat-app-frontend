@@ -54,7 +54,6 @@ export class FormComponent implements OnInit {
    }
 
   onSubmit(f: NgForm) {
-    console.log(this.userInputs)
     if(!f.valid){
      return
     }
