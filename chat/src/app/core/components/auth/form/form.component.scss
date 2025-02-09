@@ -1,12 +1,32 @@
 form {
   ion-item {
-    --background: transparent;
+    --background: var(--ion-color-grey-1);
     --padding-start: 0;
     --inner-padding-end: 0;
+    color: var(--ion-color-grey-7);
+
+    ion-input {
+      font-weight: bold;
+    }
   }
   ion-grid {
     ion-row:last-child {
         padding-top: 1rem;
+        ion-col {
+          ion-button {
+            border-radius: 2rem;
+            font-weight: bold;
+            color: var(--ion-color-grey-1);
+            font-size: 1rem;
+            padding: .4rem 0;
+            width: 100%;
+            background: linear-gradient(
+                to right bottom,
+                rgba(#2ed4f1, 1),
+                rgba(#0c0c0c, 1)
+                );
+          }
+        }
     }
   }
 }

@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
-import { LogoutComponent } from 'src/app/features/account/components/settings/logout/logout.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AccountFeatureModule } from 'src/app/features/account/account-feature.module';
 
 @NgModule({
   imports: [
@@ -16,8 +16,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     SettingsPageRoutingModule,
-    SharedModule
+    SharedModule,
+    AccountFeatureModule
 ],
-  declarations: [SettingsPage, LogoutComponent]
+  declarations: [SettingsPage]
 })
 export class SettingsPageModule {}

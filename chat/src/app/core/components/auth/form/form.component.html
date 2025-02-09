@@ -21,9 +21,12 @@
      <ion-row>
         <ion-col  size-md="6" offset-md="3">
           <ion-button
-          expand="full" type="submit"
+          expand="full"
+          type="submit"
           [disabled]="!f.valid"
           shape="round"
+          fill="clear"
+          size="small"
           >{{ authMode === 'sign-in' ? 'Sign in': 'Sign Up' }}</ion-button>
         </ion-col>
       </ion-row>

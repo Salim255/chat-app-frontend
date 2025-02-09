@@ -50,8 +50,12 @@ ion-toolbar {
 }
 
 ion-content {
-  --background: var(--ion-background-color);
-  //padding-top: env(safe-area-inset-top);
+  --background: var(--ion-color-grey-1);
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-text {
+  color: var(--ion-color-grey-7);
 }
 
 ion-modal {
