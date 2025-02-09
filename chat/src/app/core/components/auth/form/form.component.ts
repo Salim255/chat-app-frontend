@@ -54,6 +54,7 @@ export class FormComponent implements OnInit {
    }
 
   onSubmit(f: NgForm) {
+    console.log(this.userInputs)
     if(!f.valid){
      return
     }
@@ -65,7 +66,10 @@ export class FormComponent implements OnInit {
       f.reset();
       this.router.navigateByUrl('/tabs/community')
      },
-     error: (err) => { }
+     error: (err) => {
+      f.reset();
+      console.log(err, "hello error 💥💥")
+      }
     })
    }
 

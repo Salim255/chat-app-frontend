@@ -13,8 +13,8 @@
           <ion-col>
             <app-logo *ngIf="item.logo"></app-logo>
             <ion-text *ngIf="item.label">{{ item.label }}</ion-text>
-            <ion-item *ngFor="let text of item.component;">
-                <ion-text role="button"> {{ text }}</ion-text>
+            <ion-item *ngFor="let text of item.component;"  >
+                <ion-text role="button" (click)="item.onClick?.()"> {{ text }}</ion-text>
                 <ion-icon *ngIf="index <= 2" name="chevron-forward-outline" slot="end"></ion-icon>
             </ion-item>
           </ion-col>
