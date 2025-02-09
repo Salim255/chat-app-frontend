@@ -15,36 +15,16 @@ export class SliderComponent implements OnInit, OnDestroy{
   @ViewChild('swiperContainer', {static: false} ) swiperContainer: any;
 
   swiperModules= [IonicSlides];
-  presentationData: string[] = [];
-
+  userImages: string [] = []
   defaultImage = 'assets/images/default-profile.jpg';
 
   private tapEventSource!: Subscription ;
 
-  constructor (private tapService: TapService) {
-
-  }
+  constructor (private tapService: TapService) {}
 
   ngOnInit(): void {
-
-    if (this.profile) {
-      if (this.profile?.images?.length > 0) {
-        this.presentationData = this.profile.images
-      }
-      else  if (this.profile?.avatar?.length > 0) {
-        const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.profile?.avatar}`;
-        this.presentationData = [ accountAvatar ];
-
-      } else  {
-        this.presentationData.push(this.defaultImage)
-      }
-    }
-
-    this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
-      if (data?.tapSide && data?.clientId === this.profile?.id) {
-        this.onSwipe(data.tapSide)
-      }
-    })
+    this.subscribeToTapEvent();
+    this.setUserImages();
   }
 
   onSwipe(swipeDirection: string) {
@@ -59,6 +39,27 @@ export class SliderComponent implements OnInit, OnDestroy{
 
   onSlideChange(event: any){
 
+  }
+
+  // Subscribe to tap events and handles swipe actions
+  private subscribeToTapEvent(): void {
+    this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
+      if (data?.tapSide && data?.clientId === this.profile?.id) {
+        this.onSwipe(data.tapSide);
+      }
+    })
+  }
+
+  private setUserImages (): void {
+      if (!this.profile) return;
+
+      if (this.profile.images?.length) {
+        this.userImages = this.profile.images;
+      } else if (this.profile.avatar) {
+        this.userImages = [`https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.profile?.avatar}`]
+      } else {
+        this.userImages = [this.defaultImage];
+      }
   }
 
   ngOnDestroy(): void {

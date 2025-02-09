@@ -17,7 +17,7 @@ ion-content{
       }
 
       ion-text {
-        background: linear-gradient(to right, var(--ion-color-grey-1), var(--ion-color-grey-2));
+         background: linear-gradient(to right, var(--ion-color-grey-1), var(--ion-color-grey-2));
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -32,7 +32,11 @@ ion-content{
       align-items: center;
       display: flex;
       justify-content: center;
-      color: var( --ion-color-grey-1);
+      ion-text {
+        color: var( --ion-color-grey-2);
+      }
+
+
     }
   }
 

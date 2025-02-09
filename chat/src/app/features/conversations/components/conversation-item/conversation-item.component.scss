@@ -1,5 +1,6 @@
 ion-item{
   margin: .5rem 0;
+  --background: var( --ion-color-grey-1);
   ion-avatar{
     width: 4rem;
     height: 4rem;
@@ -15,7 +16,7 @@ ion-item{
       font-weight: bold;
     }
     ion-text:last-child{
-      color: rgb(143, 146, 147);
+      color: var(--ion-color-grey-6);
       white-space: nowrap;
       overflow: hidden;
        text-overflow: ellipsis;

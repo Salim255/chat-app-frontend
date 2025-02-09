@@ -18,55 +18,56 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
 
 export class ConversationItemComponent implements OnInit, OnDestroy {
   @Input() conversation!: Conversation ;
+
   lastMessage: string | null = null;
   partnerInfo: Partner | null  = null;
+  partnerImage: string = 'assets/images/default-profile.jpg';
+
   private userId: number | null = null;
   private userIdSubscription!: Subscription;
 
-  partnerImage: string = 'assets/images/default-profile.jpg';
 
-  constructor (private authService: AuthService,
-     private router: Router, private activeConversationService: ActiveConversationService) {}
+  constructor (
+     private authService: AuthService,
+     private router: Router,
+     private activeConversationService: ActiveConversationService
+    ) {}
 
   ngOnInit(): void {
-    if (!this.conversation) {
-      this.conversation = new Conversation( null, null, null, null, null);
-    }
+    this.subscribeToUserId();
+    this.initializeConversation();
+  }
 
+  // Subscribe to the user ID from aAuthservice
+  private subscribeToUserId(): void {
     this.userIdSubscription = this.authService.userId.subscribe( data =>{
       this.userId = data;
     });
-
-    if( !this.conversation?.messages?.length  || !this.conversation?.users ) return ;
-
-    this.setLastMessage(this.conversation.messages );
-    this.setPartnerInfo(this.conversation.users);
   }
 
-  // Here we are setting the active conversation and navigating to the active conversation
-  onOpenChat (): void {
-    if (!this.conversation || !this.partnerInfo?.partner_id) return;
+  // Initializes the conversation data.
+  private initializeConversation(): void {
+    if (!this.conversation) {
+      this.conversation = new Conversation(null, null, null, null, null);
+    }
 
-    this.activeConversationService.setPartnerInfo(this.partnerInfo);
-    this.activeConversationService.setActiveConversation(this.conversation);
-
-    this.router.navigate([`tabs/active-conversation/${this.partnerInfo.partner_id}`], {
-      queryParams: { partner: this.partnerInfo.partner_id },
-      replaceUrl: true });
+    if(this.conversation?.messages?.length  && this.conversation?.users ) {
+      this.setLastMessage(this.conversation.messages );
+      this.setPartnerInfo();
+    }
   }
 
   // Here we are setting the last message
   setLastMessage (messages: Message []): void {
-    let messagesSize = messages.length;
-    this.lastMessage = messages[messagesSize - 1].content;
+    const messagesSize = messages.length;
+    this.lastMessage = messages[messagesSize - 1].content || null;
   }
 
   // Here we are filtering the users to get the partner info
-  setPartnerInfo (users: User[]): void {
-    let partner =   users.find((user: User) => user.user_id !== this.userId);
-    if (!partner) {
-      return;
-    }
+  setPartnerInfo (): void {
+    const partner =   this.conversation.users?.find((user: User) => user.user_id !== this.userId);
+
+    if (!partner)  return;
 
     this.partnerInfo = {
         partner_id: partner?.user_id,
@@ -76,13 +77,22 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
         connection_status: partner.connection_status
       }
 
-    if (this.partnerInfo?.avatar && this.partnerInfo?.avatar.length > 0) {
-        const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
-        this.partnerImage = partnerAvatar;
-      }
+      this.partnerImage = partner.avatar ? `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`:  this.partnerImage;
+  }
+
+  // Here we are setting the active conversation and navigating to the active conversation
+  onOpenChat (): void {
+      if (!this.conversation || !this.partnerInfo?.partner_id) return;
+
+      this.activeConversationService.setPartnerInfo(this.partnerInfo);
+      this.activeConversationService.setActiveConversation(this.conversation);
+
+      this.router.navigate([`tabs/active-conversation/${this.partnerInfo.partner_id}`], {
+        queryParams: { partner: this.partnerInfo.partner_id },
+        replaceUrl: true });
   }
 
   ngOnDestroy(): void {
-    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+    this.userIdSubscription?.unsubscribe();
   }
 }

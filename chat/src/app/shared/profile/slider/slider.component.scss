@@ -1,7 +1,7 @@
 @use "../../../../theme/queries" as *;
 
 swiper-container {
-  --swiper-pagination-bullet-inactive-color: #909492;
+  --swiper-pagination-bullet-inactive-color: var(--ion-color-grey-5);
   --swiper-pagination-color:  var(--ion-color-primary) ;
   --swiper-pagination-bullet-width: 4.5rem;
   --swiper-pagination-bullet-height: 0.20rem;
@@ -43,8 +43,6 @@ swiper-container {
         @include respond(bp-mobile-large) {
           height: 40rem;
 
-
-
           @include respond-height(large-phone) {
             height: 40rem;
           }
@@ -54,12 +52,7 @@ swiper-container {
             object-fit: cover;
           }
         }
-        @include respond(bp-mobile-medium) {
 
-        }
-        @include respond(bp-mobile-small) {
-
-        }
       }
 
       div {
