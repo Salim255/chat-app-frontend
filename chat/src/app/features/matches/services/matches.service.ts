@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Preferences } from '@capacitor/preferences';
-import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Partner } from 'src/app/interfaces/partner.interface';
 
 @Injectable({
@@ -14,32 +13,10 @@ export class MatchesService {
   constructor(private http: HttpClient) { }
 
   fetchMatches(){
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map((storedData) => {
-        if (!storedData || !storedData.value) {
-          return null
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-
-        let token = parseData._token;
-
-        return token;
-      }),switchMap((token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      }), tap( response => {
-        console.log(response.data)
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`)
+    .pipe(tap( response => {
         this.setMatchArray(response.data)
-      })
-    )
+      }));
   }
 
   get getMatchesArray () {

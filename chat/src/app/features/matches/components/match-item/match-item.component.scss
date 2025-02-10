@@ -1,6 +1,7 @@
 ion-item{
   margin: .5rem 0;
-  ion-avatar{
+  --background: var( --ion-color-grey-1);
+  ion-avatar {
     width: 4.5rem;
     height: 4.5rem;
     img{
@@ -8,5 +9,20 @@ ion-item{
       height: 3rem;
       width: 3rem;
     }
+  }
+  ion-label {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    font-weight: bold;
+    color: var(--ion-color-grey-7);
+  }
+  ion-text {
+    background: var( --ion-color-cyan-6);
+    border-radius: 4px;
+    color: var(--ion-color-grey-0);
+    font-size: .9rem;
+    padding: .3rem .5rem;
+    font-weight: 500;
   }
 }
