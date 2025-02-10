@@ -1,16 +1,15 @@
 <app-header [pageName]="'discover'" ></app-header>
 
 <ion-content [fullscreen]="true" *ngIf="isConnected" [scrollY]="false">
-
-
   <ion-grid>
     <ion-row>
         <ion-col >
-            <app-profile-card [ngClass]="{'swipeable': true}" *ngFor="let foreigner of foreignersList; let i = index "
+            <app-profile-card class="swipeable"
+            *ngFor="let foreigner of foreignersList; let i = index; trackBy: trackById "
             [foreigner]="foreigner"
             appSwipe
             (swipe)="onSwipe($event, i)"
-            [style.transform]="i === currentIndex ? transform : '' "
+            [style.transform]="i === currentIndex ? transform ?? '' : '' "
             [lastProfileIndex]="currentIndex"
             [profileIndex]="i"
             [hidingTapStatus]="hidingTapStatus"

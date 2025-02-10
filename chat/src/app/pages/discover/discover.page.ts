@@ -25,80 +25,90 @@ interface SwipeState {
 
 export class DiscoverPage implements OnInit, OnDestroy {
   isConnected: boolean= true;
-  private foreignersSource!: Subscription;
-  foreignersList: Array < Foreigner >
 
-  viewedProfile : any;
-  private viewedProfileSubscription!: Subscription;
-  private likeActionSource!: Subscription;
-  private disLikeActionSource!: Subscription;
-  private tapHidingStatusSourceSubscription!: Subscription;
+  foreignersList: Foreigner [] = [];
+  viewedProfile: Foreigner | null = null;
+  transform: string | null = null;
+  currentIndex: number | null = null;
+  counterX: number = -50;
+  counterY: number = -50;
+  rotateCounterY: number = 0;
+  rotateCounterX: number = 0;
 
-  hidingTapStatus: DisplayTap= 'show' ;
-
-  transform: any = null;
-  currentIndex:any= null;
-  counterX:any = -50;
-  counterY:any = -50;
-  rotateCounterY= 0;
-  rotateCounterX= 0;
-
-  profilesImages: any;
-  foreignersListStatus = false;
+  profilesImages: string [] = [];
+  foreignersListStatus: boolean = false;
   swipeState: SwipeState = {
     left: 'confirmed',
     right: 'confirmed',
   };
+  hidingTapStatus: DisplayTap = 'show' ;
+
+  private foreignersSource!: Subscription;
+  private viewedProfileSubscription!: Subscription;
+  private likeActionSourceSubscription!: Subscription;
+  private disLikeActionSourceSubscription!: Subscription;
+  private tapHidingStatusSourceSubscription!: Subscription;
+  private netWorkSubscription!: Subscription;
+
   constructor (
      private discoverService: DiscoverService,
      private networkService:  NetworkService,
      private tapService: TapService, private accountService: AccountService
-    ) {
-    this.foreignersList = []
-  }
+    ) {}
 
   ngOnInit () {
+    this.subscribeNetwork();
+  }
 
-    this.networkService.getNetworkStatus().subscribe(isConnected => {
+  ionViewWillEnter () {
+    this.discoverService.fetchUsers().subscribe();
+    this.accountService.fetchAccount().subscribe();
+  }
+
+  private subscribeNetwork() {
+    this.netWorkSubscription = this.networkService.getNetworkStatus().subscribe(isConnected => {
       this.isConnected = isConnected;
-
       if (isConnected) {
-
-
-        this.likeActionSource = this.discoverService.getLikeProfileState.subscribe(state => {
-          if (state ===  'skip') {
-            this.skipFriend();
-          } else if (state ===  'like') {
-            this.addFriend();
-            this.likeActionSource.unsubscribe();
-          }
-         });
-
-         //
-         this.foreignersSource = this.discoverService.getNoConnectedFriendsArray.subscribe( (data )=> {
-          this.foreignersList = data;
-          if (data) {
-            this.setCurrentProfile();
-            this.setForeignersListStatus();
-          }
-        });
-
-        //
-        this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
-          this.viewedProfile = profile
-         })
+          this.handleLikeDislikeSubscription();
+          this.loadForeignersList();
+          this.trackViewedProfile();
+          this.subscribeHideTaps();
       }
     })
   }
 
-  ionViewWillEnter () {
-     this.discoverService.fetchUsers().subscribe();
-     this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
+  private trackViewedProfile(){
+    this.viewedProfileSubscription = this.discoverService.getDisplayedProfile.subscribe(profile => {
+      this.viewedProfile = profile
+     })
+  }
+
+  private loadForeignersList(){
+    this.foreignersSource = this.discoverService.getNoConnectedFriendsArray.subscribe( (data )=> {
+      this.foreignersList = data;
+      if (data) {
+        this.setCurrentProfile();
+        this.setForeignersListStatus();
+      }
+    });
+  }
+  private handleLikeDislikeSubscription() {
+    this.likeActionSourceSubscription = this.discoverService.getLikeProfileState.subscribe(state => {
+      if (state ===  'skip') {
+        this.skipFriend();
+      } else if (state ===  'like') {
+        this.addFriend();
+        this.likeActionSourceSubscription.unsubscribe();
+      }
+     });
+  }
+
+  private subscribeHideTaps() {
+    this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
       this.hidingTapStatus = status;
     })
-
-    this.accountService.fetchAccount().subscribe();
   }
+
 
   addFriend(){
     const foreigner =  this.getCurrentProfile();
@@ -115,7 +125,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
         next: () => {
           this.dropProfileFromForeignersList();
           this.setCurrentProfile();
-          this.likeActionSource.unsubscribe();
+          this.likeActionSourceSubscription.unsubscribe();
           this.updateSwipeStatus('right', 'confirmed' );
         }
      })
@@ -140,12 +150,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
     return this.foreignersList[ profileListLength - 1 ];
   }
 
+  trackById(index: number, item: Foreigner): number {
+    return item.id;
+  }
 
 
   skipFriend () {
      this.dropProfileFromForeignersList();
      this.setCurrentProfile();
-     this.likeActionSource.unsubscribe();
+     this.likeActionSourceSubscription.unsubscribe();
   }
 
 
@@ -172,44 +185,35 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
     if (!this.hidingTapStatus) return
 
-    if (event.dirX === 'right') {
+    const isHorizontal = event.dirX === 'left' || event.dirX === 'right' ;
+    const isVertical = event.dirY === 'up' || event.dirY === 'down';
 
-      this.counterX += 1;
-      if (this.rotateCounterX< 7) {
-        this.rotateCounterX += 0.3
-      }
+    if (isHorizontal) {
+       this.counterX += event.dirX === 'right' ? 1 : -1 ;
 
-      if ( this.swipeState.left !== "pending" &&  this.swipeState.right !== "pending") {
-        this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
-      }
+       if (this.rotateCounterX < 7) this.rotateCounterX += 0.3;
+    }
 
+    if (isVertical) {
+      this.counterY += event.dirY === 'up' ? -1 : 1;
+    }
 
-    } else if (event.dirX === 'left') {
-      this.counterX -= 1;
-      if (this.rotateCounterY < 7) {
-        this.rotateCounterY += 0.3;
-      }
-
-       if ( this.swipeState.left !== "pending" &&  this.swipeState.right !== "pending") {
-         this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`;
-       }
-    } else if (event.dirY === 'up') {
-      this.counterY--;
-      this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
-    } else if (event.dirY === 'down') {
-      this.counterY++;
-         this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(${this.rotateCounterY}deg)`
+    if (this.swipeState.left !== "pending" && this.swipeState.right !== "pending") {
+      this.transform = `translateX(${this.counterX}%) translateY(${this.counterY}%) rotate(-${this.rotateCounterX}deg)`;
     }
 
     if (event.swipeType === 'moveEnd') {
-      this.transform = null;
-      this.counterX = -50;
-      this.counterY = -50;
-      this.rotateCounterY = 0;
-      this.rotateCounterX = 0;
+      this.resetSwipeState();
       this.likeWithHorizontalSwipe(event)
-     }
+    }
+  }
 
+  private resetSwipeState() {
+    this.transform = null;
+    this.counterX = -50;
+    this.counterY = -50;
+    this.rotateCounterY = 0;
+    this.rotateCounterX = 0;
   }
 
   dropProfileFromForeignersList() {
@@ -237,17 +241,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
     const swipeDistance = clientCurrent - clientStart ;
 
-
-    /* if ( clientCurrent  > (clientStart / 3) ) {
-      console.log("Skip", clientCurrent , (clientStart / 4) );
-
-      this.skipFriend();
-
-    } else  if ( clientStart  < ( clientCurrent / 3)) {
-        this.addFriend();
-        console.log("add", clientCurrent , (clientStart / 4) );
-    } */
-
     if (swipeDistance > quarterScreen) {
       this.addFriend();
     } else if (swipeDistance < -quarterScreen) {
@@ -264,20 +257,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy () {
-    if (this.foreignersSource) {
-      this.foreignersSource.unsubscribe()
-    }
-    if (this.likeActionSource) {
-      this.likeActionSource.unsubscribe()
-    }
-    if (this.disLikeActionSource) {
-      this.disLikeActionSource.unsubscribe()
-    }
-    if (this.tapHidingStatusSourceSubscription) {
-      this.tapHidingStatusSourceSubscription.unsubscribe();
-    }
-    if (this.viewedProfileSubscription) {
-      this.viewedProfileSubscription.unsubscribe()
-    }
+    this.netWorkSubscription?.unsubscribe();
+    this.foreignersSource?.unsubscribe();
+    this.likeActionSourceSubscription?.unsubscribe();
+    this.disLikeActionSourceSubscription?.unsubscribe();
+    this.tapHidingStatusSourceSubscription?.unsubscribe();
+    this.viewedProfileSubscription?.unsubscribe();
   }
 }
