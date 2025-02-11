@@ -51,7 +51,7 @@ export class DiscoverService {
     )
   }
 
-  addFriend (friendId: number) {
+  likeProfile (friendId: number) {
     return from(Preferences.get({key: "authData"})).pipe(
       map( (storedData) => {
         if (!storedData || !storedData.value) {
@@ -87,9 +87,9 @@ export class DiscoverService {
      this.displayedProfileSource.next(data);
   }
 
-  triggerLikeProfile(state: any) {
-    console.log(state, "Hello");
-    this.likeProfileSource.next(state)
+  triggerLikeProfile() {
+    console.log( "Hello");
+    this.likeProfileSource.next('like')
   }
 
   get getLikeProfileState() {
@@ -98,7 +98,7 @@ export class DiscoverService {
 
   triggerDislikeProfile(state: any) {
     console.log(state, "Hello");
-    this.likeProfileSource.next(state)
+    this.likeProfileSource.next('dislike')
   }
 
   setForeignersListStatus(status: string) {
@@ -107,9 +107,7 @@ export class DiscoverService {
 
   // We set the profile id of the current profile
   setProfileToRemove(profileId: number){
-    console.log("🚀 Before emitting ID:", profileId);
     this.profileToRemoveSource.next(profileId);
-    console.log("✅ After emitting ID:", profileId);
   }
   // We get the Id of the current profile
   get getProfileToRemoveId(){

@@ -41,7 +41,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   onAddFriend () {
-    this.discoverService.triggerLikeProfile('like');
+    this.discoverService.triggerLikeProfile();
     this.setTapHidingStatus()
   }
 
