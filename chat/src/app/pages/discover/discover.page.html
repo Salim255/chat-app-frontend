@@ -4,16 +4,16 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12">
-        <ng-container *ngFor="let profile of profilesToShare; let index = index">
+        <ng-container *ngFor="let profile of foreignersList; let index = index">
           <app-demo
           [profile]="profile"
            ></app-demo>
         </ng-container>
       </ion-col>
     </ion-row>
- 
+
     <!-- Place holder  -->
-   <ion-row *ngIf="!foreignersListStatus">
+   <ion-row *ngIf="foreignersList?.length === 0">
       <ion-col>
          <app-place-holder [pageName]="'discover'"></app-place-holder>
       </ion-col>

@@ -1,5 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { Foreigner } from "src/app/models/foreigner.model";
+
+type SwipeStatus = 'pending' | 'confirmed' | 'rejected';
+
 @Component({
   selector: "app-demo",
   templateUrl: "./demo.component.html",
@@ -7,8 +11,8 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
   standalone: false
 })
 
-export class DemoComponent {
-  @Input() profile!: { id: number; name: string; image: string };
+export class DemoComponent implements OnInit {
+  @Input() profile!: Foreigner;
   swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
   currentTransformX: number = 0; // Keeps track of the current of the card
   isSwiping: boolean = false;
@@ -18,7 +22,11 @@ export class DemoComponent {
 
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef; // 👈 This now references the correct card
 
-
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    console.log(this.profile, "Hello from demo")
+  }
   // Getter for the current profile
   get currentProfile() {
     return this.profile;

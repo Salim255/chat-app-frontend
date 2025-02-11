@@ -3,8 +3,8 @@
  (panstart)="onPanStart($event)"
  (pan)="onPan($event)"
  (panend)="onPanEnd($event)">
-  <img [src]="currentProfile.image" alt="Profile Image">
-  <h3 >{{ currentProfile.name }}</h3>
+  <img [src]=" currentProfile.avatar || 'assets/images/default-profile.jpg' " alt="Profile Image">
+  <h3 >{{ currentProfile.first_name }}</h3>
 </div>
 
 
