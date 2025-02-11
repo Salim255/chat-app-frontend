@@ -1,0 +1,12 @@
+ <div class="profile-card"
+ #cardElement
+ (panstart)="onPanStart($event)"
+ (pan)="onPan($event)"
+ (panend)="onPanEnd($event)">
+  <img [src]="currentProfile.image" alt="Profile Image">
+  <h3 >{{ currentProfile.name }}</h3>
+</div>
+
+
+
+

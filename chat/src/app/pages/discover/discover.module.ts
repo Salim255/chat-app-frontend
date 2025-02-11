@@ -11,7 +11,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 import { DirectivesModule } from 'src/app/directives/directives.module';
 
- import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
+import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
+
+import { DemoComponent } from './demo.component';
 
 @NgModule({
 
@@ -24,6 +26,6 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
     DiscoverProfilesFeatureModule
 
   ],
-  declarations: [ DiscoverPage ]
+  declarations: [ DiscoverPage, DemoComponent ]
 })
 export class DiscoverPageModule {}

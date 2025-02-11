@@ -1,41 +1,13 @@
 @use "../../../theme/queries" as *;
 
 ion-content {
-
   ion-grid {
-    position: relative;
-    pointer-events: none;
-
-    ion-row:first-child {
-      ion-col {
-        app-profile-card  {
-          position: fixed;
-          left: 50%;
-          top: 60%;
-          @include respond(bp-tablet-md) {
-            top: 10%;
-          }
-          @include respond(bp-tablet-sm) {
-            top: 10%;
-          }
-          @include respond-height(small-phone) {
-            top: 67%;
-          }
-         // Wrap with & {}
-         & {
-          transform: translate(-50%, -50%);
-          width: 100%;
-          height: 100%;
-        }
-        }
-      }
-    }
+    padding: .2rem 0rem;
     ion-row:last-child {
       ion-col {
         text-align: center;
         color: rgb(74, 74, 74);
         font-size: 1rem;
-
       }
     }
   }

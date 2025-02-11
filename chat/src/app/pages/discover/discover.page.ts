@@ -29,7 +29,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
   foreignersList: Foreigner [] = [];
   viewedProfile: Foreigner | null = null;
   transform: string | null = null;
-  currentIndex: number | null = null;
+  currentIndex: number = 0;
+
   counterX: number = -50;
   counterY: number = -50;
   rotateCounterY: number = 0;
@@ -43,12 +44,21 @@ export class DiscoverPage implements OnInit, OnDestroy {
   };
   hidingTapStatus: DisplayTap = 'show' ;
 
+  private profiles = [
+    { id: 1, name: 'Sophia', image: 'assets/images/default-profile.jpg'},
+    { id: 2, name: 'Liam', image: 'assets/images/default-profile.jpg' },
+    { id: 3, name: 'Emma', image: 'assets/images/default-profile.jpg' },
+    { id: 4, name: 'Noah', image: 'assets/images/default-profile.jpg' }
+  ];
+
+  profilesToShare: any;
+
   private foreignersSource!: Subscription;
   private viewedProfileSubscription!: Subscription;
   private likeActionSourceSubscription!: Subscription;
   private disLikeActionSourceSubscription!: Subscription;
-  private tapHidingStatusSourceSubscription!: Subscription;
   private netWorkSubscription!: Subscription;
+  private profileToRemoveSubscription!: Subscription;
 
   constructor (
      private discoverService: DiscoverService,
@@ -57,7 +67,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit () {
+    this. profilesToShare = this.profiles;
     this.subscribeNetwork();
+    this.subscribeProfileToRemove()
   }
 
   ionViewWillEnter () {
@@ -65,6 +77,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
   }
 
+  private subscribeProfileToRemove() {
+    if (this.profileToRemoveSubscription  && !this.profileToRemoveSubscription.closed)  {
+       this.profileToRemoveSubscription.unsubscribe();
+    }
+    this.profileToRemoveSubscription = this.discoverService.getProfileToRemoveId.subscribe(profileId => {
+      if (profileId !== null && profileId !== undefined) this.removeProfileFromList(profileId)
+    })
+  }
   private subscribeNetwork() {
     this.netWorkSubscription = this.networkService.getNetworkStatus().subscribe(isConnected => {
       this.isConnected = isConnected;
@@ -72,7 +92,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
           this.handleLikeDislikeSubscription();
           this.loadForeignersList();
           this.trackViewedProfile();
-          this.subscribeHideTaps();
       }
     })
   }
@@ -103,30 +122,20 @@ export class DiscoverPage implements OnInit, OnDestroy {
      });
   }
 
-  private subscribeHideTaps() {
-    this.tapHidingStatusSourceSubscription = this.tapService?.getHidingTapStatus?.subscribe(status => {
-      this.hidingTapStatus = status;
-    })
-  }
-
-
   addFriend(){
     const foreigner =  this.getCurrentProfile();
-    this.updateSwipeStatus('right', 'pending' );
-    if (foreigner?.id) {
-      let addFriendObs: Observable<any>
-      addFriendObs = this.discoverService.addFriend(foreigner.id);
 
-      addFriendObs.subscribe({
+    if (foreigner?.id) {
+      this.discoverService.addFriend(foreigner.id)
+      .subscribe({
         error: () => {
           console.log("error");
-          this.updateSwipeStatus('right', 'rejected' );
+
         },
         next: () => {
           this.dropProfileFromForeignersList();
           this.setCurrentProfile();
           this.likeActionSourceSubscription.unsubscribe();
-          this.updateSwipeStatus('right', 'confirmed' );
         }
      })
     }
@@ -150,33 +159,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
     return this.foreignersList[ profileListLength - 1 ];
   }
 
-  trackById(index: number, item: Foreigner): number {
-    return item.id;
-  }
-
 
   skipFriend () {
      this.dropProfileFromForeignersList();
      this.setCurrentProfile();
      this.likeActionSourceSubscription.unsubscribe();
   }
-
-
-
-  onTap(event: any){
-        console.log('tap: ', event);
-  }
-
-  onDoubleTap(event: any) {
-    console.log('double Tap: ', event);
-  }
-
-  onPress(event: any) {
-    console.log('====================================');
-    console.log('pressed', event);
-    console.log('====================================');
-  }
-
 
 
   onSwipe(event: any, index: number) {
@@ -248,12 +236,23 @@ export class DiscoverPage implements OnInit, OnDestroy {
     }
   }
 
-  updateSwipeStatus(direction: 'left' | 'right' , status: SwipeStatus) {
-    this.swipeState[direction] =  status;
-    console.log('====================================');
-    console.log(this.swipeState);
-    console.log('====================================');
-    return;
+
+
+
+  // Getter for the current profile
+  removeProfileFromList(profileId: number): void {
+
+    this.profilesToShare = this.profilesToShare.filter((profile:  { id: number, name: string, image: string }) => profile.id !== profileId);
+
+   // Update currentIndex properly
+   if (this.profiles.length === 0) {
+    this.currentIndex = -1; // No profiles left
+  } else {
+    this.currentIndex = Math.min(this.currentIndex, this.profiles.length - 1);
+  }
+
+  console.log("Updated profiles:", this.profiles);
+  console.log("New currentIndex:", this.currentIndex);
   }
 
   ngOnDestroy () {
@@ -261,7 +260,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.foreignersSource?.unsubscribe();
     this.likeActionSourceSubscription?.unsubscribe();
     this.disLikeActionSourceSubscription?.unsubscribe();
-    this.tapHidingStatusSourceSubscription?.unsubscribe();
     this.viewedProfileSubscription?.unsubscribe();
+    this.profileToRemoveSubscription?.unsubscribe();
   }
 }

@@ -13,8 +13,8 @@ export class DiscoverService {
   private ENV = environment;
   private noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
   private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
-
-  private foreignersListStatusSource = new BehaviorSubject < string | null > (null)
+  private profileToRemoveSource = new BehaviorSubject <number | null> (null);
+  private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty')
 
   constructor(private http: HttpClient){
@@ -105,8 +105,19 @@ export class DiscoverService {
       this.foreignersListStatusSource.next(status)
   }
 
+  // We set the profile id of the current profile
+  setProfileToRemove(profileId: number){
+    console.log("🚀 Before emitting ID:", profileId);
+    this.profileToRemoveSource.next(profileId);
+    console.log("✅ After emitting ID:", profileId);
+  }
+  // We get the Id of the current profile
+  get getProfileToRemoveId(){
+     return this.profileToRemoveSource.asObservable();
+  }
+
   get getForeignersListStatus () {
-    return this.foreignersListStatusSource.asObservable()
+    return this.foreignersListStatusSource.asObservable();
   }
 
   get getDisLikeProfileState() {

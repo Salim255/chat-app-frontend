@@ -3,21 +3,17 @@
 <ion-content [fullscreen]="true" *ngIf="isConnected" [scrollY]="false">
   <ion-grid>
     <ion-row>
-        <ion-col >
-            <app-profile-card class="swipeable"
-            *ngFor="let foreigner of foreignersList; let i = index; trackBy: trackById "
-            [foreigner]="foreigner"
-            appSwipe
-            (swipe)="onSwipe($event, i)"
-            [style.transform]="i === currentIndex ? transform ?? '' : '' "
-            [lastProfileIndex]="currentIndex"
-            [profileIndex]="i"
-            [hidingTapStatus]="hidingTapStatus"
-            ></app-profile-card>
-        </ion-col>
+      <ion-col size="12">
+        <ng-container *ngFor="let profile of profilesToShare; let index = index">
+          <app-demo
+          [profile]="profile"
+           ></app-demo>
+        </ng-container>
+      </ion-col>
     </ion-row>
+ 
     <!-- Place holder  -->
-    <ion-row *ngIf="!foreignersListStatus">
+   <ion-row *ngIf="!foreignersListStatus">
       <ion-col>
          <app-place-holder [pageName]="'discover'"></app-place-holder>
       </ion-col>

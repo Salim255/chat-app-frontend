@@ -1,0 +1,23 @@
+.profile-card {
+  width: 100%;
+  height: 72vh;
+  background:var( --ion-color-grey-0);
+  border-radius: 15px;
+  //box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute; /* Ensures the card can move freely */
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-out; /* Smooth transition after the swipe */
+  will-change: transform; /* Hint to the browser that the transform property will be updated frequently */
+}
+img {
+  width: 80%;
+  height: 60%;
+  border-radius: 10px;
+  object-fit: cover;
+}

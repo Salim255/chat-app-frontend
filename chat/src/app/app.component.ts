@@ -6,6 +6,7 @@ import { register } from 'swiper/element/bundle';
 import { SocketIoService } from './core/services/socket.io/socket.io.service';
 import { StatusBar, StatusBarStyle } from '@capacitor/status-bar';
 
+
 register();
 
 @Component({
