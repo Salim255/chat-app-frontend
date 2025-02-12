@@ -1,10 +1,36 @@
-<div class="profile-card"
+<div
 #cardElement
 (panstart)="onPanStart($event)"
 (pan)="onPan($event)"
-(panend)="onPanEnd($event)">
- <img [src]=" profileAvatarUrl() || 'assets/images/default-profile.jpg' " alt="Profile Image">
- <h3 >{{ currentProfile.first_name }}</h3>
+(panend)="onPanEnd($event)"
+class="profile-card"
+ (click)="onProfileClick($event)">
+  <swiper-container
+  [modules]="swiperModules"
+  [pagination]="true"
+  #swiperContainer
+  [config]="swiperOptions">
+    <swiper-slide *ngFor="let item of userImages; let index" >
+      <ng-container >
+        <img [src]="item" alt="Profile Image" class="profile-img" >
+        <h3 >{{ currentProfile.first_name }}</h3>
+      </ng-container>
+    </swiper-slide>
+  </swiper-container>
 </div>
 
+
+
+
+
+<!-- <ng-container *ngFor="let item of userImages; let index"  >
+  <div class="profile-card"
+    #cardElement
+    (panstart)="onPanStart($event)"
+    (pan)="onPan($event)"
+    (panend)="onPanEnd($event)">
+     <img [src]="item" alt="Profile Image">
+     <h3 >{{ currentProfile.first_name }}</h3>
+</div>
+</ng-container> -->
 

@@ -1,13 +1,10 @@
-export class Foreigner {
-  constructor (
-    public id: number,
-    private created_at: Date,
-    private updated_at: Date,
-    public first_name: string,
-    public last_name: string,
-    public avatar: string,
-    private is_staff: boolean,
-    public images: string []
-  ) {}
-
+export type Foreigner = {
+    id: number;
+    created_at: Date;
+    updated_at: Date;
+    first_name: string;
+    last_name: string;
+    avatar: string;
+    is_staff: boolean;
+    images: string []
 }

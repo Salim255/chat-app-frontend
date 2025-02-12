@@ -15,7 +15,6 @@ import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profile
 
 
 @NgModule({
-
   imports: [
     CommonModule,
     IonicModule,

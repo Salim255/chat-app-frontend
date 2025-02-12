@@ -1,6 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from "@angular/core";
 import { Foreigner } from "src/app/models/foreigner.model";
 import { DiscoverService } from "../../services/discover.service";
+import { IonicSlides } from "@ionic/angular";
+import { Swiper } from "swiper/types";
 
 @Component({
 selector: "app-profile-swipe",
@@ -9,20 +11,61 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements OnInit {
-   @Input() profile!: Foreigner;
+export class ProfileSwipeComponent implements OnInit, AfterViewInit {
+    @Input() profile!: Foreigner;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
+    @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
+    @Input() swipeDirection: any;
+    swiperModules= [IonicSlides];
+
+    swiperOptions = {
+      pagination: { clickable: true },
+      allowTouchMove: false,  // Disable Swiper's internal swipe handling
+    };
+    swiper!: Swiper; // Store Swiper instance
+
 
     swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
     currentTransformX: number = 0; // Keeps track of the current of the card
     isSwiping: boolean = false;
     isAnimating: boolean = false ;
     resetProfileTimer: any;
+    userImages: string [] = [];
+
 
     constructor(private discoverService: DiscoverService) {}
 
     ngOnInit(): void {
       console.log( "Hello from demo")
+      this.setUserImages();
+      console.log(this.userImages, "hello")
+    }
+
+    ngAfterViewInit(): void {
+      this.swiper = this.swiperContainer.nativeElement.swiper;
+      console.log(this.swiper, "hello")
+    }
+
+    onProfileClick(event: MouseEvent) {
+      const clientX = event.clientX;
+      const cardWidth = this.cardElement.nativeElement.offsetWidth;
+
+      if (cardWidth === null || cardWidth === undefined) return;
+
+      const cardCenter = cardWidth / 2;
+
+      if (clientX < cardCenter) this.slideLeft()
+      else this.slideRight()
+    }
+
+    private slideLeft() {
+      console.log("hello from left", this.swiper)
+      if (this.swiper) this.swiper.slidePrev();
+    }
+
+    private slideRight() {
+        console.log("Hello from Right")
+        if (this.swiper) this.swiper.slideNext()
     }
 
     onSwipeLeft(event: any) {
@@ -113,6 +156,20 @@ export class ProfileSwipeComponent implements OnInit {
         }
       }, 500)
 
+    }
+
+
+    private setUserImages (): void {
+      if (!this.profile) return;
+
+      if (this.profile.images?.length > 0) {
+        this.userImages =  [...this.profile.images];
+      } else {
+        const imageUrl = 'https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/';
+        const  defaultImage = 'assets/images/default-profile.jpg';
+        this.userImages.push( this.profile.avatar ? `${imageUrl}${this.profile.avatar}`: defaultImage );
+        this.userImages.push( this.profile.avatar ? `${imageUrl}${this.profile.avatar}`: defaultImage );
+      }
     }
 
      // Getter for the current profile
