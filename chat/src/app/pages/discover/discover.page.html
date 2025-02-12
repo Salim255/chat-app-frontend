@@ -5,10 +5,9 @@
     <ion-row>
       <ion-col size="12">
         <ng-container *ngFor="let profile of foreignersList; let index = index">
-          <app-demo
-          [profile]="profile"
-           ></app-demo>
+           <app-profile-swipe  [profile]="profile"></app-profile-swipe>
         </ng-container>
+
       </ion-col>
     </ion-row>
 

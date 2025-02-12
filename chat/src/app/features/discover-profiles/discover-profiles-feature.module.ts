@@ -5,18 +5,18 @@ import { IonicModule } from "@ionic/angular";
 
 import { SharedModule } from "src/app/shared/shared.module";
 import { ProfileCardComponent } from "./components/profile-card/profile-card.component";
-
-
-
+import { ProfileSwipeComponent } from "./components/profile-swipe/profile-swipe.component";
 
 
 @NgModule({
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule],
   exports: [
-    ProfileCardComponent
+    ProfileCardComponent,
+    ProfileSwipeComponent
    ],
   declarations: [
-    ProfileCardComponent
+    ProfileCardComponent,
+    ProfileSwipeComponent
    ]
 })
 

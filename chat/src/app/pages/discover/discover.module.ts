@@ -13,7 +13,6 @@ import { DirectivesModule } from 'src/app/directives/directives.module';
 
 import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
 
-import { DemoComponent } from './demo.component';
 
 @NgModule({
 
@@ -26,6 +25,6 @@ import { DemoComponent } from './demo.component';
     DiscoverProfilesFeatureModule
 
   ],
-  declarations: [ DiscoverPage, DemoComponent ]
+  declarations: [ DiscoverPage]
 })
 export class DiscoverPageModule {}
