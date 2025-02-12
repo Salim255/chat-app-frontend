@@ -13,7 +13,12 @@ class="profile-card"
     <swiper-slide *ngFor="let item of userImages; let index" >
       <ng-container >
         <img [src]="item" alt="Profile Image" class="profile-img" >
-        <h3 >{{ currentProfile.first_name }}</h3>
+        <div class="profile-details">
+          <app-profile-coordination
+          [profile]="this.currentProfile"
+          >
+          </app-profile-coordination>
+        </div>
       </ng-container>
     </swiper-slide>
   </swiper-container>

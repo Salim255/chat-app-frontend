@@ -11,7 +11,7 @@ import { Foreigner } from "src/app/models/foreigner.model";
 })
 export class DiscoverService {
   private ENV = environment;
-  private noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
+  private noConnectedFriendsArray = new BehaviorSubject<  Foreigner [] > ([]);
   private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);

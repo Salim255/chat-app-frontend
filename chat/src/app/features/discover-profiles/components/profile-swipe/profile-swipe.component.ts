@@ -15,7 +15,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
     @Input() profile!: Foreigner;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
     @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
-    @Input() swipeDirection: any;
+
     swiperModules= [IonicSlides];
 
     swiperOptions = {
@@ -54,8 +54,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
 
       const cardCenter = cardWidth / 2;
 
-      if (clientX < cardCenter) this.slideLeft()
-      else this.slideRight()
+     ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
     }
 
     private slideLeft() {
@@ -90,7 +89,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
       if (!element) return;
 
       // Apply swipe animation
-      element.style.transition = 'transform 0.5s ease-ut';
+      element.style.transition = 'transform 0.5s ease-out';
       const translateX = direction === "left" ? "-150vw" : "150vw";
       element.style.transform = `translateX(${translateX}) rotate(${direction === "left" ? "-5deg" : "5deg"})` ;
     }
@@ -125,7 +124,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
 
       } else  {
         // Reset position if swipe was not significant enough
-        this. resetProfilePosition()
+        this.resetProfilePosition()
       }
     }
 
@@ -133,9 +132,8 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
     private handleLikeProfile(profileId: number) {
       this.discoverService.likeProfile(profileId)
       .subscribe({
-        next:(response) => {
-            this.discoverService.setProfileToRemove(this.currentProfile.id);
-        },
+        next:(response) => this.discoverService.setProfileToRemove(this.currentProfile.id)
+        ,
         error: () => this.resetProfilePosition()
       });
     }
@@ -157,7 +155,6 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
       }, 500)
 
     }
-
 
     private setUserImages (): void {
       if (!this.profile) return;

@@ -1,31 +1,30 @@
 ion-grid {
-  padding-left: 1rem ;
-  padding-right: 1rem;
-  ion-col {
-    padding: 0;
-  }
-
+  padding: 0 .8rem;
   ion-row:first-child {
-    ion-col {
+    .badge {
       display: flex;
-      justify-content: flex-start;
+      width: 100%;
+      app-badge {
+        ::ng-deep ion-badge {
+          color: var(--ion-color-grey-0);
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: .4rem .8rem;
+          text-transform: capitalize;
+          border-radius: 2rem;
+        }
+       }
+      ion-icon {
+        fill: var(--ion-color-grey-0);
+        font-size: 2rem;
+        margin-top: -.4rem;
+        margin-left: auto;
+      }
     }
   }
-
-  app-tag {
-    ::ng-deep ion-badge {
-      color: rgb(255, 255, 255);
-      font-size: .8rem;
-      font-weight: 600;
-      padding: .3rem .4rem;
-      text-transform: capitalize;
-      border-radius: 2rem;
-      background: #048478;
-
-    }
-   }
-
 
 }
+
+
 
 

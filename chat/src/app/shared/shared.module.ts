@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core";
-import { TagComponent } from "./native-components/tag/tag.component";
 import { ActionComponent } from "./profile/action/action.component";
 import { IonicModule } from "@ionic/angular";
 import { CommonModule } from '@angular/common';
@@ -28,14 +27,14 @@ import { ProfileImagesCardComponent } from "./profile/profile-images-card/profil
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [TagComponent,ActionComponent, SearchBarComponent, LogoComponent,
+  declarations: [ActionComponent, SearchBarComponent, LogoComponent,
     CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AppHeaderComponent,  NetworkConnectionComponent, AppButtonComponent
   , AppPlaceHolderComponent,
     AppWaveComponent, ProfileCoordinationComponent,
     DistanceComponent, NameAgeComponent, ProfileImagesCardComponent
    ],
   exports:
-  [TagComponent, ActionComponent,SearchBarComponent, LogoComponent,
+  [ActionComponent,SearchBarComponent, LogoComponent,
     CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent,
       AppHeaderComponent,  NetworkConnectionComponent,
     AppButtonComponent, AppPlaceHolderComponent,
