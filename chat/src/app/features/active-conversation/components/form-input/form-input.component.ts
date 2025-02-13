@@ -43,7 +43,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
 
   }
 
-   onTextChange(text: any) {
+  onTextChange(text: any) {
       // Debouncing: Emit "typing" only once until the user stops typing
       if (!this.isTypingDebounced  && this.toUserId) {
           this.socketIoService.userTyping(this.toUserId);
@@ -61,7 +61,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       }, this.typingTimeout);
    }
 
-   stopTyping(): void {
+  stopTyping(): void {
       if (this.typingTimeout) {
         clearTimeout(this.typingTimeout);
         this.typingTimer = null;
@@ -84,9 +84,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
   }
 
   ngOnDestroy(): void {
-    if (this.partnerInfoSubscription) {
-      this.partnerInfoSubscription.unsubscribe();
-    }
+    this.partnerInfoSubscription?.unsubscribe();
     this.toUserId = null;
   }
 }

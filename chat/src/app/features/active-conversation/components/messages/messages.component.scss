@@ -1,8 +1,11 @@
   ion-list{
-    //padding-top: 5rem;
 
+    --ion-background-color:  var( --ion-color-grey-1);
     ion-item {
       margin: .3rem 0;
+      background: transparent;
+
+      --ion-background-color:  var( --ion-color-grey-1);
       .message {
         max-width: 80%;
         display: inline;
@@ -11,13 +14,14 @@
 
         border-radius: .6rem;
         position: relative;
+
         &__sender{
-          background: #B8E6F2;
-          color: #004D5A;
+          background: var(--ion-sender-bg-color);
+          color: var( --ion-color-grey-7);
         }
         &__receiver {
-          background: #F1F1F1;
-          color: #333333;
+          background: var(--ion-color-grey-3);
+          color: var( --ion-color-grey-7);
         }
 
         .message-status {

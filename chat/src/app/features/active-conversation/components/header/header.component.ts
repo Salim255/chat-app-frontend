@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit} from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import { Router } from "@angular/router";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 import { TapService } from "src/app/services/tap/tap.service";
@@ -14,7 +14,7 @@ import { Subscription } from "rxjs";
     styleUrls: ['./header.component.scss'],
     standalone: false
 })
-export class headerComponent implements OnInit, OnDestroy {
+export class headerComponent implements OnChanges, OnDestroy {
   @Input() partnerInfo: Partner | null = null;
   private partnerInfoSubscription!: Subscription;
   partnerImage = 'assets/images/default-profile.jpg';
@@ -33,14 +33,11 @@ export class headerComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/tabs/conversations');
   }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
 
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     if (this.partnerInfo && this.partnerInfo.avatar) {
       if (this.partnerInfo.avatar.length > 0) {
-        const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo.avatar}`;
-        this.partnerImage = partnerAvatar;
+        this.partnerImage = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo.avatar}`;
       }
     }
 
@@ -50,6 +47,7 @@ export class headerComponent implements OnInit, OnDestroy {
        }
     })
   }
+
   // It's function that responsible of viewing details of the clicked profile
   //
   onDisplayProfile(profile: Partner | null) {
@@ -60,16 +58,7 @@ export class headerComponent implements OnInit, OnDestroy {
     //this.router.navigate(['./tabs/view-profile']);
   }
 
-
-  ionViewWillLeave(){
-    console.log("Destroy header leaving 💥💥")
-  }
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-
-    if ( this.partnerInfoSubscription ){
-      this.partnerInfoSubscription.unsubscribe();
-    }
+    this.partnerInfoSubscription?.unsubscribe();
   }
 }
