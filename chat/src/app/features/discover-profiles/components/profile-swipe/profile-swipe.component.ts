@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, SimpleChanges, OnChanges } from "@angular/core";
 import { Foreigner } from "src/app/models/foreigner.model";
 import { DiscoverService } from "../../services/discover.service";
 import { IonicSlides } from "@ionic/angular";
@@ -11,7 +11,7 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements OnInit, AfterViewInit {
+export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
     @Input() profile!: Foreigner;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
     @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
@@ -35,15 +35,12 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
 
     constructor(private discoverService: DiscoverService) {}
 
-    ngOnInit(): void {
-      console.log( "Hello from demo")
+    ngOnChanges(changes: SimpleChanges): void {
       this.setUserImages();
-      console.log(this.userImages, "hello")
     }
 
     ngAfterViewInit(): void {
       this.swiper = this.swiperContainer.nativeElement.swiper;
-      console.log(this.swiper, "hello")
     }
 
     onProfileClick(event: MouseEvent) {
@@ -58,17 +55,14 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
     }
 
     private slideLeft() {
-      console.log("hello from left", this.swiper)
       if (this.swiper) this.swiper.slidePrev();
     }
 
     private slideRight() {
-        console.log("Hello from Right")
-        if (this.swiper) this.swiper.slideNext()
+      if (this.swiper) this.swiper.slideNext()
     }
 
     onSwipeLeft(event: any) {
-      console.log(`${this.currentProfile} rejected ❌`, event);
       this.animateSwipe('left');
       this.handleDislikeProfile();
     }
@@ -77,7 +71,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
       if (this.isAnimating) return;
 
       this.isAnimating = true;
-      console.log(`${this.currentProfile.id} liked ❤️`);
+
       this.animateSwipe('right');
       this.handleLikeProfile(this.currentProfile.id);
     }
@@ -105,7 +99,6 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit {
 
     // Start tracking the swipe position when pan starts
     onPanStart (event: any) {
-      console.log('Hello from ll 1💥💥', this.currentProfile)
       this.isSwiping = true;
       this.swipeStartPosition = this.currentTransformX;
     }
