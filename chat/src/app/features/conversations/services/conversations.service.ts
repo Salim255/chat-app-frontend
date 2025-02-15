@@ -7,9 +7,10 @@ import { Conversation } from "../../active-conversation/models/active-conversati
 @Injectable({
   providedIn: 'root'
 })
+
 export class ConversationService {
   private ENV = environment;
-  private conversationsSource = new BehaviorSubject<Array<Conversation> | null> (null);
+  private conversationsSource = new BehaviorSubject< Conversation [] | null> (null);
 
   constructor(private http: HttpClient) {}
 

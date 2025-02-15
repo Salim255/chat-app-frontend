@@ -48,19 +48,13 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
   // Initializes the conversation data.
   private initializeConversation(): void {
     if (!this.conversation) {
-      this.conversation = new Conversation(null, null, null, null, null);
+      this.conversation = new Conversation(null, null, null, null, null, null, null);
     }
 
-    if(this.conversation?.messages?.length  && this.conversation?.users ) {
-      this.setLastMessage(this.conversation.messages );
+    if(this.conversation?.messages?.length && this.conversation?.users ) {
+      this.lastMessage = this.conversation.last_message?.content ?? null;
       this.setPartnerInfo();
     }
-  }
-
-  // Here we are setting the last message
-  setLastMessage (messages: Message []): void {
-    const messagesSize = messages.length;
-    this.lastMessage = messages[messagesSize - 1].content || null;
   }
 
   // Here we are filtering the users to get the partner info

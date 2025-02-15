@@ -13,6 +13,8 @@ export class Conversation {
     public id: number | null,
     public created_at: string | null,
     public updated_at: string | null,
+    public last_message:  Message | null,
+    public no_read_messages: number | null,
     public messages: Message [] | null,
     public users: User [] | null
   ){}

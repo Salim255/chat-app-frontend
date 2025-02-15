@@ -36,6 +36,7 @@ export class MatchItemComponent implements OnInit {
       },
       error: () => {
         console.error()
+        this.activeConversationService.setActiveConversation(null);
       }
     })
 
