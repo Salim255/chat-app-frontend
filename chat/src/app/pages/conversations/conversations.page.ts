@@ -14,6 +14,8 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
 })
 export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;
+  private updatedUserDisconnectionSubscription!: Subscription;
+
   conversations: Array<Conversation> = [] ;
   isEmpty: boolean = true ;
   constructor(private conversationService: ConversationService,
@@ -21,9 +23,8 @@ export class ConversationsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
-
     this.subscribeToConversations();
+    this.subscribeUpdatedUserDisconnection();
 
     this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
        if (message) {
@@ -38,6 +39,11 @@ export class ConversationsPage implements OnInit, OnDestroy {
     if (!this.conversationsSource || this.conversationsSource.closed) {
         this.subscribeToConversations();
     }
+
+    if (!this.updatedUserDisconnectionSubscription || this.updatedUserDisconnectionSubscription.closed) {
+      this.subscribeUpdatedUserDisconnection();
+    }
+
     this.conversationService.fetchConversations().subscribe();
     this.accountService.fetchAccount().subscribe();
   }
@@ -53,6 +59,13 @@ export class ConversationsPage implements OnInit, OnDestroy {
         this.isEmpty = chats.length === 0 ;
       }
     })
+  }
+
+  private subscribeUpdatedUserDisconnection() {
+    this.updatedUserDisconnectionSubscription = this.socketIoService.updatedUserDisconnectionGetter.subscribe(data => {
+      console.log(data, '1')
+      this.conversationService.fetchConversations().subscribe();
+     })
   }
 
   updateChatWithReceivedMessage(message: Message) {
@@ -87,7 +100,8 @@ export class ConversationsPage implements OnInit, OnDestroy {
   }
 
   private cleanUp() {
-    this.conversationsSource.unsubscribe();
+    this.conversationsSource?.unsubscribe();
+    this.updatedUserDisconnectionSubscription?.unsubscribe()
   }
 
   ngOnDestroy () {

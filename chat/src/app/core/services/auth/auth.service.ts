@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
 import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
-
+import { SocketIoService } from '../socket.io/socket.io.service';
 
 export type AuthMod = 'create' | 'sign-in';
 
@@ -19,7 +19,7 @@ export class AuthService implements OnDestroy {
   private authModeSource = new BehaviorSubject < AuthMod | null> (null);
   activeLogoutTimer: any;
 
-  constructor (private http: HttpClient) {
+  constructor (private http: HttpClient, private socketIoService: SocketIoService ) {
 
   }
 
@@ -87,8 +87,16 @@ export class AuthService implements OnDestroy {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }
+    // ===== To disconnect user from socket server ====
+    this.userId.subscribe(user_id => {
+      console.log("Hoole user", user_id)
+      if (user_id) this.socketIoService.disconnectUser(user_id);
+    })
+
     this.user.next(null);
     this.removeStoredData();
+
+
   }
 
   autoLogin () {

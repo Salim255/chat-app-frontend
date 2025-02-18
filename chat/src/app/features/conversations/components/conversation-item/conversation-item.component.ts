@@ -1,13 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth/auth.service';;
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
-
+import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 import { Router } from '@angular/router';
 import { Partner } from 'src/app/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+
 
 @Component({
     selector: 'app-conversation-item',
@@ -16,8 +16,8 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
     standalone: false
 })
 
-export class ConversationItemComponent implements OnInit, OnDestroy {
-  @Input() conversation!: Conversation ;
+export class ConversationItemComponent implements OnDestroy, OnChanges {
+  @Input() conversation: Conversation  | null = null;
 
   lastMessage: string | null = null;
   partnerInfo: Partner | null  = null;
@@ -25,17 +25,19 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
 
   private userId: number | null = null;
   private userIdSubscription!: Subscription;
-
+  private updatedUserDisconnectionSubscription!: Subscription;
 
   constructor (
      private authService: AuthService,
      private router: Router,
-     private activeConversationService: ActiveConversationService
+     private activeConversationService: ActiveConversationService,
+     private  socketIoService:  SocketIoService,
     ) {}
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.subscribeToUserId();
     this.initializeConversation();
+    this.subscribeToPartnerConnectionStatus();
   }
 
   // Subscribe to the user ID from aAuthservice
@@ -45,6 +47,16 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
     });
   }
 
+  private subscribeToPartnerConnectionStatus() {
+    this.updatedUserDisconnectionSubscription = this.socketIoService.updatedUserDisconnectionGetter.subscribe(data => {
+      if ( data?.connection_status !== undefined && this.partnerInfo) {
+        this.partnerInfo = {
+          ...this.partnerInfo,
+          connection_status: data.connection_status
+        }
+      }
+    })
+  }
   // Initializes the conversation data.
   private initializeConversation(): void {
     if (!this.conversation) {
@@ -59,7 +71,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
 
   // Here we are filtering the users to get the partner info
   setPartnerInfo (): void {
-    const partner =   this.conversation.users?.find((user: User) => user.user_id !== this.userId);
+    const partner =   this.conversation?.users?.find((user: User) => user.user_id !== this.userId);
 
     if (!partner)  return;
 
@@ -88,5 +100,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userIdSubscription?.unsubscribe();
+    this.updatedUserDisconnectionSubscription?.unsubscribe();
   }
 }
