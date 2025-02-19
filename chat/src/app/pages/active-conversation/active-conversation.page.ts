@@ -14,7 +14,8 @@ export type CreateMessageData = {
   chatId: number;
   fromUserId: number;
   toUserId: number;
-  content: string
+  content: string;
+  partnerConnectionStatus: string;
 }
 
 export type CreateChatInfo = {
@@ -93,7 +94,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
        content: message,
        fromUserId: this.userId,
        toUserId: this.partnerInfo.partner_id,
-       chatId: this.activeChat?.id
+       chatId: this.activeChat?.id,
+       partnerConnectionStatus: this.partnerInfo.connection_status ?? 'offline'
     };
 
     this.messageService.sendMessage(data).subscribe({

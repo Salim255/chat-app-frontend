@@ -46,7 +46,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // if (this.userId) this.socketIoService.disconnectUser(this.userId);
     if (this.authSub) this.authSub.unsubscribe();
   }
 }

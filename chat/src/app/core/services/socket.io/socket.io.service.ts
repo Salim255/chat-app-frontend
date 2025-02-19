@@ -54,7 +54,7 @@ export class SocketIoService {
     this.userId = userId;
     console.log(this.socket)
     // ==== Check for socket connection ===
-    //if (this.socket  && this.socket.connected) return;
+    if (this.socket  && this.socket.connected) return;
 
     // ==== Establish socket connection =========
     this.socket = this.establishSocketConnection();

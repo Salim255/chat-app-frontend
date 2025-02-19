@@ -21,8 +21,10 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
   @Input() conversation: Conversation  | null = null;
 
   lastMessage: Message | null = null;
+  readMessagesCounter: number = 0 ;
   partnerInfo: Partner | null  = null;
   partnerImage: string = 'assets/images/default-profile.jpg';
+
 
   private userId: number | null = null;
   private userIdSubscription!: Subscription;
@@ -36,6 +38,7 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.conversation)
     this.subscribeToUserId();
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
@@ -77,6 +80,8 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
       this.lastMessage = this.conversation.last_message;
+      this.readMessagesCounter = this.conversation.no_read_messages ?? 0;
+      console.log(this.readMessagesCounter, "hello 😍😍😍")
       this.setPartnerInfo();
     }
   }

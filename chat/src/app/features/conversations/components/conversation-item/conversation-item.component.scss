@@ -1,7 +1,7 @@
 ion-item{
   margin: .5rem 0;
   --background: var( --ion-color-grey-1);
-  ion-avatar{
+  ion-avatar {
     width: 3.5rem;
     height: 3.5rem;
     margin: 0;
@@ -41,6 +41,21 @@ ion-item{
        text-overflow: ellipsis;
        font-weight: 600;
        font-size: .8rem;
+    }
+  }
+
+  .messages_number {
+    background: var(--ion-color-online);
+    border-radius: 50%;
+    position: relative;
+    color: var(--ion-color-grey-1);
+    font-size: .8rem;
+    padding: .8rem;
+    span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }

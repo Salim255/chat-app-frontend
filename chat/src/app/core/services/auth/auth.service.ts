@@ -4,7 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
-import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap } from 'rxjs';
 import { SocketIoService } from '../socket.io/socket.io.service';
 
 export type AuthMod = 'create' | 'sign-in';
@@ -17,6 +17,8 @@ export class AuthService implements OnDestroy {
   private ENV = environment;
   private user = new BehaviorSubject <User | null> (null);
   private authModeSource = new BehaviorSubject < AuthMod | null> (null);
+  private locallyUserId: number | null =  null;
+
   activeLogoutTimer: any;
 
   constructor (private http: HttpClient, private socketIoService: SocketIoService ) {
@@ -83,15 +85,13 @@ export class AuthService implements OnDestroy {
     }, duration);
   }
 
-  logout () {
+  async logout () {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }
     // ===== To disconnect user from socket server ====
-    this.userId.subscribe(user_id => {
-      console.log("Hoole user", user_id)
-      if (user_id) this.socketIoService.disconnectUser(user_id);
-    })
+    const currentUserId = await firstValueFrom(this.userId);
+    if(currentUserId) this.socketIoService.disconnectUser(currentUserId)
 
     this.user.next(null);
     this.removeStoredData();

@@ -41,7 +41,6 @@ export class TabsPage implements OnInit, OnDestroy  {
 
   ionViewWillEnter(){
     console.log("Tap will enter 💥💥")
-
   }
 
   /* ionViewWillLeave(){
@@ -56,7 +55,7 @@ export class TabsPage implements OnInit, OnDestroy  {
   private subscribeToUserId() {
     this.userIdSubscription = this.authService.userId.subscribe(userId => {
       this.userId = userId;
-       console.log('Hello Tabs')
+       console.log('Hello Tabs', userId)
       if (this.userId){
          this.socketIoService.initializeSocket(this.userId);
         //this.socketIoService.registerUser(this.userId);
