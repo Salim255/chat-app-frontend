@@ -7,6 +7,7 @@ import { Partner } from 'src/app/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';
+import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 
 @Component({
@@ -19,14 +20,14 @@ import { Subscription } from 'rxjs';
 export class ConversationItemComponent implements OnDestroy, OnChanges {
   @Input() conversation: Conversation  | null = null;
 
-  lastMessage: string | null = null;
+  lastMessage: Message | null = null;
   partnerInfo: Partner | null  = null;
   partnerImage: string = 'assets/images/default-profile.jpg';
 
   private userId: number | null = null;
   private userIdSubscription!: Subscription;
   private updatedUserDisconnectionSubscription!: Subscription;
-
+  private messageDeliverySubscription!: Subscription;
   constructor (
      private authService: AuthService,
      private router: Router,
@@ -38,8 +39,19 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     this.subscribeToUserId();
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
+
+    this.subscribeToMessageDelivery();
   }
 
+  private subscribeToMessageDelivery(){
+    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
+      console.log(message, "hello message ")
+       if (message) {
+
+        this.updateChatWithReceivedMessage(message)
+       }
+    })
+  }
   // Subscribe to the user ID from aAuthservice
   private subscribeToUserId(): void {
     this.userIdSubscription = this.authService.userId.subscribe( data =>{
@@ -48,11 +60,11 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
   }
 
   private subscribeToPartnerConnectionStatus() {
-    this.updatedUserDisconnectionSubscription = this.socketIoService.updatedUserDisconnectionGetter.subscribe(data => {
-      if ( data?.connection_status !== undefined && this.partnerInfo) {
+    this.updatedUserDisconnectionSubscription = this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
+      if ( updatedUser?.connection_status !== undefined && this.partnerInfo && updatedUser.user_id === this.partnerInfo.partner_id) {
         this.partnerInfo = {
           ...this.partnerInfo,
-          connection_status: data.connection_status
+          connection_status: updatedUser.connection_status
         }
       }
     })
@@ -64,7 +76,7 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     }
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
-      this.lastMessage = this.conversation.last_message?.content ?? null;
+      this.lastMessage = this.conversation.last_message;
       this.setPartnerInfo();
     }
   }
@@ -98,8 +110,41 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
         replaceUrl: true });
   }
 
+  private updateChatWithReceivedMessage(message: any) {
+    // Only update if the conversation exists and the message belongs to this chat
+    if (!this.conversation || this.conversation.id !== message?.chat_id ) return;
+
+    // Always update the last message reference
+    this.lastMessage =  message ;
+
+    // Use existing messages or default to an empty array
+    const currentMessages = this.conversation.messages || [];
+
+    // Find if this message already exists in the conversation
+    const messageIndex = currentMessages.findIndex(msg => msg.id === message.id);
+    if (messageIndex === -1) {
+      // Add the message immutably
+      this.conversation = {
+        ...this.conversation,
+        messages: [...this.conversation.messages || [], message ]
+      }
+
+    } else {
+      // Add the message immutably
+      const updatedMessages = this.conversation?.messages?.map((msg, index) =>
+        index === messageIndex ? message : msg
+      )
+
+      this.conversation = {
+        ...this.conversation,
+        messages: updatedMessages || []
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     this.userIdSubscription?.unsubscribe();
     this.updatedUserDisconnectionSubscription?.unsubscribe();
+    this.messageDeliverySubscription?.unsubscribe();
   }
 }

@@ -41,7 +41,7 @@ export class headerComponent implements OnChanges, OnDestroy {
       }
     }
 
-    this.socketIoService.getPartnerConnectionStatusSubject.subscribe(updatedUser => {
+    this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
        if (updatedUser && this.partnerInfo) {
          this.partnerInfo.connection_status = updatedUser.connection_status;
        }
