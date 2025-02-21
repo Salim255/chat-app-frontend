@@ -30,7 +30,7 @@ export class TabsPage implements OnInit, OnDestroy  {
     private  authService:  AuthService) { }
 
   ngOnInit(): void {
-    console.log('tabs, Hello tabs💥💥💥')
+   // console.log('tabs, Hello tabs💥💥💥')
     this.tapHidingStatusSource = this.tapService.getHidingTapStatus.subscribe(status => {
       this.hidingTapStatus = status;
     });
@@ -40,7 +40,7 @@ export class TabsPage implements OnInit, OnDestroy  {
   }
 
   ionViewWillEnter(){
-    console.log("Tap will enter 💥💥")
+   // console.log("Tap will enter 💥💥")
   }
 
   /* ionViewWillLeave(){
@@ -55,7 +55,7 @@ export class TabsPage implements OnInit, OnDestroy  {
   private subscribeToUserId() {
     this.userIdSubscription = this.authService.userId.subscribe(userId => {
       this.userId = userId;
-       console.log('Hello Tabs', userId)
+      // console.log('Hello Tabs', userId)
       if (this.userId){
          this.socketIoService.initializeSocket(this.userId);
         //this.socketIoService.registerUser(this.userId);

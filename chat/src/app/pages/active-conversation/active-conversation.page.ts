@@ -58,19 +58,30 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     ){
 
   }
+
   ngOnInit(): void {
-
-      this.subscribeToActiveChatMessages();
-      this.subscribeToConversationRoom();
-      this.subscribeToConversation();
-      this.subscribeToPartner();
-      this.subscribeToUserId();
-
-      // Sockets
-      this.subscribeDeliveredMessage();
-      this.subscribeUpdatedMessagesToReadWithPartnerJoin();
-      this.subscribeReadMessage();
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.subscribeToUserId();
   }
+
+  ionViewWillEnter() {
+    console.log('Will enrer ', this.partnerInfoSubscription )
+    this.subscribeToActiveChatMessages();
+    this.subscribeToConversationRoom();
+    this.subscribeToConversation();
+    if (!this.partnerInfoSubscription || this.partnerInfoSubscription.closed) {
+      console.log("from inside 😍😍😍")
+      this.subscribeToPartner();
+
+    }
+    this.subscribeToUserId();
+
+    // Sockets
+    this.subscribeDeliveredMessage();
+    this.subscribeUpdatedMessagesToReadWithPartnerJoin();
+    this.subscribeReadMessage();
+}
 
 
   createNewChatObs(data: CreateChatInfo) {
@@ -151,21 +162,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.onSendMessageEmitter(lastMessage);
   }
 
-  ionViewWillEnter() {
-    if (!this.activeConversationSubscription ||  this.activeConversationSubscription.closed) {
-      this.subscribeToActiveChatMessages();
-      this.subscribeToConversationRoom();
-      this.subscribeToConversation();
-      this.subscribeToPartner();
-      this.subscribeToUserId();
-
-      // Sockets
-      this.subscribeDeliveredMessage();
-      this.subscribeUpdatedMessagesToReadWithPartnerJoin();
-      this.subscribeReadMessage();
-    }
-
-  }
 
   private subscribeToActiveChatMessages() {
     this.activeRoomMessagesSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
@@ -197,16 +193,25 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private subscribeToPartner( ) {
+    console.log("😍😍😍😍😍😍😍 Par")
       // Here we get the partner information
       this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
+
         if (partnerInfo) {
+          console.log(partnerInfo, "hello parnter ....", this.userId, !(this.partnerInfo?.partner_id && this.userId))
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId))  return;
 
+          console.log(this.activeChat, 'Hello chat')
+          if (this.activeChat)  {
+
+          }
           const usersData: JoinRomData = {
               fromUserId: this.userId,
-              toUserId: this.partnerInfo?.partner_id
+              toUserId: this.partnerInfo?.partner_id,
+              chatId: this.activeChat && this.activeChat.id
             };
+
           this.socketIoService.userJoinChatRoom(usersData);
         }
     })
@@ -241,12 +246,12 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   ionViewWillLeave() {
+    console.log("Leaveing......")
     this.cleanUp();
   }
 
   private cleanUp() {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
-    if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.conversationRoomIdSubscription) this.conversationRoomIdSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();

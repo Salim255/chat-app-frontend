@@ -4,12 +4,13 @@ import { BehaviorSubject, Subscription} from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
-import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation, User } from 'src/app/features/active-conversation/models/active-conversation.model';
 
 
 export type JoinRomData = {
   fromUserId: number ;
   toUserId: number;
+  chatId: number | null;
 }
 
 export type SendMessageEmitterData = {
@@ -42,6 +43,7 @@ export class SocketIoService {
   private userTypingStatusSubject = new BehaviorSubject <boolean> (false)
   private roomIdSource = new BehaviorSubject < string  | null> (null);
   private updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject < any > (null);
+  private updatedChatCounterSubject = new BehaviorSubject < Conversation | null>  (null)
 
 
   constructor( ) { }
@@ -146,6 +148,11 @@ export class SocketIoService {
           this.setDeliveredMessage(deliveredMessage);
       }});
 
+      // ===== Listen to chat message counter updated ====
+      this.socket?.on('updated-chat-counter', (updatedChatCounter) => {
+          console.log(updatedChatCounter)
+          this.updatedChatCounterSubject.next(updatedChatCounter);
+      })
       // === Listen to message delivery by receiver
       this.socket?.on('message-delivered-to-receiver', (receivedMessage) => {
         if (receivedMessage) {
@@ -202,6 +209,7 @@ export class SocketIoService {
 
   // == Emits the "join-room" event  join a chat room
   userJoinChatRoom(usersData: JoinRomData) {
+    console.log(usersData, "hello from join room")
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
     this.roomIdSource.next(this.currentRoomId);
@@ -305,4 +313,7 @@ export class SocketIoService {
     return this.userTypingStatusSubject.asObservable();
   }
 
+  get getUpdatedChatCounter() {
+    return this.updatedChatCounterSubject.asObservable();
+  }
 }

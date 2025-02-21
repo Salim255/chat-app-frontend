@@ -26,10 +26,12 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
   partnerImage: string = 'assets/images/default-profile.jpg';
 
 
-  private userId: number | null = null;
+  userId: number | null = null;
   private userIdSubscription!: Subscription;
   private updatedUserDisconnectionSubscription!: Subscription;
   private messageDeliverySubscription!: Subscription;
+  private updatedChatCounterSubscription!: Subscription;
+
   constructor (
      private authService: AuthService,
      private router: Router,
@@ -38,17 +40,28 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.conversation)
+   // console.log(this.conversation)
     this.subscribeToUserId();
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
 
     this.subscribeToMessageDelivery();
+    this.subscribeToUpdateChatCounter();
   }
 
+  // Subscribe to update chat counter
+  private subscribeToUpdateChatCounter() {
+    this.updatedChatCounterSubscription = this.socketIoService.getUpdatedChatCounter.subscribe(updatedChat => {
+      if (updatedChat?.id === this.conversation?.id ) {
+        this.readMessagesCounter = updatedChat?.no_read_messages ? updatedChat?.no_read_messages : this.readMessagesCounter ;
+      }
+    })
+  }
+
+  // Subscribe to message delivery
   private subscribeToMessageDelivery(){
     this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
-      console.log(message, "hello message ")
+      //console.log(message, "hello message ")
        if (message) {
 
         this.updateChatWithReceivedMessage(message)
@@ -81,7 +94,6 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     if(this.conversation?.messages?.length && this.conversation?.users ) {
       this.lastMessage = this.conversation.last_message;
       this.readMessagesCounter = this.conversation.no_read_messages ?? 0;
-      console.log(this.readMessagesCounter, "hello 😍😍😍")
       this.setPartnerInfo();
     }
   }
@@ -151,5 +163,6 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
     this.userIdSubscription?.unsubscribe();
     this.updatedUserDisconnectionSubscription?.unsubscribe();
     this.messageDeliverySubscription?.unsubscribe();
+    this. updatedChatCounterSubscription?.unsubscribe();
   }
 }
