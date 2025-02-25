@@ -64,6 +64,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
       return chat;
    })
 
+
    console.log(this.conversations, 'conversations')
     // Use existing messages or default to an empty array
     // const currentMessages = this.conversation.messages || [];

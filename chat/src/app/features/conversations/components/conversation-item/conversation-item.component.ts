@@ -44,7 +44,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-   console.log(this.conversation, this.userId)
    this.initializeConversation();
   }
 
@@ -103,40 +102,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
       this.router.navigate([`tabs/active-conversation/${this.partnerInfo.partner_id}`], {
         queryParams: { partner: this.partnerInfo.partner_id },
         replaceUrl: true });
-  }
-
-  private updateChatWithReceivedMessage(message: any) {
-    // Only update if the conversation exists and the message belongs to this chat
-    if (!this.conversation || this.conversation.id !== message?.chat_id ) return;
-
-    // Always update the last message reference
-    this.lastMessage =  message ;
-
-    // Use existing messages or default to an empty array
-    const currentMessages = this.conversation.messages || [];
-
-    // Find if this message already exists in the conversation
-    const messageIndex = currentMessages.findIndex(msg => msg.id === message.id);
-    if (messageIndex === -1) {
-      // Add the message immutably
-      this.conversation = {
-        ...this.conversation,
-        messages: [...this.conversation.messages || [], message ]
-      }
-
-    } else {
-      // Add the message immutably
-      const updatedMessages = this.conversation?.messages?.map((msg, index) =>
-        index === messageIndex ? message : msg
-      )
-
-      this.conversation = {
-        ...this.conversation,
-        messages: updatedMessages || []
-      }
-
-      console.log(this.conversation , 'conversation')
-    }
   }
 
   ngOnDestroy(): void {
