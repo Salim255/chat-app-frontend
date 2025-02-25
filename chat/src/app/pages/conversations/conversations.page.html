@@ -3,10 +3,17 @@
 <ion-content [fullscreen]="true">
   <ion-grid >
     <ion-row *ngIf="!isEmpty; else default">
-      <ion-col>
-        <ion-list *ngFor="let conversation of conversations" >
-            <app-conversation-item [conversation]="conversation"></app-conversation-item>
+      <ion-col  >
+
+        <ion-list *ngIf="userId"  >
+            <app-conversation-item *ngFor="let conversation of conversations; trackBy: trackById"
+             [conversation]="conversation"
+             [userId]="userId">
+
+            </app-conversation-item>
+
         </ion-list>
+
       </ion-col>
     </ion-row>
 

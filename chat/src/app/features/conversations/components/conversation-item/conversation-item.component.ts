@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { AuthService } from 'src/app/core/services/auth/auth.service';;
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 import { Router } from '@angular/router';
@@ -17,8 +16,9 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
     standalone: false
 })
 
-export class ConversationItemComponent implements OnDestroy, OnChanges {
+export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   @Input() conversation: Conversation  | null = null;
+  @Input() userId: number | null = null
 
   lastMessage: Message | null = null;
   readMessagesCounter: number = 0 ;
@@ -26,54 +26,30 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
   partnerImage: string = 'assets/images/default-profile.jpg';
 
 
-  userId: number | null = null;
-  private userIdSubscription!: Subscription;
+
+
   private updatedUserDisconnectionSubscription!: Subscription;
   private messageDeliverySubscription!: Subscription;
-  private updatedChatCounterSubscription!: Subscription;
+
+
 
   constructor (
-     private authService: AuthService,
      private router: Router,
      private activeConversationService: ActiveConversationService,
      private  socketIoService:  SocketIoService,
     ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-   // console.log(this.conversation)
-    this.subscribeToUserId();
-    this.initializeConversation();
+  ngOnInit(): void {
     this.subscribeToPartnerConnectionStatus();
-
-    this.subscribeToMessageDelivery();
-    this.subscribeToUpdateChatCounter();
   }
 
-  // Subscribe to update chat counter
-  private subscribeToUpdateChatCounter() {
-    this.updatedChatCounterSubscription = this.socketIoService.getUpdatedChatCounter.subscribe(updatedChat => {
-      if (updatedChat?.id === this.conversation?.id ) {
-        this.readMessagesCounter = updatedChat?.no_read_messages ? updatedChat?.no_read_messages : this.readMessagesCounter ;
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+   console.log(this.conversation, this.userId)
+   this.initializeConversation();
   }
 
-  // Subscribe to message delivery
-  private subscribeToMessageDelivery(){
-    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
-      //console.log(message, "hello message ")
-       if (message) {
 
-        this.updateChatWithReceivedMessage(message)
-       }
-    })
-  }
-  // Subscribe to the user ID from aAuthservice
-  private subscribeToUserId(): void {
-    this.userIdSubscription = this.authService.userId.subscribe( data =>{
-      this.userId = data;
-    });
-  }
+
 
   private subscribeToPartnerConnectionStatus() {
     this.updatedUserDisconnectionSubscription = this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
@@ -85,14 +61,16 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
       }
     })
   }
+
   // Initializes the conversation data.
   private initializeConversation(): void {
     if (!this.conversation) {
-      this.conversation = new Conversation(null, null, null, null, null, null, null);
+      this.conversation = new Conversation(null, null, null, null, null, null, null, null);
     }
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
-      this.lastMessage = this.conversation.last_message;
+      this.conversation = {...this.conversation};
+      this.lastMessage = this.conversation?.last_message ;
       this.readMessagesCounter = this.conversation.no_read_messages ?? 0;
       this.setPartnerInfo();
     }
@@ -156,13 +134,13 @@ export class ConversationItemComponent implements OnDestroy, OnChanges {
         ...this.conversation,
         messages: updatedMessages || []
       }
+
+      console.log(this.conversation , 'conversation')
     }
   }
 
   ngOnDestroy(): void {
-    this.userIdSubscription?.unsubscribe();
     this.updatedUserDisconnectionSubscription?.unsubscribe();
     this.messageDeliverySubscription?.unsubscribe();
-    this. updatedChatCounterSubscription?.unsubscribe();
   }
 }

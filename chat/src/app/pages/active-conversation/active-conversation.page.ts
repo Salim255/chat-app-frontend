@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Subscription, take } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
@@ -8,7 +8,7 @@ import { Partner } from "src/app/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
-
+import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 
 export type CreateMessageData = {
   chatId: number;
@@ -54,10 +54,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
-    private messageService: MessageService, private chatService: ChatService
-    ){
-
-  }
+    private messageService: MessageService, private chatService: ChatService,
+    private conversationService: ConversationService
+    ){}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -112,7 +111,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         this.activeChat = response.data[0];
-
+console.log(this.activeChat, "Hello chat")
         this.handleNewMessage();
       },
       error: (err) => {
@@ -158,7 +157,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
     const updatedMessage = [...messages];
     this.activeConversationService.setActiveConversationMessages(updatedMessage);
-    // Trigger "send-message" emitter
+
+   // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
 
@@ -209,7 +209,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           const usersData: JoinRomData = {
               fromUserId: this.userId,
               toUserId: this.partnerInfo?.partner_id,
-              chatId: this.activeChat && this.activeChat.id
+              chatId: this.activeChat && this.activeChat.id,
+              lastMessageSenderId: (this.activeChat && this.activeChat.last_message?.from_user_id) ?? null
             };
 
           this.socketIoService.userJoinChatRoom(usersData);

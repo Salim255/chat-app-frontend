@@ -8,13 +8,18 @@ import { CustomHammerConfig } from './hammer.config';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule, JsonPipe } from '@angular/common';
 
 @NgModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     declarations: [AppComponent],
     bootstrap: [AppComponent],
     imports: [
-      BrowserModule, HammerModule,
+      BrowserAnimationsModule,
+      BrowserModule,
+      CommonModule,
+      HammerModule,
       IonicModule.forRoot(), AppRoutingModule,
       ServiceWorkerModule.register('ngsw-worker.js',
         {
@@ -26,6 +31,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     ],
 
     providers: [
+       JsonPipe,
       {
         provide: RouteReuseStrategy,
         useClass: IonicRouteStrategy

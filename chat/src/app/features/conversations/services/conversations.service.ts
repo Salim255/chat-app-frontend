@@ -20,13 +20,16 @@ export class ConversationService {
 
   fetchConversations () {
     return this.http.get<any>(`${this.ENV.apiUrl}/chats`)
-    .pipe(tap ( (response) => {
-        if (response) {
-          if (response.data) {
-            this.setConversations(response.data)
-                }
-              }
-            }))
+    .pipe(tap ( (response) =>
+      {
+      if (response) {
+        if (response.data) {
+          this.setConversations(response.data)
+          }
+        }
+      }
+      )
+    )
   }
 
   get getConversations () {

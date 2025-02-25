@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { BehaviorSubject, Subscription} from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { Conversation, User } from 'src/app/features/active-conversation/models/active-conversation.model';
@@ -11,6 +10,7 @@ export type JoinRomData = {
   fromUserId: number ;
   toUserId: number;
   chatId: number | null;
+  lastMessageSenderId: number | null;
 }
 
 export type SendMessageEmitterData = {
@@ -150,11 +150,12 @@ export class SocketIoService {
 
       // ===== Listen to chat message counter updated ====
       this.socket?.on('updated-chat-counter', (updatedChatCounter) => {
-          console.log(updatedChatCounter)
+          console.log(updatedChatCounter, "Hello from update counter")
           this.updatedChatCounterSubject.next(updatedChatCounter);
       })
       // === Listen to message delivery by receiver
       this.socket?.on('message-delivered-to-receiver', (receivedMessage) => {
+        console.log(receivedMessage, "hello from receiver")
         if (receivedMessage) {
           this.messageDeliveredToReceiverSubject.next(receivedMessage)
         }

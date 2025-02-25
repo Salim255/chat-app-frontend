@@ -4,6 +4,7 @@ import { Conversation } from 'src/app/features/active-conversation/models/active
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
     selector: 'app-conversations',
@@ -11,23 +12,90 @@ import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.servi
     styleUrls: ['./conversations.page.scss'],
     standalone: false
 })
+
 export class ConversationsPage implements OnInit, OnDestroy {
   private conversationsSource!: Subscription;
   private updatedUserDisconnectionSubscription!: Subscription;
   private updatedChatCounterSubscription!: Subscription;
+  private userIdSubscription!: Subscription;
 
-  conversations: Array<Conversation> = [] ;
+  private messageDeliverySubscription!: Subscription;
+  userId: number | null = null;
+
+  conversations: Conversation [] = [] ;
   isEmpty: boolean = true ;
   constructor(private conversationService: ConversationService,
-    private accountService: AccountService, private socketIoService: SocketIoService
+    private accountService: AccountService,
+    private socketIoService: SocketIoService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
+    this.subscribeToUserId();
     this.subscribeToConversations();
     this.subscribeUpdatedUserDisconnection();
+    this.subscribeToMessageDelivery();
+  }
+
+
+  // Subscribe to message delivery
+  private subscribeToMessageDelivery(){
+    console.log('subscribing to message delivery')
+    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
+      console.log('message', message)
+       if (message) {
+       /*  if (message.chat_id === this.conversation?.id) {
+            this.conversation = {
+              ...this.conversation,
+            last_message: message }
+        } */
+        this.updateChatWithReceivedMessage(message)
+       }
+    })
+  }
+  private updateChatWithReceivedMessage(message: any) {
+   this.conversations = this.conversations.map(chat => {
+      if (chat.id === message.chat_id) {
+        return {
+          ...chat,
+          last_message: message
+        }
+      }
+      return chat;
+   })
+
+   console.log(this.conversations, 'conversations')
+    // Use existing messages or default to an empty array
+    // const currentMessages = this.conversation.messages || [];
+
+    // Find if this message already exists in the conversation
+    //const messageIndex = currentMessages.findIndex(msg => msg.id === message.id);
+/*     if (messageIndex === -1) {
+
+      this.conversation = {
+        ...this.conversation,
+        messages: [...this.conversation.messages || [], message ]
+      }
+
+    } else {
+
+      const updatedMessages = this.conversation?.messages?.map((msg, index) =>
+        index === messageIndex ? message : msg
+      )
+
+      this.conversation = {
+        ...this.conversation,
+        messages: updatedMessages || []
+      }
+
+      console.log(this.conversation , 'conversation')
+    } */
   }
 
   ionViewWillEnter () {
+    if (!this.messageDeliverySubscription || this.messageDeliverySubscription.closed) {
+      this.subscribeToMessageDelivery();
+    }
     if (!this.conversationsSource || this.conversationsSource.closed) {
         this.subscribeToConversations();
     }
@@ -44,15 +112,26 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
   }
 
-  ionViewWillLeave () {
-    this.cleanUp();
+   // Subscribe to the user ID from aAuthservice
+   private subscribeToUserId(): void {
+    this.userIdSubscription = this.authService.userId.subscribe( data =>{
+      this.userId = data;
+    });
   }
+  // Add a trackBy function for better performance
+  trackById(index: number, conversation: any) {
+    return conversation.id;
+  }
+
 
   private subscribeToConversations() {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
+
       if(chats){
-        this.conversations = chats;
+        console.log(chats, "hello from conversations 😍😍😍")
+        this.conversations = [...chats];
         this.isEmpty = chats.length === 0 ;
+        this.sortConversations();
       }
     })
   }
@@ -65,30 +144,42 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   private subscribeToUpdateChatCounter() {
     this.updatedChatCounterSubscription = this.socketIoService.getUpdatedChatCounter.subscribe(updatedChat => {
-      //console.log(this.conversations, 'from conversation', updatedChat)
-      this.conversations = this.conversations.map(chat => {
-        if (chat.id === updatedChat?.id) {
-          return {
-            ...chat,
-            updated_at: updatedChat?.updated_at,
-            no_read_messages: updatedChat?.no_read_messages
-          }
-        } else {
-          return chat
-        }
-      });
-
-      // Then sort the conversations by updated_at in descending order
-      this.conversations = this.conversations.sort((a, b) => {
-      return new Date(b.updated_at ?? new Date(0)).getTime() - new Date(a.updated_at ?? new Date(0)).getTime();
-        });
+      this.updateAndSortConversations(updatedChat);
     })
   }
 
+  /**
+   * Function to update a conversation, sort the list
+   */
+  private updateAndSortConversations(updatedChat: any) {
+    this.conversations = this.conversations.map(chat => {
+      if (chat.id === updatedChat?.id) {
+        return {
+          ...chat,
+          updated_at: updatedChat?.updated_at,
+          no_read_messages: updatedChat?.no_read_messages,
+        };
+      }
+      return chat;
+    });
+
+    this.sortConversations();
+  }
+
+  private sortConversations() {
+    this.conversations.sort((a, b) => {
+      return new Date(b.updated_at ?? new Date(0)).getTime() - new Date(a.updated_at ?? new Date(0)).getTime();
+        });
+  }
   private cleanUp() {
     this.conversationsSource?.unsubscribe();
     this.updatedUserDisconnectionSubscription?.unsubscribe();
     this.updatedChatCounterSubscription?.unsubscribe();
+    this.userIdSubscription?.unsubscribe();
+  }
+
+  ionViewWillLeave () {
+    this.cleanUp();
   }
 
   ngOnDestroy () {
