@@ -158,7 +158,26 @@ console.log(this.activeChat, "Hello chat")
     const updatedMessage = [...messages];
     this.activeConversationService.setActiveConversationMessages(updatedMessage);
 
-   // Trigger "send-message" emitter
+    //
+  /*   this.conversationService.getConversations.subscribe(conversations => {
+      if (conversations) {
+        const updatedConversations = conversations.map(conversation => {
+          if (conversation.id === this.activeChat?.id) {
+            console.log(conversation, this.activeChat )
+            return {
+              ...this.activeChat
+            };
+          }
+          return conversation;
+        });
+
+
+        console.log(updatedConversations, "Updated conversations");
+       this.conversationService.setConversations(updatedConversations);
+      }
+
+    }) */
+    // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
 

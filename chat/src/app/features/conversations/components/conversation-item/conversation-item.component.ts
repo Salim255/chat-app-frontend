@@ -25,13 +25,8 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   partnerInfo: Partner | null  = null;
   partnerImage: string = 'assets/images/default-profile.jpg';
 
-
-
-
   private updatedUserDisconnectionSubscription!: Subscription;
   private messageDeliverySubscription!: Subscription;
-
-
 
   constructor (
      private router: Router,
@@ -46,8 +41,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
    this.initializeConversation();
   }
-
-
 
 
   private subscribeToPartnerConnectionStatus() {

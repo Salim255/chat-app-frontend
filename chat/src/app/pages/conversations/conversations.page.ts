@@ -24,6 +24,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   conversations: Conversation [] = [] ;
   isEmpty: boolean = true ;
+
   constructor(private conversationService: ConversationService,
     private accountService: AccountService,
     private socketIoService: SocketIoService,
@@ -35,62 +36,6 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.subscribeToConversations();
     this.subscribeUpdatedUserDisconnection();
     this.subscribeToMessageDelivery();
-  }
-
-
-  // Subscribe to message delivery
-  private subscribeToMessageDelivery(){
-    console.log('subscribing to message delivery')
-    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
-      console.log('message', message)
-       if (message) {
-       /*  if (message.chat_id === this.conversation?.id) {
-            this.conversation = {
-              ...this.conversation,
-            last_message: message }
-        } */
-        this.updateChatWithReceivedMessage(message)
-       }
-    })
-  }
-  private updateChatWithReceivedMessage(message: any) {
-   this.conversations = this.conversations.map(chat => {
-      if (chat.id === message.chat_id) {
-        return {
-          ...chat,
-          last_message: message
-        }
-      }
-      return chat;
-   })
-
-
-   console.log(this.conversations, 'conversations')
-    // Use existing messages or default to an empty array
-    // const currentMessages = this.conversation.messages || [];
-
-    // Find if this message already exists in the conversation
-    //const messageIndex = currentMessages.findIndex(msg => msg.id === message.id);
-/*     if (messageIndex === -1) {
-
-      this.conversation = {
-        ...this.conversation,
-        messages: [...this.conversation.messages || [], message ]
-      }
-
-    } else {
-
-      const updatedMessages = this.conversation?.messages?.map((msg, index) =>
-        index === messageIndex ? message : msg
-      )
-
-      this.conversation = {
-        ...this.conversation,
-        messages: updatedMessages || []
-      }
-
-      console.log(this.conversation , 'conversation')
-    } */
   }
 
   ionViewWillEnter () {
@@ -113,6 +58,38 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
   }
 
+  // Subscribe to message delivery
+  private subscribeToMessageDelivery(){
+    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
+       if (message) {
+        this.updateGlobalConversations(message);
+        this.updateChatWithReceivedMessage(message)
+       }
+    })
+  }
+
+  private updateChatWithReceivedMessage(message: any) {
+     message && this.updateGlobalConversations(message);
+  }
+
+  private updateGlobalConversations(message: any) {
+    this.conversations = this.conversations.map(chat => {
+      if (chat.id === message.chat_id) {
+        const messageExits = chat.messages?.some(msg => msg.id === message.id);
+        const currentMessages = chat.messages || [];
+        return {
+          ...chat,
+          last_message: message,
+          messages: messageExits
+          ? currentMessages.map( msg => ( msg.id === message.id ? message : msg) )
+          : [...(chat.messages|| [] ), message],
+        }
+      }
+      return chat;
+   })
+  }
+
+
    // Subscribe to the user ID from aAuthservice
    private subscribeToUserId(): void {
     this.userIdSubscription = this.authService.userId.subscribe( data =>{
@@ -129,7 +106,6 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
 
       if(chats){
-        console.log(chats, "hello from conversations 😍😍😍")
         this.conversations = [...chats];
         this.isEmpty = chats.length === 0 ;
         this.sortConversations();
@@ -145,6 +121,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   private subscribeToUpdateChatCounter() {
     this.updatedChatCounterSubscription = this.socketIoService.getUpdatedChatCounter.subscribe(updatedChat => {
+      console
       this.updateAndSortConversations(updatedChat);
     })
   }
