@@ -213,7 +213,7 @@ export class SocketIoService {
     console.log(usersData, "hello from join room")
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
-    this.roomIdSource.next(this.currentRoomId);
+    this.setConversationRoomId(this.currentRoomId);
 
     // Trigger join-room event
     this.socket?.emit('join-room', usersData)
@@ -278,6 +278,10 @@ export class SocketIoService {
   }
   get getConversationRoomId() {
     return this.roomIdSource.asObservable();
+  }
+
+  setConversationRoomId(roomId: string | null) {
+    this.roomIdSource.next(roomId);
   }
 
   get getReadMessage() {

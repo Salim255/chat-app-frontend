@@ -9,29 +9,13 @@ import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.servi
     standalone: false
 })
 
-export class ActiveConversationMessagesPage implements OnInit, OnDestroy {
-  private typingSubscription!: Subscription;
-  typingState: boolean = false;;
+export class ActiveConversationMessagesPage implements OnInit{
 
-  constructor(
-    private socketIoService: SocketIoService,
-  ) { }
+  constructor() { }
 
   ngOnInit() {
-    this.subscribeToTyping();
-
-  }
-
-  private subscribeToTyping() {
-    this.typingSubscription =
-        this.socketIoService.getUserTypingStatus
-        .subscribe(typingStatus => {
-        this.typingState = typingStatus || false;
-    });
-  }
-
-  ngOnDestroy() {
-    this.typingSubscription?.unsubscribe();
+    console.log('init');
+    //this.subscribeToTyping();
   }
 
 }

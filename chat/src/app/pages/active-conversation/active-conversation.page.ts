@@ -65,19 +65,29 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-    console.log('Will enrer ', this.partnerInfoSubscription )
-    this.subscribeToActiveChatMessages();
-    this.subscribeToConversationRoom();
-    this.subscribeToConversation();
-    if (!this.partnerInfoSubscription || this.partnerInfoSubscription.closed) {
-      console.log("from inside 😍😍😍")
-      this.subscribeToPartner();
+    if (!this.deliveredMessageSubscription || this.deliveredMessageSubscription.closed) {
+      this.subscribeDeliveredMessage();
+    }
 
+    if(!this.activeConversationSubscription || this.activeConversationSubscription.closed) {
+      this.subscribeToConversation();
+    }
+
+    if (!this.activeRoomMessagesSubscription || this.activeRoomMessagesSubscription.closed) {
+      this.subscribeToActiveChatMessages();
+    }
+
+    if (!this.conversationRoomIdSubscription || this.conversationRoomIdSubscription.closed) {
+      this.subscribeToConversationRoom();
+    }
+
+    if (!this.partnerInfoSubscription || this.partnerInfoSubscription.closed) {
+      this.subscribeToPartner();
     }
     this.subscribeToUserId();
 
     // Sockets
-    this.subscribeDeliveredMessage();
+
     this.subscribeUpdatedMessagesToReadWithPartnerJoin();
     this.subscribeReadMessage();
 }
@@ -111,7 +121,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         this.activeChat = response.data[0];
-console.log(this.activeChat, "Hello chat")
         this.handleNewMessage();
       },
       error: (err) => {
@@ -158,25 +167,6 @@ console.log(this.activeChat, "Hello chat")
     const updatedMessage = [...messages];
     this.activeConversationService.setActiveConversationMessages(updatedMessage);
 
-    //
-  /*   this.conversationService.getConversations.subscribe(conversations => {
-      if (conversations) {
-        const updatedConversations = conversations.map(conversation => {
-          if (conversation.id === this.activeChat?.id) {
-            console.log(conversation, this.activeChat )
-            return {
-              ...this.activeChat
-            };
-          }
-          return conversation;
-        });
-
-
-        console.log(updatedConversations, "Updated conversations");
-       this.conversationService.setConversations(updatedConversations);
-      }
-
-    }) */
     // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
@@ -212,19 +202,16 @@ console.log(this.activeChat, "Hello chat")
   }
 
   private subscribeToPartner( ) {
-    console.log("😍😍😍😍😍😍😍 Par")
+
       // Here we get the partner information
       this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
 
         if (partnerInfo) {
-          console.log(partnerInfo, "hello parnter ....", this.userId, !(this.partnerInfo?.partner_id && this.userId))
+
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId))  return;
 
-          console.log(this.activeChat, 'Hello chat')
-          if (this.activeChat)  {
 
-          }
           const usersData: JoinRomData = {
               fromUserId: this.userId,
               toUserId: this.partnerInfo?.partner_id,
@@ -265,10 +252,7 @@ console.log(this.activeChat, "Hello chat")
     })
   }
 
-  ionViewWillLeave() {
-    console.log("Leaveing......")
-    this.cleanUp();
-  }
+
 
   private cleanUp() {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
@@ -283,6 +267,7 @@ console.log(this.activeChat, "Hello chat")
     this.activeConversationService.setActiveConversation(null);
     this.activeConversationService.setActiveConversationMessages(null);
 
+
     // Socket
     if (this.updatedMessagesToReadWithPartnerJoinSubscription) this.updatedMessagesToReadWithPartnerJoinSubscription.unsubscribe();
     if (this.readMessageSubscription) this.readMessageSubscription.unsubscribe();
@@ -291,7 +276,12 @@ console.log(this.activeChat, "Hello chat")
     this.socketIoService.setReadMessageSource(null);
     this.socketIoService.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
     this.socketIoService.setDeliveredMessage(null);
+    this.socketIoService.setConversationRoomId(null);
 
+  }
+
+  ionViewWillLeave() {
+    this.cleanUp();
   }
 
   ngOnDestroy() {

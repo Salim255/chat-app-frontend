@@ -46,6 +46,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
   onTextChange(text: any) {
       // Debouncing: Emit "typing" only once until the user stops typing
       if (!this.isTypingDebounced  && this.toUserId) {
+        console.log('typing......');
           this.socketIoService.userTyping(this.toUserId);
           this.isTypingDebounced = true;
       }
@@ -73,6 +74,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       }
 
    }
+
   onSubmit (f: NgForm) {
     this.stopTyping();
     if (!f.valid || this.message.trim().length === 0) {
