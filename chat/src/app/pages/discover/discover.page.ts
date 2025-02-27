@@ -4,7 +4,7 @@ import { DiscoverService } from 'src/app/features/discover-profiles/services/dis
 import { Foreigner } from '../../models/foreigner.model';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-
+import { ItsMatchModalService } from 'src/app/features/matches/services/its-match-modal.service';
 
 @Component({
     selector: 'app-discover',
@@ -28,21 +28,24 @@ export class DiscoverPage implements OnInit, OnDestroy {
   constructor (
      private discoverService: DiscoverService,
      private networkService:  NetworkService,
-     private accountService: AccountService
+     private accountService: AccountService,
+     private itsMatchModalService: ItsMatchModalService
     ) {}
 
   ngOnInit () {
     this.subscribeNetwork();
-    this.subscribeProfileToRemove()
+    this.subscribeProfileToRemove();
   }
 
   ionViewWillEnter () {
     this.discoverService.fetchUsers().subscribe();
     this.accountService.fetchAccount().subscribe();
+
+    this. itsMatchModalService.openItsMatchModal()
   }
 
   private subscribeProfileToRemove() {
-    if (this.profileToRemoveSubscription  && !this.profileToRemoveSubscription.closed)  {
+    if (this.profileToRemoveSubscription && !this.profileToRemoveSubscription.closed)  {
        this.profileToRemoveSubscription.unsubscribe();
     }
     this.profileToRemoveSubscription = this.discoverService.getProfileToRemoveId.subscribe(profileId => {

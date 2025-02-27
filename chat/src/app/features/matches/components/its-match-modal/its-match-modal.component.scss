@@ -1,0 +1,98 @@
+ion-content {
+  position: relative;
+  ion-grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    ion-row {
+      ion-col {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    ion-row:first-child {
+      height: 60%;
+      ion-col {
+        justify-content: center;
+        .its-match-text {
+          margin-top: auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 6em;
+          ion-text {
+            color: var(--ion-color-cyan-0);
+            font-size: 1rem;
+            font-weight: 600
+          }
+          ion-text:first-child {
+           font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: -10;
+            //font-family: "Faster One", serif;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-style: oblique;
+            transform: scale(1.5);
+          }
+
+          ion-text:last-child {
+            font-size: 1.5rem;
+            color: var(--ion-color-cyan-3);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+          }
+        }
+        app-paired-photos {
+
+        width: 100%;
+        text-align: center;
+       }
+      }
+    }
+    ion-row:last-child {
+      height: 40%;
+      ion-col {
+       padding-top: 4rem;
+       padding-left: 1rem;
+       padding-right: 1rem;
+
+       gap: 1rem;
+
+       ::ng-deep app-button:last-child {
+          ion-button {
+            --background: none;
+            background: none;
+            //background:  var( --ion-color-grey-2);
+            color: var(--ion-color-grey-0);
+            border: solid 1px var(--ion-color-grey-0);
+          }
+        }
+        ::ng-deep app-button:first-child {
+          ion-button {
+            --background: none;
+            background: none;
+            background:  var( --ion-color-grey-2);
+            color: var(--ion-color-grey-7);
+            border: solid 1px var(--ion-color-grey-0);
+
+          }
+        }
+      }
+    }
+  }
+}
+
+ion-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(64, 63, 63, 0.9);
+  z-index: 1;
+}
