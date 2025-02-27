@@ -18,6 +18,7 @@ export class MatchItemComponent implements OnInit {
   constructor (private router: Router,private activeConversationService: ActiveConversationService) {}
 
   ngOnInit(): void {
+    console.log("Partner info:", this.partnerInfo);
     if (this.partnerInfo?.avatar) {
       const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
       this.defaultImage = partnerAvatar;
@@ -25,6 +26,7 @@ export class MatchItemComponent implements OnInit {
   }
 
   onOpenChat () {
+    console.log("Open chat with partner:", this.partnerInfo);
     if (!this.partnerInfo?.partner_id) return;
     this.activeConversationService.setPartnerInfo(this.partnerInfo);
     // Check if there are a chat with the this partner

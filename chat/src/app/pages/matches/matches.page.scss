@@ -1,4 +1,37 @@
 
+ion-grid {
+  ion-row:first-child {
+    ion-col {
+      margin: .5rem;
+      ion-text {
+        font-weight: 600;
+        font-weight: 1rem;
+        color: var(--ion-color-grey-8);
+      }
+    }
+  }
+}
 ion-list {
   background:  var( --ion-color-grey-1);
+  display: flex;
+
+  padding: 0 .7rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  ion-item {
+    width:  calc(33.333% - .7rem);
+   --background: var( --ion-color-grey-1);
+   margin-bottom: .2rem;
+   box-sizing: border-box; /* Prevents overflow */
+   display: flex;
+   align-items: center; /* Vertically center content */
+   justify-content: center;
+
+   --inner-padding-start: 0px;
+   --inner-padding-end: 0px;
+   --padding-start: 0px;
+   --padding-end: 0px;
+   --inner-margin: 0px;
+  }
 }

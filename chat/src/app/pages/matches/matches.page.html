@@ -2,15 +2,32 @@
 
 <ion-content [fullscreen]="true">
   <ion-grid *ngIf="!isEmpty">
-   <!--  <ion-row>
+    <ion-row>
       <ion-col>
-          <app-search-bar></app-search-bar>
+          <ion-text >New matches</ion-text>
       </ion-col>
-    </ion-row> -->
+    </ion-row>
     <ion-row >
       <ion-col >
         <ion-list *ngFor="let match of matchesArray" >
-            <app-match-item [partnerInfo]="match" ></app-match-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
+            <ion-item lines="none">
+              <app-match-item [partnerInfo]="match" ></app-match-item>
+            </ion-item>
         </ion-list>
       </ion-col>
     </ion-row>

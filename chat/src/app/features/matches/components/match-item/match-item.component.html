@@ -1,7 +1,17 @@
-<ion-item>
+<!-- <ion-item>
   <ion-avatar slot="start" >
     <img alt="Silhouette of a person's head" [src]="defaultImage" />
   </ion-avatar>
   <ion-label> {{ partnerInfo.first_name }}</ion-label>
-  <ion-text role="button" (click)="onOpenChat()"> chat </ion-text>
+  <ion-text > chat </ion-text>
 </ion-item>
+ -->
+
+<ion-card role="button" (click)="onOpenChat()">
+  <ion-card-content>
+    <img alt="Silhouette of a person's head" [src]="defaultImage" />
+  </ion-card-content>
+  <ion-card-header>
+    <ion-card-title>{{ partnerInfo.first_name }}</ion-card-title>
+  </ion-card-header>
+</ion-card>
