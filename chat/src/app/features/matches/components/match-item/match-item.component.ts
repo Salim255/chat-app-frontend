@@ -2,7 +2,7 @@ import { Component,  Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { MatchesService } from '../../services/matches.service';
-
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 @Component({
     selector: 'app-match-item',
     templateUrl: './match-item.component.html',
@@ -13,7 +13,7 @@ export class MatchItemComponent implements OnChanges {
   @Input() partnerInfo: Partner | null = null ;
 
   constructor (
-    private  matchesService:  MatchesService
+    private activeConversationService: ActiveConversationService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -25,6 +25,6 @@ export class MatchItemComponent implements OnChanges {
   onOpenConversation () {
     if (!this.partnerInfo || !this.partnerInfo.partner_id) return;
 
-    this.matchesService.onOpenChat(this.partnerInfo)
+    this. activeConversationService.onOpenChat(this.partnerInfo)
   }
 }

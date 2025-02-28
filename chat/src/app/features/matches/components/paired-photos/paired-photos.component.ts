@@ -20,18 +20,14 @@ export class PairedPhotosComponent implements OnChanges, OnDestroy {
   constructor(private accountService: AccountService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-
     this.subscribeToHostProfile();
   }
-
 
   private subscribeToHostProfile() {
     this. hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
       this.hostUserPhoto =  StringUtils.getAvatarUrl(avatar);
     })
   }
-
-
 
   ngOnDestroy(): void {
     this.hostProfileSubscription?.unsubscribe();

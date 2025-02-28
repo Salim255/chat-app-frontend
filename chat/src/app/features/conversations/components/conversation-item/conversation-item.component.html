@@ -1,7 +1,7 @@
 <ion-item role="button" (click)="onOpenChat()"
   [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
   <ion-avatar slot="start">
-      <img alt="User image" [src]="partnerImage" />
+      <img alt="User image" [src]="partnerInfo?.avatar" />
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>

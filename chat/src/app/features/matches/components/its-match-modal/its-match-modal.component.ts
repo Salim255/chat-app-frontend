@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { ItsMatchModalService } from "../../services/its-match-modal.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { MatchesService } from "../../services/matches.service";
+import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
 
 @Component({
   selector: 'app-its-modal-match',
@@ -17,7 +18,7 @@ export class ItsMatchModalComponent implements OnInit {
 
   constructor (
     private itsMatchModalService : ItsMatchModalService,
-    private matchesService: MatchesService ) {}
+   private activeConversationService: ActiveConversationService ) {}
 
   ngOnInit(): void {
     if (this.matchedProfile.avatar) {
@@ -26,7 +27,7 @@ export class ItsMatchModalComponent implements OnInit {
   }
 
   onSendMessage() {
-    this.matchesService.onOpenChat(this.matchedProfile);
+    this.activeConversationService.onOpenChat(this.matchedProfile);
     this.itsMatchModalService.closeModal()
   }
 

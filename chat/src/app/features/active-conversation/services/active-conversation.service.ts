@@ -8,7 +8,7 @@ import { environment } from "src/environments/environment";
 import { CreateMessageData } from "../pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
 import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
-
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,31 @@ export class ActiveConversationService {
   private activeConversationSource = new BehaviorSubject< Conversation | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject< Message[] | null> (null);
 
-  constructor(private http: HttpClient, private conversationService: ConversationService
+  constructor(
+    private http: HttpClient,
+    private conversationService: ConversationService,
+    private router: Router
   ) { }
+
+  onOpenChat (partnerInfo: Partner) {
+    console.log("Open chat with partner:", partnerInfo);
+    if (!partnerInfo || !partnerInfo.partner_id) return
+
+    this.setPartnerInfo(partnerInfo);
+
+    // Check if there are a chat with the this partner
+    this.fetchChatByPartnerID(partnerInfo?.partner_id)
+    .subscribe({
+      next: () => {
+        this.router.navigate([`./tabs/active-conversation/${partnerInfo?.partner_id}`],
+          { queryParams: { partner: partnerInfo?.partner_id }, queryParamsHandling: 'merge' });
+      },
+      error: () => {
+        console.error()
+        this.setActiveConversation(null);
+      }
+    })
+  }
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {

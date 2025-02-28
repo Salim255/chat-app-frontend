@@ -7,7 +7,8 @@ import { Conversation } from 'src/app/features/active-conversation/models/active
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
-
+import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 
 @Component({
     selector: 'app-conversation-item',
@@ -74,27 +75,15 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
     if (!partner)  return;
 
-    this.partnerInfo = {
-        partner_id: partner?.user_id,
-        avatar: partner.avatar,
-        last_name: partner.last_name,
-        first_name: partner.first_name,
-        connection_status: partner.connection_status
-      }
+    this.partnerInfo = ProfileUtils.setProfileData(partner);
 
-      this.partnerImage = partner.avatar ? `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`:  this.partnerImage;
+    this.partnerInfo.avatar = StringUtils.getAvatarUrl(partner.avatar)
   }
 
   // Here we are setting the active conversation and navigating to the active conversation
   onOpenChat (): void {
       if (!this.conversation || !this.partnerInfo?.partner_id) return;
-
-      this.activeConversationService.setPartnerInfo(this.partnerInfo);
-      this.activeConversationService.setActiveConversation(this.conversation);
-
-      this.router.navigate([`tabs/active-conversation/${this.partnerInfo.partner_id}`], {
-        queryParams: { partner: this.partnerInfo.partner_id },
-        replaceUrl: true });
+      this.activeConversationService.onOpenChat(this.partnerInfo)
   }
 
   ngOnDestroy(): void {
