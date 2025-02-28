@@ -134,7 +134,7 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
           console.log(response)
           this.discoverService.setProfileToRemove(this.currentProfile.id);
 
-          if (response?.data  ) {
+          if (response?.data && response.data.status === 2 ) {
             const matchedData: Partner =
             {
               partner_id: this.profile.id,
