@@ -1,7 +1,7 @@
 // chat.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateChatInfo } from 'src/app/interfaces/chat.interface';
+import { CreateChatInfo } from 'src/app/shared/interfaces/chat.interface';
 import { ActiveConversationService } from './active-conversation.service';
 import { MessageService } from './message.service';
 

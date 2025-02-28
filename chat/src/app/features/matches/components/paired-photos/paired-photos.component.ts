@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { AccountService } from "src/app/features/account/services/account.service";
 import { Subscription } from "rxjs";
 import { StringUtils } from "src/app/shared/utils/string-utils";

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, tap } from 'rxjs';
-import { Partner } from 'src/app/interfaces/partner.interface';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
 
 @Injectable({
   providedIn: 'root'

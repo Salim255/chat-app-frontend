@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import { Router } from "@angular/router";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
-import { TapService } from "src/app/services/tap/tap.service";
+import { TapService } from "src/app/tabs/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
 import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket.io/socket.io.service";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 
 @Component({

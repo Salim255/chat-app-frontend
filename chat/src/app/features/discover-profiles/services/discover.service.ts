@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Preferences } from "@capacitor/preferences";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { Foreigner } from "src/app/shared/models/foreigner.model";
 
 
 @Injectable({

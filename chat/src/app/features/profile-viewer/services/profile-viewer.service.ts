@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { Foreigner } from "src/app/shared/models/foreigner.model";
 import { ModalController } from "@ionic/angular";
-import { ProfileViewerPage } from "src/app/pages/profile-viewer/profile-viewer.page";
+import { ProfileViewerPage } from "src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page";
 @Injectable({
   providedIn: 'root'
 })

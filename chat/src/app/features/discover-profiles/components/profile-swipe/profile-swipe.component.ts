@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, ViewChild, AfterViewInit, SimpleChanges, OnChanges } from "@angular/core";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { Foreigner } from "src/app/shared/models/foreigner.model";
 import { DiscoverService } from "../../services/discover.service";
 import { IonicSlides } from "@ionic/angular";
 import { Swiper } from "swiper/types";
 import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { StringUtils } from "src/app/shared/utils/string-utils";
 
 @Component({

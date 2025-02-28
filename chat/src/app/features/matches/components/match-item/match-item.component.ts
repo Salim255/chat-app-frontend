@@ -1,6 +1,6 @@
 import { Component,  Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Router } from '@angular/router';
-import { Partner } from 'src/app/interfaces/partner.interface';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 

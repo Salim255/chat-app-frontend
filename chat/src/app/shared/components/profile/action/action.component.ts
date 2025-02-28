@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
-import { Foreigner } from "../../../../models/foreigner.model";
+import { Foreigner } from "../../../models/foreigner.model";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
-import { TapService } from "src/app/services/tap/tap.service";
+import { TapService } from "src/app/tabs/services/tap/tap.service";
 
 @Component({
     selector: "app-profile-action",

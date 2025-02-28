@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular/core";
 import { NgForm } from '@angular/forms';
 import { Observable } from "rxjs";
-import { AuthPost } from "src/app/interfaces/auth.interface";
+import { AuthPost } from "src/app/core/interfaces/auth.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Router } from "@angular/router";
 // import { AuthMode } from "aws-sdk/clients/emr";

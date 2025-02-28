@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 import { Router } from '@angular/router';
-import { Partner } from 'src/app/interfaces/partner.interface';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';

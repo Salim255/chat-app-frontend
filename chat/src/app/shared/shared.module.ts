@@ -3,7 +3,7 @@ import { ActionComponent } from "./components/profile/action/action.component";
 import { IonicModule } from "@ionic/angular";
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from "./native-components/search-bar/search-bar.component";
-import { LogoComponent } from "./app-logo/logo.component";
+import { LogoComponent } from "./components/app-logo/logo.component";
 import { CardComponent } from "./native-components/card/card.component";
 
 import { BadgeComponent } from "./native-components/badge/badge.component";

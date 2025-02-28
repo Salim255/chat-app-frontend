@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
-import { AuthPost, AuthResponse } from '../../../interfaces/auth.interface';
+import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
 import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap } from 'rxjs';
 import { SocketIoService } from '../socket.io/socket.io.service';

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { Partner } from 'src/app/interfaces/partner.interface';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
 
 @Component({

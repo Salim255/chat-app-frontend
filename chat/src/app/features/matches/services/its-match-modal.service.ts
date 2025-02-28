@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { Foreigner } from "src/app/shared/models/foreigner.model";
 import { ModalController } from "@ionic/angular";
 import { ItsMatchModalComponent } from "../components/its-match-modal/its-match-modal.component";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 
 @Injectable({
   providedIn: 'root'

@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'messages',
-    loadChildren: () => import('./pages/active-conversation/active-conversation-messages/active-conversation-messages.module').then( m => m.MessagesPageModule)
+    loadChildren: () => import('./features/active-conversation/pages/active-conversation/active-conversation-messages/active-conversation-messages.module').then( m => m.MessagesPageModule)
   },
 
 

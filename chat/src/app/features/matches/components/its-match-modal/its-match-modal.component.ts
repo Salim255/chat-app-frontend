@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { ItsMatchModalService } from "../../services/its-match-modal.service";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 
 
 @Component({

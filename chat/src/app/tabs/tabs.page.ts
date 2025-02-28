@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
-import { TapService } from '../services/tap/tap.service';
+import { TapService } from './services/tap/tap.service';
 import { Subscription } from 'rxjs';
 import { SocketIoService } from '../core/services/socket.io/socket.io.service';
 import { AuthService } from '../core/services/auth/auth.service';

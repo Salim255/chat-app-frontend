@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
-import { Foreigner } from '../../models/foreigner.model';
+import { Foreigner } from '../../../../shared/models/foreigner.model';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { ItsMatchModalService } from 'src/app/features/matches/services/its-match-modal.service';

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 
-import { TapService } from 'src/app/services/tap/tap.service';
+import { TapService } from 'src/app/tabs/services/tap/tap.service';
 
 
 export type displayTap =  'show' | 'hide';

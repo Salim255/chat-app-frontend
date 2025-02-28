@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
-import { TapService } from "src/app/services/tap/tap.service";
+import { TapService } from "src/app/tabs/services/tap/tap.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { Router } from "@angular/router";
 import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { NavController } from "@ionic/angular";
 
 @Component({

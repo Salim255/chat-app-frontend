@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
-import { TapService } from "src/app/services/tap/tap.service";
+import { TapService } from "src/app/tabs/services/tap/tap.service";
 
 @Component({
     selector: "app-profile-slider",

@@ -9,7 +9,7 @@ import { DiscoverPage } from './discover.page';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
-import { DirectivesModule } from 'src/app/directives/directives.module';
+import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 
 import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
 

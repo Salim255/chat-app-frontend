@@ -1,13 +1,13 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
+import { CreateMessageData } from "../pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
-import { CreateChatInfo } from "src/app/pages/active-conversation/active-conversation.page";
+import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
 
 
 @Injectable({
