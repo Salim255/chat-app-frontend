@@ -41,7 +41,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.discoverService.fetchUsers().subscribe();
     this.accountService.fetchAccount().subscribe();
 
-    this. itsMatchModalService.openItsMatchModal()
+    //this. itsMatchModalService.openItsMatchModal()
   }
 
   private subscribeProfileToRemove() {

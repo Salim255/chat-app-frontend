@@ -1,8 +1,8 @@
-import { Component,  Input, OnInit} from '@angular/core';
+import { Component,  Input, OnChanges, SimpleChanges} from '@angular/core';
 import { Router } from '@angular/router';
 import { Partner } from 'src/app/interfaces/partner.interface';
-
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 @Component({
     selector: 'app-match-item',
@@ -10,30 +10,28 @@ import { ActiveConversationService } from 'src/app/features/active-conversation/
     styleUrls: ['./match-item.component.scss'],
     standalone: false
 })
-export class MatchItemComponent implements OnInit {
-  @Input() partnerInfo!: Partner ;
-
-  defaultImage = 'assets/images/default-profile.jpg';
+export class MatchItemComponent implements OnChanges {
+  @Input() partnerInfo: Partner | null = null ;
 
   constructor (private router: Router,private activeConversationService: ActiveConversationService) {}
 
-  ngOnInit(): void {
-    console.log("Partner info:", this.partnerInfo);
-    if (this.partnerInfo?.avatar) {
-      const partnerAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.partnerInfo?.avatar}`;
-      this.defaultImage = partnerAvatar;
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.partnerInfo?.avatar)
+    if (this.partnerInfo) {
+      this.partnerInfo.avatar = StringUtils.getAvatarUrl(this.partnerInfo.avatar)
     }
   }
 
   onOpenChat () {
     console.log("Open chat with partner:", this.partnerInfo);
-    if (!this.partnerInfo?.partner_id) return;
+    if (!this.partnerInfo || !this.partnerInfo.partner_id) return;
+
     this.activeConversationService.setPartnerInfo(this.partnerInfo);
     // Check if there are a chat with the this partner
     this.activeConversationService.fetchChatByPartnerID(this.partnerInfo.partner_id)
     .subscribe({
       next: () => {
-        this.router.navigate([`./tabs/active-conversation/${this.partnerInfo.partner_id}`],
+        this.router.navigate([`./tabs/active-conversation/${this.partnerInfo?.partner_id}`],
           { queryParams: { partner: this.partnerInfo?.partner_id }, replaceUrl: true });
       },
       error: () => {

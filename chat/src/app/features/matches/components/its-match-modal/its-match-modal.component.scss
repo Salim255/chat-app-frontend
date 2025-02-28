@@ -1,5 +1,6 @@
 ion-content {
   position: relative;
+  --background: var(--background);
   ion-grid {
     position: absolute;
     left: 0;

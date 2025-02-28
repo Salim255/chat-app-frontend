@@ -38,4 +38,16 @@ export class AccountService {
     )
   }
 
+  get getHostUserPhoto() {
+    return this.account.asObservable().pipe(
+      map(account =>
+        {
+          if (account?.avatar) {
+            return account.avatar
+          } else {
+            return null
+          }
+        })
+    )
+  }
 }

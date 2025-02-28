@@ -3,6 +3,7 @@ import { BehaviorSubject } from "rxjs";
 import { Foreigner } from "src/app/models/foreigner.model";
 import { ModalController } from "@ionic/angular";
 import { ItsMatchModalComponent } from "../components/its-match-modal/its-match-modal.component";
+import { Partner } from "src/app/interfaces/partner.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,12 @@ export class ItsMatchModalService {
     return this.matchedProfileSource.asObservable();
   }
 
-  async openItsMatchModal() {
+  async openItsMatchModal(matchedData: Partner) {
     const modal = await this.modalController.create({
-      component: ItsMatchModalComponent
+      component: ItsMatchModalComponent,
+      componentProps: {
+        matchedProfile: matchedData
+      }
     })
 
     await modal.present();

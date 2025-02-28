@@ -1,4 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import { Partner } from "src/app/interfaces/partner.interface";
+import { AccountService } from "src/app/features/account/services/account.service";
+import { Subscription } from "rxjs";
+import { StringUtils } from "src/app/shared/utils/string-utils";
 
 @Component({
   selector:'app-paired-photos',
@@ -7,6 +11,30 @@ import { Component } from "@angular/core";
   standalone: false
 })
 
-export class PairedPhotosComponent {
-  constructor() {}
+export class PairedPhotosComponent implements OnChanges, OnDestroy {
+  @Input() matchedProfile!: Partner;
+
+  hostUserPhoto: string | null = null;
+  private hostProfileSubscription!: Subscription;
+
+  constructor(private accountService: AccountService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    this.subscribeToHostProfile();
+  }
+
+
+  private subscribeToHostProfile() {
+    this. hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
+      this.hostUserPhoto =  StringUtils.getAvatarUrl(avatar);
+    })
+  }
+
+
+
+  ngOnDestroy(): void {
+    this.hostProfileSubscription?.unsubscribe();
+  }
+
 }

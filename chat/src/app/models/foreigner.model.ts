@@ -6,5 +6,6 @@ export type Foreigner = {
     last_name: string;
     avatar: string;
     is_staff: boolean;
-    images: string []
+    images: string [];
+    connection_status: string
 }

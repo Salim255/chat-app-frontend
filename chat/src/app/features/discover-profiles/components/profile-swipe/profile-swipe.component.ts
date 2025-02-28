@@ -1,8 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, AfterViewInit, SimpleChanges, OnChanges } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, AfterViewInit, SimpleChanges, OnChanges } from "@angular/core";
 import { Foreigner } from "src/app/models/foreigner.model";
 import { DiscoverService } from "../../services/discover.service";
 import { IonicSlides } from "@ionic/angular";
 import { Swiper } from "swiper/types";
+import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
+import { Partner } from "src/app/interfaces/partner.interface";
+import { StringUtils } from "src/app/shared/utils/string-utils";
 
 @Component({
 selector: "app-profile-swipe",
@@ -33,7 +36,9 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
     userImages: string [] = [];
 
 
-    constructor(private discoverService: DiscoverService) {}
+    constructor(
+       private discoverService: DiscoverService,
+       private itsMatchModalService : ItsMatchModalService ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
       this.setUserImages();
@@ -125,7 +130,25 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
     private handleLikeProfile(profileId: number) {
       this.discoverService.likeProfile(profileId)
       .subscribe({
-        next:(response) => this.discoverService.setProfileToRemove(this.currentProfile.id)
+        next:(response) => {
+          console.log(response)
+          this.discoverService.setProfileToRemove(this.currentProfile.id);
+
+          if (response?.data  ) {
+            const matchedData: Partner =
+            {
+              partner_id: this.profile.id,
+              last_name: this.profile.last_name,
+              first_name: this.profile.first_name,
+              connection_status: this.profile.connection_status,
+              avatar: this.profile.avatar
+              } ;
+
+            this.itsMatchModalService.openItsMatchModal(matchedData);
+          }
+
+        }
+
         ,
         error: () => this.resetProfilePosition()
       });
@@ -155,10 +178,9 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
       if (this.profile.images?.length > 0) {
         this.userImages =  [...this.profile.images];
       } else {
-        const imageUrl = 'https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/';
-        const  defaultImage = 'assets/images/default-profile.jpg';
-        this.userImages.push( this.profile.avatar ? `${imageUrl}${this.profile.avatar}`: defaultImage );
-        this.userImages.push( this.profile.avatar ? `${imageUrl}${this.profile.avatar}`: defaultImage );
+        this.profile.avatar =  StringUtils.getAvatarUrl(this.profile.avatar)
+        this.userImages.push(this.profile.avatar );
+        this.userImages.push(this.profile.avatar );
       }
     }
 
@@ -171,9 +193,5 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
     private handleDislikeProfile() {
       // this.discoverService.setProfileToRemove(this.currentProfile.id);
        this.resetProfilePosition();
-    }
-
-    profileAvatarUrl() {
-        return this.profile.avatar? `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.profile.avatar}`: null;
     }
 }
