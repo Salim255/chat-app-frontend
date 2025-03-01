@@ -21,10 +21,7 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule),
     canLoad: [AuthGuard]
   },
-  {
-    path: 'messages',
-    loadChildren: () => import('./features/active-conversation/pages/active-conversation/active-conversation-messages/active-conversation-messages.module').then( m => m.MessagesPageModule)
-  },
+
 
 
 ];

@@ -8,7 +8,8 @@ import { environment } from "src/environments/environment";
 import { CreateMessageData } from "../pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
 import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
-import { Router } from "@angular/router";
+import { ModalController } from "@ionic/angular";
+import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +24,22 @@ export class ActiveConversationService {
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
-    private router: Router
+    private  modalController:  ModalController
   ) { }
 
+
+   async openChatModal() {
+      const modal = await this.modalController.create({
+        component: ActiveConversationPage ,
+      })
+      await modal.present();
+  }
+
+  async closeModal() {
+    await this.modalController.dismiss();
+  }
+
   onOpenChat (partnerInfo: Partner) {
-    console.log("Open chat with partner:", partnerInfo);
     if (!partnerInfo || !partnerInfo.partner_id) return
 
     this.setPartnerInfo(partnerInfo);
@@ -36,8 +48,7 @@ export class ActiveConversationService {
     this.fetchChatByPartnerID(partnerInfo?.partner_id)
     .subscribe({
       next: () => {
-        this.router.navigate([`./tabs/active-conversation/${partnerInfo?.partner_id}`],
-          { queryParams: { partner: partnerInfo?.partner_id }, queryParamsHandling: 'merge' });
+        this.openChatModal();
       },
       error: () => {
         console.error()

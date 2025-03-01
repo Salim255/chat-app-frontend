@@ -4,6 +4,7 @@ import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 import { IonContent } from "@ionic/angular";
+import { StringUtils } from "src/app/shared/utils/string-utils";
 
 @Component({
     selector: 'app-chat-messages',
@@ -58,16 +59,10 @@ export class MessagesComponent implements OnInit, OnDestroy{
     }, 100);
   }
 
-  getMessageStatus(messageStatus: string) {
-    switch(messageStatus) {
-      case 'read':
-        return 'checkmark-done-outline';
-      case 'delivered':
-        return 'checkmark-done-outline';
-      default:
-        return 'checkmark-outline'
-    }
+  getMessageStatus(message: string) {
+    return StringUtils.getMessageIcon(message)
   }
+
 
   ngOnDestroy(): void {
     if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();

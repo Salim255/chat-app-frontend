@@ -6,7 +6,7 @@ import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket.
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 import { Location } from "@angular/common";
-import { StringUtils } from "src/app/shared/utils/string-utils";
+import { ActiveConversationService } from "../../services/active-conversation.service";
 
 @Component({
     selector: 'app-active-conversation-header',
@@ -23,20 +23,15 @@ export class headerComponent implements OnChanges, OnDestroy {
   constructor(
     private tapService: TapService,
     private socketIoService: SocketIoService,
-    private location: Location, private router: Router ) { }
+    private activeConversationService:  ActiveConversationService ) { }
 
 
   onBackArrow () {
     this.socketIoService.userLeftChatRoomEmitter();
-    this.location.back(); // Default page if no history
+    this.activeConversationService.closeModal();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.partnerInfo)
-    if (this.partnerInfo) {
-      //this.partnerInfo.avatar = StringUtils.getAvatarUrl( this.partnerInfo?.avatar)
-    }
-
     this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
        if (updatedUser && this.partnerInfo) {
          this.partnerInfo.connection_status = updatedUser.connection_status;
@@ -48,10 +43,6 @@ export class headerComponent implements OnChanges, OnDestroy {
   //
   onDisplayProfile(profile: Partner | null) {
     this.tapService.setTapHidingStatus('hide');
-    //this.discoverService.setDisplayedProfile(profile)
-    //this.profileViewerService.setProfileToDisplay(profile)
-    //this.profileViewerService.openProfileViewerModal();
-    //this.router.navigate(['./tabs/view-profile']);
   }
 
   ngOnDestroy(): void {

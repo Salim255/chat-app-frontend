@@ -6,4 +6,15 @@ export class StringUtils {
        return 'assets/images/default-profile.jpg';
     }
   }
+
+  public static getMessageIcon(messageStatus: string) {
+    switch(messageStatus) {
+      case 'read':
+        return 'checkmark-done-outline';
+      case 'delivered':
+        return 'checkmark-done-outline';
+      default:
+        return 'checkmark-outline'
+    }
+  }
 }

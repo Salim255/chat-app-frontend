@@ -9,10 +9,6 @@ const routes: Routes = [
     children:
     [
       {
-       path: 'messages',
-       loadChildren: () => import('./active-conversation-messages/active-conversation-messages-routing.module').then((m) => m.MessagesPageRoutingModule)
-      },
-      {
         path: '',
         redirectTo: 'messages',
         pathMatch: 'full'
