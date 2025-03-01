@@ -1,12 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges} from "@angular/core";
-import { Router } from '@angular/router';
-
 import { TapService } from "src/app/tabs/services/tap/tap.service";
 import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket.io/socket.io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
-import { Location } from "@angular/common";
 import { ActiveConversationService } from "../../services/active-conversation.service";
+import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 
 @Component({
     selector: 'app-active-conversation-header',
@@ -23,8 +21,9 @@ export class headerComponent implements OnChanges, OnDestroy {
   constructor(
     private tapService: TapService,
     private socketIoService: SocketIoService,
-    private activeConversationService:  ActiveConversationService ) { }
-
+    private activeConversationService:  ActiveConversationService,
+    private profileViewerService: ProfileViewerService
+    ) { }
 
   onBackArrow () {
     this.socketIoService.userLeftChatRoomEmitter();
@@ -42,7 +41,7 @@ export class headerComponent implements OnChanges, OnDestroy {
   // It's function that responsible of viewing details of the clicked profile
   //
   onDisplayProfile(profile: Partner | null) {
-    this.tapService.setTapHidingStatus('hide');
+    this.profileViewerService.openProfileViewerModal()
   }
 
   ngOnDestroy(): void {
