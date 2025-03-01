@@ -55,12 +55,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
     private messageService: MessageService, private chatService: ChatService,
-    private conversationService: ConversationService
     ){}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.subscribeToUserId();
   }
 
