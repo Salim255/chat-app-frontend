@@ -1,7 +1,5 @@
-export interface Partner {
+import { Member } from "./member.interface";
+
+export type Partner =  Omit < Member, 'id' >  & {
   partner_id: number | null;
-  avatar: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  connection_status: string | null;
 }

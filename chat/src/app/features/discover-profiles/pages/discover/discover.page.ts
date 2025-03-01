@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
-import { Foreigner } from '../../../../shared/models/foreigner.model';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { ItsMatchModalService } from 'src/app/features/matches/services/its-match-modal.service';
+import { Member } from 'src/app/shared/interfaces/member.interface';
 
 @Component({
     selector: 'app-discover',
@@ -15,8 +15,8 @@ import { ItsMatchModalService } from 'src/app/features/matches/services/its-matc
 
 export class DiscoverPage implements OnInit, OnDestroy {
   isConnected: boolean= true;
-  foreignersList: Foreigner [] = [];
-  viewedProfile: Foreigner | null = null;
+  foreignersList: Member [] = [];
+  viewedProfile: Member | null = null;
   transform: string | null = null;
 
 
@@ -40,8 +40,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   ionViewWillEnter () {
     this.discoverService.fetchUsers().subscribe();
     this.accountService.fetchAccount().subscribe();
-
-    //this. itsMatchModalService.openItsMatchModal()
   }
 
   private subscribeProfileToRemove() {
@@ -70,7 +68,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   // Getter for the current profile
   removeProfileFromList(profileId: number): void {
-    this.foreignersList = this.foreignersList.filter((profile: Foreigner) => profile.id !== profileId);
+    this.foreignersList = this.foreignersList.filter((profile: Member) => profile.id !== profileId);
   }
 
   ngOnDestroy () {

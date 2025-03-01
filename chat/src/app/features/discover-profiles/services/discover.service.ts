@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
 import { Preferences } from "@capacitor/preferences";
-import { Foreigner } from "src/app/shared/models/foreigner.model";
+import { Member } from "src/app/shared/interfaces/member.interface";
 
 
 @Injectable({
@@ -11,8 +11,8 @@ import { Foreigner } from "src/app/shared/models/foreigner.model";
 })
 export class DiscoverService {
   private ENV = environment;
-  private noConnectedFriendsArray = new BehaviorSubject<  Foreigner [] > ([]);
-  private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
+  private noConnectedFriendsArray = new BehaviorSubject<  Member [] > ([]);
+  private  displayedProfileSource = new BehaviorSubject < Member | null>(null) ;
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty')
@@ -83,7 +83,7 @@ export class DiscoverService {
     )
   }
 
-  setDisplayedProfile (data: Foreigner) {
+  setDisplayedProfile (data: Member) {
      this.displayedProfileSource.next(data);
   }
 

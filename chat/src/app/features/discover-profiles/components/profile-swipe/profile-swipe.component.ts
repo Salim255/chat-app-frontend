@@ -1,11 +1,12 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, SimpleChanges, OnChanges } from "@angular/core";
-import { Foreigner } from "src/app/shared/models/foreigner.model";
+import { Component, ElementRef, Input, ViewChild, AfterViewInit, SimpleChanges, OnChanges, OnInit } from "@angular/core";
 import { DiscoverService } from "../../services/discover.service";
 import { IonicSlides } from "@ionic/angular";
 import { Swiper } from "swiper/types";
 import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { StringUtils } from "src/app/shared/utils/string-utils";
+import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
+import { Member } from "src/app/shared/interfaces/member.interface";
 
 @Component({
 selector: "app-profile-swipe",
@@ -14,8 +15,8 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
-    @Input() profile!: Foreigner;
+export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
+    @Input() profile!: Member;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
     @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
@@ -40,7 +41,13 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
        private discoverService: DiscoverService,
        private itsMatchModalService : ItsMatchModalService ) {}
 
+    ngOnInit(): void {
+      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+      //Add 'implements OnInit' to the class.
+      console.log(this.profile, "hello")
+    }
     ngOnChanges(changes: SimpleChanges): void {
+
       this.setUserImages();
     }
 
@@ -131,24 +138,13 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
       this.discoverService.likeProfile(profileId)
       .subscribe({
         next:(response) => {
-          console.log(response)
           this.discoverService.setProfileToRemove(this.currentProfile.id);
 
           if (response?.data && response.data.status === 2 ) {
-            const matchedData: Partner =
-            {
-              partner_id: this.profile.id,
-              last_name: this.profile.last_name,
-              first_name: this.profile.first_name,
-              connection_status: this.profile.connection_status,
-              avatar: this.profile.avatar
-              } ;
-
+            const matchedData: Partner = ProfileUtils.setProfileData(this.profile);
             this.itsMatchModalService.openItsMatchModal(matchedData);
           }
-
         }
-
         ,
         error: () => this.resetProfilePosition()
       });
@@ -191,7 +187,6 @@ export class ProfileSwipeComponent implements AfterViewInit, OnChanges {
 
     // Treat dislike profile
     private handleDislikeProfile() {
-      // this.discoverService.setProfileToRemove(this.currentProfile.id);
-       this.resetProfilePosition();
+      this.resetProfilePosition();
     }
 }

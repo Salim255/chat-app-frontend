@@ -23,7 +23,8 @@ export class SliderComponent implements OnInit, OnDestroy{
   constructor (private tapService: TapService) {}
 
   ngOnInit(): void {
-    this.subscribeToTapEvent();
+    //this.subscribeToTapEvent();
+    console.log(this.profile, "Hello profile")
     this.setUserImages();
   }
 

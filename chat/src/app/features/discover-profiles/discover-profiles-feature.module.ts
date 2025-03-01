@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { IonicModule } from "@ionic/angular";
 
 import { SharedModule } from "src/app/shared/shared.module";
-import { ProfileCardComponent } from "./components/profile-card/profile-card.component";
 import { ProfileSwipeComponent } from "./components/profile-swipe/profile-swipe.component";
 
 
@@ -12,11 +11,9 @@ import { ProfileSwipeComponent } from "./components/profile-swipe/profile-swipe.
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule],
   exports: [
-    ProfileCardComponent,
     ProfileSwipeComponent
    ],
   declarations: [
-    ProfileCardComponent,
     ProfileSwipeComponent
    ]
 })

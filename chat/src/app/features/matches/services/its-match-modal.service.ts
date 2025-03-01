@@ -1,20 +1,20 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Foreigner } from "src/app/shared/models/foreigner.model";
 import { ModalController } from "@ionic/angular";
 import { ItsMatchModalComponent } from "../components/its-match-modal/its-match-modal.component";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
+import { Member } from "src/app/shared/interfaces/member.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ItsMatchModalService {
-  private  matchedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
+  private  matchedProfileSource = new BehaviorSubject < Member | null>(null) ;
 
   constructor(private modalController: ModalController){}
 
-  setProfileToDisplay (profile: Foreigner) {
+  setProfileToDisplay (profile: Member) {
     console.log(profile, "From its match service");
 
     this.matchedProfileSource.next(profile);

@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
-import { Foreigner } from "../../../models/foreigner.model";
+
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { Member } from "src/app/shared/interfaces/member.interface";
 import { TapService } from "src/app/tabs/services/tap/tap.service";
 
 @Component({
@@ -12,7 +13,7 @@ import { TapService } from "src/app/tabs/services/tap/tap.service";
 })
 
 export class ActionComponent implements OnInit, OnDestroy {
-  @Input() profile!: Foreigner;
+  @Input() profile!: Member;
 
   foreignersListStatus: any ;
   hidingTapStatus:any;
