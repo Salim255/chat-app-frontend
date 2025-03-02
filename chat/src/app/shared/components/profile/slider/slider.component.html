@@ -1,10 +1,13 @@
 
-<div  (click)="onProfileClick($event)" >
+<div
+  (click)="onProfileClick($event)"
+  [style.height]="setSliderHeight(pageName)" >
   <swiper-container
   [modules]="swiperModules"
   [pagination]="true"
   #swiperContainer
   [config]="swiperOptions"
+
 >
   <swiper-slide  *ngFor="let item of userImages; let index = index">
       <ng-container  >

@@ -4,6 +4,8 @@ import { Subscription } from "rxjs";
 import { TapService } from "src/app/tabs/services/tap/tap.service";
 import { Swiper } from "swiper/types";
 
+type PageName = "discover" | "profile-viewer" ;
+
 @Component({
     selector: "app-profile-slider",
     templateUrl: "./slider.component.html",
@@ -13,12 +15,12 @@ import { Swiper } from "swiper/types";
 export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
   @Input() profile: any;
   @Input() swipeDirection: any;
+  @Input() pageName:  PageName | null = null;
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
   swiperModules= [IonicSlides];
   userImages: string [] = []
-  defaultImage = 'assets/images/default-profile.jpg';
 
   private tapEventSource!: Subscription ;
 
@@ -29,7 +31,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     allowTouchMove: false,  // Disable Swiper's internal swipe handling
   };
 
-  constructor (private tapService: TapService) {}
+  constructor () {}
 
   ngOnInit(): void {
     //this.subscribeToTapEvent();
@@ -51,9 +53,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
      }
   }
 
-
   onProfileClick(event: MouseEvent) {
-    console.log("Hello form clikc")
     const clientX = event.clientX;
     const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
 
@@ -72,18 +72,22 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     if (this.swiper) this.swiper.slideNext()
   }
 
-
   private setUserImages (): void {
-      if (!this.profile) return;
+    if (!this.profile) return;
 
-      if (this.profile.images?.length) {
-        this.userImages = this.profile.images;
-      } else  {
-        this.userImages.push(this.profile.avatar);
-        this.userImages.push(this.profile.avatar);
-      }
+    if (this.profile.images?.length) {
+      this.userImages = this.profile.images;
+    } else  {
+      this.userImages.push(this.profile.avatar);
+      this.userImages.push(this.profile.avatar);
+    }
   }
 
+  setSliderHeight(pageName: PageName | null  ) {
+    if (!pageName) return ;
+    return  pageName === 'discover' ? "72vh" : "60vh"
+
+  }
   ngOnDestroy(): void {
     if (this.tapEventSource) {
       this.tapEventSource.unsubscribe()

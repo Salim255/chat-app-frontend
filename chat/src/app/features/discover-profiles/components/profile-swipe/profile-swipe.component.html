@@ -4,23 +4,6 @@
 (pan)="onPan($event)"
 (panend)="onPanEnd($event)"
  class="profile-card">
- <app-profile-slider [profile]="profile"></app-profile-slider>
-  <!-- <swiper-container
-  [modules]="swiperModules"
-  [pagination]="true"
-  #swiperContainer
-  [config]="swiperOptions">
-    <swiper-slide *ngFor="let item of userImages; let index" >
-      <ng-container >
-        <img [src]="item" alt="Profile Image" class="profile-img" >
-        <div class="profile-details">
-          <app-profile-coordination
-          [profile]="this.currentProfile"
-          >
-          </app-profile-coordination>
-        </div>
-      </ng-container>
-    </swiper-slide>
-  </swiper-container> -->
+ <app-profile-slider [profile]="profile" [pageName]="'discover'"></app-profile-slider>
 </div>
 

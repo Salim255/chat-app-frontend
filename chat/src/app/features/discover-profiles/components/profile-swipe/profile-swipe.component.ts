@@ -1,7 +1,5 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, SimpleChanges, OnChanges, OnInit } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges, OnInit } from "@angular/core";
 import { DiscoverService } from "../../services/discover.service";
-import { IonicSlides } from "@ionic/angular";
-import { Swiper } from "swiper/types";
 import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { StringUtils } from "src/app/shared/utils/string-utils";
@@ -15,20 +13,9 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
+export class ProfileSwipeComponent implements OnChanges {
     @Input() profile!: Member;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
-    @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
-
-
-    swiperModules= [IonicSlides];
-
-    swiperOptions = {
-      pagination: { clickable: true },
-      allowTouchMove: false,  // Disable Swiper's internal swipe handling
-    };
-    swiper!: Swiper; // Store Swiper instance
-
 
     swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
     currentTransformX: number = 0; // Keeps track of the current of the card
@@ -37,42 +24,12 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
     resetProfileTimer: any;
     userImages: string [] = [];
 
-
     constructor(
        private discoverService: DiscoverService,
        private itsMatchModalService : ItsMatchModalService ) {}
 
-    ngOnInit(): void {
-      //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-      //Add 'implements OnInit' to the class.
-      console.log(this.profile, "hello")
-    }
     ngOnChanges(changes: SimpleChanges): void {
-
       this.setUserImages();
-    }
-
-    ngAfterViewInit(): void {
-      this.swiper = this.swiperContainer.nativeElement.swiper;
-    }
-
-    onProfileClick(event: MouseEvent) {
-      const clientX = event.clientX;
-      const cardWidth = this.cardElement.nativeElement.offsetWidth;
-
-      if (cardWidth === null || cardWidth === undefined) return;
-
-      const cardCenter = cardWidth / 2;
-
-     ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
-    }
-
-    private slideLeft() {
-      if (this.swiper) this.swiper.slidePrev();
-    }
-
-    private slideRight() {
-      if (this.swiper) this.swiper.slideNext()
     }
 
     onSwipeLeft(event: any) {
@@ -82,19 +39,15 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
 
     onSwipeRight(event: any) {
       if (this.isAnimating) return;
-
       this.isAnimating = true;
-
       this.animateSwipe('right');
       this.handleLikeProfile(this.currentProfile.id);
     }
 
     private animateSwipe(direction: 'left' | 'right') {
       if (! this.cardElement) return;
-
       const element = this.cardElement.nativeElement as HTMLElement | null;
       if (!element) return;
-
       // Apply swipe animation
       element.style.transition = 'transform 0.5s ease-out';
       const translateX = direction === "left" ? "-150vw" : "150vw";
@@ -119,15 +72,12 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
     // End the swipe pan is completed
     onPanEnd(event: any){
       this.isSwiping = false;
-
       // If the swipe is greater than 25% of the screen width, trigger the swipe actions
       const threshold = window.innerWidth / 4 ;
-
       if (this.currentTransformX > threshold) {
         this.onSwipeRight(event);
       }  else if (this.currentTransformX < -threshold) {
         this.onSwipeLeft(event);
-
       } else  {
         // Reset position if swipe was not significant enough
         this.resetProfilePosition()
@@ -140,7 +90,6 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe({
         next:(response) => {
           this.discoverService.setProfileToRemove(this.currentProfile.id);
-
           if (response?.data && response.data.status === 2 ) {
             const matchedData: Partner = ProfileUtils.setProfileData(this.profile);
             this.itsMatchModalService.openItsMatchModal(matchedData);
@@ -155,10 +104,8 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
       if (this.resetProfileTimer) {
         clearTimeout(this.resetProfileTimer);
       }
-
       // Reset current transform
       this.currentTransformX = 0;
-
       this.resetProfileTimer = setTimeout(() => {
         const element =  this.cardElement.nativeElement as HTMLElement | null;
         if (element) {
@@ -166,12 +113,10 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
          element.style.transform = 'translateX(0) rotate(0)';
         }
       }, 500)
-
     }
 
     private setUserImages (): void {
       if (!this.profile) return;
-
       if (this.profile.images?.length > 0) {
         this.userImages =  [...this.profile.images];
       } else {
@@ -181,8 +126,8 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
 
-     // Getter for the current profile
-     get currentProfile() {
+    // Getter for the current profile
+    get currentProfile() {
       return this.profile;
     }
 
