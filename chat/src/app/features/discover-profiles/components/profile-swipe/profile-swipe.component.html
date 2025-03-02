@@ -3,9 +3,9 @@
 (panstart)="onPanStart($event)"
 (pan)="onPan($event)"
 (panend)="onPanEnd($event)"
- class="profile-card"
- (click)="onProfileClick($event)">
-  <swiper-container
+ class="profile-card">
+ <app-profile-slider [profile]="profile"></app-profile-slider>
+  <!-- <swiper-container
   [modules]="swiperModules"
   [pagination]="true"
   #swiperContainer
@@ -21,6 +21,6 @@
         </div>
       </ng-container>
     </swiper-slide>
-  </swiper-container>
+  </swiper-container> -->
 </div>
 

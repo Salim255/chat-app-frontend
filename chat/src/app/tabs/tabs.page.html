@@ -1,7 +1,6 @@
 <ion-tabs #tabs (ionTabsDidChange)="setCurrentTab($event)" >
-
-  <ion-tab >
-    <app-profile-action></app-profile-action>
+  <ion-tab  >
+    <app-interaction-btns *ngIf="showActionBtn"></app-interaction-btns>
   </ion-tab>
 
   <ion-tab-bar slot="bottom"  *ngIf="hidingTapStatus==='show'">

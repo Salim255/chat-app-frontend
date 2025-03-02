@@ -41,6 +41,9 @@ export class headerComponent implements OnChanges, OnDestroy {
   // It's function that responsible of viewing details of the clicked profile
   //
   onDisplayProfile(profile: Partner | null) {
+    if (!profile || !profile.partner_id) return;
+    const { partner_id, ...rest} = profile;
+    this.profileViewerService.setProfileToDisplay({ id: partner_id, ...rest })
     this.profileViewerService.openProfileViewerModal()
   }
 

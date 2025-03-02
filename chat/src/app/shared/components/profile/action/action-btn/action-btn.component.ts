@@ -23,6 +23,7 @@ export class ActionBtnComponent implements OnInit, OnDestroy {
    ngOnInit() {
      this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
       this.foreignersListStatus = status;
+      console.log( this.foreignersListStatus, "hello")
    });
 
    }

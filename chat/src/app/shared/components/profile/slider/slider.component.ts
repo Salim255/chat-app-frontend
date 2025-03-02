@@ -1,7 +1,8 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { TapService } from "src/app/tabs/services/tap/tap.service";
+import { Swiper } from "swiper/types";
 
 @Component({
     selector: "app-profile-slider",
@@ -9,16 +10,24 @@ import { TapService } from "src/app/tabs/services/tap/tap.service";
     styleUrls: ["./slider.component.scss"],
     standalone: false
 })
-export class SliderComponent implements OnInit, OnDestroy{
+export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
   @Input() profile: any;
   @Input() swipeDirection: any;
-  @ViewChild('swiperContainer', {static: false} ) swiperContainer: any;
+  @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
+  @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
   swiperModules= [IonicSlides];
   userImages: string [] = []
   defaultImage = 'assets/images/default-profile.jpg';
 
   private tapEventSource!: Subscription ;
+
+  swiper!: Swiper; // Store Swiper instance
+
+  swiperOptions = {
+    pagination: { clickable: true },
+    allowTouchMove: false,  // Disable Swiper's internal swipe handling
+  };
 
   constructor (private tapService: TapService) {}
 
@@ -27,6 +36,10 @@ export class SliderComponent implements OnInit, OnDestroy{
     console.log(this.profile, "Hello profile")
     this.setUserImages();
   }
+  ngAfterViewInit(): void {
+    this.swiper = this.swiperContainer.nativeElement.swiper;
+  }
+
 
   onSwipe(swipeDirection: string) {
      if (swipeDirection === 'right') {
@@ -38,28 +51,36 @@ export class SliderComponent implements OnInit, OnDestroy{
      }
   }
 
-  onSlideChange(event: any){
 
+  onProfileClick(event: MouseEvent) {
+    console.log("Hello form clikc")
+    const clientX = event.clientX;
+    const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
+
+    if (cardWidth === null || cardWidth === undefined) return;
+
+    const cardCenter = cardWidth / 2;
+
+   ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
   }
 
-  // Subscribe to tap events and handles swipe actions
-  private subscribeToTapEvent(): void {
-    this.tapEventSource = this.tapService.getTapEventType.subscribe(data => {
-      if (data?.tapSide && data?.clientId === this.profile?.id) {
-        this.onSwipe(data.tapSide);
-      }
-    })
+  private slideLeft() {
+    if (this.swiper) this.swiper.slidePrev();
   }
+
+  private slideRight() {
+    if (this.swiper) this.swiper.slideNext()
+  }
+
 
   private setUserImages (): void {
       if (!this.profile) return;
 
       if (this.profile.images?.length) {
         this.userImages = this.profile.images;
-      } else if (this.profile.avatar) {
-        this.userImages = [`https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.profile?.avatar}`]
-      } else {
-        this.userImages = [this.defaultImage];
+      } else  {
+        this.userImages.push(this.profile.avatar);
+        this.userImages.push(this.profile.avatar);
       }
   }
 

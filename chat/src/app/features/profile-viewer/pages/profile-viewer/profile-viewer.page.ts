@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { InteractionButtonsService } from "src/app/core/services/interaction-buttons/Interaction-buttons.service";
 @Component({
     selector: 'app-view-profile',
     templateUrl: './profile-viewer.page.html',
@@ -11,9 +12,11 @@ import { DiscoverService } from "src/app/features/discover-profiles/services/dis
 
 export class ProfileViewerPage implements OnInit, OnDestroy{
     profileToDisplay:any ;
-    private profileToDisplaySubscription!: Subscription
+    private profileToDisplaySubscription!: Subscription;
+    private interactionButtonsSubscription!: Subscription;
     constructor(private profileViewerService: ProfileViewerService,
-      private discoverService : DiscoverService
+      private discoverService : DiscoverService,
+      private interactionButtonsService: InteractionButtonsService
     ){
 
     }
@@ -25,13 +28,15 @@ export class ProfileViewerPage implements OnInit, OnDestroy{
           console.log(this.profileToDisplay, "Profile do Display");
           console.log('====================================');
         })
+
+        this.interactionButtonsSubscription = this.interactionButtonsService.getInteractionBtnsStatus.subscribe(status => {
+         // this.hidingTapStatus = status;
+        });
     }
 
     ngOnDestroy() {
-      //Called once, before the instance is destroyed.
-      //Add 'implements OnDestroy' to the class.
-      if (this.profileToDisplaySubscription) {
-        this.profileToDisplaySubscription.unsubscribe();
-      }
+      this.interactionButtonsSubscription?.unsubscribe();
+      this.profileToDisplaySubscription?.unsubscribe();
+
     }
 }

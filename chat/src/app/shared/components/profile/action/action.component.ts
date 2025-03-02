@@ -6,7 +6,7 @@ import { Member } from "src/app/shared/interfaces/member.interface";
 import { TapService } from "src/app/tabs/services/tap/tap.service";
 
 @Component({
-    selector: "app-profile-action",
+    selector: "app-interaction-btns",
     templateUrl: "./action.component.html",
     styleUrls: ["./action.component.scss"],
     standalone: false
@@ -16,7 +16,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   @Input() profile!: Member;
 
   foreignersListStatus: any ;
-  hidingTapStatus:any;
+  hidingTapStatus:any = 'show';
   private tapStatusSourceSubscription!: Subscription;
   private foreignersListStatusSource!: Subscription;
 
@@ -25,12 +25,13 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log("From")
      this.foreignersListStatusSource = this.discoverService.getForeignersListStatus.subscribe(status => {
-        this.foreignersListStatus = status
+        //this.foreignersListStatus = status;
      });
 
      this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
-      this.hidingTapStatus = status
+      //this.hidingTapStatus = status;
 
      })
   }
@@ -38,7 +39,6 @@ export class ActionComponent implements OnInit, OnDestroy {
   onSkip () {
      this.discoverService.triggerDislikeProfile('skip');
      this.setTapHidingStatus();
-
   }
 
   onAddFriend () {

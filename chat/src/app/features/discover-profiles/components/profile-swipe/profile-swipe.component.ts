@@ -20,6 +20,7 @@ export class ProfileSwipeComponent implements OnInit, AfterViewInit, OnChanges {
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
     @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
+
     swiperModules= [IonicSlides];
 
     swiperOptions = {

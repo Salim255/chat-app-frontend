@@ -1,20 +1,24 @@
-<swiper-container
-[modules]="swiperModules"
-(slidechange)="onSlideChange($event)"
-[pagination]="true"
-#swiperContainer
+
+<div  (click)="onProfileClick($event)" >
+  <swiper-container
+  [modules]="swiperModules"
+  [pagination]="true"
+  #swiperContainer
+  [config]="swiperOptions"
 >
-  <swiper-slide *ngFor="let item of userImages; let index">
-      <div class="container">
-         <img [src]="item"/>
-         <div >
+  <swiper-slide  *ngFor="let item of userImages; let index = index">
+      <ng-container  >
+        <img [src]="item" alt="Profile Image" class="profile-img" >
+        <div  class="profile-details">
           <app-profile-coordination
-            [profile]="profile"
-            >
+          [profile]="profile"
+          >
           </app-profile-coordination>
         </div>
-      </div>
-
+      </ng-container>
   </swiper-slide>
 </swiper-container>
+</div>
+
+
 

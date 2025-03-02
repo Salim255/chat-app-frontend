@@ -58,8 +58,6 @@ export class TabsPage implements OnInit, OnDestroy  {
       // console.log('Hello Tabs', userId)
       if (this.userId){
          this.socketIoService.initializeSocket(this.userId);
-        //this.socketIoService.registerUser(this.userId);
-        //console.log("Hello world 💥💥💥💥, from this.userID", userId)
       };
 
     })

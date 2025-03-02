@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
-import { Preferences } from "@capacitor/preferences";
+import { BehaviorSubject, tap } from "rxjs";
 import { Member } from "src/app/shared/interfaces/member.interface";
-
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DiscoverService {
   private ENV = environment;
   private noConnectedFriendsArray = new BehaviorSubject<  Member [] > ([]);
@@ -17,34 +16,11 @@ export class DiscoverService {
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty')
 
-  constructor(private http: HttpClient){
-
-  }
+  constructor (private http: HttpClient) { }
 
   fetchUsers(){
-    return from(Preferences.get({key: 'authData'}))
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
     .pipe(
-      map((storedData)=> {
-          if (!storedData || !storedData.value) {
-              return null
-          }
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-
-          let token = parseData._token;
-
-          return token;
-      }),switchMap((token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      }),
       tap((response) => {
         this.noConnectedFriendsArray.next(response.data)
       })
@@ -52,35 +28,8 @@ export class DiscoverService {
   }
 
   likeProfile (friendId: number) {
-    return from(Preferences.get({key: "authData"})).pipe(
-      map( (storedData) => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-
-        let token = parseData._token;
-
-        return token;
-      }), switchMap((token) => {
-        return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
-        { friend_id: friendId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-      }),
-      tap(res => {
-        console.log(res);
-
-      })
-    )
+    return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
+    { friend_id: friendId })
   }
 
   setDisplayedProfile (data: Member) {
@@ -102,7 +51,7 @@ export class DiscoverService {
   }
 
   setForeignersListStatus(status: string) {
-      this.foreignersListStatusSource.next(status)
+    this.foreignersListStatusSource.next(status)
   }
 
   // We set the profile id of the current profile

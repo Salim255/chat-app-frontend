@@ -4,9 +4,7 @@
   <ion-grid [fixed]="true">
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="6" offsetXl="3"  >
-   <!--      <app-profile-images-card [profileToDisplay]="profileToDisplay">
-        </app-profile-images-card> -->
-        <app-profile-slider [profile]="profileToDisplay"></app-profile-slider>
+       <app-profile-slider [profile]="profileToDisplay"></app-profile-slider>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -35,6 +33,10 @@
           <app-report-profile  [profile]="profileToDisplay"></app-report-profile>
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+        <app-interaction-btns></app-interaction-btns>
+      </ion-col>
+    </ion-row>
   </ion-grid>
-
 </ion-content>
