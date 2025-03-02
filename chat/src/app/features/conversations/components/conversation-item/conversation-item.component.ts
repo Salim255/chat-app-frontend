@@ -4,11 +4,11 @@ import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.servi
 import { Router } from '@angular/router';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
-import { User } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
+import { Member } from 'src/app/shared/interfaces/member.interface';
 
 @Component({
     selector: 'app-conversation-item',
@@ -71,11 +71,12 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
   // Here we are filtering the users to get the partner info
   setPartnerInfo (): void {
-    const partner =   this.conversation?.users?.find((user: User) => user.user_id !== this.userId);
+    const partner =   this.conversation?.users?.find((user: Member) => user.user_id !== this.userId);
 
     if (!partner)  return;
 
     this.partnerInfo = ProfileUtils.setProfileData(partner);
+    console.log(this.partnerInfo, "Hello from conversation item")
 
     this.partnerInfo.avatar = StringUtils.getAvatarUrl(partner.avatar)
   }

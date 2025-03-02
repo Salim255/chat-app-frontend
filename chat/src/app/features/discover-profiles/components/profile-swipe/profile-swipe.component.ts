@@ -1,9 +1,7 @@
-import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges, OnInit } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges } from "@angular/core";
 import { DiscoverService } from "../../services/discover.service";
 import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
-import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { StringUtils } from "src/app/shared/utils/string-utils";
-import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
 import { Member } from "src/app/shared/interfaces/member.interface";
 
 @Component({
@@ -16,7 +14,6 @@ standalone: false
 export class ProfileSwipeComponent implements OnChanges {
     @Input() profile!: Member;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
-
     swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
     currentTransformX: number = 0; // Keeps track of the current of the card
     isSwiping: boolean = false;
@@ -38,10 +35,10 @@ export class ProfileSwipeComponent implements OnChanges {
     }
 
     onSwipeRight(event: any) {
-      if (this.isAnimating) return;
+      if (this.isAnimating || !this.profile) return;
       this.isAnimating = true;
       this.animateSwipe('right');
-      this.handleLikeProfile(this.currentProfile.id);
+      this.handleLikeProfile(this.profile);
     }
 
     private animateSwipe(direction: 'left' | 'right') {
@@ -55,12 +52,12 @@ export class ProfileSwipeComponent implements OnChanges {
     }
 
     onPan(event: any) {
-        const element = this.cardElement.nativeElement as HTMLElement | null;
-        if (!element) return;
-        if (this.isSwiping) {
-          this.currentTransformX = this.swipeStartPosition + event.deltaX;
-          element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
-        }
+      const element = this.cardElement.nativeElement as HTMLElement | null;
+      if (!element) return;
+      if (this.isSwiping) {
+        this.currentTransformX = this.swipeStartPosition + event.deltaX;
+        element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
+      }
     }
 
     // Start tracking the swipe position when pan starts
@@ -85,17 +82,10 @@ export class ProfileSwipeComponent implements OnChanges {
     }
 
     // Treat like profile
-    private handleLikeProfile(profileId: number) {
-      this.discoverService.likeProfile(profileId)
+    private handleLikeProfile(likedProfile: Member ) {
+      console.log(likedProfile, "hello from herre")
+      this.discoverService.likeProfile(likedProfile)
       .subscribe({
-        next:(response) => {
-          this.discoverService.setProfileToRemove(this.currentProfile.id);
-          if (response?.data && response.data.status === 2 ) {
-            const matchedData: Partner = ProfileUtils.setProfileData(this.profile);
-            this.itsMatchModalService.openItsMatchModal(matchedData);
-          }
-        }
-        ,
         error: () => this.resetProfilePosition()
       });
     }
@@ -124,11 +114,6 @@ export class ProfileSwipeComponent implements OnChanges {
         this.userImages.push(this.profile.avatar );
         this.userImages.push(this.profile.avatar );
       }
-    }
-
-    // Getter for the current profile
-    get currentProfile() {
-      return this.profile;
     }
 
     // Treat dislike profile

@@ -3,8 +3,8 @@ import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
-import { Conversation, User } from 'src/app/features/active-conversation/models/active-conversation.model';
-
+import { Conversation} from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Member } from 'src/app/shared/interfaces/member.interface';
 
 export type JoinRomData = {
   fromUserId: number ;
@@ -39,7 +39,7 @@ export class SocketIoService {
 
   // ====== Other behaviorSubjects =======
   private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
-  private partnerConnectionStatusSubject = new BehaviorSubject <User | null>(null);
+  private partnerConnectionStatusSubject = new BehaviorSubject <Member | null>(null);
   private userTypingStatusSubject = new BehaviorSubject <boolean> (false)
   private roomIdSource = new BehaviorSubject < string  | null> (null);
   private updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject < any > (null);
@@ -94,7 +94,6 @@ export class SocketIoService {
     }
 
     private setupCommonListeners(): void {
-      this.setupWelcomeListener();
       this.setupPartnerConnectionListeners();
       this.setupMessageListeners();
       this.setupTypingListeners();
@@ -102,23 +101,17 @@ export class SocketIoService {
       this.setupPartnerJoinedRoom();
     }
 
-    private setupWelcomeListener() {
-      // Listen to sever welcome event
-      this.socket?.on('Welcome', (data) => {
-        console.log(data, 'welcome');
-      })
-    }
-
     private setupPartnerConnectionListeners() {
       // ===== Listen to user connection =======
-      this.socket?.on('user-online', ( updatedUser ) => {
+      this.socket?.on('user-online', ( updatedUser: Member ) => {
+        console.log(updatedUser)
         if (updatedUser) {
           this.partnerConnectionStatusSubject.next(updatedUser);
         }}
       );
 
       // ===== Listen to user disconnection =====
-      this.socket?.on('user-offline', (updatedUser ) => {
+      this.socket?.on('user-offline', (updatedUser: Member ) => {
         if (updatedUser) {
           this.partnerConnectionStatusSubject.next(updatedUser);
           //this.updateUserConnectionStatusWithDisconnectionSubject.next(updatedUser);
@@ -136,25 +129,25 @@ export class SocketIoService {
 
     private setupMessageListeners() {
       // === Listen to message read ===
-      this.socket?.on('message-read', (readMessage) => {
+      this.socket?.on('message-read', (readMessage: Message) => {
         if (readMessage) {
           this.setReadMessageSource(readMessage);
         }
       });
 
       // === Listen to message delivery by sender to connected receiver
-      this.socket?.on('message-delivered', (deliveredMessage) => {
+      this.socket?.on('message-delivered', (deliveredMessage: Message) => {
         if (deliveredMessage) {
           this.setDeliveredMessage(deliveredMessage);
       }});
 
       // ===== Listen to chat message counter updated ====
-      this.socket?.on('updated-chat-counter', (updatedChatCounter) => {
+      this.socket?.on('updated-chat-counter', (updatedChatCounter: Conversation) => {
           console.log(updatedChatCounter, "Hello from update counter")
           this.updatedChatCounterSubject.next(updatedChatCounter);
       })
       // === Listen to message delivery by receiver
-      this.socket?.on('message-delivered-to-receiver', (receivedMessage) => {
+      this.socket?.on('message-delivered-to-receiver', (receivedMessage: Message) => {
         console.log(receivedMessage, "hello from receiver")
         if (receivedMessage) {
           this.messageDeliveredToReceiverSubject.next(receivedMessage)
@@ -180,7 +173,7 @@ export class SocketIoService {
    // ==== Listen to partner-joined-room =====
   // ==== Listen to partner join room to update messages ====
   private setupPartnerJoinedRoom() {
-    this.socket?.on('partner-joined-room', (updatedMessagesToRead) => {
+    this.socket?.on('partner-joined-room', (updatedMessagesToRead: Message []) => {
       console.log(updatedMessagesToRead, "hello join")
         if (updatedMessagesToRead) {
           this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);

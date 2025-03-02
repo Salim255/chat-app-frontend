@@ -1,12 +1,7 @@
+import { Member } from "src/app/shared/interfaces/member.interface";
 import { Message } from "../interfaces/message.interface";
 
-export type User =  {
-  avatar: string;
-  user_id: number;
-  last_name: string;
-  first_name: string;
-  connection_status: string;
-}
+
 
 export class Conversation {
   constructor(
@@ -17,7 +12,7 @@ export class Conversation {
     public last_message_id: number | null,
     public no_read_messages: number | null,
     public messages: Message [] | null,
-    public users: User [] | null
+    public users: Member [] | null
   ){}
 
 }

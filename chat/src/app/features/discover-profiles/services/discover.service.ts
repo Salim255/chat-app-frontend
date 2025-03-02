@@ -3,6 +3,9 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { BehaviorSubject, tap } from "rxjs";
 import { Member } from "src/app/shared/interfaces/member.interface";
+import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
+import { ItsMatchModalService } from "../../matches/services/its-match-modal.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,22 +17,31 @@ export class DiscoverService {
   private  displayedProfileSource = new BehaviorSubject < Member | null>(null) ;
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
-  private likeProfileSource = new BehaviorSubject < string > ('empty')
+  private likeProfileSource = new BehaviorSubject < string > ('empty');
 
-  constructor (private http: HttpClient) { }
+  constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
   fetchUsers(){
     return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
     .pipe(
       tap((response) => {
+        console.log(response.data)
         this.noConnectedFriendsArray.next(response.data)
       })
     )
   }
 
-  likeProfile (friendId: number) {
+  likeProfile (likedProfile: Member) {
+    console.log(likedProfile, "Hello from service")
     return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
-    { friend_id: friendId })
+    { friend_id: likedProfile.user_id }).pipe(tap(response => {
+      this.setProfileToRemove(likedProfile.user_id);
+        if (response?.data && response.data.status === 2 ) {
+          const matchedData: Partner = ProfileUtils.setProfileData(likedProfile);
+          console.log( matchedData, "Hello from discver service 😍😍😍")
+          this.itsMatchModalService.openItsMatchModal(matchedData);
+        }
+    }))
   }
 
   setDisplayedProfile (data: Member) {

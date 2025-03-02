@@ -22,10 +22,9 @@ export class ConversationService {
     return this.http.get<any>(`${this.ENV.apiUrl}/chats`)
     .pipe(tap ( (response) =>
       {
-      if (response) {
-        if (response.data) {
-          this.setConversations(response.data)
-          }
+      if (response && response.data) {
+        console.log(response.data)
+        this.setConversations(response.data);
         }
       }
       )

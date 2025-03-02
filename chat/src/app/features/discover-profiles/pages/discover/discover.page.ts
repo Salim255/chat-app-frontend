@@ -68,7 +68,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   // Getter for the current profile
   removeProfileFromList(profileId: number): void {
-    this.foreignersList = this.foreignersList.filter((profile: Member) => profile.id !== profileId);
+    this.foreignersList = this.foreignersList.filter((profile: Member) => profile.user_id !== profileId);
   }
 
   ngOnDestroy () {

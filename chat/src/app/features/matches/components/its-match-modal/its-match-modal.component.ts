@@ -27,6 +27,7 @@ export class ItsMatchModalComponent implements OnInit {
   }
 
   onSendMessage() {
+    console.log(this.matchedProfile, "Hello from parnterInformation from matcmodal 😍😍😍")
     this.activeConversationService.onOpenChat(this.matchedProfile);
     this.itsMatchModalService.closeModal()
   }

@@ -43,7 +43,7 @@ export class headerComponent implements OnChanges, OnDestroy {
   onDisplayProfile(profile: Partner | null) {
     if (!profile || !profile.partner_id) return;
     const { partner_id, ...rest} = profile;
-    this.profileViewerService.setProfileToDisplay({ id: partner_id, ...rest })
+    this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest })
     this.profileViewerService.openProfileViewerModal()
   }
 

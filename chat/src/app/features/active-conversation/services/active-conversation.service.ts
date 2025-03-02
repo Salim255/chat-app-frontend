@@ -41,8 +41,9 @@ export class ActiveConversationService {
   }
 
   onOpenChat (partnerInfo: Partner) {
+    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
     if (!partnerInfo || !partnerInfo.partner_id) return
-
+    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
     this.setPartnerInfo(partnerInfo);
 
     // Check if there are a chat with the this partner

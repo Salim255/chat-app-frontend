@@ -24,9 +24,6 @@ export class ProfileViewerPage implements OnInit, OnDestroy{
     ngOnInit() {
       this.profileToDisplaySubscription =  this.profileViewerService.getProfileToDisplay.subscribe(profile => {
           this.profileToDisplay = profile;
-          console.log('====================================');
-          console.log(this.profileToDisplay, "Profile do Display");
-          console.log('====================================');
         })
 
         this.interactionButtonsSubscription = this.interactionButtonsService.getInteractionBtnsStatus.subscribe(status => {
