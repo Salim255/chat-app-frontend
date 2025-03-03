@@ -14,7 +14,7 @@ const routes: Routes = [
       loadChildren: () => import('../features/conversations/pages/conversations/conversations.module').then((m) => m.ConversationsPageModule)
      },
      {
-      path: 'community',
+      path: 'discover',
       loadChildren: () => import('../features/discover-profiles/pages/discover/discover.module').then((m)  => m.DiscoverPageModule)
      },
      {
@@ -30,7 +30,7 @@ const routes: Routes = [
   {
     path: 'active-conversation/:userId',
     loadChildren: () => import('../features/active-conversation/pages/active-conversation/active-conversation.module').then( (m) => m.ActiveConversationPageModule),
-    runGuardsAndResolvers: 'always'  // Forces full navigation
+     runGuardsAndResolvers: 'always'  // Forces full navigation
   }
   ,
   {

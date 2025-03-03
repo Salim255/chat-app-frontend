@@ -3,8 +3,8 @@ import { Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { ItsMatchModalService } from 'src/app/features/matches/services/its-match-modal.service';
 import { Member } from 'src/app/shared/interfaces/member.interface';
+import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 
 @Component({
     selector: 'app-discover',
@@ -20,7 +20,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   transform: string | null = null;
 
 
-  profilesToShare: any;
   private foreignersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
@@ -29,12 +28,17 @@ export class DiscoverPage implements OnInit, OnDestroy {
      private discoverService: DiscoverService,
      private networkService:  NetworkService,
      private accountService: AccountService,
-     private itsMatchModalService: ItsMatchModalService
+     private tabsService: TabsService,
     ) {}
 
   ngOnInit () {
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
+  }
+
+  selectTab() {
+    console.log("hello from dicover")
+   this.tabsService.selectedTab('account');
   }
 
   ionViewWillEnter () {

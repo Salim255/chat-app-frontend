@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges} from "@angular/core";
-import { TapService } from "src/app/tabs/services/tap/tap.service";
+import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
 import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
@@ -19,7 +19,7 @@ export class headerComponent implements OnChanges, OnDestroy {
   partnerConnectionStatus: ConnectionStatus = "offline";
 
   constructor(
-    private tapService: TapService,
+    private tabsService: TabsService,
     private socketIoService: SocketIoService,
     private activeConversationService:  ActiveConversationService,
     private profileViewerService: ProfileViewerService,

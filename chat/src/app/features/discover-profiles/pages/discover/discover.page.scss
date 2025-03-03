@@ -1,8 +1,9 @@
 @use "../../../../../theme/queries" as *;
 
 ion-content {
+  position: relative;
   ion-grid {
-    padding: .4rem .2rem;
+    //padding: .4rem .2rem;
     ion-row:last-child {
       ion-col {
         text-align: center;
@@ -11,4 +12,17 @@ ion-content {
       }
     }
   }
+}
+
+ion-modal {
+  ion-content {
+    position: relative;
+    ion-button {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+ // height: 100vh;
+  //margin-bottom: 5rem;
 }

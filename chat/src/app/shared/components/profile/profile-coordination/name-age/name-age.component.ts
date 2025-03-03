@@ -1,5 +1,5 @@
 import { Component, Input} from "@angular/core";
-import { TapService } from "src/app/tabs/services/tap/tap.service";
+import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 @Component({
     selector: 'app-name-age',
@@ -12,14 +12,14 @@ export class NameAgeComponent {
   @Input() profile: any;
 
   constructor (
-    private tapService: TapService,
+    private tabsService: TabsService,
     private profileViewerService: ProfileViewerService) { }
 
   onViewProfile(){
     console.log('====================================');
     console.log("We are on view profile");
     console.log('====================================');
-    this.tapService.setTapHidingStatus('hide');
+    this.tabsService.setTapHidingStatus('hide');
     this.profileViewerService.setProfileToDisplay(this.profile);
     this.profileViewerService.openProfileViewerModal();
  }

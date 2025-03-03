@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
-import { TapService } from './services/tap/tap.service';
+import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
 import { SocketIoService } from '../core/services/socket-io/socket-io.service';
 import { AuthService } from '../core/services/auth/auth.service';
@@ -15,7 +15,7 @@ export type displayTap =  'show' | 'hide';
 })
 export class TabsPage implements OnInit, OnDestroy  {
   @ViewChild("tabs") tabs!: IonTabs;
-
+  @ViewChild("tabsElement") tabsElement!: ElementRef;
   selectedTab: any;
   showActionBtn = false;
   hidingTapStatus: displayTap = 'hide';
@@ -23,33 +23,41 @@ export class TabsPage implements OnInit, OnDestroy  {
 
   private tapHidingStatusSource!: Subscription;
   private userIdSubscription!: Subscription;
-
+  private tabChangeSubscription!: Subscription;
+  isDiscoverActive = false;
   constructor(
-    private tapService: TapService,
+    private tabsService: TabsService,
     private socketIoService: SocketIoService,
     private  authService:  AuthService) { }
 
   ngOnInit(): void {
    // console.log('tabs, Hello tabs💥💥💥')
-    this.tapHidingStatusSource = this.tapService.getHidingTapStatus.subscribe(status => {
+    this.tapHidingStatusSource = this.tabsService.getHidingTapStatus.subscribe(status => {
       this.hidingTapStatus = status;
     });
 
     this.subscribeToUserId();
     //this.socketIoServic
+    this.subscribeToTabChange();
   }
 
-  ionViewWillEnter(){
-   // console.log("Tap will enter 💥💥")
+/*   ionViewWillEnter(){
+    if (!this.tabChangeSubscription || this.tabChangeSubscription.closed) {
+        this.subscribeToTabChange();
+    }
+  }
+ */
+  private subscribeToTabChange() {
+    this.tabChangeSubscription = this.tabsService.getNextPage.subscribe( selectedTab => {
+      console.log( selectedTab, "hello");
+      this.tabs.select('account');
+      this.isDiscoverActive = selectedTab === 'discover';
+     })
   }
 
-  /* ionViewWillLeave(){
-    console.log("Tap will leave 💥💥")
-  } */
   setCurrentTab(event: any) {
     this.selectedTab = this.tabs.getSelected();
-    if (this.selectedTab === 'community') this.showActionBtn =true
-    else this.showActionBtn = false;
+    this.isDiscoverActive = this.selectedTab === 'discover';
   }
 
   private subscribeToUserId() {
@@ -69,6 +77,7 @@ export class TabsPage implements OnInit, OnDestroy  {
     }
 
     this.userIdSubscription?.unsubscribe();
+    this.tabChangeSubscription?.unsubscribe();
   }
 
 }

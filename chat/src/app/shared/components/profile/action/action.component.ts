@@ -3,7 +3,7 @@ import { Subscription } from "rxjs";
 
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 import { Member } from "src/app/shared/interfaces/member.interface";
-import { TapService } from "src/app/tabs/services/tap/tap.service";
+import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
 
 @Component({
     selector: "app-interaction-btns",
@@ -20,7 +20,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   private tapStatusSourceSubscription!: Subscription;
   private foreignersListStatusSource!: Subscription;
 
-  constructor(private discoverService: DiscoverService, private tapService: TapService) {
+  constructor(private discoverService: DiscoverService, private tabsService: TabsService) {
 
   }
 
@@ -30,7 +30,7 @@ export class ActionComponent implements OnInit, OnDestroy {
         //this.foreignersListStatus = status;
      });
 
-     this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+     this.tapStatusSourceSubscription = this.tabsService.getHidingTapStatus.subscribe(status => {
       //this.hidingTapStatus = status;
 
      })
@@ -47,7 +47,7 @@ export class ActionComponent implements OnInit, OnDestroy {
   }
 
   setTapHidingStatus() {
-    this.tapService.setTapHidingStatus('show')
+    this.tabsService.setTapHidingStatus('show')
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { Subscription } from "rxjs";
-import { TapService } from "src/app/tabs/services/tap/tap.service";
+import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { Router } from "@angular/router";
 import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
@@ -29,7 +29,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   hidingTapStatus:any;
   takingPictureStatus: TakingPictureStatus = 'Off';
 
-  constructor(private tapService: TapService,
+  constructor(private tabsService: TabsService,
     private profileViewerService: ProfileViewerService,
     private photoService: PhotoService, private router: Router,
     private navController: NavController ){}
@@ -42,7 +42,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
  private subscribeToServices(): void {
 
-  this.tapStatusSourceSubscription = this.tapService.getHidingTapStatus.subscribe(status => {
+  this.tapStatusSourceSubscription = this.tabsService.getHidingTapStatus.subscribe(status => {
     this.hidingTapStatus = status;
    });
 
@@ -118,12 +118,12 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       break;
     case 'discover':
       if (this.hidingTapStatus === 'hide') {
-        this.tapService.setTapHidingStatus('show')
+        this.tabsService.setTapHidingStatus('show')
       }
       break;
     case 'profile-viewer':
       if (this.hidingTapStatus === 'hide') {
-        this.tapService.setTapHidingStatus('show')
+        this.tabsService.setTapHidingStatus('show')
         }
       this.profileViewerService.closeModal();
       this.router.navigateByUrl('/tabs/community');
