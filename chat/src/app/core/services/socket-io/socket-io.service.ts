@@ -3,9 +3,9 @@ import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
-import { Conversation} from 'src/app/features/active-conversation/models/active-conversation.model';
-import { Member } from 'src/app/shared/interfaces/member.interface';
 import { SocketMessageHandler} from './socket-message-handler';
+import { SocketRoomHandler } from './socket-room-handler';
+import { SocketUserTypingHandler } from './socket-user-typing-handler';
 
 export type JoinRomData = {
   fromUserId: number ;
@@ -28,19 +28,19 @@ export type ConnectionStatus = 'online' | 'offline';
 })
 
 export class SocketIoService {
-  private currentRoomId: string = "";
   private socket: Socket | null = null;
   private userId: number | null = null;
   private ENV = environment;
 
-
   // ====== Other behaviorSubjects =======
+  private currentRoomId: string = "";
   private roomIdSource = new BehaviorSubject < string  | null> (null);
   private updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject < any > (null);
 
-
-
-  constructor( private socketMessageHandler: SocketMessageHandler) { }
+  constructor (
+    private socketMessageHandler: SocketMessageHandler,
+    private socketRoomHandler: SocketRoomHandler,
+    private socketUserTypingHandler: SocketUserTypingHandler ) { }
 
   // ==== Connection & initialization ======
   // =======================================
@@ -48,7 +48,7 @@ export class SocketIoService {
   initializeSocket(userId: number) {
     // ===== Current connected user id =======
     this.userId = userId;
-    console.log(this.socket)
+
     // ==== Check for socket connection ===
     if (this.socket  && this.socket.connected) return;
 
@@ -93,6 +93,7 @@ export class SocketIoService {
 
       if (this.socket) {
         this.socketMessageHandler.handleMessageEvents(this.socket); // Delegate message event handling
+        this.socketRoomHandler.handleRoomEvent(this.socket)
       }
     }
 
@@ -106,7 +107,6 @@ export class SocketIoService {
       );
     }
 
-
   private setupDisconnectListener() {
     this.socket?.on('disconnect', (reason) => {
       console.log("Disconnected: ", reason);
@@ -117,7 +117,6 @@ export class SocketIoService {
   // =============================================
   // Emitters & Room Handling
   // ==================================
-
   // === Register the current user on the socket server
   private registerUser(userId: number) {
     console.log(this.socket?.connected, "hello 1 ")
@@ -129,25 +128,22 @@ export class SocketIoService {
 
   // == Emits the "join-room" event  join a chat room
   userJoinChatRoom(usersData: JoinRomData) {
-    console.log(usersData, "hello from join room")
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
     this.setConversationRoomId(this.currentRoomId);
-
-    // Trigger join-room event
-    this.socket?.emit('join-room', usersData)
+    this.socketRoomHandler.handleJoinRoomEmit(this.socket, usersData);
   }
 
   // === Emit the "send-message" event to socket server ===
   sentMessageEmitter(messageEmitterDada: SendMessageEmitterData) {
-      // 2) Trigger emitter
-      this.socket?.emit('send-message', messageEmitterDada)
+    this.socketMessageHandler.sentMessageEmitter(this.socket, messageEmitterDada)
   }
 
 
   // === Emit user left Chat Room event ===
   userLeftChatRoomEmitter() {
-    this.socket?.emit('leave-room', { roomId: this.currentRoomId, userId: this.userId})
+    if (!this.socket || !this.userId) return ;
+    this.socketRoomHandler.handleLeaveRoomEmit(this.socket, this.currentRoomId, this.userId)
   }
 
 
@@ -155,7 +151,7 @@ export class SocketIoService {
   userTyping(toUserId: number) {
     this.getConversationRoomId.subscribe(roomId => {
       if (roomId) {
-        this.socket?.emit('user-typing', { roomId,  toUserId, typingStatus: 'typing' } )
+        this.socketUserTypingHandler.handleTypingEmitters(this.socket,  { roomId,  toUserId, typingStatus: 'typing' } )
       }
     })
   }
@@ -164,7 +160,7 @@ export class SocketIoService {
   userStopTyping(toUserId: number){
     this.getConversationRoomId.subscribe(roomId => {
       if (roomId) {
-        this.socket?.emit('user-stop-typing', { roomId,  toUserId, typingStatus: 'stop-typing' })
+        this.socketUserTypingHandler.handleTypingListeners(this.socket, { roomId,  toUserId, typingStatus: 'stop-typing' } )
       }
     })
   }
@@ -191,16 +187,15 @@ export class SocketIoService {
   // ====================================
   // Observables & Getters
   // ==============================
-
   get updatedUserDisconnectionGetter(){
     return this.updateUserConnectionStatusWithDisconnectionSubject.asObservable();
-  }
-  get getConversationRoomId() {
-    return this.roomIdSource.asObservable();
   }
 
   setConversationRoomId(roomId: string | null) {
     this.roomIdSource.next(roomId);
+  }
+  get getConversationRoomId() {
+    return this.roomIdSource.asObservable();
   }
 
 }

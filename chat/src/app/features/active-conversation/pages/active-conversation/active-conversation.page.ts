@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription, take } from "rxjs";
+import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
-import { SendMessageEmitterData, SocketIoService, JoinRomData } from "src/app/core/services/socket.io/socket.io.service";
+import { SendMessageEmitterData, SocketIoService, JoinRomData } from "src/app/core/services/socket-io/socket-io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
-import { ConversationService } from "src/app/features/conversations/services/conversations.service";
-import { SocketMessageHandler } from "src/app/core/services/socket.io/socket-message-handler";
+import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
+import { SocketRoomHandler } from "src/app/core/services/socket-io/socket-room-handler";
+
 export type CreateMessageData = {
   chatId: number;
   fromUserId: number;
@@ -55,7 +56,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
     private messageService: MessageService, private chatService: ChatService,
-    private socketMessageHandler:  SocketMessageHandler
+    private socketMessageHandler:  SocketMessageHandler,
+    private socketRoomHandler: SocketRoomHandler
     ){}
 
   ngOnInit(): void {
@@ -232,14 +234,13 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private subscribeUpdatedMessagesToReadWithPartnerJoin() {
-    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketMessageHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
       // Update chat messages
       if (messages && messages.length > 0) {
         this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
       }
     })
   }
-
 
   private subscribeReadMessage() {
     this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe(message => {
@@ -249,8 +250,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       }
     })
   }
-
-
 
   private cleanUp() {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
@@ -272,8 +271,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.deliveredMessageSubscription) this.deliveredMessageSubscription.unsubscribe();
 
     this.socketMessageHandler.setReadMessageSource(null);
-    this.socketMessageHandler.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
     this.socketMessageHandler.setDeliveredMessage(null);
+    this.socketRoomHandler.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
     this.socketIoService.setConversationRoomId(null);
 
   }

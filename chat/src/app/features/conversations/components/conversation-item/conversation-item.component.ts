@@ -1,7 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
-import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
-import { Router } from '@angular/router';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Subscription } from 'rxjs';
@@ -9,7 +7,7 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { Member } from 'src/app/shared/interfaces/member.interface';
-import { SocketMessageHandler } from 'src/app/core/services/socket.io/socket-message-handler';
+import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 
 @Component({
     selector: 'app-conversation-item',
@@ -31,9 +29,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   private messageDeliverySubscription!: Subscription;
 
   constructor (
-     private router: Router,
      private activeConversationService: ActiveConversationService,
-     private  socketIoService:  SocketIoService,
      private  socketMessageHandler:  SocketMessageHandler
     ) {}
 

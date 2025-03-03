@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
 import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap } from 'rxjs';
-import { SocketIoService } from '../socket.io/socket.io.service';
+import { SocketIoService } from '../socket-io/socket-io.service';
 
 export type AuthMod = 'create' | 'sign-in';
 

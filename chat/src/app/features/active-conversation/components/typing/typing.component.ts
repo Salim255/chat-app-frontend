@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
-import { SocketIoService } from "src/app/core/services/socket.io/socket.io.service";
-import { SocketMessageHandler } from "src/app/core/services/socket.io/socket-message-handler";
+import { SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
+import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
 
 @Component({
     selector: 'app-typing',

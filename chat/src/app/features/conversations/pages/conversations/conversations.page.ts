@@ -3,9 +3,9 @@ import {  Subscription } from 'rxjs';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
+import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { SocketMessageHandler } from 'src/app/core/services/socket.io/socket-message-handler';
+import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 
 @Component({
     selector: 'app-conversations',

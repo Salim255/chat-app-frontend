@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { SendMessageEmitterData } from "./socket-io.service";
 
 @Injectable(
   {
@@ -14,7 +15,6 @@ export class SocketMessageHandler {
   private readMessageSubject = new BehaviorSubject<Message | null>(null);
   private deliveredMessageSubject = new BehaviorSubject<Message | null>(null);
   private messageDeliveredToReceiverSubject = new BehaviorSubject<Message | null>(null);
-  private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject<Message[] | null>(null);
   private partnerConnectionStatusSubject = new BehaviorSubject<Member | null>(null);
   private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
@@ -32,9 +32,6 @@ export class SocketMessageHandler {
     return this.messageDeliveredToReceiverSubject.asObservable();
   }
 
-  get getUpdatedMessagesToReadAfterPartnerJoinedRoom() {
-    return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
-  }
 
   get getPartnerConnectionStatus() {
     return this.partnerConnectionStatusSubject.asObservable();
@@ -55,10 +52,6 @@ export class SocketMessageHandler {
 
   setDeliveredMessage(message: Message | null) {
     this.deliveredMessageSubject.next(message);
-  }
-
-  setUpdatedMessagesToReadAfterPartnerJoinedRoom(messages: Message[] | null) {
-    this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(messages);
   }
 
   setPartnerConnectionStatus(updatedUser: Member | null) {
@@ -121,11 +114,10 @@ export class SocketMessageHandler {
         this.setUserTypingStatus(false);
       }
     });
+  }
 
-    socket.on('partner-joined-room', (updatedMessagesToRead: Message[]) => {
-      if (updatedMessagesToRead) {
-        this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
-      }
-    });
+  sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData ) {
+     // 2) Trigger emitter
+     socket?.emit('send-message', messageEmitterDada)
   }
 }
