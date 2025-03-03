@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
-import { TapService } from "src/app/tabs/services/tap/tap.service";
 import { Swiper } from "swiper/types";
 
 type PageName = "discover" | "profile-viewer" ;

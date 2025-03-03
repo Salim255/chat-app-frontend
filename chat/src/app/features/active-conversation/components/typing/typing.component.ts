@@ -1,6 +1,8 @@
 import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 import { Subscription } from "rxjs";
 import { SocketIoService } from "src/app/core/services/socket.io/socket.io.service";
+import { SocketMessageHandler } from "src/app/core/services/socket.io/socket-message-handler";
+
 @Component({
     selector: 'app-typing',
     templateUrl: './typing.component.html',
@@ -12,7 +14,9 @@ export class TypingComponent implements OnInit, OnDestroy {
   isTyping: boolean = false;
   private typingSubscription!: Subscription;
 
-  constructor( private socketIoService: SocketIoService){}
+  constructor(
+     private socketIoService: SocketIoService,
+     private socketMessageHandler: SocketMessageHandler){}
 
   ngOnInit(): void {
     this.subscribeToTyping()
@@ -26,7 +30,7 @@ export class TypingComponent implements OnInit, OnDestroy {
 
   private subscribeToTyping() {
     this.typingSubscription =
-        this.socketIoService.getUserTypingStatus
+        this.socketMessageHandler.getUserTypingStatus
         .subscribe(typingStatus => {
           console.log('typingStatus', typingStatus);
         this.isTyping = typingStatus;

@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { Conversation} from 'src/app/features/active-conversation/models/active-conversation.model';
 import { Member } from 'src/app/shared/interfaces/member.interface';
+import { SocketMessageHandler} from './socket-message-handler';
 
 export type JoinRomData = {
   fromUserId: number ;
@@ -32,21 +33,14 @@ export class SocketIoService {
   private userId: number | null = null;
   private ENV = environment;
 
-  // ====== Subject for messages and status ======
-  private readMessageSubject = new BehaviorSubject < Message | null > (null) ;
-  private deliveredMessageSubject = new BehaviorSubject < Message | null > (null) ;
-  private messageDeliveredToReceiverSubject = new BehaviorSubject < Message | null > (null) ;
 
   // ====== Other behaviorSubjects =======
-  private updatedMessagesToReadAfterPartnerJoinedRoomSubject = new BehaviorSubject < Message [] | null> (null)
-  private partnerConnectionStatusSubject = new BehaviorSubject <Member | null>(null);
-  private userTypingStatusSubject = new BehaviorSubject <boolean> (false)
   private roomIdSource = new BehaviorSubject < string  | null> (null);
   private updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject < any > (null);
-  private updatedChatCounterSubject = new BehaviorSubject < Conversation | null>  (null)
 
 
-  constructor( ) { }
+
+  constructor( private socketMessageHandler: SocketMessageHandler) { }
 
   // ==== Connection & initialization ======
   // =======================================
@@ -95,91 +89,23 @@ export class SocketIoService {
 
     private setupCommonListeners(): void {
       this.setupPartnerConnectionListeners();
-      this.setupMessageListeners();
-      this.setupTypingListeners();
       this.setupDisconnectListener();
-      this.setupPartnerJoinedRoom();
+
+      if (this.socket) {
+        this.socketMessageHandler.handleMessageEvents(this.socket); // Delegate message event handling
+      }
     }
 
     private setupPartnerConnectionListeners() {
-      // ===== Listen to user connection =======
-      this.socket?.on('user-online', ( updatedUser: Member ) => {
-        console.log(updatedUser)
-        if (updatedUser) {
-          this.partnerConnectionStatusSubject.next(updatedUser);
-        }}
-      );
-
-      // ===== Listen to user disconnection =====
-      this.socket?.on('user-offline', (updatedUser: Member ) => {
-        if (updatedUser) {
-          this.partnerConnectionStatusSubject.next(updatedUser);
-          //this.updateUserConnectionStatusWithDisconnectionSubject.next(updatedUser);
-        }}
-      );
-
       // ===== Listen to user connection change =====
       this.socket?.on('user_status_changed', result => {
         console.log(result, "heleoeo 💥💥" )
         if (result) {
-          //this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
+          this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
         }}
       );
     }
 
-    private setupMessageListeners() {
-      // === Listen to message read ===
-      this.socket?.on('message-read', (readMessage: Message) => {
-        if (readMessage) {
-          this.setReadMessageSource(readMessage);
-        }
-      });
-
-      // === Listen to message delivery by sender to connected receiver
-      this.socket?.on('message-delivered', (deliveredMessage: Message) => {
-        if (deliveredMessage) {
-          this.setDeliveredMessage(deliveredMessage);
-      }});
-
-      // ===== Listen to chat message counter updated ====
-      this.socket?.on('updated-chat-counter', (updatedChatCounter: Conversation) => {
-          console.log(updatedChatCounter, "Hello from update counter")
-          this.updatedChatCounterSubject.next(updatedChatCounter);
-      })
-      // === Listen to message delivery by receiver
-      this.socket?.on('message-delivered-to-receiver', (receivedMessage: Message) => {
-        console.log(receivedMessage, "hello from receiver")
-        if (receivedMessage) {
-          this.messageDeliveredToReceiverSubject.next(receivedMessage)
-        }
-     })
-    }
-
-
-  private  setupTypingListeners() {
-    this.socket?.on('notify-user-typing', status => {
-      if (status) {
-        this.userTypingStatusSubject.next(true);
-      }
-    })
-
-    this.socket?.on('notify-user-stop-typing', status => {
-      if (status) {
-        this.userTypingStatusSubject.next(false);
-      }
-    })
-  }
-
-   // ==== Listen to partner-joined-room =====
-  // ==== Listen to partner join room to update messages ====
-  private setupPartnerJoinedRoom() {
-    this.socket?.on('partner-joined-room', (updatedMessagesToRead: Message []) => {
-      console.log(updatedMessagesToRead, "hello join")
-        if (updatedMessagesToRead) {
-          this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
-        }
-    })
-  }
 
   private setupDisconnectListener() {
     this.socket?.on('disconnect', (reason) => {
@@ -277,41 +203,4 @@ export class SocketIoService {
     this.roomIdSource.next(roomId);
   }
 
-  get getReadMessage() {
-    return this.readMessageSubject.asObservable();
-  }
-
-  setReadMessageSource(readMessage: Message | null) {
-    this.readMessageSubject.next(readMessage);
-  }
-
-  get getDeliveredMessage() {
-    return this.deliveredMessageSubject.asObservable();
-  }
-  setDeliveredMessage(message: Message | null) {
-      this.deliveredMessageSubject.next(message)
-  }
-
-  get getMessageDeliveredToReceiver() {
-     return this.messageDeliveredToReceiverSubject.asObservable();
-  }
-
-  get getUpdatedMessagesToReadAfterPartnerJoinedRoom() {
-    return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
-  }
-  setUpdatedMessagesToReadAfterPartnerJoinedRoom(messages: Message [] | null) {
-    this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(messages);
-  }
-
-  get getPartnerConnectionStatus() {
-      return this.partnerConnectionStatusSubject.asObservable();
-  }
-
-  get getUserTypingStatus() {
-    return this.userTypingStatusSubject.asObservable();
-  }
-
-  get getUpdatedChatCounter() {
-    return this.updatedChatCounterSubject.asObservable();
-  }
 }

@@ -5,7 +5,7 @@ import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
-
+import { SocketMessageHandler } from "src/app/core/services/socket.io/socket-message-handler";
 @Component({
     selector: 'app-active-conversation-header',
     templateUrl: './header.component.html',
@@ -22,7 +22,8 @@ export class headerComponent implements OnChanges, OnDestroy {
     private tapService: TapService,
     private socketIoService: SocketIoService,
     private activeConversationService:  ActiveConversationService,
-    private profileViewerService: ProfileViewerService
+    private profileViewerService: ProfileViewerService,
+    private socketMessageHandler: SocketMessageHandler
     ) { }
 
   onBackArrow () {
@@ -31,7 +32,7 @@ export class headerComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
+    this.socketMessageHandler.getPartnerConnectionStatus.subscribe(updatedUser => {
        if (updatedUser && this.partnerInfo) {
          this.partnerInfo.connection_status = updatedUser.connection_status;
        }

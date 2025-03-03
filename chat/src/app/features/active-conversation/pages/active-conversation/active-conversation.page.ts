@@ -9,7 +9,7 @@ import { Conversation } from "src/app/features/active-conversation/models/active
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
-
+import { SocketMessageHandler } from "src/app/core/services/socket.io/socket-message-handler";
 export type CreateMessageData = {
   chatId: number;
   fromUserId: number;
@@ -55,6 +55,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
     private messageService: MessageService, private chatService: ChatService,
+    private socketMessageHandler:  SocketMessageHandler
     ){}
 
   ngOnInit(): void {
@@ -222,7 +223,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private subscribeDeliveredMessage () {
-    this.deliveredMessageSubscription = this.socketIoService.getDeliveredMessage.subscribe(deliveredMessage => {
+    this.deliveredMessageSubscription = this.socketMessageHandler.getDeliveredMessage.subscribe(deliveredMessage => {
       if (deliveredMessage) {
         this.messageService.updateMessageStatus(this.messagesList, deliveredMessage );
         this.activeConversationService.setActiveConversationMessages(this.messagesList);
@@ -231,7 +232,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private subscribeUpdatedMessagesToReadWithPartnerJoin() {
-    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketIoService.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketMessageHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
       // Update chat messages
       if (messages && messages.length > 0) {
         this.messageService.updateMessagesOnPartnerJoin(this.messagesList, messages)
@@ -241,7 +242,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
 
   private subscribeReadMessage() {
-    this.readMessageSubscription = this.socketIoService.getReadMessage.subscribe(message => {
+    this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe(message => {
       if (message) {
         this.messageService.updateMessageStatus(this.messagesList, message);
         this.activeConversationService.setActiveConversationMessages(this.messagesList);
@@ -270,9 +271,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.readMessageSubscription) this.readMessageSubscription.unsubscribe();
     if (this.deliveredMessageSubscription) this.deliveredMessageSubscription.unsubscribe();
 
-    this.socketIoService.setReadMessageSource(null);
-    this.socketIoService.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
-    this.socketIoService.setDeliveredMessage(null);
+    this.socketMessageHandler.setReadMessageSource(null);
+    this.socketMessageHandler.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);
+    this.socketMessageHandler.setDeliveredMessage(null);
     this.socketIoService.setConversationRoomId(null);
 
   }

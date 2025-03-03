@@ -9,6 +9,7 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { Member } from 'src/app/shared/interfaces/member.interface';
+import { SocketMessageHandler } from 'src/app/core/services/socket.io/socket-message-handler';
 
 @Component({
     selector: 'app-conversation-item',
@@ -33,6 +34,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
      private router: Router,
      private activeConversationService: ActiveConversationService,
      private  socketIoService:  SocketIoService,
+     private  socketMessageHandler:  SocketMessageHandler
     ) {}
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
 
   private subscribeToPartnerConnectionStatus() {
-    this.updatedUserDisconnectionSubscription = this.socketIoService.getPartnerConnectionStatus.subscribe(updatedUser => {
+    this.updatedUserDisconnectionSubscription = this.socketMessageHandler.getPartnerConnectionStatus.subscribe(updatedUser => {
       if ( updatedUser?.connection_status !== undefined && this.partnerInfo && updatedUser.user_id === this.partnerInfo.partner_id) {
         this.partnerInfo = {
           ...this.partnerInfo,

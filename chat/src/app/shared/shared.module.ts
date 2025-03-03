@@ -23,23 +23,40 @@ import { ProfileCoordinationComponent } from "./components/profile/profile-coord
 import { DistanceComponent } from "./components/profile/profile-coordination/distance/distance.component";
 import { NameAgeComponent } from "./components/profile/profile-coordination/name-age/name-age.component";
 
-import { ProfileImagesCardComponent } from "./components/profile/profile-images-card/profile-images-card.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
-  declarations: [ActionComponent, SearchBarComponent, LogoComponent,
-    CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent, AppHeaderComponent, AppButtonComponent
-  , AppPlaceHolderComponent,
-    AppWaveComponent, ProfileCoordinationComponent,
-    DistanceComponent, NameAgeComponent, ProfileImagesCardComponent
+  declarations: [
+    ActionComponent,
+    SearchBarComponent,
+    LogoComponent,
+    CardComponent,
+    SliderComponent,
+    BadgeComponent,
+    ActionBtnComponent,
+    AppHeaderComponent,
+    AppButtonComponent,
+    AppPlaceHolderComponent,
+    AppWaveComponent,
+    ProfileCoordinationComponent,
+    DistanceComponent,
+    NameAgeComponent
    ],
-  exports:
-  [ActionComponent,SearchBarComponent, LogoComponent,
-    CardComponent, SliderComponent, BadgeComponent, ActionBtnComponent,
-      AppHeaderComponent,
-    AppButtonComponent, AppPlaceHolderComponent,
-    AppWaveComponent, ProfileCoordinationComponent,
-    DistanceComponent, NameAgeComponent, ProfileImagesCardComponent
+  exports: [
+    ActionComponent,
+    SearchBarComponent,
+    LogoComponent,
+    CardComponent,
+    SliderComponent,
+    BadgeComponent,
+    ActionBtnComponent,
+    AppHeaderComponent,
+    AppButtonComponent,
+    AppPlaceHolderComponent,
+    AppWaveComponent,
+    ProfileCoordinationComponent,
+    DistanceComponent,
+    NameAgeComponent,
    ],
   imports:
   [

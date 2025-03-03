@@ -35,6 +35,7 @@ swiper-container {
     .profile-details {
       // === Start Background section
       padding-top: 2rem;
+      padding-bottom: 1rem;
       background: linear-gradient(to bottom,
       rgba(0, 0, 0, 0) 10%,   /* starts to fade from the top (10%) */
       rgba(0, 0, 0, 0.5) 30%,  /* lightly darkened after 30% */
@@ -46,10 +47,16 @@ swiper-container {
       right: 0;
       bottom: 0%;
       width: 100%;
-      height: 30%;
+      height: 40%;
+
       transform: translate(-50, 0);
       border-bottom-right-radius: 10px;
       border-bottom-left-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      app-profile-coordination {
+        margin-top: auto;
+      }
       // ===== End background section
     }
     }

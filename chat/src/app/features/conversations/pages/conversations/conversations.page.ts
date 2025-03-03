@@ -5,6 +5,7 @@ import { ConversationService } from 'src/app/features/conversations/services/con
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { SocketIoService } from 'src/app/core/services/socket.io/socket.io.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { SocketMessageHandler } from 'src/app/core/services/socket.io/socket-message-handler';
 
 @Component({
     selector: 'app-conversations',
@@ -29,6 +30,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
     private accountService: AccountService,
     private socketIoService: SocketIoService,
     private authService: AuthService,
+    private socketMessageHandler: SocketMessageHandler
   ) { }
 
   ngOnInit() {
@@ -60,7 +62,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   // Subscribe to message delivery
   private subscribeToMessageDelivery(){
-    this.messageDeliverySubscription = this.socketIoService.getMessageDeliveredToReceiver.subscribe(message => {
+    this.messageDeliverySubscription = this.socketMessageHandler.getMessageDeliveredToReceiver.subscribe(message => {
        if (message) {
         this.updateGlobalConversations(message);
         this.updateChatWithReceivedMessage(message)
@@ -120,7 +122,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
   }
 
   private subscribeToUpdateChatCounter() {
-    this.updatedChatCounterSubscription = this.socketIoService.getUpdatedChatCounter.subscribe(updatedChat => {
+    this.updatedChatCounterSubscription = this.socketMessageHandler.getUpdatedChatCounter.subscribe(updatedChat => {
       console
       this.updateAndSortConversations(updatedChat);
     })
