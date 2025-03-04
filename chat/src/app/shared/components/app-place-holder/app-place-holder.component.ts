@@ -21,7 +21,7 @@ export class AppPlaceHolderComponent {
     }
 
     onExplore() {
-      this.router.navigate(['tabs/community']);
+      this.router.navigate(['tabs/discover']);
     }
 
     setBtnText() {

@@ -1,28 +1,24 @@
 @use "../../../../../theme/queries" as *;
 
 ion-content {
+  height: 100vh;
+  --background: var(--ion-background-color-2);
   position: relative;
-  ion-grid {
-    //padding: .4rem .2rem;
-    ion-row:last-child {
-      ion-col {
-        text-align: center;
-        color: rgb(74, 74, 74);
-        font-size: 1rem;
-      }
-    }
+  .place-holder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
   }
+
+
 }
 
-ion-modal {
-  ion-content {
-    position: relative;
-    ion-button {
-      position: absolute;
-      bottom: 0;
+ion-footer {
+  ion-grid {
+    ion-row:first-child {
+      margin-bottom: .5rem;
     }
   }
-
- // height: 100vh;
-  //margin-bottom: 5rem;
 }

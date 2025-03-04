@@ -5,16 +5,18 @@ import { IonicModule } from "@ionic/angular";
 
 import { SharedModule } from "src/app/shared/shared.module";
 import { ProfileSwipeComponent } from "./components/profile-swipe/profile-swipe.component";
-
+import { DiscoverTabsComponent } from "./components/discover-tabs/discover-tabs.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule],
   exports: [
-    ProfileSwipeComponent
+    ProfileSwipeComponent,
+    DiscoverTabsComponent
    ],
   declarations: [
-    ProfileSwipeComponent
+    ProfileSwipeComponent,
+    DiscoverTabsComponent
    ]
 })
 

@@ -63,7 +63,7 @@ export class FormComponent implements OnInit {
     .subscribe({
      next: (res) => {
       f.reset();
-      this.router.navigateByUrl('/tabs/community')
+      this.router.navigateByUrl('/tabs/discover')
      },
      error: (err) => {
       f.reset();

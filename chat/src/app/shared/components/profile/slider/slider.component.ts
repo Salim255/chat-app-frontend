@@ -84,7 +84,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
 
   setSliderHeight(pageName: PageName | null  ) {
     if (!pageName) return ;
-    return  pageName === 'discover' ? "72vh" : "60vh"
+    return  pageName === 'discover' ? "72vh" : "72vh"
 
   }
   ngOnDestroy(): void {

@@ -126,7 +126,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         this.tabsService.setTapHidingStatus('show')
         }
       this.profileViewerService.closeModal();
-      this.router.navigateByUrl('/tabs/community');
+      this.router.navigateByUrl('/tabs/discover');
       break;
     default:
       return;

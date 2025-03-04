@@ -1,7 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({

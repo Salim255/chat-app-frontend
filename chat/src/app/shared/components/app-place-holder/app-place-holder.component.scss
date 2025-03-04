@@ -1,12 +1,6 @@
 ion-grid {
-  position: fixed;
-    left: 50%;
-    top: 60%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-
   ion-row:first-child {
-    margin-bottom: 6rem;
+    padding-bottom: 6rem;
     ion-col {
       display: flex;
       justify-content: center;

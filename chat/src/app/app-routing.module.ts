@@ -5,7 +5,7 @@ import { AuthGuard } from './core/guard/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs/community',
+    redirectTo: 'tabs/discover',
     pathMatch: 'full'
   },
   {

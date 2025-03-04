@@ -1,8 +1,4 @@
 <ion-tabs #tabsElement #tabs (ionTabsDidChange)="setCurrentTab($event)"    >
-  <ion-tab >
-    <app-interaction-btns *ngIf="showActionBtn"></app-interaction-btns>
-  </ion-tab>
-
   <ion-tab-bar slot="bottom" [class.hidden]="isDiscoverActive" >
 
     <ion-tab-button tab="discover">

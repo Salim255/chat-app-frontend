@@ -24,7 +24,7 @@ export class TabsPage implements OnInit, OnDestroy  {
   private tapHidingStatusSource!: Subscription;
   private userIdSubscription!: Subscription;
   private tabChangeSubscription!: Subscription;
-  isDiscoverActive = false;
+  isDiscoverActive = true;
   constructor(
     private tabsService: TabsService,
     private socketIoService: SocketIoService,
@@ -37,16 +37,9 @@ export class TabsPage implements OnInit, OnDestroy  {
     });
 
     this.subscribeToUserId();
-    //this.socketIoServic
     this.subscribeToTabChange();
   }
 
-/*   ionViewWillEnter(){
-    if (!this.tabChangeSubscription || this.tabChangeSubscription.closed) {
-        this.subscribeToTabChange();
-    }
-  }
- */
   private subscribeToTabChange() {
     this.tabChangeSubscription = this.tabsService.getNextPage.subscribe( selectedTab => {
       console.log( selectedTab, "hello");
@@ -63,7 +56,6 @@ export class TabsPage implements OnInit, OnDestroy  {
   private subscribeToUserId() {
     this.userIdSubscription = this.authService.userId.subscribe(userId => {
       this.userId = userId;
-      // console.log('Hello Tabs', userId)
       if (this.userId){
          this.socketIoService.initializeSocket(this.userId);
       };

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription} from 'rxjs';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
@@ -14,6 +14,7 @@ import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 })
 
 export class DiscoverPage implements OnInit, OnDestroy {
+  @ViewChild("footer", {static: false, read: ElementRef}) footer!: ElementRef;
   isConnected: boolean= true;
   foreignersList: Member [] = [];
   viewedProfile: Member | null = null;
@@ -74,6 +75,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   removeProfileFromList(profileId: number): void {
     this.foreignersList = this.foreignersList.filter((profile: Member) => profile.user_id !== profileId);
   }
+
 
   ngOnDestroy () {
     this.netWorkSubscription?.unsubscribe();
