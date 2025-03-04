@@ -18,4 +18,5 @@ export class ProfileCoordinationComponent implements OnInit {
     console.log(this.profile)
   }
 
+
 }

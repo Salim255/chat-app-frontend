@@ -4,6 +4,7 @@ ion-content {
   height: 100vh;
   --background: var(--ion-background-color-2);
   position: relative;
+
   .place-holder {
     position: absolute;
     left: 50%;
@@ -19,6 +20,11 @@ ion-footer {
   ion-grid {
     ion-row:first-child {
       margin-bottom: .5rem;
+    }
+    ion-row:last-child {
+     ion-col {
+      height: 4rem;
+     }
     }
   }
 }

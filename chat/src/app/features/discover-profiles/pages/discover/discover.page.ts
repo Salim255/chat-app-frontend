@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription} from 'rxjs';
-import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
+import { DiscoverProfileToggle, DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { Member } from 'src/app/shared/interfaces/member.interface';
@@ -19,11 +19,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
   foreignersList: Member [] = [];
   viewedProfile: Member | null = null;
   transform: string | null = null;
-
+  discoverToggleStatus: boolean = true;
 
   private foreignersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
+  private discoverProfileToggleSubscription!: Subscription;
 
   constructor (
      private discoverService: DiscoverService,
@@ -35,6 +36,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   ngOnInit () {
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
+    this.subscribeToDiscoverProfileToggle();
   }
 
   selectTab() {
@@ -47,6 +49,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
   }
 
+  private subscribeToDiscoverProfileToggle(){
+    this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(status =>
+      this.discoverToggleStatus = status === 'collapse'
+    )
+  }
   private subscribeProfileToRemove() {
     if (this.profileToRemoveSubscription && !this.profileToRemoveSubscription.closed)  {
        this.profileToRemoveSubscription.unsubscribe();
@@ -81,5 +88,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.netWorkSubscription?.unsubscribe();
     this.foreignersSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
+    this.discoverProfileToggleSubscription?.unsubscribe();
   }
 }

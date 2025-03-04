@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChi
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { Swiper } from "swiper/types";
+import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 
 type PageName = "discover" | "profile-viewer" ;
 
@@ -30,7 +31,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     allowTouchMove: false,  // Disable Swiper's internal swipe handling
   };
 
-  constructor () {}
+  constructor (private discoverService: DiscoverService) {}
 
   ngOnInit(): void {
     //this.subscribeToTapEvent();
@@ -53,16 +54,34 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   onProfileClick(event: MouseEvent) {
-    const clientX = event.clientX;
-    const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
 
-    if (cardWidth === null || cardWidth === undefined) return;
+    const clickedElement = event.target as HTMLElement;
+    console.log( clickedElement, clickedElement.children)
+
+
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+
+    console.log(clientY , "hello ")
+    const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
+    const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
+
+    if (cardWidth === null || cardWidth === undefined || cardHeight === undefined || cardHeight === null) return;
 
     const cardCenter = cardWidth / 2;
+    const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
 
+     // Check if click is in the last quarter of the card
+  if (clientY > lastQuarterY) {
+    this.onProfilePreview(); // Trigger profile preview
+    return; // Exit to avoid sliding action
+  }
    ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
   }
 
+  private onProfilePreview() {
+    this.discoverService.onDiscoverProfileToggle('expand')
+  }
   private slideLeft() {
     if (this.swiper) this.swiper.slidePrev();
   }
@@ -87,10 +106,15 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     return  pageName === 'discover' ? "72vh" : "72vh"
 
   }
+
   ngOnDestroy(): void {
     if (this.tapEventSource) {
       this.tapEventSource.unsubscribe()
     }
+  }
+
+  onViewProfile() {
+    console.log('Hello profile to view')
   }
 
 }

@@ -7,6 +7,7 @@ import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { ItsMatchModalService } from "../../matches/services/its-match-modal.service";
 
+export type DiscoverProfileToggle = 'expand' | 'collapse'
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +19,7 @@ export class DiscoverService {
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty');
+  private discoverProfileToggleSource = new BehaviorSubject < DiscoverProfileToggle > ('collapse')
 
   constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
@@ -29,6 +31,15 @@ export class DiscoverService {
         this.noConnectedFriendsArray.next(response.data)
       })
     )
+  }
+
+  onDiscoverProfileToggle(actionType: DiscoverProfileToggle) {
+    console.log(actionType)
+    this.discoverProfileToggleSource.next(actionType)
+  }
+
+  get getDiscoverProfileToggleStatus() {
+    return this.discoverProfileToggleSource.asObservable();
   }
 
   likeProfile (likedProfile: Member) {
