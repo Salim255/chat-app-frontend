@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 
@@ -10,9 +10,10 @@ export type UserTypingData = {
   roomId: number;
 }
 @Component({
-  selector: 'app-form-input',
-  templateUrl: './form-input.component.html',
-  styleUrls: ['./form-input.component.scss']
+    selector: 'app-form-input',
+    templateUrl: './form-input.component.html',
+    styleUrls: ['./form-input.component.scss'],
+    standalone: false
 })
 
 export class FormInputComponent implements OnInit, OnDestroy  {
@@ -42,9 +43,10 @@ export class FormInputComponent implements OnInit, OnDestroy  {
 
   }
 
-   onTextChange(text: any) {
+  onTextChange(text: any) {
       // Debouncing: Emit "typing" only once until the user stops typing
       if (!this.isTypingDebounced  && this.toUserId) {
+        console.log('typing......');
           this.socketIoService.userTyping(this.toUserId);
           this.isTypingDebounced = true;
       }
@@ -60,7 +62,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       }, this.typingTimeout);
    }
 
-   stopTyping(): void {
+  stopTyping(): void {
       if (this.typingTimeout) {
         clearTimeout(this.typingTimeout);
         this.typingTimer = null;
@@ -72,6 +74,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       }
 
    }
+
   onSubmit (f: NgForm) {
     this.stopTyping();
     if (!f.valid || this.message.trim().length === 0) {
@@ -83,9 +86,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
   }
 
   ngOnDestroy(): void {
-    if (this.partnerInfoSubscription) {
-      this.partnerInfoSubscription.unsubscribe();
-    }
+    this.partnerInfoSubscription?.unsubscribe();
     this.toUserId = null;
   }
 }

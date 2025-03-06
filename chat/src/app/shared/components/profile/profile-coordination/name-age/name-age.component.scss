@@ -1,0 +1,16 @@
+ion-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  ion-text {
+    color: var(--ion-color-grey-0);
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    span {
+      font-weight: normal;
+      margin-left: 2px;
+    }
+  }
+
+}

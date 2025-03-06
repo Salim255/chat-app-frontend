@@ -5,14 +5,14 @@
       <ion-icon size="large" role="button" name="chevron-back-outline"  (click)="onBackArrow()"></ion-icon>
     </ion-buttons>
 
-    <ion-item lines="none" [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
-        <ion-avatar>
-          <div >
-            <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" [src]="partnerImage" />
-          </div>
-          <ion-label > {{partnerInfo?.first_name}} </ion-label>
-        </ion-avatar>
-    </ion-item>
+   <ion-item lines="none" [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
+      <div class="profile-info">
+        <div class="profile-info__avatar-container">
+          <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" [src]="partnerInfo?.avatar" />
+        </div>
+        <ion-text > {{partnerInfo?.first_name}} </ion-text>
+      </div>
+   </ion-item>
 
     <ion-buttons slot="end" >
       <ion-icon aria-label="Favorite" size="large" name="ellipsis-horizontal-outline"></ion-icon>
@@ -20,3 +20,5 @@
   </ion-toolbar>
 
 </ion-header>
+
+

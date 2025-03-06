@@ -10,6 +10,7 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
+@use "./theme/typography/typography" as *;
 @import "@ionic/angular/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
@@ -35,7 +36,13 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
-@import "./theme/typography/typography";
+
+
+/* Add this to your global styles (or component-specific styles) */
+ion-header {
+  //padding-top: env(safe-area-inset-top);
+}
+
 
 
 ion-toolbar {
@@ -43,8 +50,12 @@ ion-toolbar {
 }
 
 ion-content {
-  --background: var(--ion-background-color);
- // --overflow: hidden; /* Prevent overflow and scrollbar */
+  --background: var(--ion-color-grey-1);
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-text {
+  color: var(--ion-color-grey-7);
 }
 
 ion-modal {

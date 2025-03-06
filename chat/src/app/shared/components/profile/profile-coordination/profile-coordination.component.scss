@@ -1,0 +1,35 @@
+ion-grid {
+  padding: 0 .8rem;
+  ion-row:first-child {
+    .badge {
+      display: flex;
+      width: 100%;
+      app-badge {
+        ::ng-deep ion-badge {
+          color: var(--ion-color-grey-0);
+          font-size: 0.8rem;
+          font-weight: 600;
+          padding: .4rem .8rem;
+          text-transform: capitalize;
+          border-radius: 2rem;
+        }
+       }
+      ion-icon {
+        fill: var(--ion-color-grey-0);
+        font-size: 2rem;
+        margin-top: -.4rem;
+        margin-left: auto;
+      }
+    }
+  }
+
+
+  .profile-distance {
+    margin-top: -.8rem;
+  }
+
+}
+
+
+
+

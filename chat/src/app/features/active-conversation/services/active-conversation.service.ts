@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
-import { Partner } from "src/app/interfaces/partner.interface";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { CreateMessageData } from "src/app/pages/active-conversation/active-conversation.page";
+import { CreateMessageData } from "../pages/active-conversation/active-conversation.page";
 import { ConversationService } from "../../conversations/services/conversations.service";
-import { CreateChatInfo } from "src/app/pages/active-conversation/active-conversation.page";
+import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
+import { ModalController } from "@ionic/angular";
+import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
 
 
 @Injectable({
@@ -20,8 +22,42 @@ export class ActiveConversationService {
   private activeConversationSource = new BehaviorSubject< Conversation | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject< Message[] | null> (null);
 
-  constructor(private http: HttpClient, private conversationService: ConversationService
+  constructor(
+    private http: HttpClient,
+    private conversationService: ConversationService,
+    private  modalController:  ModalController
   ) { }
+
+
+   async openChatModal() {
+      const modal = await this.modalController.create({
+        component: ActiveConversationPage ,
+      })
+      await modal.present();
+  }
+
+  async closeModal() {
+    await this.modalController.dismiss();
+  }
+
+  onOpenChat (partnerInfo: Partner) {
+    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
+    if (!partnerInfo || !partnerInfo.partner_id) return
+    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
+    this.setPartnerInfo(partnerInfo);
+
+    // Check if there are a chat with the this partner
+    this.fetchChatByPartnerID(partnerInfo?.partner_id)
+    .subscribe({
+      next: () => {
+        this.openChatModal();
+      },
+      error: () => {
+        console.error()
+        this.setActiveConversation(null);
+      }
+    })
+  }
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
@@ -35,7 +71,11 @@ export class ActiveConversationService {
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number) {
     return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`).pipe(tap((response) => {
-      this.setActiveConversation(response.data)
+      if (response?.data !== undefined) {
+        this.setActiveConversation(response.data);
+      } else {
+        this.setActiveConversation(null); // Or handle it differently
+      }
     }))
   }
 
@@ -43,7 +83,11 @@ export class ActiveConversationService {
   // This trigged by socket.js service
   fetchChatByChatId(chatId: number) {
      return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`).pipe(tap((response) => {
-       this.setActiveConversation(response.data[0]);
+      if (response?.data !== undefined && response.data.length > 0) {
+        this.setActiveConversation(response.data);
+      } else {
+        this.setActiveConversation(null); // Or handle it differently
+      }
      }))
   }
 
@@ -73,7 +117,6 @@ export class ActiveConversationService {
 
   // Here we set active conversation's messages
   setActiveConversationMessages(messagesList: Message [] | null) {
-    console.log( messagesList, "Hello handler 💥💥💥")
     this.activeChatMessagesListSource.next(messagesList);
   }
 

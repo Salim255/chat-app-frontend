@@ -1,0 +1,11 @@
+.badge {
+  &__offline {
+    background-color: #d9534f; /* A typical offline red color */
+    color: white; /* White text for contrast */
+  }
+
+  &__online {
+    background-color: #048468; /* The green color you mentioned */
+    color: white; /* White text for contrast */
+  }
+}

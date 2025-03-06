@@ -1,0 +1,29 @@
+
+<div
+  (click)="onProfileClick($event)"
+  [style.height]="setSliderHeight(pageName)" >
+  <swiper-container
+  [modules]="swiperModules"
+  [pagination]="true"
+  #swiperContainer
+  [config]="swiperOptions"
+
+>
+  <swiper-slide  *ngFor="let item of userImages; let index = index">
+      <ng-container  >
+        <img [src]="item" alt="Profile Image" class="profile-img" >
+        <div  class="profile-details"   (click)="onViewProfile()" >
+          <app-profile-coordination
+          [profile]="profile"
+
+          >
+          </app-profile-coordination>
+        </div>
+      </ng-container>
+  </swiper-slide>
+</swiper-container>
+</div>
+
+
+
+

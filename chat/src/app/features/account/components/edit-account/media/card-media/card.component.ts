@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 
 @Component({
-  selector: "app-card-media",
-  templateUrl: "./card.component.html",
-  styleUrls: ["./card.component.scss"]
+    selector: "app-card-media",
+    templateUrl: "./card.component.html",
+    styleUrls: ["./card.component.scss"],
+    standalone: false
 })
 export class CardMediaComponent implements OnChanges {
   @Input() mediaIndex: any;

@@ -1,0 +1,31 @@
+
+<ion-content [fullscreen]="true">
+  <ion-grid class="custom-grid">
+    <ion-row class="row-logo">
+      <ion-col>
+       <app-logo></app-logo>
+      </ion-col>
+    </ion-row>
+    <ion-row class="row-intro">
+      <ion-col>
+        <ion-text>
+          <strong>it Start</strong> with a  <strong> Swipe! </strong>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row class="row-terms">
+      <ion-col >
+        <ion-text>By tapping 'Create account' or 'Sign in' you agree to our <u>Terms</u>.
+          Learn how we process your data in our <u>Privacy Policy</u>
+          and <u> Cookies Policy</u>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row class="row-button">
+      <ion-col>
+       <app-button [btnText]="'Create account'" (click)="onCreate()"></app-button>
+       <app-button [btnText]="'Sign in'" (click)="onSignIn()"></app-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

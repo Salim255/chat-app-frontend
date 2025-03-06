@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Message } from "../interfaces/message.interface";
 import { ActiveConversationService } from "./active-conversation.service";
 import { Observable } from "rxjs";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,11 +28,6 @@ export class MessageService {
     return messages;
   }
 
- /*  addMessageToMessagesList(messages: Message[], message: Message) {
-
-
-    this.activeConversationService.setActiveConversationMessages(updatedMessage);
-  } */
 
   getLastMessage(messages: Message[]): Message | null {
     return messages.length > 0 ? messages[messages.length - 1] : null;

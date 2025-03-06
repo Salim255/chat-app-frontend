@@ -1,0 +1,13 @@
+
+<app-active-conversation-header [partnerInfo]="partnerInfo"  ></app-active-conversation-header>
+
+<ion-content>
+  <app-chat-messages></app-chat-messages>
+</ion-content>
+
+<ion-item lines="none">
+    <app-form-input  (submitObs)="onSubmit($event)"></app-form-input>
+</ion-item>
+
+
+

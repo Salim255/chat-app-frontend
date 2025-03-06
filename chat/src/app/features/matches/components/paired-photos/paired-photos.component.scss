@@ -1,0 +1,38 @@
+div {
+  position: relative;
+  //background: yellow;
+  height: 10rem;
+  width: 100%;
+  ion-icon {
+    fill: red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    z-index: 1;
+    border-radius: 50%;
+    background: var( --ion-color-grey-0);
+    padding: .4rem;
+  }
+
+  img {
+    position: absolute;
+    top: 50%;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 2px solid var(--ion-color-grey-0);
+  }
+  img:first-child {
+    left: 28%;
+    transform: translate(-50%, -50%);
+  }
+  img:last-child {
+    right: 28%;
+    transform: translate(50%, -50%);
+  }
+
+}

@@ -5,22 +5,23 @@ import { AuthGuard } from './core/guard/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs/community',
+    redirectTo: 'tabs/discover',
     pathMatch: 'full'
   },
   {
+    path: 'landing-page',
+    loadChildren: () => import('./core/pages/landing/app-landing.module').then( m => m.AppLandingPageModule)
+  },
+  {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule)
+    loadChildren: () => import('./core/pages/auth/auth.module').then(m => m.AuthPageModule)
   },
   {
     path: 'tabs',
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule),
     canLoad: [AuthGuard]
   },
-  {
-    path: 'messages',
-    loadChildren: () => import('./pages/active-conversation/active-conversation-messages/active-conversation-messages.module').then( m => m.MessagesPageModule)
-  },
+
 
 
 ];

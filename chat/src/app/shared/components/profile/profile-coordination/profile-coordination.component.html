@@ -1,0 +1,19 @@
+<ion-grid>
+  <ion-row>
+   <ion-col class="badge">
+      <app-badge [text]="profile.connection_status"></app-badge>
+      <ion-icon name="eye"  ></ion-icon>
+   </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="profile-info">
+      <app-name-age [profile]="profile"></app-name-age>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="profile-distance">
+      <app-distance></app-distance>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+

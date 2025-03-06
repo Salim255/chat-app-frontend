@@ -1,0 +1,30 @@
+@use "../../../../../theme/queries" as *;
+
+ion-content {
+  height: 100vh;
+  --background: var(--ion-background-color-2);
+  position: relative;
+
+  .place-holder {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+  }
+
+
+}
+
+ion-footer {
+  ion-grid {
+    ion-row:first-child {
+      margin-bottom: .5rem;
+    }
+    ion-row:last-child {
+     ion-col {
+      height: 4rem;
+     }
+    }
+  }
+}

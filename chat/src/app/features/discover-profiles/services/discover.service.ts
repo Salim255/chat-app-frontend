@@ -1,95 +1,67 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, from, map, switchMap, tap } from "rxjs";
-import { Preferences } from "@capacitor/preferences";
-import { Foreigner } from "src/app/models/foreigner.model";
+import { BehaviorSubject, tap } from "rxjs";
+import { Member } from "src/app/shared/interfaces/member.interface";
+import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
+import { Partner } from "src/app/shared/interfaces/partner.interface";
+import { ItsMatchModalService } from "../../matches/services/its-match-modal.service";
 
-
+export type DiscoverProfileToggle = 'expand' | 'collapse'
 @Injectable({
   providedIn: 'root'
 })
+
 export class DiscoverService {
   private ENV = environment;
-  private noConnectedFriendsArray = new BehaviorSubject< Array < Foreigner > > ([]);
-  private  displayedProfileSource = new BehaviorSubject <Foreigner | null>(null) ;
+  private noConnectedFriendsArray = new BehaviorSubject<  Member [] > ([]);
+  private  displayedProfileSource = new BehaviorSubject < Member | null>(null) ;
+  private profileToRemoveSource = new BehaviorSubject <number | null> (null);
+  private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
+  private likeProfileSource = new BehaviorSubject < string > ('empty');
+  private discoverProfileToggleSource = new BehaviorSubject < DiscoverProfileToggle > ('collapse')
 
-  private foreignersListStatusSource = new BehaviorSubject < string | null > (null)
-  private likeProfileSource = new BehaviorSubject < string > ('empty')
-
-  constructor(private http: HttpClient){
-
-  }
+  constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
   fetchUsers(){
-    return from(Preferences.get({key: 'authData'}))
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
     .pipe(
-      map((storedData)=> {
-          if (!storedData || !storedData.value) {
-              return null
-          }
-
-          const parseData = JSON.parse(storedData.value) as {
-            _token: string;
-            userId: string;
-            tokenExpirationDate: string;
-          }
-
-          let token = parseData._token;
-
-          return token;
-      }),switchMap((token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      }),
       tap((response) => {
+        console.log(response.data)
         this.noConnectedFriendsArray.next(response.data)
       })
     )
   }
 
-  addFriend (friendId: number) {
-    return from(Preferences.get({key: "authData"})).pipe(
-      map( (storedData) => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-
-        let token = parseData._token;
-
-        return token;
-      }), switchMap((token) => {
-        return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
-        { friend_id: friendId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-      }),
-      tap(res => {
-        console.log(res);
-
-      })
-    )
+  onDiscoverProfileToggle(actionType: DiscoverProfileToggle) {
+    console.log(actionType)
+    this.discoverProfileToggleSource.next(actionType)
   }
 
-  setDisplayedProfile (data: Foreigner) {
+  get getDiscoverProfileToggleStatus() {
+    return this.discoverProfileToggleSource.asObservable();
+  }
+
+  likeProfile (likedProfile: Member) {
+    console.log(likedProfile, "Hello from service")
+    return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
+    { friend_id: likedProfile.user_id }).pipe(tap(response => {
+      this.setProfileToRemove(likedProfile.user_id);
+        if (response?.data && response.data.status === 2 ) {
+          const matchedData: Partner = ProfileUtils.setProfileData(likedProfile);
+          console.log( matchedData, "Hello from discver service 😍😍😍")
+          this.itsMatchModalService.openItsMatchModal(matchedData);
+        }
+    }))
+  }
+
+  setDisplayedProfile (data: Member) {
      this.displayedProfileSource.next(data);
   }
 
-  triggerLikeProfile(state: any) {
-    console.log(state, "Hello");
-    this.likeProfileSource.next(state)
+  triggerLikeProfile() {
+    console.log( "Hello");
+    this.likeProfileSource.next('like')
   }
 
   get getLikeProfileState() {
@@ -98,15 +70,24 @@ export class DiscoverService {
 
   triggerDislikeProfile(state: any) {
     console.log(state, "Hello");
-    this.likeProfileSource.next(state)
+    this.likeProfileSource.next('dislike')
   }
 
   setForeignersListStatus(status: string) {
-      this.foreignersListStatusSource.next(status)
+    this.foreignersListStatusSource.next(status)
+  }
+
+  // We set the profile id of the current profile
+  setProfileToRemove(profileId: number){
+    this.profileToRemoveSource.next(profileId);
+  }
+  // We get the Id of the current profile
+  get getProfileToRemoveId(){
+     return this.profileToRemoveSource.asObservable();
   }
 
   get getForeignersListStatus () {
-    return this.foreignersListStatusSource.asObservable()
+    return this.foreignersListStatusSource.asObservable();
   }
 
   get getDisLikeProfileState() {

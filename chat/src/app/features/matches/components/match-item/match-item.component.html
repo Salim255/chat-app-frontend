@@ -1,7 +1,8 @@
-<ion-item>
-  <ion-avatar slot="start" >
-    <img alt="Silhouette of a person's head" [src]="defaultImage" />
-  </ion-avatar>
-  <ion-label>{{partnerInfo.first_name}} {{partnerInfo.last_name}}</ion-label>
-  <ion-button (click)="onOpenChat()">chat</ion-button>
-</ion-item>
+<ion-card role="button" (click)="onOpenConversation()">
+  <ion-card-content>
+    <img alt="Silhouette of a person's head" [src]="partnerInfo?.avatar" />
+  </ion-card-content>
+  <ion-card-header>
+    <ion-card-title>{{ partnerInfo?.first_name }}</ion-card-title>
+  </ion-card-header>
+</ion-card>

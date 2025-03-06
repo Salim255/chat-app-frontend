@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 
 import { AuthService } from "src/app/core/services/auth/auth.service";
-import {CanLoad, GuardResult, MaybeAsync, Route, Router, UrlSegment } from "@angular/router";
-import { Preferences } from "@capacitor/preferences";
-import { Observable, from, of, switchMap, take, tap } from "rxjs";
+import {CanLoad, Route, Router, UrlSegment } from "@angular/router";
+import { Observable, of, switchMap, take, tap } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -24,7 +23,7 @@ export class AuthGuard implements CanLoad {
       }),
       tap((isAuthenticated) => {
         if (!isAuthenticated) {
-          this.router.navigateByUrl(`/auth`);
+          this.router.navigateByUrl(`/landing-page`);
         }
       })
     )

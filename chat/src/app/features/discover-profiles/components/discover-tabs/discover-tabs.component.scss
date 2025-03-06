@@ -1,0 +1,16 @@
+
+ion-col {
+  padding-bottom: 2.5rem;
+  color: var(--ion-color-grey-6);
+  text-align: center;
+  display: flex;
+
+  ion-icon {
+      fill: var(--ion-text-color-1);
+  }
+  ion-tab-button:first-child {
+    ion-icon {
+      fill: var(--ion-color-primary);
+    }
+  }
+}

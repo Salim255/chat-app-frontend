@@ -1,0 +1,33 @@
+ion-content {
+  ion-grid {
+    height: 100vh;
+
+    ion-row:first-child {
+      ion-col {
+        height: 10%;
+        padding-top: 4rem;
+
+        ion-icon {
+          font-size: 2rem;
+          padding: 0 .5rem;
+          color: var(--ion-color-grey-7);
+        }
+      }
+    }
+    ion-row:last-child {
+      height: 70%;
+      padding: 0 1rem;
+      ion-col {
+        display: flex;
+        flex-direction: column;
+        app-auth-form  {
+          margin-top: auto;
+        }
+
+      }
+    }
+  }
+}
+
+
+

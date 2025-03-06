@@ -1,0 +1,66 @@
+
+swiper-container {
+  --swiper-pagination-bullet-inactive-color: var(--ion-color-grey-5);
+  --swiper-pagination-color:  var(--ion-color-primary) ;
+  --swiper-pagination-bullet-width: 4.5rem;
+  --swiper-pagination-bullet-height: 0.20rem;
+  --swiper-pagination-bullet-border-radius: 2rem;
+  --swiper-pagination-top: -1%;
+  border-radius: 10px;
+  //pointer-events: none; /* Ensures Swiper doesn’t block touch gestures */
+  width: 100%;
+  height: 72vh;
+  overflow: hidden;
+
+  &::part(bullet-active) {
+    height: 0.20rem;
+    width: 4.5rem;
+    border-radius: 2rem;
+  }
+  swiper-slide {
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      overflow: hidden;
+      position: relative;
+      &__default {
+        height: 4rem;
+        width: 4rem;
+        border-radius: 50%;
+      }
+    }
+
+    .profile-details {
+      // === Start Background section
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0) 10%,   /* starts to fade from the top (10%) */
+      rgba(0, 0, 0, 0.5) 30%,  /* lightly darkened after 30% */
+      rgba(0, 0, 0, 0.7) 50%,  /* stronger darkening at 50% */
+      rgba(0, 0, 0, 0.8) 70%,  /* almost full dark at 70% */
+      rgba(0, 0, 0, 1) 90%     /* fully dark at the bottom (90%) */);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0%;
+      width: 100%;
+      height: 40%;
+
+      transform: translate(-50, 0);
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      app-profile-coordination {
+        margin-top: auto;
+      }
+      // ===== End background section
+    }
+    }
+}
+
+
+

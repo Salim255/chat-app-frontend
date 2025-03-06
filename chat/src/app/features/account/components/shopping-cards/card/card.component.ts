@@ -1,9 +1,10 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges,ChangeDetectorRef } from "@angular/core";
 
 @Component({
-  selector: 'app-shopping-card',
-  templateUrl: './card.component.html',
-  styleUrls: ['./card.component.scss']
+    selector: 'app-shopping-card',
+    templateUrl: './card.component.html',
+    styleUrls: ['./card.component.scss'],
+    standalone: false
 })
 export class CardComponent implements OnChanges, OnInit {
   @Input() btnContent!: string;

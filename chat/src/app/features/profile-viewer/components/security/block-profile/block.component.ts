@@ -2,9 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
-  selector: "app-block-profile",
-  templateUrl: "./block.component.html",
-  styleUrls: ["./block.component.scss"]
+    selector: "app-block-profile",
+    templateUrl: "./block.component.html",
+    styleUrls: ["./block.component.scss"],
+    standalone: false
 })
 export class blockComponent implements OnInit, OnDestroy {
   @Input() profile: any;

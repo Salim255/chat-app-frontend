@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar >
+     <!-- Content for 'settings' page -->
+     <ng-container *ngIf="pageName === 'settings'; else defaultToolbar">
+      <ion-title>Settings</ion-title>
+      <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
+    </ng-container>
+
+     <!-- Default content for other pages -->
+    <ng-template #defaultToolbar>
+      <app-logo *ngIf="hidingTapStatus === 'show'"></app-logo>
+      <ion-text *ngIf="hidingTapStatus === 'hide'" class="user-name">
+        {{ viewedProfile?.first_name }}, 31
+      </ion-text>
+
+      <ion-buttons slot="end">
+        <ion-icon *ngIf="pageName !== 'profile-viewer' && takingPictureStatus !== 'Pending'" [name]="displayLeftIcon(pageName)"></ion-icon>
+        <ion-icon
+          [name]="displayRightIcon(pageName)"
+          [ngClass]="setRightIconCss(pageName)"
+          (click)="onRightBtn(pageName)"
+          *ngIf="takingPictureStatus !== 'Pending'">
+        </ion-icon>
+        <ion-text role="button" (click)="onSavePicture()" *ngIf="takingPictureStatus === 'Pending'">Done</ion-text>
+      </ion-buttons>
+    </ng-template>
+
+  </ion-toolbar>
+</ion-header>

@@ -1,9 +1,10 @@
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-profile-about-me",
-  templateUrl: "./about-me.component.html",
-  styleUrls: ["./about-me.component.scss"]
+    selector: "app-profile-about-me",
+    templateUrl: "./about-me.component.html",
+    styleUrls: ["./about-me.component.scss"],
+    standalone: false
 })
 export class AboutMeComponent {
 

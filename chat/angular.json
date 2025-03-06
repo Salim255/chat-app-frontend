@@ -13,6 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json",
             "outputPath": "www",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -36,6 +38,7 @@
           },
           "configurations": {
             "production": {
+              "serviceWorker": true,
               "budgets": [
                 {
                   "type": "initial",

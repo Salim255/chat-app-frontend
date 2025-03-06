@@ -1,13 +1,17 @@
-<ion-item role="button" (click)="onOpenChat()">
+<ion-item role="button" (click)="onOpenChat()"
+  [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
   <ion-avatar slot="start">
-    <img alt="Silhouette of a person's head" [src]="partnerImage" />
+      <img alt="User image" [src]="partnerInfo?.avatar" />
   </ion-avatar>
   <ion-label>
-    <ion-text>
-      {{ partnerInfo?.first_name }}
-    </ion-text>
-    <ion-text>
-      {{lastMessage}}
-    </ion-text>
+    <ion-text> {{ partnerInfo?.first_name }} </ion-text>
+    <ion-text> {{ conversation?.last_message?.content }} </ion-text>
   </ion-label>
+
+  @if ( readMessagesCounter  && ((conversation?.last_message?.from_user_id ?? -1 )!== userId)) {
+    <ion-text class="messages_number">
+      <span> {{ readMessagesCounter }} </span>
+    </ion-text>
+  }
 </ion-item>
+

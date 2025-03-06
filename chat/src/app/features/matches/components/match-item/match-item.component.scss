@@ -1,12 +1,32 @@
-ion-item{
-  margin: .5rem 0;
-  ion-avatar{
-    width: 4.5rem;
-    height: 4.5rem;
-    img{
-      object-position: top;
-      height: 3rem;
-      width: 3rem;
+
+ion-card {
+  box-shadow: none; /* Removes shadow */
+  --box-shadow: none; /* Ensures Ionic's shadow is removed */
+  min-height: 10rem;
+  width: 100%;
+
+  background: var( --ion-color-grey-1);
+  border-radius: .4rem;
+  margin: 0;
+  padding: 0;
+  ion-card-header {
+    padding: .4rem;
+    ion-card-title {
+      font-size: .8rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--ion-color-grey-7);
+   }
+  }
+
+  ion-card-content {
+    height: 80%;
+    padding: 0;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover ;
+      border-radius: .4rem;
     }
   }
 }

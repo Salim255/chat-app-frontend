@@ -1,0 +1,26 @@
+ion-grid {
+  ion-row:first-child {
+    padding-bottom: 6rem;
+    ion-col {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  ion-row:nth-child(even) {
+      ion-col {
+        display: flex;
+        ion-text {
+          margin: auto;
+          text-align: left;
+          width: 90%;
+        }
+      }
+  }
+  ion-row:last-child {
+    padding-top: .5rem;
+      ion-col {
+        text-align: center;
+      }
+  }
+
+}

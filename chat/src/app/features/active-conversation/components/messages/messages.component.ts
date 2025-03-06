@@ -1,54 +1,70 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Message } from "../../interfaces/message.interface";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
-import { MessageService } from "../../services/message.service";
-import { SocketIoService } from "src/app/services/socket.io/socket.io.service";
+import { IonContent } from "@ionic/angular";
+import { StringUtils } from "src/app/shared/utils/string-utils";
 
 @Component({
-  selector: 'app-chat-messages',
-  templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.scss']
+    selector: 'app-chat-messages',
+    templateUrl: './messages.component.html',
+    styleUrls: ['./messages.component.scss'],
+    standalone: false
 })
+
 export class MessagesComponent implements OnInit, OnDestroy{
+  @ViewChild(IonContent, { static: false }) ionContent!: IonContent;
   messagesList: Message [] = [];
   userId: number | null = null;
-  private userIdSubscription!: Subscription;
   date: Date | null = null;
+
+  private userIdSubscription!: Subscription;
   private messagesSourceSubscription!: Subscription;
 
-  constructor(private authService: AuthService,
-    private activeConversationService: ActiveConversationService) {
-
-  }
+  constructor(
+    private authService: AuthService,
+    private activeConversationService: ActiveConversationService,
+    ) {}
 
   ngOnInit() {
+    this.subscribeToMessages();
+    this.subscribeUserId();
+  }
 
-    this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-      if (messages )  this.messagesList = messages;
-     });
+  private subscribeUserId() {
+      this.userIdSubscription = this.authService.userId.subscribe( data =>{
+        this.userId = data;
+      });
+  }
 
-     this.userIdSubscription = this.authService.userId.subscribe( data =>{
-      this.userId = data;
-    });
+  private subscribeToMessages () {
+      this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
+        if (messages ) {
+          this.messagesList = messages;
+          this.scrollToBottom();
+        }
+      });
+  }
 
+  trackById(index: number, message: Message) {
+    return message.id; // Use a unique ID to track messages
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.ionContent) {
+        this.ionContent.scrollToBottom(300); // Smooth scroll in 300ms
+      }
+    }, 100);
+  }
+
+  getMessageStatus(message: string) {
+    return StringUtils.getMessageIcon(message)
   }
 
 
-  getMessageStatus(messageStatus: string) {
-    switch(messageStatus) {
-      case 'read':
-        return 'checkmark-done-outline';
-      case 'delivered':
-        return 'checkmark-done-outline';
-      default:
-        return 'checkmark-outline'
-    }
-  }
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
     if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
   }

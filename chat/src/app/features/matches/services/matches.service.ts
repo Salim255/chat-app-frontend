@@ -1,47 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Preferences } from '@capacitor/preferences';
-import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
-import { Partner } from 'src/app/interfaces/partner.interface';
-
+import { BehaviorSubject, tap } from 'rxjs';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { ActiveConversationService } from '../../active-conversation/services/active-conversation.service';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 export class MatchesService {
   private ENV = environment;
-  private matchesArraySource = new BehaviorSubject <Array <Partner> > ([])
-  constructor(private http: HttpClient) { }
+  private matchesArraySource = new BehaviorSubject <Partner [] | null > (null)
+  constructor(
+     private http: HttpClient ) { }
 
   fetchMatches(){
-    return from(Preferences.get({key: 'authData'})).pipe(
-      map((storedData) => {
-        if (!storedData || !storedData.value) {
-          return null
-        }
-
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-        }
-
-        let token = parseData._token;
-
-        return token;
-      }),switchMap((token) => {
-        return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-      }), tap( response => {
-        this.matchesArraySource.next(response.data)
-      })
-    )
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`)
+    .pipe(tap( response => {
+        this.setMatchArray(response.data)
+      }));
   }
 
   get getMatchesArray () {
-    return this.matchesArraySource.asObservable()
+    return this.matchesArraySource.asObservable();
+  }
+
+  setMatchArray(matchesArray: Partner [] | null) {
+    this.matchesArraySource.next(matchesArray);
   }
 }

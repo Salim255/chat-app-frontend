@@ -1,0 +1,9 @@
+<div
+#cardElement
+(panstart)="onPanStart($event)"
+(pan)="onPan($event)"
+(panend)="onPanEnd($event)"
+ class="profile-card">
+  <app-profile-slider [profile]="profile" [pageName]="'discover'"></app-profile-slider>
+</div>
+
