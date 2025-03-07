@@ -43,9 +43,9 @@ export class TabsPage implements OnInit, OnDestroy  {
   private subscribeToTabChange() {
     this.tabChangeSubscription = this.tabsService.getNextPage.subscribe( selectedTab => {
       console.log( selectedTab, "hello");
-      if ( this.tabs) {
+      if (this.tabs) {
         this.tabs.select('account');
-        this.isDiscoverActive = selectedTab === 'discover';
+        //this.isDiscoverActive = selectedTab === 'discover';
       }
 
      })
@@ -53,7 +53,7 @@ export class TabsPage implements OnInit, OnDestroy  {
 
   setCurrentTab(event: any) {
     this.selectedTab = this.tabs.getSelected();
-    this.isDiscoverActive = this.selectedTab === 'discover';
+    //this.isDiscoverActive = this.selectedTab === 'discover';
   }
 
   private subscribeToUserId() {

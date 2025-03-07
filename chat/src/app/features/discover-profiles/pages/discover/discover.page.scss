@@ -4,13 +4,7 @@ ion-content {
  // height: 100vh;
   --background: var(--ion-background-color-2);
   position: relative;
-.test {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-}
+
   .place-holder {
     position: absolute;
     left: 50%;
@@ -18,23 +12,34 @@ ion-content {
     transform: translate(-50%, -50%);
     width: 90%;
   }
+  .test2 {
+    height: 90%;
+  }
+
+  .test {
+    height: 10%;
+
+    ion-footer {
 
 
-}
-
-ion-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-
-  ion-grid {
-    ion-row:first-child {
-      margin-bottom: .5rem;
-    }
-    ion-row:last-child {
-     ion-col {
-      height: 4rem;
-     }
+      ion-grid {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: red;
+        ion-row:first-child {
+          margin-bottom: .5rem;
+        }
+        ion-row:last-child {
+         ion-col {
+          height: 4rem;
+         }
+        }
+      }
     }
   }
+
 }
+
+
+

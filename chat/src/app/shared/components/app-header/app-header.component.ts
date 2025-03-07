@@ -82,7 +82,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.tapStatusSourceSubscription?.unsubscribe();
     this.viewedProfileSubscription?.unsubscribe()
     this.takingPictureStateSourceSubscription?.unsubscribe();
-
+    this.discoverProfileToggleSubscription?.unsubscribe();
  }
 
  // Determine if the logo should be shown
@@ -162,6 +162,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
 
  ngOnDestroy(): void {
-      this.unsubscribeFromServices();
+    this.unsubscribeFromServices();
  }
 }

@@ -13,20 +13,38 @@ ion-list {
   height: 100vh; /* Full viewport height */
   overflow: hidden; /* Prevent content from overflowing the container */
 
+  transition: all 0.3s ease; /* Add transition for smooth effect */
   .profile-details-list {
-    //height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
-    //overflow-y: auto;
+
       &__enable-scroll {
         height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
         overflow-y: auto; /* Allows the list to scroll if the content overflows */
-        background: red;
+
       }
 
-      &__disable-scoll {
-           //height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
-          //overflow-y: auto; /* Allows the list to scroll if the content overflows */
-          background: red;
+      &__disable-scroll {
+          overflow: hidden;
+          //max-height: 0; /* This is where the height animation happens */
       }
+
+    .details {
+      transition: all .3s ease-in-out;
+        &__enable {
+
+          transform: translateY(0%);
+          ion-item {
+            background-color: red;
+          }
+        }
+
+        &__disable {
+          transform: translateY(-120%);
+          ion-item {
+            background: green;
+          }
+
+        }
+    }
   }
 }
 

@@ -8,17 +8,15 @@ class="container"
 [pagination]="true"
 #swiperContainer
 [config]="swiperOptions"
-
+[ngClass]="setSwiperContainerHeight(profileToView)"
 >
-<swiper-slide  *ngFor="let item of userImages; let index = index">
+<swiper-slide  *ngFor="let item of setUserImages(profile) ; let index = index">
     <ng-container  >
       <img [src]="item"
       alt="Profile Image"
        [ngClass]="'profile-img'"
        loading="lazy" >
-       <div  [ngClass]="
-        !viewerProfileIsActive ? 'profile-summary profile-summary __show '
-        : 'profile-summary  profile-summary__hide'"
+       <div  [ngClass]="setProfileDetailsStyle(profileToView)"
           >
         <app-profile-coordination
         [profile]="profile"

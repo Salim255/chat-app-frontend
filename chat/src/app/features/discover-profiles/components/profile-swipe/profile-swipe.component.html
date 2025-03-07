@@ -1,27 +1,29 @@
 
-  <div #cardElement
-appHammerSwipe
-(swipeLeft)="onSwipeLeft($event)"
-(swipeRight)="onSwipeRight($event)"
-class="container">
-  <ion-list [ngClass]="setProfileListStyle(profileToView)">
-  <app-profile-slider
-    [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
-    [profile]="profile"
-    [pageName]="'discover'">
-    </app-profile-slider>
+  <div
+    #cardElement
+    appHammerSwipe
+    (swipeLeft)="onSwipeLeft($event)"
+    (swipeRight)="onSwipeRight($event)"
 
+    class="container">
+    <ion-list
+      [ngClass]="setProfileListStyle(profileToView)">
+      <app-profile-slider
+        [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+        [profile]="profile"
+        [pageName]="'discover'">
+      </app-profile-slider>
 
-      <ion-grid [ngClass]="setProfileDetailsStyle(profileToView)" *ngFor="let item of items">
-     <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-text> Hello Salim,  ,lldl,,,l,,</ion-text>
-        </ion-item>
-      </ion-col>
-     </ion-row>
-      </ion-grid>
-</ion-list>
+        <ion-grid  [ngClass]="setProfileDetailsStyle(profileToView)" >
+            <ion-row  *ngFor="let item of [ ].constructor(30)">
+              <ion-col>
+                <ion-item>
+                  <ion-text> Hello Salim,  ,lldl,,,l,,</ion-text>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+    </ion-list>
 </div>
 
 

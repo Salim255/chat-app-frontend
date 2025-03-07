@@ -1,5 +1,5 @@
 
-swiper-container {
+.swiper-container {
   --swiper-pagination-bullet-inactive-color: var(--ion-color-grey-5);
   --swiper-pagination-color:  var(--ion-color-primary) ;
   --swiper-pagination-bullet-width: 4.5rem;
@@ -9,15 +9,20 @@ swiper-container {
   border-radius: 10px;
   pointer-events: none; /* Ensures Swiper doesn’t block touch gestures */
   width: 100%;
-  height: 72vh;
-  background-color: yellow;
+
+  &__preview-enabled-height {
+    height: 60vh;
+  }
+  &__preview-disabled-height {
+    height: 72vh;
+  }
   &::part(bullet-active) {
     height: 0.20rem;
     width: 4.5rem;
     border-radius: 2rem;
   }
-  swiper-slide {
 
+  swiper-slide {
     .profile-img {
       width: 100%;
       height: 100%;
@@ -47,12 +52,22 @@ swiper-container {
       bottom: 0%;
       width: 100%;
       height: 40%;
-
       transform: translate(-50, 0);
+
       border-bottom-right-radius: 10px;
       border-bottom-left-radius: 10px;
       display: flex;
       flex-direction: column;
+
+      // For animation
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      &__show {
+        animation: showAnimation 0.3s ease-in-out forwards;
+      }
+      &__hide {
+        animation: hideAnimation 0.3s ease-in-out forwards;
+      }
+
       app-profile-coordination {
         margin-top: auto;
       }
@@ -62,11 +77,34 @@ swiper-container {
 }
 
 
+@keyframes showAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
 
-.profile-height {
-  height: 72vh;
+  50% {
+    opacity: 0.5;
+    transform: translateY(-20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.viewer-height {
-    height: 60vh;
+@keyframes hideAnimation {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-60%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120%);
+    //visibility: hidden; /* Delayed hiding */
+  }
 }

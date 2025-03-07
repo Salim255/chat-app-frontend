@@ -1,6 +1,7 @@
 
 ion-tabs {
   position: relative;
+
   ion-tab-bar {
     padding-top: .5rem;
     --background: var(--ion-background-color-2);
@@ -9,5 +10,5 @@ ion-tabs {
 }
 
 .hidden {
-  display: none !important;
+  //display: none !important;
 }

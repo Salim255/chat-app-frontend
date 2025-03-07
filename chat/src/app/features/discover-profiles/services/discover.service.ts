@@ -31,7 +31,7 @@ export class DiscoverService {
     return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
     .pipe(
       tap((response) => {
-        console.log(response.data)
+        console.log(response.data, "hello from service")
         this.noConnectedFriendsArray.next(response.data)
       })
     )

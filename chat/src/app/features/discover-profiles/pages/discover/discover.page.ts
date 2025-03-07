@@ -6,6 +6,7 @@ import { AccountService } from 'src/app/features/account/services/account.servic
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 @Component({
     selector: 'app-discover',
@@ -26,6 +27,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
   discoverToggleStatus: boolean | null = true;
   profileToView: DisableProfileSwipe | null = null;
 
+  showTabs: boolean = false;
+
   private membersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
@@ -39,9 +42,18 @@ export class DiscoverPage implements OnInit, OnDestroy {
     ) {}
 
   ngOnInit () {
+    this.showTabs = true;
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
     this.subscribeToDiscoverProfileToggle();
+  }
+
+
+
+  ionViewDidEnter() {
+    //this.showTabs = true;
+    console.log("Hello Salim");
+
   }
 
   isSwiping: boolean = false;
@@ -63,7 +75,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     console.log("Hello", this.cardElement)
     if (! this.cardElement) return;
     const element = this.cardElement.nativeElement as HTMLElement | null;
-    console.log(element, 'hello')
+
     if (!element) return;
     // Apply swipe animation
     element.style.transition = 'transform 0.3s ease-out';
@@ -81,23 +93,26 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter () {
+    this.showTabs = true;
+
     this.discoverService.fetchUsers().subscribe();
     this.accountService.fetchAccount().subscribe();
+  }
+  ionViewWillLeave() {
+    this.showTabs = false;
   }
 
 
   private subscribeToDiscoverProfileToggle(){
     this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(data =>
     {
-      console.log(data, "hello ")
 
       this.discoverToggleStatus = data?.disableSwipe ? data.disableSwipe : null;
       this.profileToView = data;
+
       if (!this.discoverToggleStatus && this.content) {
 
           this.content.scrollToTop(500); // Scrolls back to the top in 500ms
-
-        //this.profileViewerService.openProfileViewerModal();
       }
     }
     )
@@ -126,8 +141,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   private loadForeignersList(){
     this.membersSource = this.discoverService.getNoConnectedFriendsArray.subscribe( (profiles )=> {
-      console.log(profiles)
-      this.membersList = profiles;
+      this.membersList = [...profiles];
+      console.log(profiles, 'just befor')
+      if (this.membersList) {
+        this.membersList.forEach(member => {
+           // member.avatar = StringUtils.getAvatarUrl(member.avatar)
+        })
+      }
+
+      console.log(this.membersList, 'after')
     });
   }
 

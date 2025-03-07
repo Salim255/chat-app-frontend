@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
-import { Subscription } from "rxjs";
 import { Swiper } from "swiper/types";
 import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
-import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
+import { StringUtils } from "src/app/shared/utils/string-utils";
+import { Member } from "src/app/shared/interfaces/member.interface";
+
 type PageName = "discover" | "profile-viewer" ;
 
 @Component({
@@ -17,42 +18,35 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   @Input() profileToView: DisableProfileSwipe | null = null;
   @Input() swipeDirection: any;
   @Input() pageName:  PageName | null = null;
+
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
   swiperModules= [IonicSlides];
-  userImages: string [] = [] ;
-  //profileViewer: boolean = false;
-
-  viewerProfileIsActive: boolean = false ;
-
-  sliderHeight: string = ""
   swiper!: Swiper; // Store Swiper instance
-
   swiperOptions = {
     pagination: { clickable: true },
     allowTouchMove: false,  // Disable Swiper's internal swipe handling
   };
+
+  viewerProfileIsActive: boolean = false ;
+  sliderHeight: string = ""
 
   constructor (
     private discoverService: DiscoverService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.viewerProfileIsActive =  this. profileToView ? this.profileToView?.disableSwipe : false;
-    this.setUserImages();
-    console.log( this.viewerProfileIsActive, "hello", this.profile)
+    this.viewerProfileIsActive =  this.profileToView?.disableSwipe ?? false;
   }
-
 
   ngAfterViewInit(): void {
     this.swiper = this.swiperContainer.nativeElement.swiper;
   }
 
-  setProfileSummaryStyle() {
-
+  setUserImages (profile: Member) {
+    return  Array(2).fill(StringUtils.getAvatarUrl(profile.avatar));
   }
-
 
   onSwipe(swipeDirection: string) {
      if (swipeDirection === 'right') {
@@ -72,49 +66,50 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
     const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
 
-    if (cardWidth === null || cardWidth === undefined || cardHeight === undefined || cardHeight === null) return;
+    if (!cardWidth  || !cardHeight ) return;
 
     const cardCenter = cardWidth / 2;
     const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
 
      // Check if click is in the last quarter of the card
   if (clientY > lastQuarterY) {
-    console.log()
+
     this.onProfilePreview(); // Trigger profile preview
     return; // Exit to avoid sliding action
   }
    ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
   }
 
+  setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {
+    if (this.profile?.user_id !== profileToView?.profile.user_id)  return "profile-summary profile-summary__show";
+    if (!profileToView?.disableSwipe) {
+        return  "profile-summary profile-summary__show"
+    }  else {
+        return  "profile-summary profile-summary__hide"
+    }
+  }
+
+  setSwiperContainerHeight(profileToView: DisableProfileSwipe  | null): string {
+    if (this.profile?.user_id !== profileToView?.profile.user_id)  return "swiper-container swiper-container__preview-disabled-height";
+    if (!profileToView?.disableSwipe) {
+        return  "swiper-container swiper-container__preview-disabled-height"
+    }  else {
+        return  "swiper-container swiper-container__preview-enabled-height"
+    }
+
+  }
   private onProfilePreview() {
     if (this.profileToView?.disableSwipe) return;
     this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
 
-
   private slideLeft() {
     if (this.swiper) this.swiper.slidePrev();
   }
 
+
   private slideRight() {
     if (this.swiper) this.swiper.slideNext()
-  }
-
-  private setUserImages (): void {
-    if (!this.profile) return;
-
-    if (this.profile.images?.length) {
-      this.userImages = this.profile.images;
-    } else  {
-      this.userImages.push(this.profile.avatar);
-      this.userImages.push(this.profile.avatar);
-    }
-  }
-
-
-
-  onViewProfile() {
-    console.log('Hello profile to view')
   }
 
 }

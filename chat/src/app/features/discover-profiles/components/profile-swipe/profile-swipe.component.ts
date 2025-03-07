@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
 import { DisableProfileSwipe, DiscoverService } from "../../services/discover.service";
-import { StringUtils } from "src/app/shared/utils/string-utils";
+
 import { Member } from "src/app/shared/interfaces/member.interface";
 import { Subscription } from "rxjs";
 
@@ -12,18 +12,21 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements OnDestroy, OnChanges {
+export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges {
     @Input() profile!: Member;
     @Input() profileToView: DisableProfileSwipe | null = null;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
-    items = Array.from({ length: 30 }, (_, i) => i + 1);
+    @ViewChild('ionListScroller', {static: false}) ionListScroller!: ElementRef;
+
+
     swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
     currentTransformX: number = 0; // Keeps track of the current of the card
      isSwiping: boolean = false;
     isAnimating: boolean = false ;
     resetProfileTimer: any;
-    userImages: string [] = [];
+    //userImages: string [] = [];
 
+    scrollPosition: number = 0;  // This will track the scroll position
 
     discoverProfileToggleSubscription!: Subscription;
     constructor(
@@ -31,12 +34,19 @@ export class ProfileSwipeComponent implements OnDestroy, OnChanges {
       ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
-      this.setUserImages();
+
       console.log(this.profile, "hello");
-
-
+      this.profileToView
     }
 
+    ngAfterViewInit() {
+      // Ensure the list is accessed after view initialization
+      if (this.ionListScroller) {
+        // You can reset the scroll position when needed
+        //this.resetScrollPosition();
+      }
+
+    }
 
     setProfileListStyle(isSwipeDisabled: DisableProfileSwipe | null): string {
       if (!isSwipeDisabled || this.profile?.user_id !== isSwipeDisabled.profile.user_id) {
@@ -46,14 +56,32 @@ export class ProfileSwipeComponent implements OnDestroy, OnChanges {
       if (isSwipeDisabled.disableSwipe) {
         return 'profile-details-list profile-details-list__enable-scroll';
       } else {
-        return 'profile-details-list';
+
+        return 'profile-details-list profile-details-list__disable-scroll ';
       }
     }
 
-    setProfileDetailsStyle(isSwipeDisabled: DisableProfileSwipe | null): string | null {
-      if (this.profile?.user_id !== isSwipeDisabled?.profile.user_id)  return null;
-      const swipeDisabled = (this.profile?.user_id === isSwipeDisabled?.profile.user_id) && isSwipeDisabled.disableSwipe ;
-      return (swipeDisabled ? "swipe-active": "swipe-inactive")
+    // Method to handle scroll event
+    onScroll(event: any): void {
+      console.log(this.scrollPosition, "hello scoll postion")
+      if (event.target.scrollTop !== 0) {
+        //this.scrollPosition = event.target.scrollTop;  // Track scroll position when it's not at the top
+      }
+    }
+
+    // Method to reset the scroll position when scrolling is enabled again
+    resetScrollPosition(): void {
+      this.scrollPosition = 0;
+    }
+
+    setProfileDetailsStyle(isSwipeDisabled: DisableProfileSwipe | null): string {
+      if (this.profile?.user_id !== isSwipeDisabled?.profile.user_id)  return "details details__disable";
+      if (!isSwipeDisabled.disableSwipe) {
+          return  "details details__disable"
+      }  else {
+          return  "details details__enable"
+      }
+
     }
 
 
@@ -137,21 +165,13 @@ export class ProfileSwipeComponent implements OnDestroy, OnChanges {
       }, 100)
     }
 
-    private setUserImages (): void {
-      if (!this.profile) return;
-      if (this.profile.images?.length > 0) {
-        this.userImages =  [...this.profile.images];
-      } else {
-        this.profile.avatar =  StringUtils.getAvatarUrl(this.profile.avatar)
-        this.userImages.push(this.profile.avatar );
-        this.userImages.push(this.profile.avatar );
-      }
-    }
+
 
     // Treat dislike profile
     private handleDislikeProfile() {
       this.resetProfilePosition();
     }
+
 
     ngOnDestroy(): void {
       //Called once, before the instance is destroyed.
