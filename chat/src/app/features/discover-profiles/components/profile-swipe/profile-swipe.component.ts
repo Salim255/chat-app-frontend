@@ -1,8 +1,9 @@
-import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges } from "@angular/core";
-import { DiscoverService } from "../../services/discover.service";
-import { ItsMatchModalService } from "src/app/features/matches/services/its-match-modal.service";
+import { Component, ElementRef, Input, ViewChild, SimpleChanges, OnChanges, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
+import { DisableProfileSwipe, DiscoverService } from "../../services/discover.service";
 import { StringUtils } from "src/app/shared/utils/string-utils";
 import { Member } from "src/app/shared/interfaces/member.interface";
+import { Subscription } from "rxjs";
+
 
 @Component({
 selector: "app-profile-swipe",
@@ -11,25 +12,54 @@ styleUrls: ["./profile-swipe.component.scss"],
 standalone: false
 })
 
-export class ProfileSwipeComponent implements OnChanges {
+export class ProfileSwipeComponent implements OnDestroy, OnChanges {
     @Input() profile!: Member;
+    @Input() profileToView: DisableProfileSwipe | null = null;
     @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
+    items = Array.from({ length: 30 }, (_, i) => i + 1);
     swipeStartPosition: number = 0; // Keeps track of the starting position of the swipe;
     currentTransformX: number = 0; // Keeps track of the current of the card
-    isSwiping: boolean = false;
+     isSwiping: boolean = false;
     isAnimating: boolean = false ;
     resetProfileTimer: any;
     userImages: string [] = [];
 
+
+    discoverProfileToggleSubscription!: Subscription;
     constructor(
-       private discoverService: DiscoverService,
-       private itsMatchModalService : ItsMatchModalService ) {}
+      private discoverService: DiscoverService,
+      ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
       this.setUserImages();
+      console.log(this.profile, "hello");
+
+
     }
 
+
+    setProfileListStyle(isSwipeDisabled: DisableProfileSwipe | null): string {
+      if (!isSwipeDisabled || this.profile?.user_id !== isSwipeDisabled.profile.user_id) {
+        return 'profile-details-list';  // Return the default class if the condition doesn't match
+      }
+      console.log("hell ptof", isSwipeDisabled);
+      if (isSwipeDisabled.disableSwipe) {
+        return 'profile-details-list profile-details-list__enable-scroll';
+      } else {
+        return 'profile-details-list';
+      }
+    }
+
+    setProfileDetailsStyle(isSwipeDisabled: DisableProfileSwipe | null): string | null {
+      if (this.profile?.user_id !== isSwipeDisabled?.profile.user_id)  return null;
+      const swipeDisabled = (this.profile?.user_id === isSwipeDisabled?.profile.user_id) && isSwipeDisabled.disableSwipe ;
+      return (swipeDisabled ? "swipe-active": "swipe-inactive")
+    }
+
+
     onSwipeLeft(event: any) {
+     // if (this.isSwiping) return; // Prevent multiple swipes
+      console.log("swipet left")
       this.animateSwipe('left');
       this.handleDislikeProfile();
     }
@@ -42,32 +72,34 @@ export class ProfileSwipeComponent implements OnChanges {
     }
 
     private animateSwipe(direction: 'left' | 'right') {
+
       if (! this.cardElement) return;
       const element = this.cardElement.nativeElement as HTMLElement | null;
+      console.log(element, 'hello we dont find element')
       if (!element) return;
       // Apply swipe animation
-      element.style.transition = 'transform 0.5s ease-out';
+      element.style.transition = 'transform 0.3s ease-out';
       const translateX = direction === "left" ? "-150vw" : "150vw";
       element.style.transform = `translateX(${translateX}) rotate(${direction === "left" ? "-5deg" : "5deg"})` ;
     }
 
-    onPan(event: any) {
+   /*  onPan(event: any) {
       const element = this.cardElement.nativeElement as HTMLElement | null;
       if (!element) return;
       if (this.isSwiping) {
         this.currentTransformX = this.swipeStartPosition + event.deltaX;
         element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
       }
-    }
+    } */
 
     // Start tracking the swipe position when pan starts
-    onPanStart (event: any) {
+   /*  onPanStart (event: any) {
       this.isSwiping = true;
       this.swipeStartPosition = this.currentTransformX;
     }
-
+ */
     // End the swipe pan is completed
-    onPanEnd(event: any){
+    /* onPanEnd(event: any){
       this.isSwiping = false;
       // If the swipe is greater than 25% of the screen width, trigger the swipe actions
       const threshold = window.innerWidth / 4 ;
@@ -79,7 +111,7 @@ export class ProfileSwipeComponent implements OnChanges {
         // Reset position if swipe was not significant enough
         this.resetProfilePosition()
       }
-    }
+    } */
 
     // Treat like profile
     private handleLikeProfile(likedProfile: Member ) {
@@ -102,7 +134,7 @@ export class ProfileSwipeComponent implements OnChanges {
          element.style.transition = 'transform 0.3s ease-out';
          element.style.transform = 'translateX(0) rotate(0)';
         }
-      }, 500)
+      }, 100)
     }
 
     private setUserImages (): void {
@@ -119,5 +151,11 @@ export class ProfileSwipeComponent implements OnChanges {
     // Treat dislike profile
     private handleDislikeProfile() {
       this.resetProfilePosition();
+    }
+
+    ngOnDestroy(): void {
+      //Called once, before the instance is destroyed.
+      //Add 'implements OnDestroy' to the class.
+      this.discoverProfileToggleSubscription?.unsubscribe();
     }
 }

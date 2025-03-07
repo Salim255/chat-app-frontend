@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Subscription } from "rxjs";
 import { Swiper } from "swiper/types";
-import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
-
+import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 type PageName = "discover" | "profile-viewer" ;
 
 @Component({
@@ -12,18 +12,21 @@ type PageName = "discover" | "profile-viewer" ;
     styleUrls: ["./slider.component.scss"],
     standalone: false
 })
-export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
+export class SliderComponent implements OnChanges, AfterViewInit {
   @Input() profile: any;
+  @Input() profileToView: DisableProfileSwipe | null = null;
   @Input() swipeDirection: any;
   @Input() pageName:  PageName | null = null;
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
   swiperModules= [IonicSlides];
-  userImages: string [] = []
+  userImages: string [] = [] ;
+  //profileViewer: boolean = false;
 
-  private tapEventSource!: Subscription ;
+  viewerProfileIsActive: boolean = false ;
 
+  sliderHeight: string = ""
   swiper!: Swiper; // Store Swiper instance
 
   swiperOptions = {
@@ -31,15 +34,23 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     allowTouchMove: false,  // Disable Swiper's internal swipe handling
   };
 
-  constructor (private discoverService: DiscoverService) {}
+  constructor (
+    private discoverService: DiscoverService,
+  ) {}
 
-  ngOnInit(): void {
-    //this.subscribeToTapEvent();
-    console.log(this.profile, "Hello profile")
+  ngOnChanges(changes: SimpleChanges): void {
+    this.viewerProfileIsActive =  this. profileToView ? this.profileToView?.disableSwipe : false;
     this.setUserImages();
+    console.log( this.viewerProfileIsActive, "hello", this.profile)
   }
+
+
   ngAfterViewInit(): void {
     this.swiper = this.swiperContainer.nativeElement.swiper;
+  }
+
+  setProfileSummaryStyle() {
+
   }
 
 
@@ -53,16 +64,11 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
      }
   }
 
-  onProfileClick(event: MouseEvent) {
-
-    const clickedElement = event.target as HTMLElement;
-    console.log( clickedElement, clickedElement.children)
-
-
+  onProfileClick(event: MouseEvent, profile: any) {
+    console.log(profile, "hello")
     const clientX = event.clientX;
     const clientY = event.clientY;
 
-    console.log(clientY , "hello ")
     const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
     const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
 
@@ -73,6 +79,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
 
      // Check if click is in the last quarter of the card
   if (clientY > lastQuarterY) {
+    console.log()
     this.onProfilePreview(); // Trigger profile preview
     return; // Exit to avoid sliding action
   }
@@ -80,8 +87,11 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   private onProfilePreview() {
-    this.discoverService.onDiscoverProfileToggle('expand')
+    if (this.profileToView?.disableSwipe) return;
+    this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
+
+
   private slideLeft() {
     if (this.swiper) this.swiper.slidePrev();
   }
@@ -101,17 +111,7 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
     }
   }
 
-  setSliderHeight(pageName: PageName | null  ) {
-    if (!pageName) return ;
-    return  pageName === 'discover' ? "72vh" : "72vh"
 
-  }
-
-  ngOnDestroy(): void {
-    if (this.tapEventSource) {
-      this.tapEventSource.unsubscribe()
-    }
-  }
 
   onViewProfile() {
     console.log('Hello profile to view')

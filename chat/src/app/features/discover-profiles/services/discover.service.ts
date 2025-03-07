@@ -7,7 +7,11 @@ import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { ItsMatchModalService } from "../../matches/services/its-match-modal.service";
 
-export type DiscoverProfileToggle = 'expand' | 'collapse'
+export type DisableProfileSwipe ={
+  disableSwipe: boolean;
+  profile: Member;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +23,7 @@ export class DiscoverService {
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty');
-  private discoverProfileToggleSource = new BehaviorSubject < DiscoverProfileToggle > ('collapse')
+  private discoverProfileToggleSource = new BehaviorSubject < DisableProfileSwipe | null > (null)
 
   constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
@@ -33,8 +37,8 @@ export class DiscoverService {
     )
   }
 
-  onDiscoverProfileToggle(actionType: DiscoverProfileToggle) {
-    console.log(actionType)
+  onDiscoverProfileToggle(actionType: DisableProfileSwipe) {
+    console.log(actionType, "Hello")
     this.discoverProfileToggleSource.next(actionType)
   }
 

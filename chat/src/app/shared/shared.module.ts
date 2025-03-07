@@ -22,7 +22,7 @@ import { AppWaveComponent } from "./components/app-wave/app-wave.component";
 import { ProfileCoordinationComponent } from "./components/profile/profile-coordination/profile-coordination.component";
 import { DistanceComponent } from "./components/profile/profile-coordination/distance/distance.component";
 import { NameAgeComponent } from "./components/profile/profile-coordination/name-age/name-age.component";
-
+import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.directive";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
@@ -40,7 +40,8 @@ import { NameAgeComponent } from "./components/profile/profile-coordination/name
     AppWaveComponent,
     ProfileCoordinationComponent,
     DistanceComponent,
-    NameAgeComponent
+    NameAgeComponent,
+    HammerSwipeDirective
    ],
   exports: [
     ActionComponent,
@@ -57,6 +58,7 @@ import { NameAgeComponent } from "./components/profile/profile-coordination/name
     ProfileCoordinationComponent,
     DistanceComponent,
     NameAgeComponent,
+    HammerSwipeDirective
    ],
   imports:
   [

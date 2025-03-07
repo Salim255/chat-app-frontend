@@ -1,8 +1,70 @@
 
-.profile-card {
+ion-list {
+  //height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
+  //overflow-y: auto; /* Allows the list to scroll if the content overflows */
+}
+
+.container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent content from overflowing the container */
+
+  .profile-details-list {
+    //height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
+    //overflow-y: auto;
+      &__enable-scroll {
+        height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
+        overflow-y: auto; /* Allows the list to scroll if the content overflows */
+        background: red;
+      }
+
+      &__disable-scoll {
+           //height: 100%; /* Ensures the ion-list takes up the full height of the wrapper */
+          //overflow-y: auto; /* Allows the list to scroll if the content overflows */
+          background: red;
+      }
+  }
+}
+
+.container__disabled {
+ //pointer-events: none;
+ //position: relative;
+ ///display: block;
+ .container ion-list {
+
+ }
+}
+
+
+
+
+
+
+
+
+
+
+
+.is-active-view {
+
+  background: green;
+
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  //position: absolute;
+  overflow: auto;
+
+}
+.in-active-view {
+
+  position: relative;
+  //background: red;
   top: 0;
   left: 0;
   transition: transform 0.3s ease-out;
@@ -10,5 +72,3 @@
   border-radius: 15px;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
 }
-
-

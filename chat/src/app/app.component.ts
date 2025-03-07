@@ -25,6 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
   }
 
+
   ngOnInit () {
 
     // Overlay the web view on the status bar

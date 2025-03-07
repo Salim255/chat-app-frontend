@@ -1,16 +1,24 @@
 <ion-header [translucent]="true">
   <ion-toolbar >
-     <!-- Content for 'settings' page -->
-     <ng-container *ngIf="pageName === 'settings'; else defaultToolbar">
-      <ion-title>Settings</ion-title>
-      <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
+    <!-- Content for 'settings' page -->
+    <ng-container *ngIf="pageName === 'settings' || pageName === 'discover-viewer'; else defaultToolbar">
+
+      <ng-container *ngIf="pageName === 'settings'">
+        <ion-title >Settings</ion-title>
+        <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
+      </ng-container>
+
+      <ng-container  *ngIf="pageName === 'discover-viewer'">
+          <ion-text slot="start" > {{viewedProfile?.profile?.last_name}}</ion-text>
+      <ion-icon  slot="end" (click)="closeProfileViewer(viewedProfile)" name="close-outline"></ion-icon>
+    </ng-container>
     </ng-container>
 
-     <!-- Default content for other pages -->
+    <!-- Default content for other pages -->
     <ng-template #defaultToolbar>
       <app-logo *ngIf="hidingTapStatus === 'show'"></app-logo>
       <ion-text *ngIf="hidingTapStatus === 'hide'" class="user-name">
-        {{ viewedProfile?.first_name }}, 31
+      <!--   {{ viewedProfile?.first_name }} -->, 31
       </ion-text>
 
       <ion-buttons slot="end">
