@@ -1,7 +1,7 @@
     <app-header [pageName]="discoverToggleStatus ? 'discover-viewer': 'discover'" (closeProfileViewer)="closeProfileViewer()"  ></app-header>
     <ion-content #content [fullscreen]="true" *ngIf="isConnected" >
       <ion-grid>
-         <ion-row *ngIf="membersList.length > 0; else default" class="test2">
+         <ion-row *ngIf="membersList.length > 0; else default" >
           <ion-col size="12"  >
             <ng-container *ngFor="let item of membersList;  let index = index; trackBy: trackById ">
 
@@ -13,22 +13,9 @@
           </ion-col>
         </ion-row>
 
-       <ion-row class="test" *ngIf="showTabs">
+       <ion-row  >
          <ion-col>
-          <ion-footer   >
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <app-interaction-btns ></app-interaction-btns>
-                </ion-col>
-              </ion-row>
-              <ion-row>
-                <ion-col>
-                   <app-discover-tabs *ngIf="!discoverToggleStatus"></app-discover-tabs>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-           </ion-footer>
+
          </ion-col>
         </ion-row>
         <!-- Place holder  -->
@@ -41,9 +28,19 @@
           </ion-row>
         </ng-template>
       </ion-grid>
-
     </ion-content>
 
-
-
-
+    <ion-footer  *ngIf="showTabs" >
+      <ion-grid  >
+        <ion-row>
+          <ion-col>
+            <app-interaction-btns ></app-interaction-btns>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+             <app-discover-tabs *ngIf="!discoverToggleStatus"></app-discover-tabs>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+     </ion-footer>

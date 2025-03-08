@@ -63,7 +63,7 @@
       // For animation
       transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
       &__show {
-        //animation: showAnimation 0.3s ease-in-out forwards;
+        animation: showAnimation 0.3s ease-in-out forwards;
       }
       &__hide {
         animation: hideAnimation 0.3s ease-in-out forwards;
