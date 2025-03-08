@@ -5,8 +5,6 @@ import { ProfileViewerService } from "src/app/features/profile-viewer/services/p
 import { Router } from "@angular/router";
 import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
-import { NavController } from "@ionic/angular";
-import { Member } from "../../interfaces/member.interface";
 import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
     selector: 'app-header',
@@ -36,25 +34,20 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   constructor(private tabsService: TabsService,
     private profileViewerService: ProfileViewerService,
     private photoService: PhotoService, private router: Router,
-    private navController: NavController,
     private discoverService: DiscoverService ){}
 
  ngOnInit(): void {
-
-  // Subscribe to service
   this.subscribeToServices();
-
   this.subscribeToDiscoverProfileToggle();
  }
 
  private subscribeToDiscoverProfileToggle(){
-      this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(data =>
-          {
-                if (data) {
-                  this.viewedProfile = data;
-                  console.log(this.viewedProfile , "hello")
-                }
-          })
+    this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(data =>
+      {
+        if (data) {
+          this.viewedProfile = data;
+        }
+      })
   }
 
  closeProfileViewer(viewedProfile: DisableProfileSwipe | null ) {

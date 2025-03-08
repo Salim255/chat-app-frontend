@@ -16,6 +16,7 @@
   &__preview-disabled-height {
     height: 72vh;
   }
+
   &::part(bullet-active) {
     height: 0.20rem;
     width: 4.5rem;
@@ -62,7 +63,7 @@
       // For animation
       transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
       &__show {
-        animation: showAnimation 0.3s ease-in-out forwards;
+        //animation: showAnimation 0.3s ease-in-out forwards;
       }
       &__hide {
         animation: hideAnimation 0.3s ease-in-out forwards;

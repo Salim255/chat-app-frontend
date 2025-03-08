@@ -66,6 +66,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
     const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
 
+    console.log(!cardWidth  || !cardHeight, "hello")
     if (!cardWidth  || !cardHeight ) return;
 
     const cardCenter = cardWidth / 2;
@@ -77,7 +78,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     this.onProfilePreview(); // Trigger profile preview
     return; // Exit to avoid sliding action
   }
-   ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
+  ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
   }
 
   setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {

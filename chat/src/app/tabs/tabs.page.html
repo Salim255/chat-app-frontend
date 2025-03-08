@@ -1,5 +1,5 @@
 <ion-tabs #tabsElement #tabs (ionTabsDidChange)="setCurrentTab($event)"    >
-  <ion-tab-bar slot="bottom"  >
+  <ion-tab-bar slot="bottom" [class.hidden]="isDiscoverActive" >
 
     <ion-tab-button tab="discover">
       <ion-icon name="heart"></ion-icon>
