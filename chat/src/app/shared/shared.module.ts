@@ -41,7 +41,9 @@ import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.di
     ProfileCoordinationComponent,
     DistanceComponent,
     NameAgeComponent,
-    HammerSwipeDirective
+    HammerSwipeDirective,
+
+
    ],
   exports: [
     ActionComponent,
@@ -58,7 +60,8 @@ import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.di
     ProfileCoordinationComponent,
     DistanceComponent,
     NameAgeComponent,
-    HammerSwipeDirective
+    HammerSwipeDirective,
+
    ],
   imports:
   [

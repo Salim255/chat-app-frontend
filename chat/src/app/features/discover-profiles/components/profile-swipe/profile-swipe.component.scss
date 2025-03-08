@@ -30,19 +30,12 @@ ion-list {
     .details {
       transition: all .3s ease-in-out;
         &__enable {
-
           transform: translateY(0%);
-          ion-item {
-            background-color: red;
-          }
+          padding-bottom: 14rem;
         }
 
         &__disable {
           transform: translateY(-120%);
-          ion-item {
-            background: green;
-          }
-
         }
     }
   }
@@ -58,19 +51,7 @@ ion-list {
 }
 
 
-
-
-
-
-
-
-
-
-
 .is-active-view {
-
-  background: green;
-
   position: absolute;
   top: 0;
   left: 0;
@@ -80,9 +61,7 @@ ion-list {
 
 }
 .in-active-view {
-
   position: relative;
-  //background: red;
   top: 0;
   left: 0;
   transition: transform 0.3s ease-out;

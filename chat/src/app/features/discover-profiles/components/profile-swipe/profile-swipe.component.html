@@ -4,7 +4,6 @@
     appHammerSwipe
     (swipeLeft)="onSwipeLeft($event)"
     (swipeRight)="onSwipeRight($event)"
-
     class="container">
     <ion-list
       [ngClass]="setProfileListStyle(profileToView)">
@@ -14,15 +13,10 @@
         [pageName]="'discover'">
       </app-profile-slider>
 
-        <ion-grid  [ngClass]="setProfileDetailsStyle(profileToView)" >
-            <ion-row  *ngFor="let item of [ ].constructor(30)">
-              <ion-col>
-                <ion-item>
-                  <ion-text> Hello Salim,  ,lldl,,,l,,</ion-text>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+      <div [ngClass]="setProfileDetailsStyle(profileToView)">
+        <app-profile-viewer-description >
+        </app-profile-viewer-description>
+      </div>
     </ion-list>
 </div>
 

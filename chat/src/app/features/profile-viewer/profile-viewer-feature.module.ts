@@ -10,7 +10,8 @@ import { blockComponent } from "./components/security/block-profile/block.compon
 import { ReportComponent } from "./components/security/report-profile/report.component";
 @NgModule({
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule],
-  declarations: [ AboutMeComponent, LookingForComponent,  EssentialsComponent,
+  declarations: [
+    AboutMeComponent, LookingForComponent,  EssentialsComponent,
     blockComponent, ReportComponent
   ],
   exports: [ AboutMeComponent,  LookingForComponent,  EssentialsComponent,
