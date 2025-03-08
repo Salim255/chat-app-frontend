@@ -7,7 +7,9 @@ import { Directive, ElementRef, HostListener, Output, EventEmitter, Input } from
 export class HammerSwipeDirective {
   @Output() swipeLeft = new EventEmitter<void>();
   @Output() swipeRight = new EventEmitter<void>();
-  @Output() profileClick = new EventEmitter<void>();
+  @Output() profilePreview = new EventEmitter<void>();
+  @Output() slideLeft = new EventEmitter<void>(); // images slider
+  @Output() slideRight = new EventEmitter<void>(); // ===========
 
   private swipeStartPosition: number = 0;
   private currentTransformX: number = 0;
@@ -95,16 +97,32 @@ export class HammerSwipeDirective {
   }
 
   @HostListener('click', ['$event'])
-  onClick(event: MouseEvent): void {
-    const clickedElement = event.target as HTMLElement;
-    const cardHeight = this.el.nativeElement.offsetHeight;
-    const clientY = event.clientY;
-    const lastQuarterY = cardHeight * 0.75;
+  onClickProfile(event: MouseEvent): void {
 
+    const clickedElement = event.target as HTMLElement;
+    const swiperContainer = clickedElement?.querySelector('swiper-container');
+
+    if ( !swiperContainer)  return;
+
+    const cardWidth = swiperContainer?.clientWidth;
+    const cardHeight = swiperContainer?.clientHeight;
+    const clientY = event.clientY;
+    const clientX = event.clientX;
+
+    if (!cardWidth  || !cardHeight) return;
+
+    const cardCenter = cardWidth / 2;
+    const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
+
+    // Check if click is in the last quarter of the card
     if (clientY > lastQuarterY) {
-      this.profileClick.emit();
+      console.log("Hello2")
+        this.profilePreview.emit(); // Trigger profile preview
+        return; // Exit to avoid sliding action
     }
+    ( clientX < cardCenter) ? this.slideLeft.emit(): this.slideRight.emit() ;
   }
+
 
   private resetProfilePosition(): void {
     if (this.resetProfileTimer) {

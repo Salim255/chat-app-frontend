@@ -35,7 +35,7 @@ export class TabsPage implements OnInit, OnDestroy  {
     this.tapHidingStatusSource = this.tabsService.getHidingTapStatus.subscribe(status => {
       this.hidingTapStatus = status;
     });
-
+    ////////
     this.subscribeToUserId();
     this.subscribeToTabChange();
   }
@@ -43,7 +43,7 @@ export class TabsPage implements OnInit, OnDestroy  {
   private subscribeToTabChange() {
     this.tabChangeSubscription = this.tabsService.getNextPage.subscribe( selectedTab => {
       console.log( selectedTab, "hello");
-      this.tabs.select('account');
+      this.tabs?.select('account');
       this.isDiscoverActive = selectedTab === 'discover';
      })
   }

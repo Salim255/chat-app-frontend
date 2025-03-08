@@ -39,6 +39,8 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
       this.profileToView
     }
 
+
+
     ngAfterViewInit() {
       // Ensure the list is accessed after view initialization
       if (this.ionListScroller) {

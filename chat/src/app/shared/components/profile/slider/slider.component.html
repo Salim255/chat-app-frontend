@@ -1,8 +1,9 @@
-
 <div
-(click)="onProfileClick($event, profile)"
-class="container"
- >
+appHammerSwipe
+(profilePreview)="onProfilePreview()"
+(slideLeft)="slideLeft()"
+(slideRight)="slideRight()" >
+
 <swiper-container
 [modules]="swiperModules"
 [pagination]="true"
@@ -28,6 +29,8 @@ class="container"
 </swiper-slide>
 </swiper-container>
 </div>
+
+
 
 
 

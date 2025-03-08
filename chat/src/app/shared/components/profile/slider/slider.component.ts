@@ -58,27 +58,27 @@ export class SliderComponent implements OnChanges, AfterViewInit {
      }
   }
 
-  onProfileClick(event: MouseEvent, profile: any) {
-    console.log(profile, "hello")
-    const clientX = event.clientX;
-    const clientY = event.clientY;
+  onProfileClick( profile: any) {
+    //console.log( "hello from slide click😍😍😍")
+   // const clientX = event.clientX;
+    //const clientY = event.clientY;
 
     const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
-    const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
+    //const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
 
-    console.log(!cardWidth  || !cardHeight, "hello")
-    if (!cardWidth  || !cardHeight ) return;
+    //console.log(!cardWidth  || !cardHeight, "hello")
+    //if (!cardWidth  || !cardHeight ) return;
 
-    const cardCenter = cardWidth / 2;
-    const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
+    //const cardCenter = cardWidth / 2;
+    //const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
 
      // Check if click is in the last quarter of the card
-  if (clientY > lastQuarterY) {
+/*   if (clientY > lastQuarterY) {
 
     this.onProfilePreview(); // Trigger profile preview
     return; // Exit to avoid sliding action
-  }
-  ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
+  } */
+  //( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
   }
 
   setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {
@@ -99,17 +99,19 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     }
 
   }
-  private onProfilePreview() {
+ onProfilePreview() {
+  console.log(this.profileToView?.disableSwipe, "1")
     if (this.profileToView?.disableSwipe) return;
+    console.log(this.profileToView?.disableSwipe, "2")
     this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
 
-  private slideLeft() {
+  slideLeft() {
     if (this.swiper) this.swiper.slidePrev();
   }
 
 
-  private slideRight() {
+  slideRight() {
     if (this.swiper) this.swiper.slideNext()
   }
 
