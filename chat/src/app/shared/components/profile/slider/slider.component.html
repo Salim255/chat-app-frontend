@@ -53,10 +53,16 @@ appHammerSwipe
  (profilePreview)="onProfilePreview()"
   (slideLeft)="slideLeft()"
   (slideRight)="slideRight()"
+
+  class="swiper-container"
   >
   <ion-card >
     <ion-card-content>
-      <ion-img   loading="lazy" [src]="setUserImages(profile)[currentIndex]"></ion-img>
+      <div  class="swiper-pagination">
+        <div class="swiper-pagination__bullet" *ngFor="let item of setUserImages(profile)">
+         </div>
+       </div>
+      <img   loading="lazy" [src]="setUserImages(profile)[currentIndex]"/>
       <ion-text>{{currentIndex}}</ion-text>
     </ion-card-content>
   </ion-card>
