@@ -23,6 +23,7 @@ import { ProfileCoordinationComponent } from "./components/profile/profile-coord
 import { DistanceComponent } from "./components/profile/profile-coordination/distance/distance.component";
 import { NameAgeComponent } from "./components/profile/profile-coordination/name-age/name-age.component";
 import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.directive";
+import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.directive";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
@@ -42,7 +43,7 @@ import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.di
     DistanceComponent,
     NameAgeComponent,
     HammerSwipeDirective,
-
+    CustomSwiperDirective
 
    ],
   exports: [
@@ -61,7 +62,7 @@ import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.di
     DistanceComponent,
     NameAgeComponent,
     HammerSwipeDirective,
-
+    CustomSwiperDirective
    ],
   imports:
   [

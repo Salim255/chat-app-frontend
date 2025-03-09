@@ -23,7 +23,7 @@ export class HammerSwipeDirective {
 
   @HostListener('panstart', ['$event'])
   onPanStart(event: any): void {
-    console.log(event, "Hello start")
+    //console.log(event, "Hello start")
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
 
@@ -31,18 +31,18 @@ export class HammerSwipeDirective {
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
       this.isHorizontalSwipe = true;
       this.isSwiping = true;  // Start swipe
-      console.log("Swiping")
+      //console.log("Swiping")
     } else {
       /* To enable later */
       //this.isHorizontalSwipe = false;
       //this.isScrolling = true;  // Enable vertical scrolling
-      console.log("Scolling")
+     // console.log("Scolling")
     }
   }
 
   @HostListener('pan', ['$event'])
   onPan(event: any): void {
-    console.log("Panning")
+    //console.log("Panning")
     const element = this.el.nativeElement;
     if (!element) return;
    /*  if (this.isSwiping) {
@@ -61,14 +61,14 @@ export class HammerSwipeDirective {
 
   @HostListener('panend', ['$event'])
   onPanEnd(event: any): void {
-    console.log(event, 'enendndndnd')
+   // console.log(event, 'enendndndnd')
     this.isSwiping = false;
 
     const threshold = window.innerWidth / 4;
     if (this.currentTransformX > threshold) {
       this.swipeRight.emit();
     } else if (this.currentTransformX < -threshold) {
-      console.log("pans end  left called😍😍")
+      //console.log("pans end  left called😍😍")
       this.swipeLeft.emit();
     } else {
       this.resetProfilePosition();

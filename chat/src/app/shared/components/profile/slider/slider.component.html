@@ -1,4 +1,4 @@
-<div
+<!-- <div
 appHammerSwipe
 (profilePreview)="onProfilePreview()"
 (slideLeft)="slideLeft()"
@@ -33,7 +33,33 @@ appHammerSwipe
 
 
 
+ -->
+<!--
+ <swiper-container
+ [modules]="swiperModules"
+ [pagination]="true"
+ #swiperContainer
+ [config]="swiperOptions"
+ [ngClass]="setSwiperContainerHeight(profileToView)"
+ >
+ <swiper-slide  *ngFor="let item of setUserImages(profile) ; let index = index">
+
+ </swiper-slide>
+ </swiper-container> -->
 
 
+ <div
+ appCustomSwiper
+ (profilePreview)="onProfilePreview()"
+  (slideLeft)="slideLeft()"
+  (slideRight)="slideRight()"
+  >
+  <ion-card >
+    <ion-card-content>
+      <ion-img   loading="lazy" [src]="setUserImages(profile)[currentIndex]"></ion-img>
+      <ion-text>{{currentIndex}}</ion-text>
+    </ion-card-content>
+  </ion-card>
+ </div>
 
 

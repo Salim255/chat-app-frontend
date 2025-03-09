@@ -1,0 +1,11 @@
+
+<div>
+<app-profile-slider
+  [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+  [profile]="profile"
+  [pageName]="'discover'">
+</app-profile-slider>
+  <app-profile-viewer-description >
+  </app-profile-viewer-description>
+</div>
+

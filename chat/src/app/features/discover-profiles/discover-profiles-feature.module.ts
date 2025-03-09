@@ -8,6 +8,8 @@ import { ProfileSwipeComponent } from "./components/profile-swipe/profile-swipe.
 import { DiscoverTabsComponent } from "./components/discover-tabs/discover-tabs.component";
 import { ProfileViewerDescriptionComponent } from "./components/profile-viewer-description/profile-viewer-description.component";
 import { ProfileViewerFeatureModule } from "../profile-viewer/profile-viewer-feature.module";
+import { ProfileContentComponent } from "./components/profile-content/profile-content.component";
+
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule,  ProfileViewerFeatureModule],
@@ -15,11 +17,13 @@ import { ProfileViewerFeatureModule } from "../profile-viewer/profile-viewer-fea
     ProfileSwipeComponent,
     DiscoverTabsComponent,
     ProfileViewerDescriptionComponent,
+    ProfileContentComponent
    ],
   declarations: [
     ProfileSwipeComponent,
     DiscoverTabsComponent,
     ProfileViewerDescriptionComponent,
+    ProfileContentComponent
    ]
 })
 

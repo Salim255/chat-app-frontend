@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, Signal, SimpleChanges, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
 import { Swiper } from "swiper/types";
 import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
@@ -19,6 +19,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   @Input() swipeDirection: any;
   @Input() pageName:  PageName | null = null;
 
+
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
@@ -32,11 +33,16 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   viewerProfileIsActive: boolean = false ;
   sliderHeight: string = ""
 
+  currentIndex: number = 0
+  currentImage: string | null = null;
+
   constructor (
     private discoverService: DiscoverService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.currentIndex = 0;
+    console.log(this.currentIndex)
     this.viewerProfileIsActive =  this.profileToView?.disableSwipe ?? false;
   }
 
@@ -45,6 +51,11 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   }
 
   setUserImages (profile: Member) {
+    return [
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVvcGxlfGVufDB8fDB8fHww'
+    ]
     return  Array(2).fill(StringUtils.getAvatarUrl(profile.avatar));
   }
 
@@ -58,28 +69,6 @@ export class SliderComponent implements OnChanges, AfterViewInit {
      }
   }
 
-  onProfileClick( profile: any) {
-    //console.log( "hello from slide click😍😍😍")
-   // const clientX = event.clientX;
-    //const clientY = event.clientY;
-
-    const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
-    //const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
-
-    //console.log(!cardWidth  || !cardHeight, "hello")
-    //if (!cardWidth  || !cardHeight ) return;
-
-    //const cardCenter = cardWidth / 2;
-    //const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
-
-     // Check if click is in the last quarter of the card
-/*   if (clientY > lastQuarterY) {
-
-    this.onProfilePreview(); // Trigger profile preview
-    return; // Exit to avoid sliding action
-  } */
-  //( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
-  }
 
   setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {
     if (this.profile?.user_id !== profileToView?.profile.user_id)  return "profile-summary profile-summary__show";
@@ -100,19 +89,41 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 
   }
  onProfilePreview() {
-  console.log(this.profileToView?.disableSwipe, "1")
+  console.log("From preview")
     if (this.profileToView?.disableSwipe) return;
     console.log(this.profileToView?.disableSwipe, "2")
     this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
 
   slideLeft() {
-    if (this.swiper) this.swiper.slidePrev();
+    console.log("From left")
+    this.slidePrev()
   }
 
+private slidePrev() {
+  if (this.currentIndex > 0) {
+    this.currentIndex = this.currentIndex - 1;
+    console.log(this.currentIndex)
 
+  } else {
+    this.currentIndex = this.setUserImages(this.profile).length - 1; // Loop back to last image
+    console.log(this.currentIndex)
+  }
+}
+
+private slideNext() {
+  if (this.currentIndex <  this.setUserImages(this.profile).length - 1) {
+    this.currentIndex = this.currentIndex + 1;
+    console.log(this.currentIndex)
+
+  } else {
+    this.currentIndex = 0; // Loop back to last image
+    console.log(this.currentIndex)
+  }
+}
   slideRight() {
-    if (this.swiper) this.swiper.slideNext()
+    console.log("From right")
+    this.slideNext()
   }
 
 }

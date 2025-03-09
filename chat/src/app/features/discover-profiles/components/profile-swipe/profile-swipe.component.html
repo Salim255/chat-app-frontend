@@ -1,5 +1,5 @@
 
-  <div
+<!--   <div
     #cardElement
     appHammerSwipe
     (swipeLeft)="onSwipeLeft($event)"
@@ -18,6 +18,22 @@
         </app-profile-viewer-description>
       </div>
     </ion-list>
+</div>
+ -->
+
+<div
+#cardElement
+appHammerSwipe
+(swipeLeft)="onSwipeLeft($event)"
+(swipeRight)="onSwipeRight($event)"
+class="container">
+<!-- <app-profile-viewer-description >
+</app-profile-viewer-description> -->
+  <app-profile-content
+
+  [profile]="profile"
+  [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+  ></app-profile-content>
 </div>
 
 
