@@ -59,7 +59,10 @@ appHammerSwipe
   <ion-card >
     <ion-card-content>
       <div  class="swiper-pagination">
-        <div class="swiper-pagination__bullet" *ngFor="let item of setUserImages(profile)">
+        <div [ngClass]=" index !== currentIndex ?
+         'swiper-pagination__bullet' :
+        'swiper-pagination__bullet swiper-pagination__bullet--active'"
+          *ngFor="let item of setUserImages(profile); let index = index;" >
          </div>
        </div>
       <img   loading="lazy" [src]="setUserImages(profile)[currentIndex]"/>

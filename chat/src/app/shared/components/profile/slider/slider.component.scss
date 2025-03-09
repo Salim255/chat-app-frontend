@@ -138,15 +138,19 @@
         padding-left: 1rem;
         padding-right: 1rem;
         display: flex;
-        gap: 4px;
+        gap: 10px;
+
         &__bullet{
-          background: var(--ion-color-grey-8);
+          background: var(--ion-color-grey-6);
           flex: 1;
           justify-content: space-between;
           height: 4px;
           border-radius: 2px;
+         outline: .7px solid var(--ion-color-grey-3);
+
           &--active {
-            background: var(--ion-color-grey-2);
+
+            background: var(--ion-color-grey-3);
           }
         }
       }
