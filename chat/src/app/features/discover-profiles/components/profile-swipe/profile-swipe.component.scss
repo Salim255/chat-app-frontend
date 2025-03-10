@@ -1,6 +1,10 @@
-.hammer-swiper-container {
 
-  &__disable-hammer-swipe {
-    pointer-events: none;
+ion-grid {
+
+  .hammer-swiper-container {
+    &__disable-hammer-swipe {
+      pointer-events: none;
+    }
   }
+
 }

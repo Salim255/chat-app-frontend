@@ -1,118 +1,20 @@
-/* .swiper-container {
-  --swiper-pagination-bullet-inactive-color: var(--ion-color-grey-5);
-  --swiper-pagination-color:  var(--ion-color-primary) ;
-  --swiper-pagination-bullet-width: 4.5rem;
-  --swiper-pagination-bullet-height: 0.20rem;
-  --swiper-pagination-bullet-border-radius: 2rem;
-  --swiper-pagination-top: -1%;
-  border-radius: 10px;
-  pointer-events: none;
+//
+.swiper-container {
+  position: relative;
   width: 100%;
+  transition: all 1s ease-in-out forwards ;
 
   &__preview-enabled-height {
+    transition: all 1s ease-in-out forwards ;
     height: 60vh;
   }
   &__preview-disabled-height {
     height: 72vh;
-  }
+    transition: all 1s ease-in-out forwards ;
 
-  &::part(bullet-active) {
-    height: 0.20rem;
-    width: 4.5rem;
-    border-radius: 2rem;
-  }
-
-  swiper-slide {
-    .profile-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      object-fit: cover;
-      position: relative;
-      &__default {
-        height: 4rem;
-        width: 4rem;
-        border-radius: 50%;
-      }
-    }
-
-    .profile-summary {
-      // === Start Background section
-      padding-top: 2rem;
-      padding-bottom: 2rem;
-      background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0) 10%,
-      rgba(0, 0, 0, 0.5) 30%,
-      rgba(0, 0, 0, 0.7) 50%,
-      rgba(0, 0, 0, 0.8) 70%,
-      rgba(0, 0, 0, 1) 90% );
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0%;
-      width: 100%;
-      height: 40%;
-      transform: translate(-50, 0);
-
-      border-bottom-right-radius: 10px;
-      border-bottom-left-radius: 10px;
-      display: flex;
-      flex-direction: column;
-
-      // For animation
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-      &__show {
-        animation: showAnimation 0.3s ease-in-out forwards;
-      }
-      &__hide {
-        animation: hideAnimation 0.3s ease-in-out forwards;
-      }
-
-      app-profile-coordination {
-        margin-top: auto;
-      }
-      // ===== End background section
-    }
-    }
-}
- */
-
-@keyframes showAnimation {
-  0% {
-    opacity: 0;
-    transform: translateY(-120%);
-  }
-
-  50% {
-    opacity: 0.5;
-    transform: translateY(-20%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes hideAnimation {
-  0% {
-    opacity: 1;
-    transform: translateY(0%);
-  }
-  50% {
-    opacity: 0.5;
-    transform: translateY(-60%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-120%);
 
   }
-}
-//
-.swiper-container {
-  position: relative;
-  height: 74vh;
-  width: 100%;
+
   ion-card {
     position: absolute;
     top: 50%;
@@ -156,12 +58,100 @@
           }
         }
       }
-      img   {
-        height: 100%;
+
+      .profile-img {
         width: 100%;
+       // height: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        //position: relative;
+        transition: all .3s ease-out;
+        &__preview-disabled{
+          transition: all .3s ease-out;
+           height: 72vh;
+        }
+        &__preview-enabled{
+          transition: all .3s ease-out;
+          height: 60vh;
+        }
+       /*  &__default {
+          height: 4rem;
+          width: 4rem;
+          border-radius: 50%;
+        } */
       }
 
+      .profile-summary {
+        // === Start Background section
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0) 10%,
+        rgba(0, 0, 0, 0.3) 30%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 1) 90% );
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0%;
+        width: 100%;
+        height: 40%;
+        transform: translate(-50, 0);
+
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        display: flex;
+        flex-direction: column;
+
+        // For animation
+        transition: all 0.3s ease-in-out;
+        &__show {
+          animation: showAnimation 0.5s ease-in-out forwards;
+        }
+        &__hide {
+          animation: hideAnimation 0.3s ease-in-out forwards;
+        }
+
+        app-profile-coordination {
+          margin-top: auto;
+        }
+        // ===== End background section
+      }
     }
+
+  }
+}
+
+
+@keyframes showAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-120%);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: translateY(-20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hideAnimation {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-60%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120%);
 
   }
 }

@@ -85,19 +85,27 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  setSwiperContainerHeight(profileToView: DisableProfileSwipe  | null): string {
+ setSwiperContainerHeight(profileToView: DisableProfileSwipe | null ): string {
     if (this.profile?.user_id !== profileToView?.profile.user_id)  return "swiper-container swiper-container__preview-disabled-height";
     if (!profileToView?.disableSwipe) {
         return  "swiper-container swiper-container__preview-disabled-height"
     }  else {
         return  "swiper-container swiper-container__preview-enabled-height"
     }
-
   }
- onProfilePreview() {
+
+  setProfileImagesHeight(profileToView: DisableProfileSwipe | null) {
+  if (this.profile?.user_id !== profileToView?.profile.user_id)  return "profile-img  profile-img__preview-disabled";
+    if (!profileToView?.disableSwipe) {
+        return  "profile-img  profile-img__preview-disabled"
+    }  else {
+        return  "profile-img  profile-img__preview-enabled"
+    }
+}
+
+  onProfilePreview() {
   console.log("From preview")
     if (this.profileToView?.disableSwipe) return;
-    console.log(this.profileToView?.disableSwipe, "2")
     this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
 
@@ -106,7 +114,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     this.slidePrev()
   }
 
-private slidePrev() {
+  private slidePrev() {
   if (this.currentIndex > 0) {
     this.currentIndex = this.currentIndex - 1;
     console.log(this.currentIndex)

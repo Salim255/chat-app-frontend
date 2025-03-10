@@ -1,11 +1,24 @@
 
+ion-grid {
+  background: var(--ion-background-color-2);
+
+  ion-row:first-child {
+    height: 100%;
+  }
+}
+
 .profile-details {
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
    &__expand {
-      padding-bottom: 10rem;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out, opacity 0.3s ease-in-out;
+    transform: translateX(0);
    }
 
    &__collapse {
-     opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.5s ease-in-out, opacity 0.3s ease-in-out;
+      transform: translateX(-120%);
    }
 }
+
