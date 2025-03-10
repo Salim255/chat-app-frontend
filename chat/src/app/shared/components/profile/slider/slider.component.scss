@@ -123,6 +123,8 @@
     padding: 0;
     margin: 0;
 
+    box-shadow: none ;
+    --ion-box-shadow: none;
     ion-card-content {
       height: 100%;
       width: 100%;
@@ -157,17 +159,8 @@
       img   {
         height: 100%;
         width: 100%;
-        --margin: 0;
-        --padding: 0;
       }
 
-      ion-text {
-        position: absolute ;
-        bottom: 0;
-        height: 2rem;
-        width: 100%;
-        background: red;
-      }
     }
 
   }

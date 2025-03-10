@@ -1,39 +1,16 @@
 
-<!--   <div
-    #cardElement
-    appHammerSwipe
-    (swipeLeft)="onSwipeLeft($event)"
-    (swipeRight)="onSwipeRight($event)"
-    class="container">
-    <ion-list
-      [ngClass]="setProfileListStyle(profileToView)">
-      <app-profile-slider
-        [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
-        [profile]="profile"
-        [pageName]="'discover'">
-      </app-profile-slider>
-
-      <div [ngClass]="setProfileDetailsStyle(profileToView)">
-        <app-profile-viewer-description >
-        </app-profile-viewer-description>
-      </div>
-    </ion-list>
-</div>
- -->
-
 <div
-#cardElement
-appHammerSwipe
-(swipeLeft)="onSwipeLeft($event)"
-(swipeRight)="onSwipeRight($event)"
-class="container">
-<!-- <app-profile-viewer-description >
-</app-profile-viewer-description> -->
-  <app-profile-content
-
-  [profile]="profile"
-  [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
-  ></app-profile-content>
+  #cardElement
+  appHammerSwipe
+  (swipeLeft)="onSwipeLeft($event)"
+  (swipeRight)="onSwipeRight($event)"
+  [ngClass]=" disableHammerSwiper(profileToView)">
+   <app-profile-content
+    [profile]="profile"
+    [profileToView]="profile.user_id ===
+        profileToView?.profile?.user_id ?
+        profileToView :
+        null">
+    </app-profile-content>
 </div>
-
 

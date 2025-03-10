@@ -1,52 +1,6 @@
-/* .container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  transition: all 0.3s ease;
+.hammer-swiper-container {
 
-  .profile-details-list {
-
-      &__enable-scroll {
-       height: 100%;
-       overflow-y: auto;
-
-      }
-
-      &__disable-scroll {
-          overflow: hidden;
-      }
-
-    .details {
-      transform: translateX(-100%);
-      transition: all .3s ease-in-out;
-      height: 0%;
-        &__enable {
-          transform: translateX(0%);
-          padding-bottom: 14rem;
-          height: 100%;
-
-        }
-
-        &__disable {
-          transform: translateX(-100%);
-
-        }
-    }
+  &__disable-hammer-swipe {
+    pointer-events: none;
   }
-}
- */
-
-.container {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden; /* Prevent content from overflowing the container */
-  transition: all 0.3s ease; /* Add transition for smooth effect */
 }

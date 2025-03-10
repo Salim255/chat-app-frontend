@@ -29,6 +29,9 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
     scrollPosition: number = 0;  // This will track the scroll position
 
     discoverProfileToggleSubscription!: Subscription;
+
+
+    isDisableHammerSwipe: boolean = true;
     constructor(
       private discoverService: DiscoverService,
       ) {}
@@ -40,6 +43,12 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
     }
 
 
+    setIsDisableHammerSwipe(profileToView:  DisableProfileSwipe| null ): boolean {
+      if ( (this.profile.user_id === profileToView?.profile?.user_id ) &&  profileToView.disableSwipe) {
+        return true;
+      }
+      return false
+    }
 
     ngAfterViewInit() {
       // Ensure the list is accessed after view initialization
@@ -50,22 +59,22 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
 
     }
 
-    setProfileListStyle(isSwipeDisabled: DisableProfileSwipe | null): string {
-      if (!isSwipeDisabled || this.profile?.user_id !== isSwipeDisabled.profile.user_id) {
-        return 'profile-details-list';  // Return the default class if the condition doesn't match
+    disableHammerSwiper(profileToView: DisableProfileSwipe | null): string {
+      if (!profileToView || this.profile?.user_id !== profileToView.profile.user_id) {
+        return 'hammer-swiper-container ';  // Return the default class if the condition doesn't match
       }
-      console.log("hell ptof", isSwipeDisabled);
-      if (isSwipeDisabled.disableSwipe) {
-        return 'profile-details-list profile-details-list__enable-scroll';
+     // console.log("hell ptof", profileToView);
+      if (profileToView.disableSwipe) {
+        return 'hammer-swiper-container  hammer-swiper-container__disable-hammer-swipe';
       } else {
 
-        return 'profile-details-list profile-details-list__disable-scroll ';
+        return 'hammer-swiper-container ';
       }
     }
 
     // Method to handle scroll event
     onScroll(event: any): void {
-      console.log(this.scrollPosition, "hello scoll postion")
+     // console.log(this.scrollPosition, "hello scoll postion")
       if (event.target.scrollTop !== 0) {
         //this.scrollPosition = event.target.scrollTop;  // Track scroll position when it's not at the top
       }

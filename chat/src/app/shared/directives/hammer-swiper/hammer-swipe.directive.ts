@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostListener, Output, EventEmitter, Input } from '@angular/core';
-
+import { Directive, ElementRef, HostListener, Output, EventEmitter, Input, SimpleChanges, OnChanges } from '@angular/core';
+import * as Hammer from 'hammerjs';
 @Directive({
   selector: '[appHammerSwipe]',
   standalone: false
@@ -18,12 +18,16 @@ export class HammerSwipeDirective {
   private isHorizontalSwipe: boolean = false;
   private isAnimating: boolean = false;
   private resetProfileTimer: any;
+  private hammerInstance: HammerManager | null = null;
+  constructor(private el: ElementRef) {
+    // Initialize Hammer instance
+   this.hammerInstance =  new Hammer(this.el.nativeElement);
+  }
 
-  constructor(private el: ElementRef) {}
 
   @HostListener('panstart', ['$event'])
   onPanStart(event: any): void {
-    //console.log(event, "Hello start")
+    console.log(event, "Hello start")
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
 
@@ -33,16 +37,16 @@ export class HammerSwipeDirective {
       this.isSwiping = true;  // Start swipe
       //console.log("Swiping")
     } else {
-      /* To enable later */
-      //this.isHorizontalSwipe = false;
-      //this.isScrolling = true;  // Enable vertical scrolling
+
+      this.isHorizontalSwipe = false;
+      this.isScrolling = true;  // Enable vertical scrolling
      // console.log("Scolling")
     }
   }
 
   @HostListener('pan', ['$event'])
   onPan(event: any): void {
-    //console.log("Panning")
+    console.log("Panning")
     const element = this.el.nativeElement;
     if (!element) return;
    /*  if (this.isSwiping) {
@@ -61,7 +65,7 @@ export class HammerSwipeDirective {
 
   @HostListener('panend', ['$event'])
   onPanEnd(event: any): void {
-   // console.log(event, 'enendndndnd')
+    console.log(event, 'enendndndnd')
     this.isSwiping = false;
 
     const threshold = window.innerWidth / 4;
@@ -107,11 +111,9 @@ export class HammerSwipeDirective {
     const cardWidth = swiperContainer?.clientWidth;
     const cardHeight = swiperContainer?.clientHeight;
     const clientY = event.clientY;
-    const clientX = event.clientX;
 
     if (!cardWidth  || !cardHeight) return;
 
-    const cardCenter = cardWidth / 2;
     const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
 
     // Check if click is in the last quarter of the card
@@ -120,7 +122,6 @@ export class HammerSwipeDirective {
         this.profilePreview.emit(); // Trigger profile preview
         return; // Exit to avoid sliding action
     }
-    ( clientX < cardCenter) ? this.slideLeft.emit(): this.slideRight.emit() ;
   }
 
 

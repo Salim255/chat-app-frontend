@@ -25,6 +25,7 @@ import { NameAgeComponent } from "./components/profile/profile-coordination/name
 import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.directive";
 import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.directive";
 
+
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   declarations: [
@@ -44,7 +45,6 @@ import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.
     NameAgeComponent,
     HammerSwipeDirective,
     CustomSwiperDirective
-
    ],
   exports: [
     ActionComponent,
