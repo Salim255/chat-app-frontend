@@ -1,24 +1,21 @@
 
 ion-grid {
   background: var(--ion-background-color-2);
-
   ion-row:first-child {
-    height: 100%;
+    margin-bottom: .2rem;
   }
+
+  .profile-details {
+    &__expand {
+     transition: all 0.5s ease-in-out;
+     transform: translateX(0);
+    }
+    &__collapse {
+       max-height: 0;
+       transition: all 0.5s ease-in-out;
+       transform: translateX(-120%);
+    }
+ }
 }
 
-.profile-details {
-   &__expand {
-    overflow: hidden;
-    transition: all 0.5s ease-in-out, opacity 0.3s ease-in-out;
-    transform: translateX(0);
-   }
-
-   &__collapse {
-      max-height: 0;
-      overflow: hidden;
-      transition: all 0.5s ease-in-out, opacity 0.3s ease-in-out;
-      transform: translateX(-120%);
-   }
-}
 

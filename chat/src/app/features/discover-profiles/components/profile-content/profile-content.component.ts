@@ -19,6 +19,9 @@ export class ProfileContentComponent implements OnChanges{
     //Add '${implements OnChanges}' to the class.
     console.log("hello")
   }
+  testconst() {
+    console.log("Hello coentner")
+  }
 
   onCollapseProfileDetails(profileToView: DisableProfileSwipe | null) {
     if ( (this.profile.user_id === profileToView?.profile?.user_id ) &&  profileToView.disableSwipe) {

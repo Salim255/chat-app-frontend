@@ -1,5 +1,8 @@
 //
 .swiper-container {
+  overflow: hidden;
+  height: 100%;
+
   position: relative;
   width: 100%;
   transition: all 1s ease-in-out forwards ;
@@ -16,24 +19,25 @@
   }
 
   ion-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 100%;
-    width: 100%;
-    padding: 0;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     margin: 0;
-
+    height: 100%;
+    padding: 0;
     box-shadow: none ;
     --ion-box-shadow: none;
+
     ion-card-content {
       height: 100%;
-      width: 100%;
-      padding: 0;
       margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      position: relative;
       .swiper-pagination {
         position: absolute;
         top: 2%;
@@ -61,24 +65,20 @@
 
       .profile-img {
         width: 100%;
-       // height: 100%;
         border-radius: 10px;
         object-fit: cover;
-        //position: relative;
+        object-position: top;
         transition: all .3s ease-out;
-        &__preview-disabled{
-          transition: all .3s ease-out;
+        width: 100%;
+        height: 100%;
+
+         &__preview-disabled {
            height: 72vh;
         }
-        &__preview-enabled{
-          transition: all .3s ease-out;
+        &__preview-enabled {
           height: 60vh;
+
         }
-       /*  &__default {
-          height: 4rem;
-          width: 4rem;
-          border-radius: 50%;
-        } */
       }
 
       .profile-summary {
@@ -98,7 +98,8 @@
         width: 100%;
         height: 40%;
         transform: translate(-50, 0);
-
+        //position: relative;
+        height: 40%;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
         display: flex;
@@ -127,12 +128,12 @@
 @keyframes showAnimation {
   0% {
     opacity: 0;
-    transform: translateY(-120%);
+    transform: translateY(-100%);
   }
 
   50% {
     opacity: 0.5;
-    transform: translateY(-20%);
+    transform: translateY(-30%);
   }
   100% {
     opacity: 1;
@@ -147,11 +148,12 @@
   }
   50% {
     opacity: 0.5;
-    transform: translateY(-60%);
+    transform: translateY(-40%);
   }
   100% {
     opacity: 0;
-    transform: translateY(-120%);
+    pointer-events: none;
+    transform: translateY(-100%);
 
   }
 }

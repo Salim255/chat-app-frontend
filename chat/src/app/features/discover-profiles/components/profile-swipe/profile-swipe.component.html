@@ -1,23 +1,30 @@
-<ion-grid>
-    <ion-row>
-      <ion-col>
-        <div
-        #cardElement
-        appHammerSwipe
-        (swipeLeft)="onSwipeLeft($event)"
-        (swipeRight)="onSwipeRight($event)"
-        [ngClass]=" disableHammerSwiper(profileToView)">
-         <app-profile-content
+
+<div
+  #cardElement
+  tabindex="0"
+  appHammerSwipe
+  (swipeLeft)="onSwipeLeft($event)"
+  (swipeRight)="onSwipeRight($event)"
+  [ngClass]=" disableHammerSwiper(profileToView)">
+  <app-profile-content
+    [profile]="profile"
+    [profileToView]="profile.user_id ===
+        profileToView?.profile?.user_id ?
+        profileToView :
+        null">
+  </app-profile-content>
+</div>
+
+
+<!-- <div *ngIf="profile.user_id ===
+profileToView?.profile?.user_id &&
+profileToView?.disableSwipe ">
+  <app-profile-content
+         (click)="testin()"
           [profile]="profile"
           [profileToView]="profile.user_id ===
               profileToView?.profile?.user_id ?
               profileToView :
               null">
-          </app-profile-content>
-        </div>
-      </ion-col>
-    </ion-row>
-</ion-grid>
-
-
-
+   </app-profile-content>
+</div> -->

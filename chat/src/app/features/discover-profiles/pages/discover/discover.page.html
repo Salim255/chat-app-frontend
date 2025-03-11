@@ -1,31 +1,25 @@
-<app-header [pageName]="discoverToggleStatus ?
+ <app-header [pageName]="discoverToggleStatus ?
 'discover-viewer': 'discover'"
 (closeProfileViewer)="closeProfileViewer()" >
 </app-header>
 
-<ion-content #content fullscreen="true" *ngIf="isConnected" >
-  <ion-grid>
-      <ion-row *ngIf="membersList.length > 0; else default" >
-      <ion-col size="12"  >
-        <ng-container *ngFor="let item of membersList;  let index = index; trackBy: trackById ">
-          <div class="profile-viewer">
-            <app-profile-swipe   [profile]="item"
-            [profileToView]="profileToView?.profile?.user_id === item.user_id ? profileToView: null ">
-            </app-profile-swipe>
-          </div>
-        </ng-container>
-      </ion-col>
-    </ion-row>
+<ion-content #content fullscreen="true" *ngIf="isConnected" scrollY="true" forceOverscroll="false" >
+  <ng-container *ngIf="membersList.length > 0; else default" >
+    <div
+      class="profile-viewer"
+      *ngFor="let item of membersList;  let i = index; trackBy: trackById"
+      [style.z-index]="100 - i">
+      <app-profile-swipe   [profile]="item"
+      [profileToView]="profileToView?.profile?.user_id === item.user_id ? profileToView: null ">
+      </app-profile-swipe>
+    </div>
+  </ng-container>
 
-    <!-- Place holder  -->
-    <ng-template #default>
-      <ion-row  class="place-holder">
-        <ion-col>
-            <app-place-holder [pageName]="'discover'"></app-place-holder>
-        </ion-col>
-      </ion-row>
-    </ng-template>
-  </ion-grid>
+  <ng-template #default>
+  <!--   <div  class="place-holder">
+      <app-place-holder [pageName]="'discover'"></app-place-holder>
+    </div> -->
+  </ng-template>
 </ion-content>
 
 <ion-footer  *ngIf="showTabs" >

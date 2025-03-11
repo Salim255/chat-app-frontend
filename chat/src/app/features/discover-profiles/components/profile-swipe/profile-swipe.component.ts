@@ -42,7 +42,9 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
       this.profileToView
     }
 
-
+    testin(){
+      console.log("testing😍😍😍😍")
+    }
     setIsDisableHammerSwipe(profileToView:  DisableProfileSwipe| null ): boolean {
       if ( (this.profile.user_id === profileToView?.profile?.user_id ) &&  profileToView.disableSwipe) {
         return true;
