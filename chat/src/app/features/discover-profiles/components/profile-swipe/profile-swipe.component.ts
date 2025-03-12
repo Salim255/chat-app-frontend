@@ -37,14 +37,13 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
       ) {}
 
     ngOnChanges(changes: SimpleChanges): void {
+        if (changes['profile']) {
+          console.log(this.profile, "hello");
+        }
 
-      console.log(this.profile, "hello");
       this.profileToView
     }
 
-    testin(){
-      console.log("testing😍😍😍😍")
-    }
     setIsDisableHammerSwipe(profileToView:  DisableProfileSwipe| null ): boolean {
       if ( (this.profile.user_id === profileToView?.profile?.user_id ) &&  profileToView.disableSwipe) {
         return true;
@@ -124,36 +123,6 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
       element.style.transform = `translateX(${translateX}) rotate(${direction === "left" ? "-5deg" : "5deg"})` ;
     }
 
-   /*  onPan(event: any) {
-      const element = this.cardElement.nativeElement as HTMLElement | null;
-      if (!element) return;
-      if (this.isSwiping) {
-        this.currentTransformX = this.swipeStartPosition + event.deltaX;
-        element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
-      }
-    } */
-
-    // Start tracking the swipe position when pan starts
-   /*  onPanStart (event: any) {
-      this.isSwiping = true;
-      this.swipeStartPosition = this.currentTransformX;
-    }
- */
-    // End the swipe pan is completed
-    /* onPanEnd(event: any){
-      this.isSwiping = false;
-      // If the swipe is greater than 25% of the screen width, trigger the swipe actions
-      const threshold = window.innerWidth / 4 ;
-      if (this.currentTransformX > threshold) {
-        this.onSwipeRight(event);
-      }  else if (this.currentTransformX < -threshold) {
-        this.onSwipeLeft(event);
-      } else  {
-        // Reset position if swipe was not significant enough
-        this.resetProfilePosition()
-      }
-    } */
-
     // Treat like profile
     private handleLikeProfile(likedProfile: Member ) {
       console.log(likedProfile, "hello from herre")
@@ -182,6 +151,7 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
 
     // Treat dislike profile
     private handleDislikeProfile() {
+      this.discoverService.triggerDislikeProfile
       this.resetProfilePosition();
     }
 

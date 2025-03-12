@@ -9,6 +9,8 @@ import { DiscoverTabsComponent } from "./components/discover-tabs/discover-tabs.
 import { ProfileViewerDescriptionComponent } from "./components/profile-viewer-description/profile-viewer-description.component";
 import { ProfileViewerFeatureModule } from "../profile-viewer/profile-viewer-feature.module";
 import { ProfileContentComponent } from "./components/profile-content/profile-content.component";
+import { InteractionBtnsComponent } from "./components/interaction-btns/interaction-btns.component";
+import { ActionBtnComponent } from "./components/interaction-btns/action-btn/action-btn.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
@@ -17,13 +19,17 @@ import { ProfileContentComponent } from "./components/profile-content/profile-co
     ProfileSwipeComponent,
     DiscoverTabsComponent,
     ProfileViewerDescriptionComponent,
-    ProfileContentComponent
+    ProfileContentComponent,
+    InteractionBtnsComponent,
+    ActionBtnComponent
    ],
   declarations: [
     ProfileSwipeComponent,
     DiscoverTabsComponent,
     ProfileViewerDescriptionComponent,
-    ProfileContentComponent
+    ProfileContentComponent,
+    InteractionBtnsComponent,
+    ActionBtnComponent
    ]
 })
 

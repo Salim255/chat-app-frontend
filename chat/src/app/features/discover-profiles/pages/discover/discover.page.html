@@ -1,6 +1,6 @@
  <app-header [pageName]="discoverToggleStatus ?
 'discover-viewer': 'discover'"
-(closeProfileViewer)="closeProfileViewer()" >
+ >
 </app-header>
 
 <ion-content #content fullscreen="true" *ngIf="isConnected" scrollY="true" forceOverscroll="false" >
@@ -12,27 +12,28 @@
       <app-profile-swipe   [profile]="item"
       [profileToView]="profileToView?.profile?.user_id === item.user_id ? profileToView: null ">
       </app-profile-swipe>
+
     </div>
   </ng-container>
 
   <ng-template #default>
-  <!--   <div  class="place-holder">
+   <div  class="place-holder">
       <app-place-holder [pageName]="'discover'"></app-place-holder>
-    </div> -->
+    </div>
   </ng-template>
 </ion-content>
 
 <ion-footer  *ngIf="showTabs" >
-<ion-grid  >
-  <ion-row>
-    <ion-col>
-      <app-interaction-btns ></app-interaction-btns>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-        <app-discover-tabs *ngIf="!discoverToggleStatus"></app-discover-tabs>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+  <ion-grid  >
+    <ion-row  class="interaction-btns">
+      <ion-col>
+        <app-interaction-btns ></app-interaction-btns>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+          <app-discover-tabs *ngIf="!discoverToggleStatus"></app-discover-tabs>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-footer>

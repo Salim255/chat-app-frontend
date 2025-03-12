@@ -42,7 +42,6 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.currentIndex = 0;
-    console.log(this.currentIndex)
     this.viewerProfileIsActive =  this.profileToView?.disableSwipe ?? false;
   }
 

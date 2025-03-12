@@ -1,21 +1,19 @@
 
 ion-grid {
-  background: var(--ion-background-color-2);
-  ion-row:first-child {
-    margin-bottom: .2rem;
-  }
-
   .profile-details {
     &__expand {
      transition: all 0.5s ease-in-out;
      transform: translateX(0);
+     background: var(--ion-background-color-2);
     }
     &__collapse {
        max-height: 0;
        transition: all 0.5s ease-in-out;
        transform: translateX(-120%);
+       background-color: transparent;
     }
  }
 }
+
 
 

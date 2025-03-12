@@ -12,6 +12,8 @@ export type DisableProfileSwipe ={
   profile: Member;
 }
 
+export type  InteractionType =  'like' | 'dislike' | 'undo' | 'super-like' | 'message';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,6 +26,8 @@ export class DiscoverService {
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty');
   private discoverProfileToggleSource = new BehaviorSubject < DisableProfileSwipe | null > (null)
+
+  private profileInteractionTypeSource = new  BehaviorSubject <InteractionType | null > (null);
 
   constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
@@ -57,6 +61,18 @@ export class DiscoverService {
           this.itsMatchModalService.openItsMatchModal(matchedData);
         }
     }))
+  }
+
+  get getProfileInteractionType() {
+    return this.profileInteractionTypeSource.asObservable()
+  }
+  setProfileInteractionType(interActionType: InteractionType) {
+    this.profileInteractionTypeSource.next(interActionType)
+  }
+
+
+  disLikeProfile() {
+
   }
 
   setDisplayedProfile (data: Member) {
@@ -97,6 +113,8 @@ export class DiscoverService {
   get getDisLikeProfileState() {
     return this.likeProfileSource.asObservable()
   }
+
+
 
   get getDisplayedProfile() {
       return this.displayedProfileSource.asObservable();
