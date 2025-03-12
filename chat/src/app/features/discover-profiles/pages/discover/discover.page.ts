@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription} from 'rxjs';
+import { Subscription, take} from 'rxjs';
 import {  DisableProfileSwipe, DiscoverService, InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
@@ -57,14 +57,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   get topProfile() {
-    return this.membersList.length > 0 ? this.membersList[this.membersList.length - 1] : null;
+    return this.membersList.length > 0 ? this.membersList[0] : null;
   }
 
   isSwiping: boolean = false;
-
-
-
-
 
   //
   trackById(i: number, item: Member): number {
@@ -92,7 +88,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
       getProfileInteractionType.subscribe(interActionType => {
 
         console.log(interActionType, "hello")
-
         interActionType  && this.handleProfileInteraction(interActionType)
       })
   }
@@ -104,7 +99,23 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   handleLikeProfile() {
       console.log("hello from handel like")
+      const profile = this.topProfile ?? null;
+      console.log(profile, "like proifle")
+      if ( profile )   {
+      this.discoverService.likeProfile(profile)
+      .pipe(take(1))
+      .subscribe({
+          next:(res) => {
+            console.log(res, "hello result")
+            this.removeTopProfile()
+          },
+          error: () => {
+            console.log('Error 😇😇😇')
+          }
+        });
+      }
   }
+
   removeTopProfile() {
     if (this.membersList.length > 0) {
       console.log("Hello from remove last before", this.membersList)
