@@ -27,7 +27,7 @@
     height: 4.5rem;
     width: 4.5rem;
     ion-icon {
-      height: rem;
+      height: 3rem;
       width: 3rem;
       transform: translate(-50%, -50%);
     }
@@ -40,6 +40,8 @@
         transform: translate(-50%, -50%);
       }
     }
+
+
   }
 
   &__boost, &__stars , &__undo  {

@@ -67,6 +67,7 @@ export class DiscoverService {
     return this.profileInteractionTypeSource.asObservable()
   }
   setProfileInteractionType(interActionType: InteractionType) {
+    console.log("hello proifk", interActionType)
     this.profileInteractionTypeSource.next(interActionType)
   }
 

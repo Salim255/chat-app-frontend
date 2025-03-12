@@ -11,7 +11,7 @@ import { ProfileViewerFeatureModule } from "../profile-viewer/profile-viewer-fea
 import { ProfileContentComponent } from "./components/profile-content/profile-content.component";
 import { InteractionBtnsComponent } from "./components/interaction-btns/interaction-btns.component";
 import { ActionBtnComponent } from "./components/interaction-btns/action-btn/action-btn.component";
-
+import { DiscoverHeaderComponent } from "./components/profile-header/discover-header.component";
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
   imports: [ IonicModule, CommonModule, FormsModule, SharedModule,  ProfileViewerFeatureModule],
@@ -21,7 +21,8 @@ import { ActionBtnComponent } from "./components/interaction-btns/action-btn/act
     ProfileViewerDescriptionComponent,
     ProfileContentComponent,
     InteractionBtnsComponent,
-    ActionBtnComponent
+    ActionBtnComponent,
+    DiscoverHeaderComponent
    ],
   declarations: [
     ProfileSwipeComponent,
@@ -29,7 +30,8 @@ import { ActionBtnComponent } from "./components/interaction-btns/action-btn/act
     ProfileViewerDescriptionComponent,
     ProfileContentComponent,
     InteractionBtnsComponent,
-    ActionBtnComponent
+    ActionBtnComponent,
+    DiscoverHeaderComponent
    ]
 })
 

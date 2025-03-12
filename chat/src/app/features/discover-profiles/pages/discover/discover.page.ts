@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { Subscription, take} from 'rxjs';
-import {  DisableProfileSwipe, DiscoverService, InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
+import { pipe, Subscription, take} from 'rxjs';
+import { DisableProfileSwipe, DiscoverService, InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { Member } from 'src/app/shared/interfaces/member.interface';
@@ -26,13 +26,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   isConnected = signal < boolean > (false);
   showTabs = signal < boolean > (false);
-
-  membersList = signal < Member[] > ([]);
-  discoverToggleStatus = signal <boolean | null > (true);
-  profileToView = signal <DisableProfileSwipe | null> (null);
-
+  discoverToggleStatus = signal <boolean | null > (null);
   animationClass= signal < string > ('');
   isAnimating = signal < boolean > (false);
+
+  membersList = signal < Member[] > ([]);
+  profileToView = signal <DisableProfileSwipe | null> (null);
 
   private membersSource!: Subscription;
   private netWorkSubscription!: Subscription;
@@ -56,6 +55,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.subscribeToDiscoverProfileToggle();
   }
 
+  ionViewWillEnter () {
+    this.showTabs.set(true) ;
+    this.discoverService.fetchUsers().subscribe();
+    this.accountService.fetchAccount().subscribe();
+    this.subscribeToInteraction();
+  }
+
   get topProfile () {
     return this.membersList().length > 0 ? this.membersList()[0] : null;
   }
@@ -68,16 +74,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
    this.tabsService.selectedTab('account');
   }
 
-  ionViewWillEnter () {
-    this.showTabs.set(true) ;
-    this.discoverService.fetchUsers().subscribe();
-    this.accountService.fetchAccount().subscribe();
-    this.subscribeToInteraction();
-  }
-
   private subscribeToInteraction() {
     this.listenToProfileInteractionSource = this.discoverService.
-      getProfileInteractionType.subscribe(interActionType => {
+      getProfileInteractionType
+      .subscribe(interActionType => {
         interActionType  && this.handleProfileInteraction(interActionType)
       })
   }
@@ -88,7 +88,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   handleDislikeProfile() {
-
+    console.log(this.isAnimating(), "hello status")
    if (this.isAnimating()) return;
     this.setSwipeAnimationStyle(SwipeDirection['swipe-left']);
 
@@ -105,7 +105,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   handleLikeProfile() {
-
     if (this.isAnimating()) return;
     this.isAnimating.set(true);
     this.setSwipeAnimationStyle(SwipeDirection['swipe-right']);
@@ -185,6 +184,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   ionViewWillLeave() {
     this.showTabs.set(false);
+    this.netWorkSubscription?.unsubscribe();
+    this.membersSource?.unsubscribe();
+    this.profileToRemoveSubscription?.unsubscribe();
+    this.discoverProfileToggleSubscription?.unsubscribe();
+    this.listenToProfileInteractionSource?.unsubscribe();
   }
 
   ngOnDestroy () {
