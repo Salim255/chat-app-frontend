@@ -8,6 +8,7 @@
     <div
       class="profile-viewer"
       *ngFor="let item of membersList;  let i = index; trackBy: trackById"
+      [ngClass]="i === 0 ? animationClass: ''"
       [style.z-index]="100 - i">
       <app-profile-swipe   [profile]="item"
       [profileToView]="profileToView?.profile?.user_id === item.user_id ? profileToView: null ">

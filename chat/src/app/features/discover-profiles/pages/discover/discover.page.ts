@@ -29,6 +29,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   showTabs: boolean = false;
 
+  animationClass: string = "";
+
   private membersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
@@ -64,7 +66,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   //
   trackById(i: number, item: Member): number {
-    console.log(item.user_id)
     return item.user_id; // Ensure user_id is unique
   }
 
@@ -93,12 +94,20 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private handleProfileInteraction(actionType: InteractionType) {
-      if (actionType === 'dislike')  this.removeTopProfile();
-      if (actionType === 'like')  this.handleLikeProfile()
+    if (actionType === 'dislike') this.handleDislikeProfile();
+    if (actionType === 'like') this.handleLikeProfile();
   }
 
+
+  handleDislikeProfile() {
+   this.animationClass = 'swipe-left'; // Add animation class
+   setTimeout(() => {
+      console.log('hello',this.animationClass);
+      this.removeTopProfile();
+      this.animationClass = ''; // Reset the animation class
+   }, 2000)
+  }
   handleLikeProfile() {
-      console.log("hello from handel like")
       const profile = this.topProfile ?? null;
       console.log(profile, "like proifle")
       if ( profile )   {
