@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { Subscription, take} from 'rxjs';
 import {  DisableProfileSwipe, DiscoverService, InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
 import { NetworkService } from 'src/app/core/services/network/network.service';
@@ -7,12 +7,16 @@ import { Member } from 'src/app/shared/interfaces/member.interface';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
 
+enum SwipeDirection {
+  'swipe-left' =  'swipe-left',
+  'swipe-right' = 'swipe-right'
+}
 
 @Component({
-    selector: 'app-discover',
-    templateUrl: './discover.page.html',
-    styleUrls: ['./discover.page.scss'],
-    standalone: false
+  selector: 'app-discover',
+  templateUrl: './discover.page.html',
+  styleUrls: ['./discover.page.scss'],
+  standalone: false
 })
 
 export class DiscoverPage implements OnInit, OnDestroy {
@@ -20,75 +24,60 @@ export class DiscoverPage implements OnInit, OnDestroy {
   @ViewChild(IonContent, { static: false }) content!: IonContent;
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
 
-  isConnected: boolean= true;
-  membersList: Member [] = [];
-  viewedProfile: Member | null = null;
-  transform: string | null = null;
-  discoverToggleStatus: boolean | null = true;
-  profileToView: DisableProfileSwipe | null = null;
+  isConnected = signal < boolean > (false);
+  showTabs = signal < boolean > (false);
 
-  showTabs: boolean = false;
+  membersList = signal < Member[] > ([]);
+  discoverToggleStatus = signal <boolean | null > (true);
+  profileToView = signal <DisableProfileSwipe | null> (null);
 
-  animationClass: string = "";
+  animationClass= signal < string > ('');
+  isAnimating = signal < boolean > (false);
 
   private membersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
   private discoverProfileToggleSubscription!: Subscription;
-
   private listenToProfileInteractionSource!: Subscription;
+
   constructor (
      private discoverService: DiscoverService,
      private networkService:  NetworkService,
      private accountService: AccountService,
      private tabsService: TabsService
-    ) {}
+    ) {
+      this.networkService.getNetworkStatus();
+    }
 
   ngOnInit () {
-    this.showTabs = true;
+    this.showTabs.set(true) ;
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
     this.subscribeToDiscoverProfileToggle();
-
   }
 
-  ionViewDidEnter() {
-    //this.showTabs = true;
-    console.log("Hello Salim");
-
+  get topProfile () {
+    return this.membersList().length > 0 ? this.membersList()[0] : null;
   }
 
-  get topProfile() {
-    return this.membersList.length > 0 ? this.membersList[0] : null;
-  }
-
-  isSwiping: boolean = false;
-
-  //
   trackById(i: number, item: Member): number {
     return item.user_id; // Ensure user_id is unique
   }
 
-  selectTab() {
-    console.log("hello from dicover")
+  selectTab () {
    this.tabsService.selectedTab('account');
   }
 
   ionViewWillEnter () {
-    this.showTabs = true;
+    this.showTabs.set(true) ;
     this.discoverService.fetchUsers().subscribe();
     this.accountService.fetchAccount().subscribe();
     this.subscribeToInteraction();
-  }
-  ionViewWillLeave() {
-    this.showTabs = false;
   }
 
   private subscribeToInteraction() {
     this.listenToProfileInteractionSource = this.discoverService.
       getProfileInteractionType.subscribe(interActionType => {
-
-        console.log(interActionType, "hello")
         interActionType  && this.handleProfileInteraction(interActionType)
       })
   }
@@ -98,73 +87,89 @@ export class DiscoverPage implements OnInit, OnDestroy {
     if (actionType === 'like') this.handleLikeProfile();
   }
 
-
   handleDislikeProfile() {
-   this.animationClass = 'swipe-left'; // Add animation class
+
+   if (this.isAnimating()) return;
+    this.setSwipeAnimationStyle(SwipeDirection['swipe-left']);
+
+    this.isAnimating.set(true) ;
    setTimeout(() => {
-      console.log('hello',this.animationClass);
       this.removeTopProfile();
-      this.animationClass = ''; // Reset the animation class
-   }, 2000)
+      this.animationClass.set(''); // Reset the animation class
+      this.isAnimating.set(false) ;
+   }, 500);
   }
+
+  private setSwipeAnimationStyle (swipeDirection: SwipeDirection ) {
+    this.animationClass.set(swipeDirection);
+  }
+
   handleLikeProfile() {
-      const profile = this.topProfile ?? null;
-      console.log(profile, "like proifle")
-      if ( profile )   {
-      this.discoverService.likeProfile(profile)
-      .pipe(take(1))
-      .subscribe({
-          next:(res) => {
-            console.log(res, "hello result")
-            this.removeTopProfile()
-          },
-          error: () => {
-            console.log('Error 😇😇😇')
-          }
-        });
-      }
+
+    if (this.isAnimating()) return;
+    this.isAnimating.set(true);
+    this.setSwipeAnimationStyle(SwipeDirection['swipe-right']);
+    const profile = this.topProfile ?? null;
+    if (profile ) {
+    this.discoverService.likeProfile(profile)
+    .pipe(take(1))
+    .subscribe({
+        next:(res) => {
+          this.removeTopProfile();
+          this.isAnimating.set(false) ;
+        },
+        error: () => {
+          console.log('Error 😇😇😇');
+          this.isAnimating.set(false) ;
+        }
+      });
+    }
+
+    setTimeout(() => {
+      this.removeTopProfile();
+      this.animationClass.set(''); // Reset the animation class
+   }, 500);
   }
 
-  removeTopProfile() {
-    if (this.membersList.length > 0) {
-      console.log("Hello from remove last before", this.membersList)
+  private removeTopProfile() {
+    if (this.membersList().length > 0) {
+      this.membersList.update(members => {
+        if ( members.length > 0 ) {
+          members.shift();
+        }
+        return members;
+      })
+    }
 
-      this.membersList = this.membersList.slice(1);
-
-      if (this.membersList.length === 0) {
-        this.discoverService.fetchUsers().subscribe();
-      }
+    if (this.membersList().length === 0) {
+      this.discoverService.fetchUsers().subscribe();
     }
   }
 
   private subscribeToDiscoverProfileToggle(){
-    this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(data =>
-    {
+    this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus
+    .subscribe(data => {
+      this.discoverToggleStatus.set(data?.disableSwipe ? data.disableSwipe : null) ;
+      this.profileToView.set(data) ;
 
-      this.discoverToggleStatus = data?.disableSwipe ? data.disableSwipe : null;
-      this.profileToView = data;
-
-      if (!this.discoverToggleStatus && this.content) {
-
-          this.content.scrollToTop(500); // Scrolls back to the top in 500ms
+      if (!this.discoverToggleStatus() && this.content) {
+        this.content.scrollToTop(500); // Scrolls back to the top in 500ms
       }
     }
     )
   }
 
-
   private subscribeProfileToRemove() {
-    if (this.profileToRemoveSubscription && !this.profileToRemoveSubscription.closed)  {
-       this.profileToRemoveSubscription.unsubscribe();
-    }
-    this.profileToRemoveSubscription = this.discoverService.getProfileToRemoveId.subscribe(profileId => {
-      if (profileId !== null && profileId !== undefined) this.removeProfileFromList(profileId)
+    this.profileToRemoveSubscription = this.discoverService.getProfileToRemoveId
+    .subscribe(profileId => {
+      this.removeTopProfile();
     })
   }
 
   private subscribeNetwork() {
-    this.netWorkSubscription = this.networkService.getNetworkStatus().subscribe(isConnected => {
-      this.isConnected = isConnected;
+    this.netWorkSubscription = this.networkService.getNetworkStatus()
+    .subscribe(isConnected => {
+      this.isConnected.set(isConnected);
       if (isConnected) {
         this.loadForeignersList();
       }
@@ -172,24 +177,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private loadForeignersList(){
-    if (this.membersSource) {
-      this.membersSource.unsubscribe();
-    }
-    this.membersSource = this.discoverService.getNoConnectedFriendsArray.subscribe( (profiles )=> {
-      console.log( this.membersList, 'just befor 😍😍😍')
-      this.membersList =  [...profiles];
-
-
-      console.log(this.membersList, 'after🥰🥰🥰')
+    this.membersSource = this.discoverService.getNoConnectedFriendsArray
+    .subscribe( (profiles )=> {
+      this.membersList.set([...profiles]) ;
     });
   }
 
-  // Getter for the current profile
-  removeProfileFromList(profileId: number): void {
-    this.membersList = [...this.membersList.filter(profile => profile.user_id !== profileId)];
-
+  ionViewWillLeave() {
+    this.showTabs.set(false);
   }
-
 
   ngOnDestroy () {
     this.netWorkSubscription?.unsubscribe();
