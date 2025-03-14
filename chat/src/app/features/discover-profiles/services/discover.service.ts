@@ -32,7 +32,7 @@ export class DiscoverService {
   constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
   fetchUsers(){
-    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends/non-friends`)
     .pipe(
       tap((response) => {
         console.log(response.data, "hello from service")
@@ -70,7 +70,6 @@ export class DiscoverService {
     console.log("hello proifk", interActionType)
     this.profileInteractionTypeSource.next(interActionType)
   }
-
 
   disLikeProfile() {
 

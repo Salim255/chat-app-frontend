@@ -4,12 +4,8 @@ import { Observable } from "rxjs";
 import { AuthPost } from "src/app/core/interfaces/auth.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Router } from "@angular/router";
-// import { AuthMode } from "aws-sdk/clients/emr";
+import { AuthMode } from "src/app/core/services/auth/auth.service";
 
-export enum AuthMode {
-  SignIn = "sign-in",
-  Create = "create"
-}
 
 interface FormField {
   label: string;
@@ -38,7 +34,7 @@ interface UserInput {
 })
 
 export class FormComponent implements OnInit {
-  authMode: AuthMode | null = null;;
+  authMode: AuthMode | null = null;
   userInputs: UserInput = {};
   formFields: FormField[] = [];
 
@@ -54,12 +50,11 @@ export class FormComponent implements OnInit {
    }
 
   onSubmit(f: NgForm) {
-    if(!f.valid){
+    if(!f.valid || ! this.authMode ){
      return
     }
 
-    const mode = this.authMode === 'sign-in' ? 'login' : 'signup/createUser';
-    this.authService.authenticate(mode, this.userInputs)
+     this.authService.authenticate(this.authMode, this.userInputs )
     .subscribe({
      next: (res) => {
       f.reset();
@@ -81,7 +76,7 @@ export class FormComponent implements OnInit {
       { label: 'Password', id: 'password', name: 'password', model: 'password', type: 'password', required: true, email: false },
     ];
 
-    if (this.authMode === 'create') {
+    if (this.authMode === 'signup') {
 
     return [
             { label: 'First name', id: 'first_name', name: 'first_name', model: 'first_name', type: 'text', required: true, email: false },

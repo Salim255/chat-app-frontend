@@ -4,10 +4,19 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
-import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap, pipe } from 'rxjs';
 import { SocketIoService } from '../socket-io/socket-io.service';
+import { PrivatePublicKeys } from '../encryption/private-public-key';
 
-export type AuthMod = 'create' | 'sign-in';
+export enum AuthMode {
+  login = "login",
+  signup = "signup"
+}
+
+export interface AuthPostWithKeys extends AuthPost {
+  publicKey: string;
+  privateKey: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,17 +25,32 @@ export type AuthMod = 'create' | 'sign-in';
 export class AuthService implements OnDestroy {
   private ENV = environment;
   private user = new BehaviorSubject <User | null> (null);
-  private authModeSource = new BehaviorSubject < AuthMod | null> (null);
-  private locallyUserId: number | null =  null;
+  private authModeSource = new BehaviorSubject < AuthMode | null> (null);
 
   activeLogoutTimer: any;
 
-  constructor (private http: HttpClient, private socketIoService: SocketIoService ) {
+  constructor (
+    private http: HttpClient,
+    private socketIoService: SocketIoService ) { }
 
+    authenticate (mode: AuthMode,  userInput: AuthPost ) {
+    if (mode === AuthMode.signup && userInput.password) {
+
+      return from(PrivatePublicKeys.PrivatePublicKeys(userInput.password) ).pipe(
+        switchMap(({ publicKey,  privateKey }) => {
+          const userInputWithKeys: AuthPostWithKeys =
+           { publicKey, privateKey, ...userInput };
+           console.log('publick: ', publicKey, 'private: ', privateKey)
+           return this.authRequest(mode, userInputWithKeys);
+        })
+      )
+    } else {
+      return this.authRequest(mode, userInput)
+    }
   }
 
-  authenticate (mode: string, userInput: AuthPost) {
-      return this.http
+  private  authRequest( mode: AuthMode, userInput: AuthPost | AuthPostWithKeys) {
+    return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {
         this.setAuthData(response.data)
@@ -34,11 +58,11 @@ export class AuthService implements OnDestroy {
   }
 
   private setAuthData (authData: AuthResponse) {
-      const expirationTime = new Date(new Date().getTime() + +authData.expireIn);
-      let userId = authData.id;
-      const buildUser = new User(userId, authData.token, expirationTime);
-      this.user.next(buildUser);
-      this.storeAuthData(buildUser);
+    const expirationTime = new Date(new Date().getTime() + +authData.expireIn);
+    let userId = authData.id;
+    const buildUser = new User(userId, authData.token, expirationTime);
+    this.user.next(buildUser);
+    this.storeAuthData(buildUser);
   }
 
   private storeAuthData = async (dataToStore: User) => {
@@ -95,8 +119,6 @@ export class AuthService implements OnDestroy {
 
     this.user.next(null);
     this.removeStoredData();
-
-
   }
 
   autoLogin () {
@@ -171,13 +193,15 @@ export class AuthService implements OnDestroy {
     //return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData)
   }
 
-  setAuthMode(authMode: AuthMod ) {
+  setAuthMode(authMode: AuthMode ) {
     console.log(authMode)
       this.authModeSource.next(authMode);
   }
+
   get getAuthMode() {
     return this.authModeSource.asObservable();
   }
+
   ngOnDestroy () {
    if (this.activeLogoutTimer) {
     clearTimeout(this.activeLogoutTimer)
