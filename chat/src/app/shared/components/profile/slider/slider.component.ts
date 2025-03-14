@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, Signal, SimpleChanges, ViewChild } from "@angular/core";
 import { IonicSlides } from "@ionic/angular";
-import { Subscription } from "rxjs";
 import { Swiper } from "swiper/types";
-import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
+import { StringUtils } from "src/app/shared/utils/string-utils";
+import { Member } from "src/app/shared/interfaces/member.interface";
 
 type PageName = "discover" | "profile-viewer" ;
 
@@ -12,36 +13,61 @@ type PageName = "discover" | "profile-viewer" ;
     styleUrls: ["./slider.component.scss"],
     standalone: false
 })
-export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
+export class SliderComponent implements OnChanges, AfterViewInit {
   @Input() profile: any;
+  @Input() profileToView: DisableProfileSwipe | null = null;
   @Input() swipeDirection: any;
   @Input() pageName:  PageName | null = null;
+
+
   @ViewChild("cardElement", { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', {static: false} ) swiperContainer!: ElementRef;
 
   swiperModules= [IonicSlides];
-  userImages: string [] = []
-
-  private tapEventSource!: Subscription ;
-
   swiper!: Swiper; // Store Swiper instance
-
   swiperOptions = {
     pagination: { clickable: true },
     allowTouchMove: false,  // Disable Swiper's internal swipe handling
   };
 
-  constructor (private discoverService: DiscoverService) {}
+  viewerProfileIsActive: boolean = false ;
+  sliderHeight: string = ""
 
-  ngOnInit(): void {
-    //this.subscribeToTapEvent();
-    console.log(this.profile, "Hello profile")
-    this.setUserImages();
+  currentIndex: number = 0
+  currentImage: string | null = null;
+
+  constructor (
+    private discoverService: DiscoverService,
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.currentIndex = 0;
+    this.viewerProfileIsActive =  this.profileToView?.disableSwipe ?? false;
   }
+
   ngAfterViewInit(): void {
-    this.swiper = this.swiperContainer.nativeElement.swiper;
+    this.swiper = this.swiperContainer?.nativeElement.swiper;
   }
 
+  trackByIndex(index: number, _: any): number {
+    return index;
+  }
+
+  setUserImages (profile: Member) {
+ const imagesList =  [
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fHww',
+'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVvcGxlfGVufDB8fDB8fHww'
+    ]
+    return imagesList
+  /*   return  Array(2).fill(StringUtils.getAvatarUrl(profile.avatar)); */
+  }
 
   onSwipe(swipeDirection: string) {
      if (swipeDirection === 'right') {
@@ -53,68 +79,69 @@ export class SliderComponent implements OnInit, AfterViewInit, OnDestroy{
      }
   }
 
-  onProfileClick(event: MouseEvent) {
 
-    const clickedElement = event.target as HTMLElement;
-    console.log( clickedElement, clickedElement.children)
-
-
-    const clientX = event.clientX;
-    const clientY = event.clientY;
-
-    console.log(clientY , "hello ")
-    const cardWidth = this.swiperContainer.nativeElement.offsetWidth;
-    const cardHeight = this.swiperContainer.nativeElement.offsetHeight;
-
-    if (cardWidth === null || cardWidth === undefined || cardHeight === undefined || cardHeight === null) return;
-
-    const cardCenter = cardWidth / 2;
-    const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
-
-     // Check if click is in the last quarter of the card
-  if (clientY > lastQuarterY) {
-    this.onProfilePreview(); // Trigger profile preview
-    return; // Exit to avoid sliding action
-  }
-   ( clientX < cardCenter) ? this.slideLeft(): this.slideRight() ;
-  }
-
-  private onProfilePreview() {
-    this.discoverService.onDiscoverProfileToggle('expand')
-  }
-  private slideLeft() {
-    if (this.swiper) this.swiper.slidePrev();
-  }
-
-  private slideRight() {
-    if (this.swiper) this.swiper.slideNext()
-  }
-
-  private setUserImages (): void {
-    if (!this.profile) return;
-
-    if (this.profile.images?.length) {
-      this.userImages = this.profile.images;
-    } else  {
-      this.userImages.push(this.profile.avatar);
-      this.userImages.push(this.profile.avatar);
+  setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {
+    if (this.profile?.user_id !== profileToView?.profile.user_id)  return "profile-summary profile-summary__show";
+    if (!profileToView?.disableSwipe) {
+        return  "profile-summary profile-summary__show"
+    }  else {
+        return  "profile-summary profile-summary__hide"
     }
   }
 
-  setSliderHeight(pageName: PageName | null  ) {
-    if (!pageName) return ;
-    return  pageName === 'discover' ? "72vh" : "72vh"
-
-  }
-
-  ngOnDestroy(): void {
-    if (this.tapEventSource) {
-      this.tapEventSource.unsubscribe()
+ setSwiperContainerHeight(profileToView: DisableProfileSwipe | null ): string {
+    if (this.profile?.user_id !== profileToView?.profile.user_id)  return "swiper-container swiper-container__preview-disabled-height";
+    if (!profileToView?.disableSwipe) {
+        return  "swiper-container swiper-container__preview-disabled-height"
+    }  else {
+        return  "swiper-container swiper-container__preview-enabled-height"
     }
   }
 
-  onViewProfile() {
-    console.log('Hello profile to view')
+  setProfileImagesHeight(profileToView: DisableProfileSwipe | null) {
+  if (this.profile?.user_id !== profileToView?.profile.user_id)  return "profile-img  profile-img__preview-disabled";
+    if (!profileToView?.disableSwipe) {
+        return  "profile-img  profile-img__preview-disabled"
+    }  else {
+        return  "profile-img  profile-img__preview-enabled"
+    }
+}
+
+  onProfilePreview() {
+  console.log("From preview")
+    if (this.profileToView?.disableSwipe) return;
+    this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
+  }
+
+  slideLeft() {
+    console.log("From left")
+    this.slidePrev()
+  }
+
+  private slidePrev() {
+  if (this.currentIndex > 0) {
+    this.currentIndex = this.currentIndex - 1;
+    console.log(this.currentIndex)
+
+  } else {
+   // this.currentIndex = this.setUserImages(this.profile).length - 1; // Loop back to last image
+    console.log(this.currentIndex)
+  }
+}
+
+private slideNext() {
+  if (this.currentIndex <  this.setUserImages(this.profile).length - 1) {
+    this.currentIndex = this.currentIndex + 1;
+    console.log(this.currentIndex)
+
+  } else {
+    //this.currentIndex = 0; // Loop back to last image
+    console.log(this.currentIndex)
+  }
+}
+  slideRight() {
+    console.log("From right")
+    this.slideNext()
   }
 
 }

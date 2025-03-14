@@ -5,8 +5,7 @@ import { ProfileViewerService } from "src/app/features/profile-viewer/services/p
 import { Router } from "@angular/router";
 import { PhotoService, TakingPictureStatus } from "src/app/core/services/media/photo.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
-import { NavController } from "@ionic/angular";
-
+import { DisableProfileSwipe, DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
     selector: 'app-header',
     templateUrl: './app-header.component.html',
@@ -16,6 +15,7 @@ import { NavController } from "@ionic/angular";
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() settings = new EventEmitter();
+  //@Output() closeProfileViewer = new EventEmitter()
   @Input() pageName: string | null = null;
   @Input() partnerInfo!: Partner;
 
@@ -24,31 +24,44 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   private tapStatusSourceSubscription!: Subscription;
   private takingPictureStateSourceSubscription!: Subscription;
 
+  private discoverProfileToggleSubscription!: Subscription;
+
   // States
-  viewedProfile: any;
+  viewedProfile: DisableProfileSwipe | null = null;
   hidingTapStatus:any;
   takingPictureStatus: TakingPictureStatus = 'Off';
 
   constructor(private tabsService: TabsService,
     private profileViewerService: ProfileViewerService,
     private photoService: PhotoService, private router: Router,
-    private navController: NavController ){}
+    private discoverService: DiscoverService ){}
 
  ngOnInit(): void {
-
-  // Subscribe to service
   this.subscribeToServices();
+  this.subscribeToDiscoverProfileToggle();
  }
 
+ private subscribeToDiscoverProfileToggle(){
+    this.discoverProfileToggleSubscription = this.discoverService.getDiscoverProfileToggleStatus.subscribe(data =>
+      {
+        if (data) {
+          this.viewedProfile = data;
+        }
+      })
+  }
+
+ closeProfileViewer(viewedProfile: DisableProfileSwipe | null ) {
+  if (viewedProfile) {
+    this.discoverService.onDiscoverProfileToggle({ profile: viewedProfile.profile, disableSwipe: false });
+    this.viewedProfile = null;
+  }
+
+ }
  private subscribeToServices(): void {
 
   this.tapStatusSourceSubscription = this.tabsService.getHidingTapStatus.subscribe(status => {
     this.hidingTapStatus = status;
    });
-
-   this.viewedProfileSubscription = this.profileViewerService.getProfileToDisplay.subscribe(profile => {
-      this.viewedProfile = profile;
-   })
 
    this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(status =>
     {
@@ -62,7 +75,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.tapStatusSourceSubscription?.unsubscribe();
     this.viewedProfileSubscription?.unsubscribe()
     this.takingPictureStateSourceSubscription?.unsubscribe();
-
+    this.discoverProfileToggleSubscription?.unsubscribe();
  }
 
  // Determine if the logo should be shown
@@ -142,6 +155,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
 
  ngOnDestroy(): void {
-      this.unsubscribeFromServices();
+    this.unsubscribeFromServices();
  }
 }

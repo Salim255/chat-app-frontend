@@ -1,0 +1,14 @@
+ion-grid {
+  padding-bottom: 10rem;
+  ion-row{
+    ion-col {
+      padding-top: .4rem;
+    }
+  }
+  ion-row:first-child {
+    ion-col {
+      padding-top: .6rem;
+    }
+  }
+}
+

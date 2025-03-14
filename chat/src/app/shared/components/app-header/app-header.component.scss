@@ -39,3 +39,20 @@ ion-header {
 }
 
 
+// Discover-viewer Section
+.discover-viewer {
+  &__user-name {
+    font-weight: bold;
+    font-size: 1.6rem;
+    text-transform: capitalize;
+  }
+  &__close-icon {
+    padding: .3rem;
+   border-radius: 50%;
+    font-size: 1.4rem;
+    //transform: scale(1.2);
+    color: var( --ion-color-grey-0);
+
+    background: linear-gradient(#ea0b25, #f85c6e);
+  }
+}

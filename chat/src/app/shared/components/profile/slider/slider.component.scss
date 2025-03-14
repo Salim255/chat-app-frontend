@@ -1,66 +1,150 @@
-
-swiper-container {
-  --swiper-pagination-bullet-inactive-color: var(--ion-color-grey-5);
-  --swiper-pagination-color:  var(--ion-color-primary) ;
-  --swiper-pagination-bullet-width: 4.5rem;
-  --swiper-pagination-bullet-height: 0.20rem;
-  --swiper-pagination-bullet-border-radius: 2rem;
-  --swiper-pagination-top: -1%;
-  border-radius: 10px;
-  //pointer-events: none; /* Ensures Swiper doesn’t block touch gestures */
-  width: 100%;
-  height: 72vh;
+//
+.swiper-container {
   overflow: hidden;
+  height: 100%;
 
-  &::part(bullet-active) {
-    height: 0.20rem;
-    width: 4.5rem;
-    border-radius: 2rem;
+  position: relative;
+  width: 100%;
+  transition: all 1s ease-in-out forwards ;
+  background-color: transparent;
+
+  &__preview-enabled-height {
+    transition: all 1s ease-in-out forwards ;
+    height: 60vh;
   }
-  swiper-slide {
-    .profile-img {
-      width: 100%;
+  &__preview-disabled-height {
+    height: 72vh;
+    transition: all 1s ease-in-out forwards;
+  }
+
+  ion-card {
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    height: 100%;
+    padding: 0;
+    box-shadow: none ;
+    --ion-box-shadow: none;
+
+    ion-card-content {
       height: 100%;
-      border-radius: 10px;
-      object-fit: cover;
-      overflow: hidden;
-      position: relative;
-      &__default {
-        height: 4rem;
-        width: 4rem;
-        border-radius: 50%;
-      }
-    }
-
-    .profile-details {
-      // === Start Background section
-      padding-top: 2rem;
-      padding-bottom: 2rem;
-      background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0) 10%,   /* starts to fade from the top (10%) */
-      rgba(0, 0, 0, 0.5) 30%,  /* lightly darkened after 30% */
-      rgba(0, 0, 0, 0.7) 50%,  /* stronger darkening at 50% */
-      rgba(0, 0, 0, 0.8) 70%,  /* almost full dark at 70% */
-      rgba(0, 0, 0, 1) 90%     /* fully dark at the bottom (90%) */);
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0%;
-      width: 100%;
-      height: 40%;
-
-      transform: translate(-50, 0);
-      border-bottom-right-radius: 10px;
-      border-bottom-left-radius: 10px;
+      margin: 0;
+      padding: 0;
       display: flex;
-      flex-direction: column;
-      app-profile-coordination {
-        margin-top: auto;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      .swiper-pagination {
+        position: absolute;
+        top: 2%;
+        left: 0;
+        right: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        display: flex;
+        gap: 10px;
+
+        &__bullet{
+          background: var(--ion-color-grey-6);
+          flex: 1;
+          justify-content: space-between;
+          height: 4px;
+          border-radius: 2px;
+         outline: .7px solid var(--ion-color-grey-3);
+
+          &--active {
+
+            background: var(--ion-color-grey-3);
+          }
+        }
       }
-      // ===== End background section
+
+      .profile-img {
+        width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        object-position: top;
+        transition: all .3s ease-out;
+        width: 100%;
+        height: 100%;
+      }
+
+      .profile-summary {
+        // === Start Background section
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0) 10%,
+        rgba(0, 0, 0, 0.3) 30%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 1) 90% );
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0%;
+        width: 100%;
+        height: 40%;
+        transform: translate(-50, 0);
+        //position: relative;
+        height: 40%;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        display: flex;
+        flex-direction: column;
+
+        // For animation
+        transition: all 0.3s ease-in-out;
+        &__show {
+          animation: showAnimation 0.5s ease-in-out forwards;
+        }
+        &__hide {
+          animation: hideAnimation 0.3s ease-in-out forwards;
+        }
+
+        app-profile-coordination {
+          margin-top: auto;
+        }
+        // ===== End background section
+      }
     }
-    }
+
+  }
 }
 
 
+@keyframes showAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 
+  50% {
+    opacity: 0.5;
+    transform: translateY(-30%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hideAnimation {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-40%);
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+
+  }
+}

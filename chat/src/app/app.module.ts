@@ -4,7 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { CustomHammerConfig } from './hammer.config';
+import { CustomHammerConfig } from './core/hammer-config';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';

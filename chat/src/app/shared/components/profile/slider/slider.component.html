@@ -1,29 +1,35 @@
-
 <div
-  (click)="onProfileClick($event)"
-  [style.height]="setSliderHeight(pageName)" >
-  <swiper-container
-  [modules]="swiperModules"
-  [pagination]="true"
-  #swiperContainer
-  [config]="swiperOptions"
+ appCustomSwiper
+ (profilePreview)="onProfilePreview()"
+  (slideLeft)="slideLeft()"
+  (slideRight)="slideRight()"
 
->
-  <swiper-slide  *ngFor="let item of userImages; let index = index">
-      <ng-container  >
-        <img [src]="item" alt="Profile Image" class="profile-img" >
-        <div  class="profile-details"   (click)="onViewProfile()" >
-          <app-profile-coordination
-          [profile]="profile"
+  [ngClass]="setSwiperContainerHeight(profileToView)"
+  >
+  <ion-card >
+    <ion-card-content>
+      <div  class="swiper-pagination">
+        <div [ngClass]=" index !== currentIndex ?
+         'swiper-pagination__bullet' :
+        'swiper-pagination__bullet swiper-pagination__bullet--active'"
+          *ngFor="let item of setUserImages(profile); let index = index; trackBy: trackByIndex" >
+         </div>
+       </div>
+      <img
+        alt="Profile Image"
+        loading="lazy"
+        *ngIf="setUserImages(profile).length > 0"
+        [ngClass]="setProfileImagesHeight(profileToView)"
+        [src]="setUserImages(profile)[currentIndex]"/>
 
-          >
-          </app-profile-coordination>
-        </div>
-      </ng-container>
-  </swiper-slide>
-</swiper-container>
+      <div [ngClass]="setProfileDetailsStyle(profileToView)">
+        <app-profile-coordination
+        [profile]="profile"
+        >
+        </app-profile-coordination>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </div>
-
-
 
 

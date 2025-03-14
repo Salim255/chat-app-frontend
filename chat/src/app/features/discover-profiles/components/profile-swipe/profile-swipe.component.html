@@ -1,9 +1,16 @@
-<div
-#cardElement
-(panstart)="onPanStart($event)"
-(pan)="onPan($event)"
-(panend)="onPanEnd($event)"
- class="profile-card">
-  <app-profile-slider [profile]="profile" [pageName]="'discover'"></app-profile-slider>
-</div>
 
+<div
+  #cardElement
+  tabindex="0"
+  appHammerSwipe
+  (swipeLeft)="onSwipeLeft($event)"
+  (swipeRight)="onSwipeRight($event)"
+  [ngClass]=" disableHammerSwiper(profileToView)">
+  <app-profile-content
+    [profile]="profile"
+    [profileToView]="profile.user_id ===
+        profileToView?.profile?.user_id ?
+        profileToView :
+        null">
+  </app-profile-content>
+</div>

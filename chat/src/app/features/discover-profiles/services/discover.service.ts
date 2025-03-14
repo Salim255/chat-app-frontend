@@ -7,7 +7,13 @@ import { ProfileUtils } from "src/app/shared/utils/profiles-utils";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { ItsMatchModalService } from "../../matches/services/its-match-modal.service";
 
-export type DiscoverProfileToggle = 'expand' | 'collapse'
+export type DisableProfileSwipe ={
+  disableSwipe: boolean;
+  profile: Member;
+}
+
+export type  InteractionType =  'like' | 'dislike' | 'undo' | 'super-like' | 'message';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +25,9 @@ export class DiscoverService {
   private profileToRemoveSource = new BehaviorSubject <number | null> (null);
   private foreignersListStatusSource = new BehaviorSubject < string | null > (null);
   private likeProfileSource = new BehaviorSubject < string > ('empty');
-  private discoverProfileToggleSource = new BehaviorSubject < DiscoverProfileToggle > ('collapse')
+  private discoverProfileToggleSource = new BehaviorSubject < DisableProfileSwipe | null > (null)
+
+  private profileInteractionTypeSource = new  BehaviorSubject <InteractionType | null > (null);
 
   constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
 
@@ -27,14 +35,14 @@ export class DiscoverService {
     return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-non-friends`)
     .pipe(
       tap((response) => {
-        console.log(response.data)
+        console.log(response.data, "hello from service")
         this.noConnectedFriendsArray.next(response.data)
       })
     )
   }
 
-  onDiscoverProfileToggle(actionType: DiscoverProfileToggle) {
-    console.log(actionType)
+  onDiscoverProfileToggle(actionType: DisableProfileSwipe) {
+    console.log(actionType, "Hello")
     this.discoverProfileToggleSource.next(actionType)
   }
 
@@ -53,6 +61,19 @@ export class DiscoverService {
           this.itsMatchModalService.openItsMatchModal(matchedData);
         }
     }))
+  }
+
+  get getProfileInteractionType() {
+    return this.profileInteractionTypeSource.asObservable()
+  }
+  setProfileInteractionType(interActionType: InteractionType) {
+    console.log("hello proifk", interActionType)
+    this.profileInteractionTypeSource.next(interActionType)
+  }
+
+
+  disLikeProfile() {
+
   }
 
   setDisplayedProfile (data: Member) {
@@ -93,6 +114,8 @@ export class DiscoverService {
   get getDisLikeProfileState() {
     return this.likeProfileSource.asObservable()
   }
+
+
 
   get getDisplayedProfile() {
       return this.displayedProfileSource.asObservable();
