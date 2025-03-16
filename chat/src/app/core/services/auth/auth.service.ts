@@ -4,9 +4,9 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
 import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
-import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap, pipe } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap} from 'rxjs';
 import { SocketIoService } from '../socket-io/socket-io.service';
-import { PrivatePublicKeys } from '../encryption/private-public-key';
+import { KeyPairManager } from '../encryption/encryption-utils/key-pair-manager';
 
 export enum AuthMode {
   login = "login",
@@ -34,13 +34,12 @@ export class AuthService implements OnDestroy {
     private socketIoService: SocketIoService ) { }
 
     authenticate (mode: AuthMode,  userInput: AuthPost ) {
-    if (mode === AuthMode.signup && userInput.password) {
+    if (mode === AuthMode.signup && userInput.email) {
 
-      return from(PrivatePublicKeys.PrivatePublicKeys(userInput.password) ).pipe(
+      return from( KeyPairManager.getPrivatePublicKeys(userInput.email) ).pipe(
         switchMap(({ publicKey,  privateKey }) => {
           const userInputWithKeys: AuthPostWithKeys =
            { publicKey, privateKey, ...userInput };
-           console.log('publick: ', publicKey, 'private: ', privateKey)
            return this.authRequest(mode, userInputWithKeys);
         })
       )
@@ -53,14 +52,26 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {
+        console.log(response)
         this.setAuthData(response.data)
       }))
   }
 
   private setAuthData (authData: AuthResponse) {
     const expirationTime = new Date(new Date().getTime() + +authData.expireIn);
-    let userId = authData.id;
-    const buildUser = new User(userId, authData.token, expirationTime);
+    const userId = authData.id;
+    const privateKey =  authData.privateKey;
+    const publicKey = authData.publicKey;
+    const email = authData.email;
+
+    const buildUser = new User(
+      userId,
+      authData.token,
+      expirationTime,
+      privateKey,
+      publicKey,
+      email
+      );
     this.user.next(buildUser);
     this.storeAuthData(buildUser);
   }
@@ -132,6 +143,9 @@ export class AuthService implements OnDestroy {
           id: number;
           _token: string;
           tokenExpirationDate: string;
+          _privateKey: string,
+          _publicKey: string,
+          _email: string
         };
 
         const expirationTime = new Date(parseData.tokenExpirationDate);
@@ -143,7 +157,10 @@ export class AuthService implements OnDestroy {
         const userToReturn = new User(
           parseData.id,
           parseData._token,
-          expirationTime
+          expirationTime,
+          parseData._privateKey,
+          parseData._publicKey,
+          parseData._email
         );
 
         return userToReturn
@@ -171,6 +188,9 @@ export class AuthService implements OnDestroy {
           _token: string;
           userId: string;
           tokenExpirationDate: string;
+          _privateKey: string;
+          _publicKey: string;
+          _email: string;
         }
 
         let token = parseData._token;
@@ -194,8 +214,7 @@ export class AuthService implements OnDestroy {
   }
 
   setAuthMode(authMode: AuthMode ) {
-    console.log(authMode)
-      this.authModeSource.next(authMode);
+    this.authModeSource.next(authMode);
   }
 
   get getAuthMode() {

@@ -6,5 +6,6 @@ export type Member =  {
   last_name: string;
   avatar: string;
   connection_status: string;
-  images: string []
+  images: string [];
+  public_key: string;
 }

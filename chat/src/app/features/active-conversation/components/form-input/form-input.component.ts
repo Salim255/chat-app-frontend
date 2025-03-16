@@ -5,6 +5,7 @@ import { SocketIoService } from "src/app/core/services/socket-io/socket-io.servi
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 
+
 export type UserTypingData = {
   userId: number;
   roomId: number;
@@ -81,9 +82,11 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       return
     }
 
+
     this.submitObs.emit(this.message);
     f.reset();
   }
+
 
   ngOnDestroy(): void {
     this.partnerInfoSubscription?.unsubscribe();

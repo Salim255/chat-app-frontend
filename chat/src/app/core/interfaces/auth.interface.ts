@@ -9,5 +9,8 @@ export interface AuthPost {
 export interface AuthResponse {
   expireIn: number,
   id: number
-  token: string
+  token: string,
+  privateKey: string,
+  publicKey: string,
+  email: string
 }

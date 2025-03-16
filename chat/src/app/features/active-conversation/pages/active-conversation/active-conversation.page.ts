@@ -11,6 +11,7 @@ import { ChatService } from "src/app/features/active-conversation/services/chat.
 import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
 import { SocketRoomHandler } from "src/app/core/services/socket-io/socket-room-handler";
 
+
 export type CreateMessageData = {
   chatId: number;
   fromUserId: number;
@@ -61,6 +62,13 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     ){}
 
   ngOnInit(): void {
+   // console.log("Hello from active converstion")
+    this.activeConversationService.getActiveConversation.subscribe(conversation => {
+      console.log(conversation, "hello conversation")
+      if (!conversation) {
+
+      }
+    })
     this.subscribeToUserId();
   }
 
@@ -91,7 +99,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeUpdatedMessagesToReadWithPartnerJoin();
     this.subscribeReadMessage();
 }
-
+  private async encryptMessage(message: string) {
+    //const result = MessageEncryptionDecryption.encryptMessage(message)
+  }
 
   createNewChatObs(data: CreateChatInfo) {
     this.chatService.createNewChat(data).subscribe({

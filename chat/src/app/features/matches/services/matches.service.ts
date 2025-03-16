@@ -15,7 +15,7 @@ export class MatchesService {
      private http: HttpClient ) { }
 
   fetchMatches(){
-    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`)
+    return this.http.get<any>(`${this.ENV.apiUrl}/friends`)
     .pipe(tap( response => {
         this.setMatchArray(response.data)
       }));

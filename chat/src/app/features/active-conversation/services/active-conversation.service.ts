@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, tap } from "rxjs";
+import { BehaviorSubject, from, switchMap, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
@@ -10,7 +10,9 @@ import { ConversationService } from "../../conversations/services/conversations.
 import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
 import { ModalController } from "@ionic/angular";
 import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
-
+import { AuthService } from "src/app/core/services/auth/auth.service";
+import { Preferences } from "@capacitor/preferences";
+import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/encryption-utils/message-encrypt-decrypt-";
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +20,18 @@ import { ActiveConversationPage } from "../pages/active-conversation/active-conv
 
 export class ActiveConversationService {
   private ENV = environment;
-  private partnerInfoSource = new BehaviorSubject< Partner | null > (null);
-  private activeConversationSource = new BehaviorSubject< Conversation | null > (null);
-  private activeChatMessagesListSource = new BehaviorSubject< Message[] | null> (null);
+  private partnerInfoSource = new BehaviorSubject < Partner | null > (null);
+  private activeConversationSource = new BehaviorSubject < Conversation | null > (null);
+  private activeChatMessagesListSource = new BehaviorSubject < Message[] | null> (null);
+  receiverPublicKey: string | null = null;
+  private senderPrivatekey: string | null = null;
+
 
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
-    private  modalController:  ModalController
+    private  modalController:  ModalController,
+    private authService: AuthService
   ) { }
 
 
@@ -61,16 +67,49 @@ export class ActiveConversationService {
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
-    return this.http.post<any>(`${this.ENV.apiUrl}/chats`, data).pipe(tap((response) => {
-        if (response.data) {
-          this.setActiveConversation(response.data)
+
+
+    return from(Preferences.get({ key: 'authData' })).pipe(
+      switchMap((storedData) => {
+        if (!storedData || !storedData.value)  {
+          throw new Error("Something went wrong.");
         }
-    }))
+        const parsedData = JSON.parse(storedData.value) as {
+            _privateKey: string,
+            _publicKey: string,
+            _email: string
+        }
+
+        const messageData : MessageEncryptionData = {
+          messageText: data.content,
+          senderPublicKeyBase64: parsedData._publicKey,
+          encryptedSessionKey: null,
+          receiverPublicKeyBase64: this.partnerInfoSource.value?.public_key ?? null ,
+          senderPrivateKeyBase64: parsedData._privateKey,
+          senderEmail: parsedData._email
+        };
+
+        return from( MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
+          switchMap((encryptedMessage) => {
+            console.log(encryptedMessage)
+            throw new Error("Sender's private key is required to decrypt the session key., for testing 😍😍");
+            //encryptedMessage, encryptedSessionKeyForSender, encryptedSessionKeyForReceiver
+             /*  return  this.http.post<any>(`${this.ENV.apiUrl}/chats`, data).pipe(tap((response) => {
+                if (response.data) {
+                  this.setActiveConversation(response.data);
+                }
+            })) */
+          })
+        )
+
+
+      })
+    )
   }
 
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number) {
-    return this.http.get<any>(`${this.ENV.apiUrl}/chats/chat-by-users-ids/${partnerId}`).pipe(tap((response) => {
+    return this.http.get<any>(`${this.ENV.apiUrl}/chats/${partnerId}`).pipe(tap((response) => {
       if (response?.data !== undefined) {
         this.setActiveConversation(response.data);
       } else {
@@ -112,6 +151,7 @@ export class ActiveConversationService {
 
   // Here we set conversation's partner information
   setPartnerInfo(data: Partner | null) {
+    this.receiverPublicKey = data?.public_key ?? null;
     this.partnerInfoSource.next(data)
   }
 

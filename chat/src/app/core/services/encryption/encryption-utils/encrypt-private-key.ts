@@ -1,12 +1,13 @@
-import { DeriveKeyFromPassword } from "./derive-Key-from-password";
-export class EncryptKeys {
+import { DeriveKeyFromEmail } from "./derive-Key-from-email";
+
+export class EncryptPrivateKey {
     // Encrypts the private key with the user's password using AES-GCM
-    static async encryptPrivateKey(privateKey: string, password: string) {
+    static async encryptPrivateKey(privateKey: string, email: string) {
       const salt = window.crypto.getRandomValues(new Uint8Array(16)); // Random salt for password-based key derivation
       const iv = window.crypto.getRandomValues(new Uint8Array(12)); // Random initialization vector (IV) for AES-GCM
 
       // Derive the AES key from the password and salt
-      const key = await DeriveKeyFromPassword.deriveKeyFromPassword(password, salt);
+      const key = await DeriveKeyFromEmail.deriveKeyFromEmail(email, salt);
 
       // Encrypt the private key using the derived AES key
       const encryptedData = await window.crypto.subtle.encrypt(

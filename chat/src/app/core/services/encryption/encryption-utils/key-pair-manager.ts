@@ -1,7 +1,7 @@
 import { Preferences } from "@capacitor/preferences";
+import { EncryptPrivateKey } from "./encrypt-private-key";
 
-export class KeyPairGenerator {
-
+export class KeyPairManager {
   static async  generateKeyPair() {
     // Generates an RSA key pair and exports the public and private keys in Base64 format
     const keyPair = await window.crypto.subtle.generateKey(
@@ -26,25 +26,27 @@ export class KeyPairGenerator {
     };
   }
 
-  static async  saveKeys(privateKey: string, publicKey: string) {
-    await Preferences.set({ key: 'privateKey', value: privateKey });
-    await Preferences.set({ key: 'publicKey', value: publicKey });
+  static async getPrivatePublicKeys(email: string) {
+    // Generate keys ///
+    const { publicKey, privateKey } = await KeyPairManager.generateKeyPair();
+
+    // Derive key from password
+    const encryptedPrivateKey =  await EncryptPrivateKey.encryptPrivateKey(privateKey, email );
+    return { publicKey, privateKey: encryptedPrivateKey}
   }
 
-  static async  getKey(keyName: string): Promise<string | null> {
-    const { value } = await Preferences.get({ key: keyName });
-    return value;
-  }
+  static async GetCurrentUserKeys() {
+    const userPublicKey = await Preferences.get({key: 'authData'});
+    if (!userPublicKey.value) return;
 
-  static async generateSessionKey() {
-    const key = await window.crypto.subtle.generateKey(
-      {
-        name: "AES-GCM", // AES-GCM is a symmetric encryption algorithm
-        length: 256, // 256-bit key
-      },
-      true, // Whether the key is extractable (can be used for export)
-      ["encrypt", "decrypt"] // Key usage
-    );
-    return key;
+    const parsedData = JSON.parse(userPublicKey.value) as {
+      _privateKey: string,
+      _publicKey: string
+    };
+
+    const publicKey = parsedData._publicKey;
+    const privateKey = parsedData._privateKey;
+
+    return { privateKey, publicKey }
   }
 }
