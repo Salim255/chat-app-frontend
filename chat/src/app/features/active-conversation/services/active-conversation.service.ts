@@ -12,7 +12,7 @@ import { ModalController } from "@ionic/angular";
 import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Preferences } from "@capacitor/preferences";
-import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/encryption-utils/message-encrypt-decrypt-";
+import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/message-encrypt-decrypt-";
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +67,6 @@ export class ActiveConversationService {
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
-
-
     return from(Preferences.get({ key: 'authData' })).pipe(
       switchMap((storedData) => {
         if (!storedData || !storedData.value)  {
@@ -90,21 +88,20 @@ export class ActiveConversationService {
         };
 
         return from( MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
-          switchMap((encryptedMessage) => {
-            console.log(encryptedMessage)
-            throw new Error("Sender's private key is required to decrypt the session key., for testing 😍😍");
-            //encryptedMessage, encryptedSessionKeyForSender, encryptedSessionKeyForReceiver
-             /*  return  this.http.post<any>(`${this.ENV.apiUrl}/chats`, data).pipe(tap((response) => {
-                if (response.data) {
-                  this.setActiveConversation(response.data);
-                }
-            })) */
+          switchMap((encryptedData) => {
+            const { encryptedMessageBase64, ...rest } = encryptedData;
+            data.content = encryptedMessageBase64;
+
+            return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {...data, ...rest }).pipe(
+              tap((response) => {
+              if (response.data) {
+                this.setActiveConversation(response.data);
+              }
+            }));
           })
-        )
-
-
+        );
       })
-    )
+    );
   }
 
   // Function that fetch conversation by partner ID

@@ -1,4 +1,5 @@
-import { DeriveKeyFromEmail } from "./derive-Key-from-email";
+import { KeyPairManager } from "./key-pair-manager";
+import { EncryptionUtils } from "./utils";
 
 export type MessageEncryptionData = {
   messageText: string,
@@ -32,13 +33,6 @@ export class MessageEncryptDecrypt {
     return randomIV;
   }
 
-  /**
-   * Converts a Uint8Array to a Base64-encoded string.
-   */
-    static toBase64(buffer: Uint8Array): string {
-      const encodedBase64 =  btoa(String.fromCharCode(...buffer));
-      return encodedBase64;
-   }
 
   /**
    * Converts a Base64-encoded string back to Uint8Array.
@@ -75,7 +69,7 @@ export class MessageEncryptDecrypt {
       publicKey,
       sessionKeyBuffer
     );
-    const encryptSessionKeyBase64 = this.toBase64(new Uint8Array(encryptedSessionKey));
+    const encryptSessionKeyBase64 = EncryptionUtils.toBase64(new Uint8Array(encryptedSessionKey));
     return encryptSessionKeyBase64;
   }
 
@@ -93,43 +87,70 @@ export class MessageEncryptDecrypt {
       encoder.encode(messageText)
     );
 
-    const encryptMessageWithSessionKeyBase64 =  this.toBase64(iv) + ":" + this.toBase64(new Uint8Array(encryptedData));
+    const encryptMessageWithSessionKeyBase64 =  EncryptionUtils.toBase64(iv) + ":" + EncryptionUtils.toBase64(new Uint8Array(encryptedData));
     return encryptMessageWithSessionKeyBase64;
+  }
+
+  /**
+   * Decrypts a message using AES-GCM with the provided session key.
+   * @param {string} encryptedMessage - The encrypted message in Base64 format (IV:Ciphertext).
+   * @param {CryptoKey} sessionKey - The decrypted AES session key.
+   * @returns {Promise<string>} - The decrypted plaintext message.
+   */
+  static async decryptMessageWithSessionKey(encryptedMessage: string, sessionKey: CryptoKey): Promise<string> {
+    // Split the IV and Ciphertext
+    const [ivBase64, ciphertextBase64] = encryptedMessage.split(":");
+    if (!ivBase64 || !ciphertextBase64) {
+      throw new Error("Invalid encrypted message format.");
+    }
+
+    // Convert Base64 to Uint8Array
+    const iv = this.fromBase64(ivBase64);
+    const ciphertext = this.fromBase64(ciphertextBase64);
+
+    // Decrypt using AES-GCM
+    const decryptedBuffer = await window.crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      sessionKey,
+      ciphertext
+    );
+
+    // Decode back to string
+    return new TextDecoder().decode(decryptedBuffer);
   }
 
  /**
  * Imports an RSA private key from Base64 format, decrypting it using the user's email-derived AES key.
  */
-static async importPrivateKey(privateKeyBase64: string, email: string): Promise<CryptoKey> {
-  // Decode the Base64 private key data into a Uint8Array
+ static async importPrivateKey(privateKeyBase64: string, email: string): Promise<CryptoKey> {
+  // Decode Base64 to Uint8Array
   const privateKeyData = this.fromBase64(privateKeyBase64);
 
-  // Extract the salt and IV from the privateKeyData (assuming it's the concatenation of salt, IV, and encrypted private key)
-  const salt = privateKeyData.slice(0, 16); // First 16 bytes as the salt
-  const iv = privateKeyData.slice(16, 28);  // Next 12 bytes as the IV
-  const encryptedPrivateKey = privateKeyData.slice(28); // Rest is the encrypted private key
+  // Extract salt, IV, and encrypted private key
+  const salt = privateKeyData.slice(0, 16);
+  const iv = privateKeyData.slice(16, 28);
+  const encryptedPrivateKey = privateKeyData.slice(28);
 
-  // Derive the AES key from the user's email (used as the password) and the extracted salt
-  const aesKey = await DeriveKeyFromEmail.deriveKeyFromEmail(email, salt);
+  // Derive the AES key from email
+  const aesKey = await KeyPairManager.deriveKeyFromEmail(email, salt);
 
-  // Decrypt the private key using AES-GCM with the derived AES key
+  // Decrypt the private key
   const decryptedPrivateKeyBuffer = await window.crypto.subtle.decrypt(
-    { name: "AES-GCM", iv }, // AES-GCM with the extracted IV
-    aesKey, // The AES key derived from the email
-    encryptedPrivateKey // The encrypted private key to be decrypted
+    { name: "AES-GCM", iv },
+    aesKey,
+    encryptedPrivateKey
   );
 
-  // Now, import the decrypted private key as an RSA private key using PKCS#8 format
-  const rsaPrivateKey = await window.crypto.subtle.importKey(
-    "pkcs8", // PKCS#8 format for private keys
-    decryptedPrivateKeyBuffer, // The decrypted private key buffer
-    { name: "RSA-OAEP", hash: "SHA-256" }, // RSA with OAEP padding and SHA-256 hash
-    false, // The key is not extractable
-    ["decrypt"] // The key will be used for decryption
+  // Import the decrypted private key as an RSA private key
+  return await window.crypto.subtle.importKey(
+    "pkcs8",
+    decryptedPrivateKeyBuffer,
+    { name: "RSA-OAEP", hash: "SHA-256" },
+    false,
+    ["decrypt"]
   );
-
-  return rsaPrivateKey;
 }
+
 
 
   /**
@@ -138,8 +159,8 @@ static async importPrivateKey(privateKeyBase64: string, email: string): Promise<
    * @param {CryptoKey} privateKey - The sender's private key.
    * @returns {Promise<CryptoKey>} - The decrypted AES session key.
    */
-   static async decryptSessionKey(encryptedSessionKey: string, privateKey: CryptoKey): Promise<CryptoKey> {
-    const encryptedBuffer = this.fromBase64(encryptedSessionKey);
+   static async decryptSessionKey(encryptedSessionKeyBase64: string, privateKey: CryptoKey): Promise<CryptoKey> {
+    const encryptedBuffer = this.fromBase64(encryptedSessionKeyBase64);
     const decryptedKeyBuffer = await window.crypto.subtle.decrypt(
       { name: "RSA-OAEP" },
       privateKey,
@@ -167,11 +188,11 @@ static async importPrivateKey(privateKeyBase64: string, email: string): Promise<
    */
    static async encryptMessage(
     encryptionData: MessageEncryptionData
-  ): Promise<{ encryptedMessage: string; encryptedSessionKeyForSender?: string; encryptedSessionKeyForReceiver?: string }> {
-    console.log(encryptionData)
+  ): Promise<{ encryptedMessageBase64: string; encryptedSessionKeyForSenderBase64?: string; encryptedSessionKeyForReceiverBase64?: string }> {
+
     let sessionKey!: CryptoKey ;
-    let encryptedSessionKeyForSender: string | undefined;
-    let encryptedSessionKeyForReceiver: string | undefined;
+    let encryptedSessionKeyForSenderBase64: string | undefined;
+    let encryptedSessionKeyForReceiverBase64: string | undefined;
 
     if (!encryptionData.encryptedSessionKey &&  encryptionData.receiverPublicKeyBase64 ) {
 
@@ -182,10 +203,9 @@ static async importPrivateKey(privateKeyBase64: string, email: string): Promise<
       const senderPublicKey = await this.importPublicKey( encryptionData.senderPublicKeyBase64);
       const receiverPublicKey = await this.importPublicKey( encryptionData.receiverPublicKeyBase64);
 
-      encryptedSessionKeyForSender = await this.encryptSessionKey(sessionKey, senderPublicKey);
-      encryptedSessionKeyForReceiver = await this.encryptSessionKey(sessionKey, receiverPublicKey);
+      encryptedSessionKeyForSenderBase64 = await this.encryptSessionKey(sessionKey, senderPublicKey);
+      encryptedSessionKeyForReceiverBase64 = await this.encryptSessionKey(sessionKey, receiverPublicKey);
     } else if ( encryptionData.encryptedSessionKey &&  encryptionData.senderEmail) {
-      console.log("Hellof rom second codntion")
       // Ensure sender's private key is provided
       if (!encryptionData.senderPrivateKeyBase64 ) {
         throw new Error("Sender's private key is required to decrypt the session key.");
@@ -199,12 +219,56 @@ static async importPrivateKey(privateKeyBase64: string, email: string): Promise<
     }
 
     // Encrypt the message with the session key
-    console.log("From last condtion")
-    const encryptedMessage =  await this.encryptMessageWithSessionKey( encryptionData.messageText, sessionKey );
+    const encryptedMessageBase64=  await this.encryptMessageWithSessionKey( encryptionData.messageText, sessionKey );
+
+    if ( encryptedSessionKeyForSenderBase64 &&  encryptionData.senderPrivateKeyBase64) {
+
+      const decryptedMessage = await this.decryptMessage(
+        encryptedMessageBase64,
+        encryptedSessionKeyForSenderBase64,
+        encryptionData.senderPrivateKeyBase64,
+        encryptionData.senderEmail );
+      //console.log("Decrpoted message: ",  decryptedMessage )
+    }
+
 
     return  encryptionData.encryptedSessionKey
-      ? { encryptedMessage } // Sender reuses session key, no need to send it again
-      : { encryptedMessage, encryptedSessionKeyForSender, encryptedSessionKeyForReceiver };
+      ? { encryptedMessageBase64 } // Sender reuses session key, no need to send it again
+      : { encryptedMessageBase64, encryptedSessionKeyForSenderBase64, encryptedSessionKeyForReceiverBase64 };
   }
+
+    /**
+   * Decrypts a message securely, handling session key decryption if necessary.
+   *
+   * @param {string} encryptedMessage - The encrypted message.
+   * @param {string | null} encryptedSessionKey - The encrypted session key (Base64, if provided).
+   * @param {string} receiverPrivateKeyBase64 - The receiver's private key in Base64 (for decrypting the session key).
+   * @param {string | null} receiverEmail - The receiver's email (for decrypting the private key).
+   * @returns {Promise<string>} - The decrypted plaintext message.
+   */
+    static async decryptMessage(
+      encryptedMessageBase64: string,
+      encryptedSessionKeyBase64: string | null,
+      receiverPrivateKeyBase64: string,
+      receiverEmail: string | null
+    ): Promise<string> {
+      try {
+        let sessionKey!: CryptoKey;
+
+        // If an encrypted session key is provided, decrypt it
+        if (encryptedSessionKeyBase64 && receiverEmail) {
+
+          const receiverPrivateKey = await this.importPrivateKey(receiverPrivateKeyBase64, receiverEmail);
+          sessionKey = await this.decryptSessionKey(encryptedSessionKeyBase64, receiverPrivateKey);
+        } else {
+          throw new Error("Encrypted session key or private key information is missing. i else condtion");
+        }
+
+        // Decrypt the message with the session key
+        return await this.decryptMessageWithSessionKey(encryptedMessageBase64, sessionKey);
+      } catch (error) {
+        throw new Error("Encrypted session key or private key information is missing");
+      }
+    }
 
 }
