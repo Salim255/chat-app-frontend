@@ -106,9 +106,11 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   private subscribeToConversations() {
     this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
-
+      //, "just here console.log(chats, "hello")
       if(chats){
         this.conversations = [...chats];
+        this.conversations= [...this.conversations]
+        console.log( this.conversations, "just here")
         this.isEmpty = chats.length === 0 ;
         this.sortConversations();
       }
@@ -147,6 +149,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
   }
 
   private sortConversations() {
+    console.log(  this.conversations, "From herhehe  s jsj ")
     this.conversations.sort((a, b) => {
       return new Date(b.updated_at ?? new Date(0)).getTime() - new Date(a.updated_at ?? new Date(0)).getTime();
         });

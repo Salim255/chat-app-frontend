@@ -5,7 +5,7 @@
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>
-    <ion-text> {{ conversation?.last_message?.content }} </ion-text>
+    <ion-text> {{ lastMessage()?.content}} </ion-text>
   </ion-label>
 
   @if ( readMessagesCounter  && ((conversation?.last_message?.from_user_id ?? -1 )!== userId)) {

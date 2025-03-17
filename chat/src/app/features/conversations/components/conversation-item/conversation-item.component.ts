@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, signal, Signal, SimpleChanges } from '@angular/core';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
@@ -20,10 +20,9 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   @Input() conversation: Conversation  | null = null;
   @Input() userId: number | null = null
 
-  lastMessage: Message | null = null;
+  lastMessage = signal< Message | null >(null);
   readMessagesCounter: number = 0 ;
   partnerInfo: Partner | null  = null;
-  partnerImage: string = 'assets/images/default-profile.jpg';
 
   private updatedUserDisconnectionSubscription!: Subscription;
   private messageDeliverySubscription!: Subscription;
@@ -40,7 +39,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
    this.initializeConversation();
   }
-
 
   private subscribeToPartnerConnectionStatus() {
     this.updatedUserDisconnectionSubscription = this.socketMessageHandler.getPartnerConnectionStatus.subscribe(updatedUser => {
@@ -60,8 +58,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
-      this.conversation = {...this.conversation};
-      this.lastMessage = this.conversation?.last_message ;
+      this.lastMessage.set(this.conversation.messages?.at(-1) || null) ;
       this.readMessagesCounter = this.conversation.no_read_messages ?? 0;
       this.setPartnerInfo();
     }

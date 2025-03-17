@@ -16,7 +16,7 @@ export class MessageEncryptDecrypt {
    * @returns {Promise<CryptoKey>} - The generated AES session key.
    */
   static async generateSessionKey(): Promise<CryptoKey> {
-    const key = window.crypto.subtle.generateKey(
+    const key = self.crypto.subtle.generateKey(
         { name: "AES-GCM", length: 256 },
         true, // Extractable
         ["encrypt", "decrypt"]
@@ -29,7 +29,7 @@ export class MessageEncryptDecrypt {
    * @returns {Uint8Array} - The generated IV.
    */
    static generateIV(): Uint8Array {
-    const randomIV =  window.crypto.getRandomValues(new Uint8Array(12)); // AES-GCM requires a 12-byte IV
+    const randomIV =  self.crypto.getRandomValues(new Uint8Array(12)); // AES-GCM requires a 12-byte IV
     return randomIV;
   }
 
@@ -47,7 +47,7 @@ export class MessageEncryptDecrypt {
    */
   static async importPublicKey(publicKeyBase64: string): Promise<CryptoKey> {
     const publicKeyBuffer = this.fromBase64(publicKeyBase64).buffer;
-    const rsaPublickey = window.crypto.subtle.importKey(
+    const rsaPublickey = self.crypto.subtle.importKey(
       "spki",
       publicKeyBuffer,
       { name: "RSA-OAEP", hash: "SHA-256" },
@@ -63,8 +63,8 @@ export class MessageEncryptDecrypt {
    * @returns {Promise<string>} - The encrypted session key in Base64 format.
    */
   static async encryptSessionKey(sessionKey: CryptoKey, publicKey: CryptoKey): Promise<string> {
-    const sessionKeyBuffer = await window.crypto.subtle.exportKey("raw", sessionKey);
-    const encryptedSessionKey = await window.crypto.subtle.encrypt(
+    const sessionKeyBuffer = await self.crypto.subtle.exportKey("raw", sessionKey);
+    const encryptedSessionKey = await self.crypto.subtle.encrypt(
       { name: "RSA-OAEP" },
       publicKey,
       sessionKeyBuffer
@@ -81,7 +81,7 @@ export class MessageEncryptDecrypt {
     const iv = this.generateIV();
     const encoder = new TextEncoder();
 
-    const encryptedData = await window.crypto.subtle.encrypt(
+    const encryptedData = await self.crypto.subtle.encrypt(
       { name: "AES-GCM", iv: iv },
       sessionKey,
       encoder.encode(messageText)
@@ -109,7 +109,7 @@ export class MessageEncryptDecrypt {
     const ciphertext = this.fromBase64(ciphertextBase64);
 
     // Decrypt using AES-GCM
-    const decryptedBuffer = await window.crypto.subtle.decrypt(
+    const decryptedBuffer = await self.crypto.subtle.decrypt(
       { name: "AES-GCM", iv },
       sessionKey,
       ciphertext
@@ -135,14 +135,14 @@ export class MessageEncryptDecrypt {
   const aesKey = await KeyPairManager.deriveKeyFromEmail(email, salt);
 
   // Decrypt the private key
-  const decryptedPrivateKeyBuffer = await window.crypto.subtle.decrypt(
+  const decryptedPrivateKeyBuffer = await self.crypto.subtle.decrypt(
     { name: "AES-GCM", iv },
     aesKey,
     encryptedPrivateKey
   );
 
   // Import the decrypted private key as an RSA private key
-  return await window.crypto.subtle.importKey(
+  return await self.crypto.subtle.importKey(
     "pkcs8",
     decryptedPrivateKeyBuffer,
     { name: "RSA-OAEP", hash: "SHA-256" },
@@ -161,13 +161,13 @@ export class MessageEncryptDecrypt {
    */
    static async decryptSessionKey(encryptedSessionKeyBase64: string, privateKey: CryptoKey): Promise<CryptoKey> {
     const encryptedBuffer = this.fromBase64(encryptedSessionKeyBase64);
-    const decryptedKeyBuffer = await window.crypto.subtle.decrypt(
+    const decryptedKeyBuffer = await self.crypto.subtle.decrypt(
       { name: "RSA-OAEP" },
       privateKey,
       encryptedBuffer
     );
 
-    return window.crypto.subtle.importKey(
+    return self.crypto.subtle.importKey(
       "raw",
       decryptedKeyBuffer,
       { name: "AES-GCM", length: 256 },
@@ -222,7 +222,7 @@ export class MessageEncryptDecrypt {
     // Encrypt the message with the session key
     const encryptedMessageBase64=  await this.encryptMessageWithSessionKey( encryptionData.messageText, sessionKey );
 
-    if ( encryptedSessionKeyForSenderBase64 &&  encryptionData.senderPrivateKeyBase64) {
+    if ( encryptedSessionKeyForSenderBase64 &&  encryptionData.senderPrivateKeyBase64 && encryptionData.senderEmail) {
 
       const decryptedMessage = await this.decryptMessage(
         encryptedMessageBase64,
@@ -232,7 +232,7 @@ export class MessageEncryptDecrypt {
         console.log("Testing decrypt", decryptedMessage )
     }
 
-    if (encryptionData.encryptedSessionKey &&  encryptionData.senderPrivateKeyBase64) {
+    if (encryptionData.encryptedSessionKey &&  encryptionData.senderPrivateKeyBase64 && encryptionData.senderEmail) {
       const decryptedMessage = await this.decryptMessage(
         encryptedMessageBase64,
         encryptionData.encryptedSessionKey,
@@ -258,9 +258,9 @@ export class MessageEncryptDecrypt {
    */
     static async decryptMessage(
       encryptedMessageBase64: string,
-      encryptedSessionKeyBase64: string | null,
+      encryptedSessionKeyBase64: string,
       receiverPrivateKeyBase64: string,
-      receiverEmail: string | null
+      receiverEmail: string
     ): Promise<string> {
       try {
         let sessionKey!: CryptoKey;

@@ -25,14 +25,19 @@ export class ActiveConversationService {
   private activeChatMessagesListSource = new BehaviorSubject < Message[] | null> (null);
   receiverPublicKey: string | null = null;
   private senderPrivatekey: string | null = null;
-
+  private worker: Worker | null = null;
 
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
     private  modalController:  ModalController,
     private authService: AuthService
-  ) { }
+  ) {
+    if (typeof Worker !== undefined) {
+      this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
+      console.log(this.worker, "hello from active ")
+    }
+  }
 
 
    async openChatModal() {
@@ -109,17 +114,51 @@ export class ActiveConversationService {
 
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number): Observable <Conversation | null> {
-    return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
-    .pipe(
-      map(response => response.data),
+    return from(Preferences.get({key: 'authData'})).pipe(
+      switchMap((storedData) => {
+        if (!storedData || !storedData.value) {
+          throw new Error('Something went wrong')
+        }
+        const parsedData = JSON.parse(storedData.value) as {
+          _privateKey: string,
+          _publicKey: string,
+          _email: string
+        }
 
-      tap((data) => {
-      if ( data !== undefined) {
-        this.setActiveConversation(data);
-      } else {
-        this.setActiveConversation(null); // Or handle it differently
-      }
-    }))
+        const decryptionData = {
+          email: parsedData._email,
+          privateKey: parsedData._privateKey
+        }
+
+        return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
+        .pipe(
+          map(response => response.data),
+
+          tap((data) => {
+
+          if ( data !== undefined) {
+            if (this.worker ) {
+              this.worker.postMessage({
+                action: 'decrypt',
+                ...decryptionData,
+                conversations: [data]
+              });
+
+              this.worker.onmessage = (event: MessageEvent) => {
+                const decryptedData = event.data;
+                console.log(decryptedData, "hello")
+                if (decryptedData && decryptedData.conversations) {
+                  this.setActiveConversation(decryptedData.conversations[0]);
+                }
+              }
+            }
+
+          } else {
+            this.setActiveConversation(null);
+          }
+          }))
+        })
+    )
   }
 
   // We use this function to update the current conversation with receiving  new message
@@ -130,7 +169,7 @@ export class ActiveConversationService {
 
         this.setActiveConversation(response.data);
       } else {
-        this.setActiveConversation(null); // Or handle it differently
+        this.setActiveConversation(null);
       }
      }))
   }
@@ -159,7 +198,7 @@ export class ActiveConversationService {
           _publicKey: string,
           _email: string
         }
-console.log(this.activeConversationSource.value)
+
         const messageData : MessageEncryptionData = {
           messageText: data.content,
           senderPublicKeyBase64: null,

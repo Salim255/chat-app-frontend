@@ -4,7 +4,7 @@ import { EncryptionUtils } from "./utils";
 export class KeyPairManager {
   static async  generateKeyPair() {
     // Generates an RSA key pair and exports the public and private keys in Base64 format
-    const keyPair = await window.crypto.subtle.generateKey(
+    const keyPair = await self.crypto.subtle.generateKey(
       {
         name: "RSA-OAEP",
         modulusLength: 2048, // 2048-bit key for security
@@ -16,8 +16,8 @@ export class KeyPairManager {
     );
 
     // Export the public and private keys in a standardized format
-    const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
-    const privateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+    const publicKey = await self.crypto.subtle.exportKey("spki", keyPair.publicKey);
+    const privateKey = await self.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
 
     return {
       // Convert the keys to Base64 format (for easier storage)
@@ -52,14 +52,14 @@ export class KeyPairManager {
 
       // Encrypts the private key with the user's password using AES-GCM
       static async encryptPrivateKey(privateKey: ArrayBuffer, email: string): Promise<string> {
-        const salt = window.crypto.getRandomValues(new Uint8Array(16)); // Random salt
-        const iv = window.crypto.getRandomValues(new Uint8Array(12)); // Random IV
+        const salt = self.crypto.getRandomValues(new Uint8Array(16)); // Random salt
+        const iv = self.crypto.getRandomValues(new Uint8Array(12)); // Random IV
 
         // Derive AES key from email
         const key = await this.deriveKeyFromEmail(email, salt);
 
         // Encrypt the private key (as an ArrayBuffer)
-        const encryptedData = await window.crypto.subtle.encrypt(
+        const encryptedData = await self.crypto.subtle.encrypt(
           { name: "AES-GCM", iv },
           key,
           privateKey // Encrypting the raw ArrayBuffer of the key
@@ -79,7 +79,7 @@ export class KeyPairManager {
       const emailBytes = encoder.encode(email);
 
       // Import the email as raw key material to be used in PBKDF2
-      const keyMaterial = await window.crypto.subtle.importKey(
+      const keyMaterial = await self.crypto.subtle.importKey(
         "raw", // The email is used as raw key material
         emailBytes, // Email as key material
         { name: "PBKDF2" }, // PBKDF2 is the key derivation function
@@ -88,7 +88,7 @@ export class KeyPairManager {
       );
 
       // Use PBKDF2 to derive the AES key (256-bit) from the email and salt
-      const derivedKey =  window.crypto.subtle.deriveKey(
+      const derivedKey =  self.crypto.subtle.deriveKey(
         {
           name: "PBKDF2",
           salt, // The salt value for key derivation
