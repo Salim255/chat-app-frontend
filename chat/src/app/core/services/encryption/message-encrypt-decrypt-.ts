@@ -3,7 +3,7 @@ import { EncryptionUtils } from "./utils";
 
 export type MessageEncryptionData = {
   messageText: string,
-  senderPublicKeyBase64: string,
+  senderPublicKeyBase64: string | null,
   encryptedSessionKey: string | null,
   receiverPublicKeyBase64: string | null,
   senderPrivateKeyBase64: string | null,
@@ -194,7 +194,8 @@ export class MessageEncryptDecrypt {
     let encryptedSessionKeyForSenderBase64: string | undefined;
     let encryptedSessionKeyForReceiverBase64: string | undefined;
 
-    if (!encryptionData.encryptedSessionKey &&  encryptionData.receiverPublicKeyBase64 ) {
+    console.log( encryptionData, "hello data ")
+    if (!encryptionData.encryptedSessionKey &&  encryptionData.receiverPublicKeyBase64 && encryptionData.senderPublicKeyBase64 ) {
 
       // Generate a new session key
       sessionKey = await this.generateSessionKey();
@@ -228,7 +229,16 @@ export class MessageEncryptDecrypt {
         encryptedSessionKeyForSenderBase64,
         encryptionData.senderPrivateKeyBase64,
         encryptionData.senderEmail );
-      //console.log("Decrpoted message: ",  decryptedMessage )
+        console.log("Testing decrypt", decryptedMessage )
+    }
+
+    if (encryptionData.encryptedSessionKey &&  encryptionData.senderPrivateKeyBase64) {
+      const decryptedMessage = await this.decryptMessage(
+        encryptedMessageBase64,
+        encryptionData.encryptedSessionKey,
+        encryptionData.senderPrivateKeyBase64,
+        encryptionData.senderEmail );
+        console.log("Testing decrypt", decryptedMessage )
     }
 
 

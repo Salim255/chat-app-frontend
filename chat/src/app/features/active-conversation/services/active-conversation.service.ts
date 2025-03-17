@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, from, switchMap, tap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
@@ -47,9 +47,9 @@ export class ActiveConversationService {
   }
 
   onOpenChat (partnerInfo: Partner) {
-    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
+
     if (!partnerInfo || !partnerInfo.partner_id) return
-    console.log(partnerInfo, "Hello from parnterInformation 😍😍😍")
+
     this.setPartnerInfo(partnerInfo);
 
     // Check if there are a chat with the this partner
@@ -59,6 +59,7 @@ export class ActiveConversationService {
         this.openChatModal();
       },
       error: () => {
+        console.log("erooror")
         console.error()
         this.setActiveConversation(null);
       }
@@ -87,6 +88,7 @@ export class ActiveConversationService {
           senderEmail: parsedData._email
         };
 
+
         return from( MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
           switchMap((encryptedData) => {
             const { encryptedMessageBase64, ...rest } = encryptedData;
@@ -95,6 +97,7 @@ export class ActiveConversationService {
             return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {...data, ...rest }).pipe(
               tap((response) => {
               if (response.data) {
+                console.log(response.data)
                 this.setActiveConversation(response.data);
               }
             }));
@@ -105,10 +108,14 @@ export class ActiveConversationService {
   }
 
   // Function that fetch conversation by partner ID
-  fetchChatByPartnerID (partnerId: number) {
-    return this.http.get<any>(`${this.ENV.apiUrl}/chats/${partnerId}`).pipe(tap((response) => {
-      if (response?.data !== undefined) {
-        this.setActiveConversation(response.data);
+  fetchChatByPartnerID (partnerId: number): Observable <Conversation | null> {
+    return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
+    .pipe(
+      map(response => response.data),
+
+      tap((data) => {
+      if ( data !== undefined) {
+        this.setActiveConversation(data);
       } else {
         this.setActiveConversation(null); // Or handle it differently
       }
@@ -120,6 +127,7 @@ export class ActiveConversationService {
   fetchChatByChatId(chatId: number) {
      return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`).pipe(tap((response) => {
       if (response?.data !== undefined && response.data.length > 0) {
+
         this.setActiveConversation(response.data);
       } else {
         this.setActiveConversation(null); // Or handle it differently
@@ -140,10 +148,44 @@ export class ActiveConversationService {
 
   // Here we send a message to a current conversation
   sendMessage(data: CreateMessageData) {
-    return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data).pipe(tap(() => {
-      //To trigger conversations in conversations page
-      this.conversationService.fetchConversations();
-    }))
+    return from (Preferences.get({key: 'authData'})).pipe(
+      switchMap((storedData) => {
+        if (!storedData || !storedData.value)  {
+          throw new Error("Something went wrong.");
+        }
+
+        const parsedData = JSON.parse(storedData.value) as {
+          _privateKey: string,
+          _publicKey: string,
+          _email: string
+        }
+console.log(this.activeConversationSource.value)
+        const messageData : MessageEncryptionData = {
+          messageText: data.content,
+          senderPublicKeyBase64: null,
+          encryptedSessionKey:
+            this.activeConversationSource.value?.encrypted_session_base64
+            ?? null,
+          receiverPublicKeyBase64: null ,
+          senderPrivateKeyBase64: parsedData._privateKey,
+          senderEmail: parsedData._email
+        };
+
+        // ==========
+        return from (MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
+          switchMap((encryptedMessage) => {
+            const { encryptedMessageBase64 } = encryptedMessage;
+            data.content = encryptedMessageBase64;
+
+            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data).pipe(tap(() => {
+              console.log( data, "hello data ")
+              //To trigger conversations in conversations page
+              this.conversationService.fetchConversations();
+            }))
+          })
+        )
+      })
+    )
   }
 
   // Here we set conversation's partner information

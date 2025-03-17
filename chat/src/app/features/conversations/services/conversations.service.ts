@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, tap } from "rxjs";
+import { BehaviorSubject, map, Observable, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 
 @Injectable({
@@ -18,15 +18,18 @@ export class ConversationService {
       this.conversationsSource.next(chats);
   }
 
-  fetchConversations () {
-    return this.http.get<any>(`${this.ENV.apiUrl}/chats`)
-    .pipe(tap ( (response) =>
-      {
-      if (response && response.data) {
-        console.log(response.data)
-        this.setConversations(response.data);
+  fetchConversations (): Observable < Conversation [] | null > {
+    return this.http.get<{ data: Conversation [] }>(`${this.ENV.apiUrl}/chats`)
+    .pipe(
+
+      map( response => response.data || null ),
+
+      tap ( (data) => {
+      if ( data) {
+        console.log(data, "hello from chats ")
+        this.setConversations(data);
         }
-      }
+       }
       )
     )
   }

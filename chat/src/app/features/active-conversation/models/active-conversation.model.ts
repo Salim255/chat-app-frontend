@@ -12,7 +12,8 @@ export class Conversation {
     public last_message_id: number | null,
     public no_read_messages: number | null,
     public messages: Message [] | null,
-    public users: Member [] | null
+    public users: Member [] | null,
+    public encrypted_session_base64: string | null,
   ){}
 
 }

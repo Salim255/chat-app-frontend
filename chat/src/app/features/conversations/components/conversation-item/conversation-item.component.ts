@@ -56,7 +56,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   // Initializes the conversation data.
   private initializeConversation(): void {
     if (!this.conversation) {
-      this.conversation = new Conversation(null, null, null, null, null, null, null, null);
+      this.conversation = new Conversation(null,null, null, null, null, null, null, null, null);
     }
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
