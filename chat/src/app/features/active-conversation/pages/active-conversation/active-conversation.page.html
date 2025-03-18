@@ -5,7 +5,7 @@
 
 <ion-content>
   <app-chat-messages
-  [messagesList]="messagesList()"
+  [messagesList]="activeChat?.messages ?? []"
   [userId]="userId">
   </app-chat-messages>
 </ion-content>

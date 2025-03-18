@@ -46,9 +46,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private updatedMessagesToReadWithPartnerJoinSubscription!: Subscription;
   private readMessageSubscription!:  Subscription;
   private deliveredMessageSubscription!: Subscription;
-   userId: number | null = null;
+  userId: number | null = null;
   partnerInfo: Partner | null = null;
-  private activeChat: Conversation | null = null;
+   activeChat: Conversation | null = null;
   messagesList = signal< Message []> ([]) ;
 
   typingState: boolean = false;
@@ -62,36 +62,17 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     ){}
 
   ngOnInit(): void {
-   // console.log("Hello from active converstion")
-    this.activeConversationService.getActiveConversation.subscribe(conversation => {
-      if (!conversation) {
-      }
-    })
     this.subscribeToUserId();
   }
 
   ionViewWillEnter() {
-
-      this.subscribeDeliveredMessage();
-
-
-      this.subscribeToConversation();
-
-
-
-      this.subscribeToActiveChatMessages();
-
-
-
-      this.subscribeToConversationRoom();
-
-
-      this.subscribeToPartner();
-
+    this.subscribeDeliveredMessage();
+    this.subscribeToConversation();
+    this.subscribeToConversationRoom();
+    this.subscribeToPartner();
     this.subscribeToUserId();
 
     // Sockets
-
     this.subscribeUpdatedMessagesToReadWithPartnerJoin();
     this.subscribeReadMessage();
 }
@@ -99,8 +80,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   createNewChatObs(data: CreateChatInfo) {
     this.chatService.createNewChat(data).subscribe({
-      next: (res) => {
-          this.handleNewMessage();
+      next: () => {
+        this.handleNewMessage();
       },
       error: (err) => {
         console.log(err)
@@ -108,30 +89,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     })
   }
 
-  sendMessageObs(message: string) {
-    if (!(this.partnerInfo?.partner_id && this.userId && this.activeChat?.id) ) {
-      return
-    }
 
-    const data: CreateMessageData =
-    {
-       content: message,
-       fromUserId: this.userId,
-       toUserId: this.partnerInfo.partner_id,
-       chatId: this.activeChat?.id,
-       partnerConnectionStatus: this.partnerInfo.connection_status ?? 'offline'
-    };
-
-    this.messageService.sendMessage(data).subscribe({
-      next: (response) => {
-        this.activeChat = response[0];
-        this.handleNewMessage();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-  }
 
  onSendMessageEmitter (message: Message) {
   if (!(this.userId && this.partnerInfo?.partner_id && this.conversationRoomId)) return;
@@ -155,32 +113,51 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
            };
         this.createNewChatObs(createChatData);
      } else  {
-      this.sendMessageObs(message)
+      this.sendMessageObs(message);
      }
+  }
+
+  sendMessageObs(message: string) {
+    if (!(this.partnerInfo?.partner_id && this.userId && this.activeChat?.id) ) {
+      return
+    }
+
+    const data: CreateMessageData =
+    {
+       content: message,
+       fromUserId: this.userId,
+       toUserId: this.partnerInfo.partner_id,
+       chatId: this.activeChat?.id,
+       partnerConnectionStatus: this.partnerInfo.connection_status ?? 'offline'
+    };
+
+    this.messageService.sendMessage(data).subscribe({
+      next: (response) => {
+        if (!response) return;
+        // Add the new message to the chat
+        this.activeChat?.messages?.push(response);
+        this.handleNewMessage();
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
  private handleNewMessage() {
     if (!(this.activeChat && this.activeChat.messages)) return;
 
-    const messages: Message [] = [...this.activeChat?.messages];
+    const messages: Message[] = this.activeChat?.messages;
 
     let lastMessage = this.messageService.getLastMessage(messages);
 
     if (!lastMessage) return;
-
-    const updatedMessage = [...messages];
-    this.activeConversationService.setActiveConversationMessages(updatedMessage);
 
     // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }
 
 
-  private subscribeToActiveChatMessages() {
-    this.activeRoomMessagesSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-      if (messages ) this.messagesList.set(messages) ;
-    })
-  }
   private subscribeToConversationRoom() {
      // Getting roomId from socket.service
      this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(roomId => {
@@ -233,7 +210,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.deliveredMessageSubscription = this.socketMessageHandler.getDeliveredMessage.subscribe(deliveredMessage => {
       if (deliveredMessage) {
         this.messageService.updateMessageStatus(this.messagesList(), deliveredMessage );
-        this.activeConversationService.setActiveConversationMessages(this.messagesList());
       }
     })
   }
@@ -251,7 +227,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe(message => {
       if (message) {
         this.messageService.updateMessageStatus(this.messagesList(), message);
-        this.activeConversationService.setActiveConversationMessages(this.messagesList());
       }
     })
   }
@@ -267,7 +242,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
     this.activeConversationService.setPartnerInfo(null);
     this.activeConversationService.setActiveConversation(null);
-    this.activeConversationService.setActiveConversationMessages(null);
+
 
 
     // Socket

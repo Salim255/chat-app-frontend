@@ -24,6 +24,6 @@ export class MatchItemComponent implements OnChanges {
 
   onOpenConversation () {
     if (!this.partnerInfo || !this.partnerInfo.partner_id) return;
-    this.activeConversationService.onOpenChat(this.partnerInfo)
+    this.activeConversationService.openConversation(this.partnerInfo, null)
   }
 }

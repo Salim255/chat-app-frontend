@@ -22,7 +22,7 @@ export class ActiveConversationService {
   private ENV = environment;
   private partnerInfoSource = new BehaviorSubject < Partner | null > (null);
   private activeConversationSource = new BehaviorSubject < Conversation | null > (null);
-  private activeChatMessagesListSource = new BehaviorSubject < Message[] | null> (null);
+
   receiverPublicKey: string | null = null;
 
   private worker: Worker | null = null;
@@ -51,25 +51,14 @@ export class ActiveConversationService {
     await this.modalController.dismiss();
   }
 
-  onOpenChat (partnerInfo: Partner) {
-
+  openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
     if (!partnerInfo || !partnerInfo.partner_id) return
-
     this.setPartnerInfo(partnerInfo);
-
-    // Check if there are a chat with the this partner
-    this.fetchChatByPartnerID(partnerInfo?.partner_id)
-    .subscribe({
-      next: () => {
-        this.openChatModal();
-      },
-      error: (err) => {
-
-        console.error()
-        this.setActiveConversation(null);
-      }
-    })
+    this.setActiveConversation(conversation);
+    this.openChatModal();
   }
+
+
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
@@ -146,7 +135,6 @@ export class ActiveConversationService {
     } else {
       const builtActiveChat = {...conversation }; // Immutable copy
       this.activeConversationSource.next(builtActiveChat);
-      this.setActiveConversationMessages(builtActiveChat.messages);
     }
   }
 
@@ -179,29 +167,14 @@ export class ActiveConversationService {
         return from (MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
           switchMap((encryptedMessage) => {
             const { encryptedMessageBase64 } = encryptedMessage;
+            const originalMessage = data.content;
             data.content = encryptedMessageBase64;
 
             return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data)
             .pipe(
-              map(response => response.data),
-              switchMap( conversations => {
-                //console.log(conversations)
-                if (conversations && this.worker) {
-
-                  const data = conversations;
-                  console.log(data , "Hello ")
-                  return DecryptConversationsUtils.decryptConversation( data, this.worker)
-                } else {
-                  return of(null);
-                }
-              })
-              ,
-              tap((response) => {
-
-              //To trigger conversations in conversations page
-              /* 🔥🔥🔥 need to comeback here  */
-              this.conversationService.fetchConversations();
-            }))
+              map(response => {
+                return {...response.data, content: originalMessage}
+              }))
           })
         )
       })
@@ -215,13 +188,10 @@ export class ActiveConversationService {
   }
 
   // Here we set active conversation's messages
-  setActiveConversationMessages(messagesList: Message [] | null) {
+ /*  setActiveConversationMessages(messagesList: Message [] | null) {
     this.activeChatMessagesListSource.next(messagesList);
-  }
+  } */
 
-  get getActiveConversationMessages() {
-    return this.activeChatMessagesListSource.asObservable()
-  }
 
   get getPartnerInfo (){
     return this.partnerInfoSource.asObservable();

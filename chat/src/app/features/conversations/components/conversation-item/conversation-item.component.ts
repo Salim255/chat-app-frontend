@@ -75,9 +75,10 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
   // Here we are setting the active conversation and navigating to the active conversation
   onOpenChat (): void {
-      if (!this.conversation || !this.partnerInfo?.partner_id) return;
-      this.activeConversationService.onOpenChat(this.partnerInfo)
+    if (!this.conversation || !this.partnerInfo?.partner_id) return;
+    this.activeConversationService.openConversation(this.partnerInfo, this.conversation)
   }
+
 
   ngOnDestroy(): void {
     this.updatedUserDisconnectionSubscription?.unsubscribe();
