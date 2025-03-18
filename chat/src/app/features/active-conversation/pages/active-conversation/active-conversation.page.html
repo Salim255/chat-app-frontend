@@ -1,12 +1,20 @@
 
-<app-active-conversation-header [partnerInfo]="partnerInfo"  ></app-active-conversation-header>
+<app-active-conversation-header
+[partnerInfo]="partnerInfo" >
+</app-active-conversation-header>
 
 <ion-content>
-  <app-chat-messages></app-chat-messages>
+  <app-chat-messages
+  [messagesList]="messagesList()"
+  [userId]="userId">
+  </app-chat-messages>
 </ion-content>
 
 <ion-item lines="none">
-    <app-form-input  (submitObs)="onSubmit($event)"></app-form-input>
+    <app-form-input
+      [toUserId]="partnerInfo?.partner_id ?? null"
+      (submitObs)="onSubmit($event)">
+    </app-form-input>
 </ion-item>
 
 

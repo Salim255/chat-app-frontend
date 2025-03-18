@@ -1,15 +1,10 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { IonTextarea } from "@ionic/angular";
 import { SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
-import { ActiveConversationService } from "../../services/active-conversation.service";
-import { Subscription } from "rxjs";
 
 
-export type UserTypingData = {
-  userId: number;
-  roomId: number;
-}
+
 @Component({
     selector: 'app-form-input',
     templateUrl: './form-input.component.html',
@@ -17,39 +12,30 @@ export type UserTypingData = {
     standalone: false
 })
 
-export class FormInputComponent implements OnInit, OnDestroy  {
+export class FormInputComponent implements OnChanges {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitObs = new EventEmitter<any>();
-  isTyping: boolean = false;
+  @Input() toUserId: number | null = null;
+
+  private isTypingDebounced = signal<boolean>(false);
+
   private typingTimeout = 2000;
   private typingTimer: ReturnType<typeof setTimeout> | null = null; // Timer for "stop typing"
-  private isTypingDebounced = false;
-  private toUserId: number | null = null;
 
   message: string = '';
-  private partnerInfoSubscription!: Subscription;
 
-  constructor(private socketIoService: SocketIoService,
-    private activeConversationService: ActiveConversationService
-  ){
+  constructor(private socketIoService: SocketIoService){ }
 
-  }
-
-  ngOnInit() {
-    this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe( partnerInfo => {
-      if (partnerInfo) {
-        this.toUserId = partnerInfo?.partner_id;
-      }
-    })
-
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('On change')
   }
 
   onTextChange(text: any) {
       // Debouncing: Emit "typing" only once until the user stops typing
-      if (!this.isTypingDebounced  && this.toUserId) {
-        console.log('typing......');
+      if (!this.isTypingDebounced()  && this.toUserId) {
+
           this.socketIoService.userTyping(this.toUserId);
-          this.isTypingDebounced = true;
+          this.isTypingDebounced.set(true);
       }
 
       // Clear the timer on each input event and set a new one
@@ -69,7 +55,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
         this.typingTimer = null;
       }
 
-      this.isTypingDebounced = false;
+      this.isTypingDebounced.set(false);
       if (this.toUserId) {
         this.socketIoService.userStopTyping(this.toUserId);
       }
@@ -82,14 +68,7 @@ export class FormInputComponent implements OnInit, OnDestroy  {
       return
     }
 
-
     this.submitObs.emit(this.message);
     f.reset();
-  }
-
-
-  ngOnDestroy(): void {
-    this.partnerInfoSubscription?.unsubscribe();
-    this.toUserId = null;
   }
 }

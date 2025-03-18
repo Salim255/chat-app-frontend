@@ -1,7 +1,5 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AuthService } from "src/app/core/services/auth/auth.service";
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { Message } from "../../interfaces/message.interface";
-import { ActiveConversationService } from "../../services/active-conversation.service";
 import { Subscription } from "rxjs";
 import { IonContent } from "@ionic/angular";
 import { StringUtils } from "src/app/shared/utils/string-utils";
@@ -13,39 +11,21 @@ import { StringUtils } from "src/app/shared/utils/string-utils";
     standalone: false
 })
 
-export class MessagesComponent implements OnInit, OnDestroy{
+export class MessagesComponent implements OnChanges{
   @ViewChild(IonContent, { static: false }) ionContent!: IonContent;
-  messagesList: Message [] = [];
-  userId: number | null = null;
+  @Input() messagesList: Message [] = [];
+  @Input() userId: number | null = null;
+
   date: Date | null = null;
 
-  private userIdSubscription!: Subscription;
-  private messagesSourceSubscription!: Subscription;
 
-  constructor(
-    private authService: AuthService,
-    private activeConversationService: ActiveConversationService,
-    ) {}
+  constructor() {}
 
-  ngOnInit() {
-    this.subscribeToMessages();
-    this.subscribeUserId();
+  ngOnChanges(_changes: SimpleChanges): void {
+   this.scrollToBottom();
   }
 
-  private subscribeUserId() {
-      this.userIdSubscription = this.authService.userId.subscribe( data =>{
-        this.userId = data;
-      });
-  }
 
-  private subscribeToMessages () {
-      this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-        if (messages ) {
-          this.messagesList = messages;
-          this.scrollToBottom();
-        }
-      });
-  }
 
   trackById(index: number, message: Message) {
     return message.id; // Use a unique ID to track messages
@@ -61,11 +41,5 @@ export class MessagesComponent implements OnInit, OnDestroy{
 
   getMessageStatus(message: string) {
     return StringUtils.getMessageIcon(message)
-  }
-
-
-  ngOnDestroy(): void {
-    if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
-    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
   }
 }

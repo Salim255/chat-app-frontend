@@ -39,8 +39,6 @@ addEventListener('message', async ({ data }) => {
                 receiverPrivateKeyBase64, // Private key
                 decryptionEmail
               );
-
-              console.log( decryptedContent)
               return { ...msg, content: decryptedContent }; // Return decrypted message
             } catch (error) {
               console.error("Decryption error for message:", msg.id, error);

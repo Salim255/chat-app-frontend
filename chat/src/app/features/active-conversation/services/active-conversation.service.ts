@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, of, pipe, switchMap, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Message } from "../interfaces/message.interface";
@@ -10,9 +10,9 @@ import { ConversationService } from "../../conversations/services/conversations.
 import { CreateChatInfo } from "../pages/active-conversation/active-conversation.page";
 import { ModalController } from "@ionic/angular";
 import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
-import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Preferences } from "@capacitor/preferences";
 import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/message-encrypt-decrypt-";
+import { DecryptConversationsUtils } from "./decryption-observer";
 
 @Injectable({
   providedIn: 'root'
@@ -24,18 +24,18 @@ export class ActiveConversationService {
   private activeConversationSource = new BehaviorSubject < Conversation | null > (null);
   private activeChatMessagesListSource = new BehaviorSubject < Message[] | null> (null);
   receiverPublicKey: string | null = null;
-  private senderPrivatekey: string | null = null;
+
   private worker: Worker | null = null;
 
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
     private  modalController:  ModalController,
-    private authService: AuthService
+
   ) {
     if (typeof Worker !== undefined) {
       this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
-      console.log(this.worker, "hello from active ")
+
     }
   }
 
@@ -63,8 +63,8 @@ export class ActiveConversationService {
       next: () => {
         this.openChatModal();
       },
-      error: () => {
-        console.log("erooror")
+      error: (err) => {
+
         console.error()
         this.setActiveConversation(null);
       }
@@ -113,66 +113,31 @@ export class ActiveConversationService {
   }
 
   // Function that fetch conversation by partner ID
-  fetchChatByPartnerID (partnerId: number): Observable <Conversation | null> {
-    return from(Preferences.get({key: 'authData'})).pipe(
-      switchMap((storedData) => {
-        if (!storedData || !storedData.value) {
-          throw new Error('Something went wrong')
-        }
-        const parsedData = JSON.parse(storedData.value) as {
-          _privateKey: string,
-          _publicKey: string,
-          _email: string
-        }
-
-        const decryptionData = {
-          email: parsedData._email,
-          privateKey: parsedData._privateKey
-        }
+  fetchChatByPartnerID (partnerId: number): Observable <Conversation [] | null> {
 
         return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
         .pipe(
           map(response => response.data),
+          switchMap(conversations => {
+              if (conversations && this.worker) {
 
-          tap((data) => {
-
-          if ( data !== undefined) {
-            if (this.worker ) {
-              this.worker.postMessage({
-                action: 'decrypt',
-                ...decryptionData,
-                conversations: [data]
-              });
-
-              this.worker.onmessage = (event: MessageEvent) => {
-                const decryptedData = event.data;
-                console.log(decryptedData, "hello")
-                if (decryptedData && decryptedData.conversations) {
-                  this.setActiveConversation(decryptedData.conversations[0]);
-                }
+                const data = [conversations]
+                return DecryptConversationsUtils.decryptConversation( data, this.worker)
+              } else {
+                return of(null);
               }
+          }),
+          tap(conversations => {
+            if (conversations && conversations?.length> 0) {
+              this.setActiveConversation(conversations[0])
             }
-
-          } else {
+           else {
             this.setActiveConversation(null);
-          }
-          }))
-        })
-    )
+           }
+          })
+        );
   }
 
-  // We use this function to update the current conversation with receiving  new message
-  // This trigged by socket.js service
-  fetchChatByChatId(chatId: number) {
-     return this.http.get<any>(`${this.ENV.apiUrl}/chats/${chatId}`).pipe(tap((response) => {
-      if (response?.data !== undefined && response.data.length > 0) {
-
-        this.setActiveConversation(response.data);
-      } else {
-        this.setActiveConversation(null);
-      }
-     }))
-  }
 
   // Here we set the active conversation
   setActiveConversation(conversation: Conversation | null) {
@@ -216,9 +181,25 @@ export class ActiveConversationService {
             const { encryptedMessageBase64 } = encryptedMessage;
             data.content = encryptedMessageBase64;
 
-            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data).pipe(tap(() => {
-              console.log( data, "hello data ")
+            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data)
+            .pipe(
+              map(response => response.data),
+              switchMap( conversations => {
+                //console.log(conversations)
+                if (conversations && this.worker) {
+
+                  const data = conversations;
+                  console.log(data , "Hello ")
+                  return DecryptConversationsUtils.decryptConversation( data, this.worker)
+                } else {
+                  return of(null);
+                }
+              })
+              ,
+              tap((response) => {
+
               //To trigger conversations in conversations page
+              /* 🔥🔥🔥 need to comeback here  */
               this.conversationService.fetchConversations();
             }))
           })

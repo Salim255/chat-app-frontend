@@ -69,10 +69,7 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
     const partner =   this.conversation?.users?.find((user: Member) => user.user_id !== this.userId);
 
     if (!partner)  return;
-
     this.partnerInfo = ProfileUtils.setProfileData(partner);
-    console.log(this.partnerInfo, "Hello from conversation item")
-
     this.partnerInfo.avatar = StringUtils.getAvatarUrl(partner.avatar)
   }
 

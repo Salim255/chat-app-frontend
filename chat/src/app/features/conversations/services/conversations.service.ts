@@ -50,7 +50,6 @@ export class ConversationService {
 
             tap ( (data) => {
               if (data ) {
-                console.log(data, "hello from chats ")
                 // Send messages to the worker for decryption
                 if (this.worker ) {
                   this.worker.postMessage(
@@ -69,7 +68,6 @@ export class ConversationService {
                     // Now update the conversations with decrypted data
                     if (decryptedData && decryptedData.conversations) {
                       this.setConversations(decryptedData.conversations);
-                      console.log('Decrypted conversations:', this.conversationsSource.value);
                     }
                   };
                 }
