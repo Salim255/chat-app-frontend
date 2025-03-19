@@ -19,9 +19,11 @@ export class ConversationsPage implements OnInit, OnDestroy {
   private updatedUserDisconnectionSubscription!: Subscription;
   private updatedChatCounterSubscription!: Subscription;
   private userIdSubscription!: Subscription;
+  private updateConversationWithNewMessageSubscription!: Subscription;
 
   private messageDeliverySubscription!: Subscription;
   userId: number | null = null;
+
 
   conversations: Conversation [] = [] ;
   isEmpty: boolean = true ;
@@ -45,8 +47,10 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.subscribeToUserId();
     this.subscribeToMessageDelivery();
     this.subscribeToUpdateChatCounter();
-    this.subscribeUpdatedUserDisconnection();
+    this.subscribeUpdatedUserDisconnection();;
+
   }
+
 
   // Subscribe to message delivery
   private subscribeToMessageDelivery(){
@@ -139,11 +143,14 @@ export class ConversationsPage implements OnInit, OnDestroy {
     });
   }
 
+
+
   private cleanUp() {
     this.conversationsSource?.unsubscribe();
     this.updatedUserDisconnectionSubscription?.unsubscribe();
     this.updatedChatCounterSubscription?.unsubscribe();
     this.userIdSubscription?.unsubscribe();
+    this.updateConversationWithNewMessageSubscription?.unsubscribe();
   }
 
   ionViewWillLeave () {

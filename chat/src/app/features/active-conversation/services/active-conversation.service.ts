@@ -35,7 +35,6 @@ export class ActiveConversationService {
   ) {
     if (typeof Worker !== undefined) {
       this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
-
     }
   }
 
@@ -167,13 +166,24 @@ export class ActiveConversationService {
         return from (MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
           switchMap((encryptedMessage) => {
             const { encryptedMessageBase64 } = encryptedMessage;
+
+            // ========== Here we store the original message
             const originalMessage = data.content;
+            // ========== Here we associate the encrypted message with the data object
             data.content = encryptedMessageBase64;
 
             return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data)
             .pipe(
               map(response => {
-                return {...response.data, content: originalMessage}
+                // ========== Here we return the original message
+                // avoiding decryption of the message
+                // and returning the message as it was sent
+                const sentMessage = { ...response.data, content: originalMessage };
+                console.log(sentMessage)
+                // Update conversation that this message belongs to in the conversations list
+                this.conversationService.updateConversationWithNewMessage(sentMessage);
+                // Update active conversation messages
+                return sentMessage;
               }))
           })
         )

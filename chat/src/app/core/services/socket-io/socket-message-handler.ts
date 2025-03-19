@@ -28,6 +28,7 @@ export class SocketMessageHandler {
     return this.deliveredMessageSubject.asObservable();
   }
 
+  // Here we are returning the observable of the messageDeliveredToReceiverSubject
   get getMessageDeliveredToReceiver() {
     return this.messageDeliveredToReceiverSubject.asObservable();
   }
@@ -85,7 +86,7 @@ export class SocketMessageHandler {
     });
 
     socket.on('message-delivered-to-receiver', (receivedMessage: Message) => {
-
+      console.log('receivedMessage', receivedMessage);
       if (receivedMessage) {
         this.messageDeliveredToReceiverSubject.next(receivedMessage);
       }

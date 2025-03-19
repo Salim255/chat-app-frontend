@@ -4,6 +4,7 @@ import { environment } from "src/environments/environment";
 import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
+import { Message } from "../../active-conversation/interfaces/message.interface";
 
 export type WorkerMessage = {
   action: 'decrypt' | 'decrypted';
@@ -18,7 +19,9 @@ export type WorkerMessage = {
 
 export class ConversationService {
   private ENV = environment;
+  private conversationsMap = new Map<string, Conversation>();
   private conversationsSource = new BehaviorSubject< Conversation [] | null> (null);
+
   private worker: Worker | null = null;
 
   constructor(private http: HttpClient) {
@@ -26,10 +29,6 @@ export class ConversationService {
       this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
       console.log(this.worker, "worker")
     }
-  }
-
-  setConversations (chats: any) {
-      this.conversationsSource.next(chats);
   }
 
   fetchConversations (): Observable < Conversation [] | null > {
@@ -56,6 +55,7 @@ export class ConversationService {
           map( response => response.data || null ),
 
           tap ( (incomingConversations) => {
+
             if (!incomingConversations || !this.worker) return;
 
             const existingConversations = this.conversationsSource.value;
@@ -81,13 +81,55 @@ export class ConversationService {
     )
   }
 
+  setConversations (chats: Conversation[] | null) {
+    this.conversationsSource.next(chats);
+  }
+
+  private initializeConversationsMap(conversations: Conversation[]) {
+    this.conversationsMap.clear();
+    conversations.forEach(convo => {
+      if (convo.id) {
+        this.conversationsMap.set(convo.id.toString(), convo);
+      }
+    });
+  }
+
+  updateConversationWithNewMessage(message: Message) {
+    if (message ) {
+      const conversationId = (message.chat_id) + '';
+      const conversation = this.conversationsMap.get(conversationId);
+
+      console.log(conversation, "conversation");
+      if(conversation){
+        // Create a shallow copy of the conversation to avoid mutation
+        const updatedConversation = { ...conversation };
+
+        // Update the messages array with the new message
+        updatedConversation.messages = [...(updatedConversation.messages || []), message];
+
+        // Update the last message of the conversation
+        updatedConversation.last_message = message;
+
+        // Set the updated conversation back into the Map
+        this.conversationsMap.set(conversationId, updatedConversation);
+
+        // Reflect the change in the UI array (this will trigger UI updates)
+        this.setConversations(Array.from(this.conversationsMap.values()));
+      }
+    }
+  }
+
+  get getConversations () {
+    return this.conversationsSource.asObservable()
+  }
+
+
   private decryptAndAddConversation (
     conversationsToDecrypt: Conversation [],
     existingConversations: Conversation[] ,
     decryptionData: any) {
 
     if (!this.worker) return;
-
     const workerMessageData: WorkerMessage =
     {
       action: 'decrypt',
@@ -103,12 +145,10 @@ export class ConversationService {
       // Now update the conversations with decrypted data
       if (decryptedData && decryptedData.conversations) {
         this.setConversations(existingConversations ? [...existingConversations, ...decryptedData.conversations] : decryptedData.conversations);
+        this.initializeConversationsMap(this.conversationsSource.value || []);
       }
     };
   }
 
-  get getConversations () {
-    return this.conversationsSource.asObservable()
-  }
 
 }
