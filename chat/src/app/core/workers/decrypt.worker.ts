@@ -4,6 +4,7 @@ import { MessageEncryptDecrypt } from "../services/encryption/message-encrypt-de
 
 
 addEventListener('message', async ({ data }) => {
+
   try {
     if (!data || data.action !== 'decrypt') {
       postMessage({ error: "Invalid action or missing data" });

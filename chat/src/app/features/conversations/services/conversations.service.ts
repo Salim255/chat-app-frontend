@@ -1,9 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, from, map, Observable, pipe, switchMap, tap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
+
+export type WorkerMessage = {
+  action: 'decrypt' | 'decrypted';
+  email: string;
+  privateKey: string; // User's private key
+  conversations: Conversation []; // Array of Conversation objects
+}
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +26,6 @@ export class ConversationService {
       this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
       console.log(this.worker, "worker")
     }
-
   }
 
   setConversations (chats: any) {
@@ -41,43 +47,64 @@ export class ConversationService {
 
         const decryptionData = {
           email: parsedData._email,
-          privateKey: parsedData._privateKey }
+          privateKey: parsedData._privateKey
+        }
 
-          return this.http.get<{ data: Conversation [] }>(`${this.ENV.apiUrl}/chats`)
-          .pipe(
+        return this.http.get<{ data: Conversation [] }>(`${this.ENV.apiUrl}/chats`)
+        .pipe(
 
-            map( response => response.data || null ),
+          map( response => response.data || null ),
 
-            tap ( (data) => {
-              if (data ) {
-                // Send messages to the worker for decryption
-                if (this.worker ) {
-                  this.worker.postMessage(
-                    {
-                    action: 'decrypt',
-                    ...decryptionData,
-                    conversations: data
-                    }
-                  );
+          tap ( (incomingConversations) => {
+            if (!incomingConversations || !this.worker) return;
 
-                  // Listen for the worker's response and update conversations
-                  this.worker.onmessage = (event: MessageEvent) => {
-                    const decryptedData = event.data;
-                    //this.setConversations(event.data.conversations);
-                    //console.log(event)
-                    // Now update the conversations with decrypted data
-                    if (decryptedData && decryptedData.conversations) {
-                      this.setConversations(decryptedData.conversations);
-                    }
-                  };
-                }
-                }
-             }
+            const existingConversations = this.conversationsSource.value;
+            let conversationsToDecrypt = incomingConversations;
+            if (existingConversations && existingConversations.length > 0) {
+              // Store existing conversation IDs in a Set for O(1) lookup
+              const existingIds = new Set(existingConversations.map(conv => conv.id));
+              conversationsToDecrypt = incomingConversations.filter(conv => !existingIds.has(conv.id));
+
+              if (conversationsToDecrypt.length === 0) return; // No new conversations
+            }
+
+            this.decryptAndAddConversation(
+              conversationsToDecrypt,
+              existingConversations ?? [],
+              decryptionData
             )
+            }
           )
+        )
       }),
 
     )
+  }
+
+  private decryptAndAddConversation (
+    conversationsToDecrypt: Conversation [],
+    existingConversations: Conversation[] ,
+    decryptionData: any) {
+
+    if (!this.worker) return;
+
+    const workerMessageData: WorkerMessage =
+    {
+      action: 'decrypt',
+      ...decryptionData,
+      conversations:  conversationsToDecrypt
+    }
+
+    this.worker.postMessage(workerMessageData);
+
+    // Listen for the worker's response and update conversations
+    this.worker.onmessage = (event: MessageEvent) => {
+      const decryptedData = event.data;
+      // Now update the conversations with decrypted data
+      if (decryptedData && decryptedData.conversations) {
+        this.setConversations(existingConversations ? [...existingConversations, ...decryptedData.conversations] : decryptedData.conversations);
+      }
+    };
   }
 
   get getConversations () {

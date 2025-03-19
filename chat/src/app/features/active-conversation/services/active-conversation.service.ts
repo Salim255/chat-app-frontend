@@ -12,7 +12,7 @@ import { ModalController } from "@ionic/angular";
 import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
 import { Preferences } from "@capacitor/preferences";
 import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/message-encrypt-decrypt-";
-import { DecryptConversationsUtils } from "./decryption-observer";
+import { DecryptConversationsObserver } from "./decryption-observer";
 
 @Injectable({
   providedIn: 'root'
@@ -111,7 +111,7 @@ export class ActiveConversationService {
               if (conversations && this.worker) {
 
                 const data = [conversations]
-                return DecryptConversationsUtils.decryptConversation( data, this.worker)
+                return DecryptConversationsObserver.decryptConversation( data, this.worker)
               } else {
                 return of(null);
               }

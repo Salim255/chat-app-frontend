@@ -9,7 +9,7 @@ type WorkerMessage = {
   conversations: Conversation []
 }
 
-export class DecryptConversationsUtils {
+export class DecryptConversationsObserver {
   static decryptConversation(conversations: Conversation [], worker: Worker): Observable< Conversation []> {
     return from(Preferences.get({key: 'authData'})).pipe(
       switchMap((storedData) => {
