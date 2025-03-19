@@ -4,6 +4,8 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { SendMessageEmitterData } from "./socket-io.service";
+import { ConversationService } from "src/app/features/conversations/services/conversations.service";
+import { WorkerService } from "../../workers/worker.service";
 
 @Injectable(
   {
@@ -18,7 +20,16 @@ export class SocketMessageHandler {
   private partnerConnectionStatusSubject = new BehaviorSubject<Member | null>(null);
   private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
+  private messageReceivedByReceiverSubject = new BehaviorSubject<Message | null>(null);
 
+  private worker: Worker | null = null;
+
+  constructor(
+    private conversationService: ConversationService,
+    private workerService: WorkerService
+  ) {
+    this.worker = this.workerService.getWorker();
+  }
    // Message Subjects Getters
    get getReadMessage() {
     return this.readMessageSubject.asObservable();
@@ -46,6 +57,10 @@ export class SocketMessageHandler {
     return this.updatedChatCounterSubject.asObservable();
   }
 
+  get getMessageReceivedByReceiver() {
+    return this.messageReceivedByReceiverSubject.asObservable()
+  }
+
   // Message Handlers
   setReadMessageSource(readMessage: Message | null) {
     this.readMessageSubject.next(readMessage);
@@ -67,6 +82,10 @@ export class SocketMessageHandler {
     this.updatedChatCounterSubject.next(updatedChatCounter);
   }
 
+  setReceivedMessage(message: Message | null) {
+    this.messageDeliveredToReceiverSubject.next(message);
+  }
+
   // Event Listeners for Messages and Status
   handleMessageEvents(socket: any) {
     socket.on('message-read', (readMessage: Message) => {
@@ -76,6 +95,7 @@ export class SocketMessageHandler {
     });
 
     socket.on('message-delivered', (deliveredMessage: Message) => {
+      console.log('deliveredMessage', deliveredMessage);
       if (deliveredMessage) {
         this.setDeliveredMessage(deliveredMessage);
       }
@@ -85,12 +105,16 @@ export class SocketMessageHandler {
       this.setUpdatedChatCounter(updatedChatCounter);
     });
 
+    // To server by the receiver when the message is delivered to the receiver
     socket.on('message-delivered-to-receiver', (receivedMessage: Message) => {
-      console.log('receivedMessage', receivedMessage);
+      console.log('receivedMessage', this.worker);
       if (receivedMessage) {
-        this.messageDeliveredToReceiverSubject.next(receivedMessage);
+
+        this.conversationService.updateConversationWithNewMessage(receivedMessage);
+        this.messageReceivedByReceiverSubject.next(receivedMessage);
       }
     });
+
 
     socket.on('user-online', (updatedUser: Member) => {
       if (updatedUser) {

@@ -5,9 +5,10 @@ import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
 import { Message } from "../../active-conversation/interfaces/message.interface";
+import { WorkerService } from "src/app/core/workers/worker.service";
 
 export type WorkerMessage = {
-  action: 'decrypt' | 'decrypted';
+  action: 'decrypt-conversations' | 'decrypted-conversations';
   email: string;
   privateKey: string; // User's private key
   conversations: Conversation []; // Array of Conversation objects
@@ -24,11 +25,8 @@ export class ConversationService {
 
   private worker: Worker | null = null;
 
-  constructor(private http: HttpClient) {
-    if (typeof Worker !== undefined) {
-      this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
-      console.log(this.worker, "worker")
-    }
+  constructor(private http: HttpClient, private workerService: WorkerService) {
+     this.worker = this.workerService.getWorker();
   }
 
   fetchConversations (): Observable < Conversation [] | null > {
@@ -132,7 +130,7 @@ export class ConversationService {
     if (!this.worker) return;
     const workerMessageData: WorkerMessage =
     {
-      action: 'decrypt',
+      action: 'decrypt-conversations',
       ...decryptionData,
       conversations:  conversationsToDecrypt
     }

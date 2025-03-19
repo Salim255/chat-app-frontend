@@ -13,6 +13,7 @@ import { ActiveConversationPage } from "../pages/active-conversation/active-conv
 import { Preferences } from "@capacitor/preferences";
 import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/services/encryption/message-encrypt-decrypt-";
 import { DecryptConversationsObserver } from "./decryption-observer";
+import { WorkerService } from "src/app/core/workers/worker.service";
 
 @Injectable({
   providedIn: 'root'
@@ -31,15 +32,13 @@ export class ActiveConversationService {
     private http: HttpClient,
     private conversationService: ConversationService,
     private  modalController:  ModalController,
-
+    private workerService: WorkerService
   ) {
-    if (typeof Worker !== undefined) {
-      this.worker = new Worker (new URL('../../../core/workers/decrypt.worker', import.meta.url), { type: 'module' });
-    }
+    this.worker = this.workerService.getWorker();
   }
 
 
-   async openChatModal() {
+  async openChatModal() {
       const modal = await this.modalController.create({
         component: ActiveConversationPage ,
       })
@@ -179,7 +178,6 @@ export class ActiveConversationService {
                 // avoiding decryption of the message
                 // and returning the message as it was sent
                 const sentMessage = { ...response.data, content: originalMessage };
-                console.log(sentMessage)
                 // Update conversation that this message belongs to in the conversations list
                 this.conversationService.updateConversationWithNewMessage(sentMessage);
                 // Update active conversation messages
