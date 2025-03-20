@@ -6,6 +6,10 @@ import { Conversation } from 'src/app/features/active-conversation/models/active
 import { SendMessageEmitterData } from "./socket-io.service";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 import { WorkerService } from "../../workers/worker.service";
+import { ReceivedMessage } from "../../workers/decrypt.worker";
+import { GetAuthData } from "src/app/shared/utils/get-auth-data";
+import { MessageDecryptionData, MessageEncryptDecrypt } from "../encryption/message-encrypt-decrypt-";
+
 
 @Injectable(
   {
@@ -20,15 +24,12 @@ export class SocketMessageHandler {
   private partnerConnectionStatusSubject = new BehaviorSubject<Member | null>(null);
   private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
-  private messageReceivedByReceiverSubject = new BehaviorSubject<Message | null>(null);
-
-  private worker: Worker | null = null;
 
   constructor(
     private conversationService: ConversationService,
-    private workerService: WorkerService
+
   ) {
-    this.worker = this.workerService.getWorker();
+
   }
    // Message Subjects Getters
    get getReadMessage() {
@@ -57,9 +58,7 @@ export class SocketMessageHandler {
     return this.updatedChatCounterSubject.asObservable();
   }
 
-  get getMessageReceivedByReceiver() {
-    return this.messageReceivedByReceiverSubject.asObservable()
-  }
+
 
   // Message Handlers
   setReadMessageSource(readMessage: Message | null) {
@@ -106,13 +105,28 @@ export class SocketMessageHandler {
     });
 
     // To server by the receiver when the message is delivered to the receiver
-    socket.on('message-delivered-to-receiver', (receivedMessage: Message) => {
-      console.log('receivedMessage', this.worker);
-      if (receivedMessage) {
+    socket.on('message-delivered-to-receiver', async (receivedMessage: ReceivedMessage ) => {
+     try {
+        if(!receivedMessage) return;
 
-        this.conversationService.updateConversationWithNewMessage(receivedMessage);
-        this.messageReceivedByReceiverSubject.next(receivedMessage);
-      }
+        const { _privateKey: privateKey,  _email: email } = await GetAuthData.getAuthData();
+
+        const decryptionData: MessageDecryptionData = {
+          encryptedMessageBase64: receivedMessage.content,
+          encryptedSessionKeyBase64: receivedMessage.encrypted_session_base64,
+          receiverPrivateKeyBase64: privateKey,
+          receiverEmail: email
+        };
+
+        const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
+        const {encrypted_session_base64, ...rest} = receivedMessage;
+        const decryptedMessage = {...rest, content: decryptedContent};
+        this.conversationService.updateConversationWithNewMessage(decryptedMessage);
+
+     } catch (error) {
+        console.error("Error processing received message:", error);
+     }
+
     });
 
 

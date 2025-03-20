@@ -35,6 +35,8 @@ export class ActiveConversationService {
     private workerService: WorkerService
   ) {
     this.worker = this.workerService.getWorker();
+    this.setPartnerInfo(null);
+    this.setActiveConversation(null);
   }
 
 
@@ -55,8 +57,6 @@ export class ActiveConversationService {
     this.setActiveConversation(conversation);
     this.openChatModal();
   }
-
-
 
   // A function that create a new conversation
   createConversation (data: CreateChatInfo) {
@@ -101,7 +101,6 @@ export class ActiveConversationService {
 
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number): Observable <Conversation [] | null> {
-
         return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
         .pipe(
           map(response => response.data),
@@ -194,11 +193,6 @@ export class ActiveConversationService {
     this.receiverPublicKey = data?.public_key ?? null;
     this.partnerInfoSource.next(data)
   }
-
-  // Here we set active conversation's messages
- /*  setActiveConversationMessages(messagesList: Message [] | null) {
-    this.activeChatMessagesListSource.next(messagesList);
-  } */
 
 
   get getPartnerInfo (){

@@ -6,9 +6,11 @@ import { Conversation } from "../../active-conversation/models/active-conversati
 import { Preferences } from "@capacitor/preferences";
 import { Message } from "../../active-conversation/interfaces/message.interface";
 import { WorkerService } from "src/app/core/workers/worker.service";
+import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
+
 
 export type WorkerMessage = {
-  action: 'decrypt-conversations' | 'decrypted-conversations';
+  action: DecryptionActionType;
   email: string;
   privateKey: string; // User's private key
   conversations: Conversation []; // Array of Conversation objects
@@ -26,7 +28,10 @@ export class ConversationService {
   private worker: Worker | null = null;
 
   constructor(private http: HttpClient, private workerService: WorkerService) {
-     this.worker = this.workerService.getWorker();
+    this.worker = this.workerService.getWorker();
+    console.log('Worker initialized:', this.worker);
+    this.setConversations(null);
+    this.conversationsMap.clear();
   }
 
   fetchConversations (): Observable < Conversation [] | null > {
@@ -75,7 +80,6 @@ export class ConversationService {
           )
         )
       }),
-
     )
   }
 
@@ -130,7 +134,7 @@ export class ConversationService {
     if (!this.worker) return;
     const workerMessageData: WorkerMessage =
     {
-      action: 'decrypt-conversations',
+      action: DecryptionActionType.decryptConversations,
       ...decryptionData,
       conversations:  conversationsToDecrypt
     }
@@ -139,10 +143,13 @@ export class ConversationService {
 
     // Listen for the worker's response and update conversations
     this.worker.onmessage = (event: MessageEvent) => {
+      console.log('Worker response:', event.data);
       const decryptedData = event.data;
       // Now update the conversations with decrypted data
       if (decryptedData && decryptedData.conversations) {
-        this.setConversations(existingConversations ? [...existingConversations, ...decryptedData.conversations] : decryptedData.conversations);
+        this.setConversations(existingConversations ?
+          [...existingConversations, ...decryptedData.conversations]
+          : decryptedData.conversations);
         this.initializeConversationsMap(this.conversationsSource.value || []);
       }
     };

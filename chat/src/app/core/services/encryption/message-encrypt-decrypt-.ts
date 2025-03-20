@@ -9,6 +9,13 @@ export type MessageEncryptionData = {
   senderPrivateKeyBase64: string | null,
   senderEmail: string | null
 }
+
+export type MessageDecryptionData = {
+  encryptedMessageBase64: string,
+  encryptedSessionKeyBase64: string,
+  receiverPrivateKeyBase64: string,
+  receiverEmail: string
+}
 export class MessageEncryptDecrypt {
 
   /**
@@ -190,61 +197,45 @@ export class MessageEncryptDecrypt {
     encryptionData: MessageEncryptionData
   ): Promise<{ encryptedMessageBase64: string; encryptedSessionKeyForSenderBase64?: string; encryptedSessionKeyForReceiverBase64?: string }> {
 
-    let sessionKey!: CryptoKey ;
-    let encryptedSessionKeyForSenderBase64: string | undefined;
-    let encryptedSessionKeyForReceiverBase64: string | undefined;
+    try {
+      let sessionKey!: CryptoKey ;
+      let encryptedSessionKeyForSenderBase64: string | undefined;
+      let encryptedSessionKeyForReceiverBase64: string | undefined;
 
-    console.log( encryptionData, "hello data ")
-    if (!encryptionData.encryptedSessionKey &&  encryptionData.receiverPublicKeyBase64 && encryptionData.senderPublicKeyBase64 ) {
+      if (!encryptionData.encryptedSessionKey &&  encryptionData.receiverPublicKeyBase64 && encryptionData.senderPublicKeyBase64 ) {
 
-      // Generate a new session key
-      sessionKey = await this.generateSessionKey();
+        // Generate a new session key
+        sessionKey = await this.generateSessionKey();
 
-      // Encrypt session key for both sender and receiver
-      const senderPublicKey = await this.importPublicKey( encryptionData.senderPublicKeyBase64);
-      const receiverPublicKey = await this.importPublicKey( encryptionData.receiverPublicKeyBase64);
+        // Encrypt session key for both sender and receiver
+        const senderPublicKey = await this.importPublicKey( encryptionData.senderPublicKeyBase64);
+        const receiverPublicKey = await this.importPublicKey( encryptionData.receiverPublicKeyBase64);
 
-      encryptedSessionKeyForSenderBase64 = await this.encryptSessionKey(sessionKey, senderPublicKey);
-      encryptedSessionKeyForReceiverBase64 = await this.encryptSessionKey(sessionKey, receiverPublicKey);
-    } else if ( encryptionData.encryptedSessionKey &&  encryptionData.senderEmail) {
-      // Ensure sender's private key is provided
-      if (!encryptionData.senderPrivateKeyBase64 ) {
-        throw new Error("Sender's private key is required to decrypt the session key.");
+        encryptedSessionKeyForSenderBase64 = await this.encryptSessionKey(sessionKey, senderPublicKey);
+        encryptedSessionKeyForReceiverBase64 = await this.encryptSessionKey(sessionKey, receiverPublicKey);
+      } else if ( encryptionData.encryptedSessionKey &&  encryptionData.senderEmail) {
+        // Ensure sender's private key is provided
+        if (!encryptionData.senderPrivateKeyBase64 ) {
+          throw new Error("Sender's private key is required to decrypt the session key.");
+        }
+
+        // Decrypt the session key using the sender's private key
+        const senderPrivateKey = await this.importPrivateKey( encryptionData.senderPrivateKeyBase64,  encryptionData.senderEmail );
+        sessionKey = await this.decryptSessionKey( encryptionData.encryptedSessionKey, senderPrivateKey );
+
+        // Receiver already has the session key, so we **DO NOT** send it again
       }
 
-      // Decrypt the session key using the sender's private key
-      const senderPrivateKey = await this.importPrivateKey( encryptionData.senderPrivateKeyBase64,  encryptionData.senderEmail );
-      sessionKey = await this.decryptSessionKey( encryptionData.encryptedSessionKey, senderPrivateKey );
+      // Encrypt the message with the session key
+      const encryptedMessageBase64 =  await this.encryptMessageWithSessionKey( encryptionData.messageText, sessionKey );
 
-      // Receiver already has the session key, so we **DO NOT** send it again
+      return  encryptionData.encryptedSessionKey
+        ? { encryptedMessageBase64 } // Sender reuses session key, no need to send it again
+        : { encryptedMessageBase64, encryptedSessionKeyForSenderBase64, encryptedSessionKeyForReceiverBase64 };
+    } catch (error) {
+      console.error("Error encrypting message:", error);
+      throw new Error("Message encryption failed");
     }
-
-    // Encrypt the message with the session key
-    const encryptedMessageBase64=  await this.encryptMessageWithSessionKey( encryptionData.messageText, sessionKey );
-
-    if ( encryptedSessionKeyForSenderBase64 &&  encryptionData.senderPrivateKeyBase64 && encryptionData.senderEmail) {
-
-      const decryptedMessage = await this.decryptMessage(
-        encryptedMessageBase64,
-        encryptedSessionKeyForSenderBase64,
-        encryptionData.senderPrivateKeyBase64,
-        encryptionData.senderEmail );
-        console.log("Testing decrypt", decryptedMessage )
-    }
-
-    if (encryptionData.encryptedSessionKey &&  encryptionData.senderPrivateKeyBase64 && encryptionData.senderEmail) {
-      const decryptedMessage = await this.decryptMessage(
-        encryptedMessageBase64,
-        encryptionData.encryptedSessionKey,
-        encryptionData.senderPrivateKeyBase64,
-        encryptionData.senderEmail );
-        console.log("Testing decrypt", decryptedMessage )
-    }
-
-
-    return  encryptionData.encryptedSessionKey
-      ? { encryptedMessageBase64 } // Sender reuses session key, no need to send it again
-      : { encryptedMessageBase64, encryptedSessionKeyForSenderBase64, encryptedSessionKeyForReceiverBase64 };
   }
 
     /**
@@ -257,25 +248,26 @@ export class MessageEncryptDecrypt {
    * @returns {Promise<string>} - The decrypted plaintext message.
    */
     static async decryptMessage(
-      encryptedMessageBase64: string,
-      encryptedSessionKeyBase64: string,
-      receiverPrivateKeyBase64: string,
-      receiverEmail: string
+      decryptData: MessageDecryptionData
     ): Promise<string> {
       try {
+
         let sessionKey!: CryptoKey;
-
+        //console.log(encryptedSessionKeyBase64 , receiverEmail ,"😍😍😍")
         // If an encrypted session key is provided, decrypt it
-        if (encryptedSessionKeyBase64 && receiverEmail) {
+        if ( decryptData.encryptedSessionKeyBase64 &&  decryptData.receiverEmail) {
 
-          const receiverPrivateKey = await this.importPrivateKey(receiverPrivateKeyBase64, receiverEmail);
-          sessionKey = await this.decryptSessionKey(encryptedSessionKeyBase64, receiverPrivateKey);
+          const receiverPrivateKey = await this.importPrivateKey( decryptData.receiverPrivateKeyBase64,  decryptData.receiverEmail);
+
+          sessionKey = await this.decryptSessionKey( decryptData.encryptedSessionKeyBase64, receiverPrivateKey);
+          console.log(sessionKey, "receiverPrivateKey")
         } else {
-          throw new Error("Encrypted session key or private key information is missing. i else condtion");
+          throw new Error("Encrypted session key or private key information is missing.");
         }
 
         // Decrypt the message with the session key
-        return await this.decryptMessageWithSessionKey(encryptedMessageBase64, sessionKey);
+
+        return await this.decryptMessageWithSessionKey( decryptData.encryptedMessageBase64, sessionKey);
       } catch (error) {
         throw new Error("Encrypted session key or private key information is missing");
       }

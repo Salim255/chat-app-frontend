@@ -1,6 +1,20 @@
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
-import { MessageEncryptDecrypt } from "../services/encryption/message-encrypt-decrypt-";
+import { MessageDecryptionData, MessageEncryptDecrypt } from "../services/encryption/message-encrypt-decrypt-";
+import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
+
+
+//import { DecryptionActionType } from "src/app/features/conversations/services/conversations.service";
+
 /// <reference lib="webworker" />
+
+export type ReceivedMessage = Message & { encrypted_session_base64: string };
+
+export enum DecryptionActionType {
+  decryptConversations = 'decrypt-conversations' ,
+  decryptedConversations = 'decrypted-conversations',
+  decryptSingleMessage = 'decrypt-single-message',
+  decryptedSingleMessage = 'decrypted-single-message'
+};
 
 type DecryptConversationsParams = {
   conversations: Conversation[];
@@ -8,16 +22,20 @@ type DecryptConversationsParams = {
   decryptionEmail: string;
 };
 
+export type DecryptSingleMessageParams = Omit<DecryptConversationsParams, 'conversations'> & {
+  messageToDecrypt: Message & { encrypted_session_base64: string };
+};
+
 addEventListener('message', async ({ data }) => {
   try {
 
-    if (!data || data.action !== 'decrypt-conversations') {
+    if (!data || !Object.values(DecryptionActionType).includes(data.action))  {
       postMessage({ error: "Invalid action or missing data" });
       return;
     }
 
     switch (data.action) {
-      case 'decrypt-conversations':
+      case DecryptionActionType.decryptConversations:
         const decryptData : DecryptConversationsParams = {
           conversations: data.conversations,
           receiverPrivateKeyBase64: data.privateKey,
@@ -26,6 +44,7 @@ addEventListener('message', async ({ data }) => {
         const decryptedConversations = await decryptConversations(decryptData);
         postMessage({ action: 'decrypted-conversations', conversations: decryptedConversations });
         break;
+
       default:
         postMessage({ error: "Invalid action" });
     }
@@ -35,9 +54,9 @@ addEventListener('message', async ({ data }) => {
   }
 });
 
-
 // Decrypt messages in each conversation asynchronously
 async function decryptConversations(data:  DecryptConversationsParams) {
+  console.log(data, "hello")
   const decryptedConversations = await Promise.all(
     data.conversations.map(async (conversation: Conversation) => {
 
@@ -50,13 +69,13 @@ async function decryptConversations(data:  DecryptConversationsParams) {
             throw new Error('Something wrong')
           }
           try {
+            const decryptionData: MessageDecryptionData = {
+              encryptedMessageBase64: msg.content,
+              encryptedSessionKeyBase64: conversation.encrypted_session_base64, // Session key
+              receiverPrivateKeyBase64: data.receiverPrivateKeyBase64, // Private key
+              receiverEmail: data.decryptionEmail}
+            const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
 
-            const decryptedContent = await MessageEncryptDecrypt.decryptMessage(
-              msg.content,
-              conversation.encrypted_session_base64, // Session key
-              data.receiverPrivateKeyBase64, // Private key
-              data.decryptionEmail
-            );
             return { ...msg, content: decryptedContent }; // Return decrypted message
           } catch (error) {
             console.error("Decryption error for message:", msg.id, error);
@@ -70,3 +89,4 @@ async function decryptConversations(data:  DecryptConversationsParams) {
   );
   return decryptedConversations;
 }
+

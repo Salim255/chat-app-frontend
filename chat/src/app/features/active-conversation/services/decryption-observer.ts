@@ -1,9 +1,9 @@
 import { from, Observable, switchMap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
-
+import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
 type WorkerMessage = {
-  action: 'decrypt' | 'decrypted';
+  action: DecryptionActionType;
   email: string;
   privateKey: string;
   conversations: Conversation []
@@ -30,7 +30,7 @@ export class DecryptConversationsObserver {
         return new Observable<Conversation []>((observer) =>{
           if (worker) {
             const workerMessageData:  WorkerMessage  = {
-              action: 'decrypt',
+              action: DecryptionActionType.decryptConversations,
               ...decryptionData,
               conversations: conversations,
             }
