@@ -56,7 +56,6 @@ addEventListener('message', async ({ data }) => {
 
 // Decrypt messages in each conversation asynchronously
 async function decryptConversations(data:  DecryptConversationsParams) {
-  console.log(data, "hello")
   const decryptedConversations = await Promise.all(
     data.conversations.map(async (conversation: Conversation) => {
 

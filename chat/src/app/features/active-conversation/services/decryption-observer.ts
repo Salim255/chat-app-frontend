@@ -2,6 +2,7 @@ import { from, Observable, switchMap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
 import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
+
 type WorkerMessage = {
   action: DecryptionActionType;
   email: string;

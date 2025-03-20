@@ -96,13 +96,13 @@ export class ConversationService {
     });
   }
 
-  updateConversationWithNewMessage(message: Message) {
+  updateConversationWithNewMessage(message: Message, actionTypeReceive=false) {
     if (message ) {
       const conversationId = (message.chat_id) + '';
       const conversation = this.conversationsMap.get(conversationId);
 
-      console.log(conversation, "conversation");
       if(conversation){
+        console.log(conversation)
         // Create a shallow copy of the conversation to avoid mutation
         const updatedConversation = { ...conversation };
 
@@ -112,6 +112,10 @@ export class ConversationService {
         // Update the last message of the conversation
         updatedConversation.last_message = message;
 
+        if(actionTypeReceive){
+          // If the message is received, increment the unread message count
+          updatedConversation.no_read_messages = (updatedConversation.no_read_messages || 0) + 1;
+        }
         // Set the updated conversation back into the Map
         this.conversationsMap.set(conversationId, updatedConversation);
 
@@ -124,7 +128,6 @@ export class ConversationService {
   get getConversations () {
     return this.conversationsSource.asObservable()
   }
-
 
   private decryptAndAddConversation (
     conversationsToDecrypt: Conversation [],

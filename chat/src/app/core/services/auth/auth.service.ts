@@ -52,7 +52,6 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput)
       .pipe(tap(response => {
-        console.log(response, "hello")
         this.setAuthData(response.data)
       }))
   }

@@ -121,7 +121,7 @@ export class SocketMessageHandler {
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
         const {encrypted_session_base64, ...rest} = receivedMessage;
         const decryptedMessage = {...rest, content: decryptedContent};
-        this.conversationService.updateConversationWithNewMessage(decryptedMessage);
+        this.conversationService.updateConversationWithNewMessage(decryptedMessage, true);
 
      } catch (error) {
         console.error("Error processing received message:", error);

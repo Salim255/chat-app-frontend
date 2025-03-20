@@ -40,7 +40,6 @@ export class MessageEncryptDecrypt {
     return randomIV;
   }
 
-
   /**
    * Converts a Base64-encoded string back to Uint8Array.
    */
@@ -130,34 +129,33 @@ export class MessageEncryptDecrypt {
  * Imports an RSA private key from Base64 format, decrypting it using the user's email-derived AES key.
  */
  static async importPrivateKey(privateKeyBase64: string, email: string): Promise<CryptoKey> {
-  // Decode Base64 to Uint8Array
-  const privateKeyData = this.fromBase64(privateKeyBase64);
+    // Decode Base64 to Uint8Array
+    const privateKeyData = this.fromBase64(privateKeyBase64);
 
-  // Extract salt, IV, and encrypted private key
-  const salt = privateKeyData.slice(0, 16);
-  const iv = privateKeyData.slice(16, 28);
-  const encryptedPrivateKey = privateKeyData.slice(28);
+    // Extract salt, IV, and encrypted private key
+    const salt = privateKeyData.slice(0, 16);
+    const iv = privateKeyData.slice(16, 28);
+    const encryptedPrivateKey = privateKeyData.slice(28);
 
-  // Derive the AES key from email
-  const aesKey = await KeyPairManager.deriveKeyFromEmail(email, salt);
+    // Derive the AES key from email
+    const aesKey = await KeyPairManager.deriveKeyFromEmail(email, salt);
 
-  // Decrypt the private key
-  const decryptedPrivateKeyBuffer = await self.crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
-    aesKey,
-    encryptedPrivateKey
-  );
+    // Decrypt the private key
+    const decryptedPrivateKeyBuffer = await self.crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      aesKey,
+      encryptedPrivateKey
+    );
 
-  // Import the decrypted private key as an RSA private key
-  return await self.crypto.subtle.importKey(
-    "pkcs8",
-    decryptedPrivateKeyBuffer,
-    { name: "RSA-OAEP", hash: "SHA-256" },
-    false,
-    ["decrypt"]
-  );
-}
-
+    // Import the decrypted private key as an RSA private key
+    return await self.crypto.subtle.importKey(
+      "pkcs8",
+      decryptedPrivateKeyBuffer,
+      { name: "RSA-OAEP", hash: "SHA-256" },
+      false,
+      ["decrypt"]
+    );
+  }
 
 
   /**
@@ -253,14 +251,14 @@ export class MessageEncryptDecrypt {
       try {
 
         let sessionKey!: CryptoKey;
-        //console.log(encryptedSessionKeyBase64 , receiverEmail ,"😍😍😍")
+
         // If an encrypted session key is provided, decrypt it
         if ( decryptData.encryptedSessionKeyBase64 &&  decryptData.receiverEmail) {
 
           const receiverPrivateKey = await this.importPrivateKey( decryptData.receiverPrivateKeyBase64,  decryptData.receiverEmail);
 
           sessionKey = await this.decryptSessionKey( decryptData.encryptedSessionKeyBase64, receiverPrivateKey);
-          console.log(sessionKey, "receiverPrivateKey")
+
         } else {
           throw new Error("Encrypted session key or private key information is missing.");
         }
