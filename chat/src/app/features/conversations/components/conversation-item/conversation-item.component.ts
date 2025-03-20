@@ -21,7 +21,8 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
   @Input() userId: number | null = null
 
   lastMessage = signal< Message | null >(null);
-  readMessagesCounter: number = 0 ;
+  readMessagesCounter = signal <number> (0)  ;
+
   partnerInfo: Partner | null  = null;
 
   private updatedUserDisconnectionSubscription!: Subscription;
@@ -59,7 +60,13 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
     if(this.conversation?.messages?.length && this.conversation?.users ) {
       this.lastMessage.set(this.conversation.messages?.at(-1) || null) ;
-      this.readMessagesCounter = this.conversation.no_read_messages ?? 0;
+      this.readMessagesCounter.set(this.conversation.no_read_messages ?? 0) ;
+      console.log('Conversation:',
+        this.readMessagesCounter(),
+         "userID:", this.userId,
+        "conversation-last-message:", this.lastMessage(),
+      "last-message:", this.conversation.last_message)
+
       this.setPartnerInfo();
     }
   }

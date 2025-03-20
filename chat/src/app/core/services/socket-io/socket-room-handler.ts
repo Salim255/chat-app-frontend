@@ -16,6 +16,7 @@ export class SocketRoomHandler {
 
   handleRoomEvent(socket: any) {
     socket.on('partner-joined-room', (updatedMessagesToRead: Message[]) => {
+      console.log('partner-joined-room event received:', updatedMessagesToRead);
       if (updatedMessagesToRead) {
         this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
       }

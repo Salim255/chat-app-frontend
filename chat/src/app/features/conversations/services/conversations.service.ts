@@ -115,6 +115,9 @@ export class ConversationService {
         if(actionTypeReceive){
           // If the message is received, increment the unread message count
           updatedConversation.no_read_messages = (updatedConversation.no_read_messages || 0) + 1;
+        } else {
+          // If the change is due to a sent message, reset the unread message count
+          updatedConversation.no_read_messages = 0;
         }
         // Set the updated conversation back into the Map
         this.conversationsMap.set(conversationId, updatedConversation);

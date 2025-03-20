@@ -8,9 +8,9 @@
     <ion-text> {{ lastMessage()?.content}} </ion-text>
   </ion-label>
 
-  @if ( readMessagesCounter  && ((conversation?.last_message?.from_user_id ?? -1 )!== userId)) {
+  @if ( readMessagesCounter()  && ((conversation?.last_message?.from_user_id ?? -1 )!== userId)) {
     <ion-text class="messages_number">
-      <span> {{ readMessagesCounter }} </span>
+      <span> {{ readMessagesCounter() }} </span>
     </ion-text>
   }
 </ion-item>
