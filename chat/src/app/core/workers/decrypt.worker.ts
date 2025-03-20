@@ -1,5 +1,5 @@
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
-import { MessageDecryptionData, MessageEncryptDecrypt } from "../services/encryption/message-encrypt-decrypt-";
+import { MessageEncryptDecrypt } from "../services/encryption/message-encrypt-decrypt-";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 
 
@@ -55,37 +55,45 @@ addEventListener('message', async ({ data }) => {
 });
 
 // Decrypt messages in each conversation asynchronously
-async function decryptConversations(data:  DecryptConversationsParams) {
-  const decryptedConversations = await Promise.all(
-    data.conversations.map(async (conversation: Conversation) => {
+async function decryptConversations(data: DecryptConversationsParams) {
+  const decryptedConversations = [];
 
-      if (!conversation.messages ) return conversation; // Skip if no messages
-      //console.log(conversation, "hello conve")
-      const decryptedMessages = await Promise.all(
-        conversation.messages.map(async (msg) => {
+  for (const conversation of data.conversations) {
+    if (!conversation.messages) {
+      decryptedConversations.push(conversation);
+      continue;
+    }
 
-          if (!conversation.encrypted_session_base64) {
-            throw new Error('Something wrong')
-          }
-          try {
-            const decryptionData: MessageDecryptionData = {
-              encryptedMessageBase64: msg.content,
-              encryptedSessionKeyBase64: conversation.encrypted_session_base64, // Session key
-              receiverPrivateKeyBase64: data.receiverPrivateKeyBase64, // Private key
-              receiverEmail: data.decryptionEmail}
-            const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
+    if (!conversation.encrypted_session_base64) {
+      throw new Error('Something wrong');
+    }
 
-            return { ...msg, content: decryptedContent }; // Return decrypted message
-          } catch (error) {
-            console.error("Decryption error for message:", msg.id, error);
-            return { ...msg, content: "Error decrypting message" }; // Handle errors gracefully
-          }
-        })
-      );
+    // Precompute decryption session
+    const decryptionDataBase = {
+      encryptedSessionKeyBase64: conversation.encrypted_session_base64,
+      receiverPrivateKeyBase64: data.receiverPrivateKeyBase64,
+      receiverEmail: data.decryptionEmail,
+    };
 
-      return { ...conversation, messages: decryptedMessages };
-    })
-  );
+    // Decrypt all messages in a single pass
+    const decryptedMessages = await Promise.all(
+      conversation.messages.map(async (msg) => {
+        try {
+          const decryptedContent = await MessageEncryptDecrypt.decryptMessage({
+            ...decryptionDataBase,
+            encryptedMessageBase64: msg.content,
+          });
+
+          return { ...msg, content: decryptedContent };
+        } catch (error) {
+          console.error("Decryption error for message:", msg.id, error);
+          return { ...msg, content: "Error decrypting message" };
+        }
+      })
+    );
+
+    decryptedConversations.push({ ...conversation, messages: decryptedMessages });
+  }
+
   return decryptedConversations;
 }
-

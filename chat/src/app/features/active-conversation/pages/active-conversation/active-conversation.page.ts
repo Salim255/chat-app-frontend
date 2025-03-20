@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, signal } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
-import { ActiveConversationService } from "src/app/features/active-conversation/services/active-conversation.service";
+import { ActiveConversationService, PartnerRoomStatus } from "src/app/features/active-conversation/services/active-conversation.service";
 import { SendMessageEmitterData, SocketIoService, JoinRomData } from "src/app/core/services/socket-io/socket-io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
@@ -10,7 +10,7 @@ import { MessageService } from "src/app/features/active-conversation/services/me
 import { ChatService } from "src/app/features/active-conversation/services/chat.service";
 import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
 import { SocketRoomHandler } from "src/app/core/services/socket-io/socket-room-handler";
-
+import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 
 export type CreateMessageData = {
   chatId: number;
@@ -58,7 +58,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private activeConversationService: ActiveConversationService,
     private messageService: MessageService, private chatService: ChatService,
     private socketMessageHandler:  SocketMessageHandler,
-    private socketRoomHandler: SocketRoomHandler
+    private socketRoomHandler: SocketRoomHandler,
+    private conversationService: ConversationService
     ){}
 
   ngOnInit(): void {
@@ -133,8 +134,12 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         if (!response) return;
+        let sentMessage = response;
+        if(this.activeConversationService?.partnerRoomStatusSource.value === PartnerRoomStatus.IN_ROOM) {
+          sentMessage.status = 'read'
+        }
         // Add the new message to the chat
-        this.activeChat?.messages?.push(response);
+        this.activeChat?.messages?.push(sentMessage);
         this.handleNewMessage();
       },
       error: (err) => {
@@ -210,17 +215,33 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   private subscribeUpdatedMessagesToReadWithPartnerJoin() {
-    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(messages => {
+    this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(updatedMessagesToRead => {
       // Update chat messages
-      if (messages && messages.length > 0) {
-        this.messageService.updateMessagesOnPartnerJoin(this.messagesList(), messages)
+      if (updatedMessagesToRead && updatedMessagesToRead.length > 0) {
+        // Get the active conversation
+        const activeConversation = this.activeChat;
+        if (!activeConversation) return;
+
+        // Update only the status of messages that match
+        activeConversation?.messages?.forEach(msg => {
+          const updatedMsg = updatedMessagesToRead.find(updated => updated.id === msg.id);
+          if (updatedMsg) {
+            msg.status = 'read';  // Set the status to "read"
+          }
+        });
+
+        // Update the active conversation to reflect changes
+        this.activeChat = { ...activeConversation };
+        this.conversationService.updatedActiveConversationMessagesToReadWithPartnerJoin(this.activeChat)
       }
     })
   }
 
+  // Here we push received message during live chat
   private subscribeReadMessage() {
     this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe(message => {
       if (message) {
+        // Here we push received message during live chat
        this.activeChat?.messages?.push(message)
       }
     })

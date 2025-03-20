@@ -29,26 +29,40 @@ export class DecryptConversationsObserver {
         };
 
         return new Observable<Conversation []>((observer) =>{
-          if (worker) {
-            const workerMessageData:  WorkerMessage  = {
-              action: DecryptionActionType.decryptConversations,
-              ...decryptionData,
-              conversations: conversations,
-            }
-            worker.postMessage(workerMessageData);
-
-            worker.onmessage = (event: MessageEvent) => {
-              const decryptedData = event.data;
-              if (decryptedData && decryptedData.conversations) {
-                observer.next(decryptedData.conversations);
-              } else {
-                observer.error(new Error('Decryption failed'));
-              }
-              observer.complete();
-            }
-          } else {
+          if (!worker) {
             observer.error(new Error('Web worker not available'));
+            return;
           }
+
+          const workerMessageData:  WorkerMessage  = {
+            action: DecryptionActionType.decryptConversations,
+            ...decryptionData,
+            conversations: conversations,
+          }
+
+          worker.postMessage(workerMessageData);
+
+          // Handle successful decryption
+          worker.onmessage = (event: MessageEvent) => {
+            const decryptedData = event.data;
+            if (decryptedData && decryptedData.conversations) {
+              observer.next(decryptedData.conversations);
+              observer.complete();
+            } else {
+              observer.error(new Error('Decryption failed'));
+            }
+            // Terminate worker safely
+            worker.terminate();
+          };
+
+
+          // Handle worker errors
+          worker.onerror = (error) => {
+            observer.error(new Error(`Worker error: ${error.message}`));
+            // Ensure the worker is properly terminated
+            worker.terminate();
+
+        };
         })
       })
     )

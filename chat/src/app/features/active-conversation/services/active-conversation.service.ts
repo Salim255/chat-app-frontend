@@ -15,6 +15,12 @@ import { MessageEncryptDecrypt, MessageEncryptionData } from "src/app/core/servi
 import { DecryptConversationsObserver } from "./decryption-observer";
 import { WorkerService } from "src/app/core/workers/worker.service";
 
+export enum PartnerRoomStatus {
+  OFFLINE = "offline",
+  CONNECTED = "connected",
+  IN_ROOM = "in_room"
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +28,7 @@ import { WorkerService } from "src/app/core/workers/worker.service";
 export class ActiveConversationService {
   private ENV = environment;
   private partnerInfoSource = new BehaviorSubject < Partner | null > (null);
+  partnerRoomStatusSource = new BehaviorSubject <PartnerRoomStatus > (PartnerRoomStatus.OFFLINE)
   private activeConversationSource = new BehaviorSubject < Conversation | null > (null);
 
   receiverPublicKey: string | null = null;
@@ -51,11 +58,8 @@ export class ActiveConversationService {
     await this.modalController.dismiss();
   }
 
-  openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
-    if (!partnerInfo || !partnerInfo.partner_id) return
-    this.setPartnerInfo(partnerInfo);
-    this.setActiveConversation(conversation);
-    this.openChatModal();
+  setPartnerInRoomStatus(status: PartnerRoomStatus) {
+    this.partnerRoomStatusSource.next(status);
   }
 
   // A function that create a new conversation
@@ -99,16 +103,62 @@ export class ActiveConversationService {
     );
   }
 
+  openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
+   /*  this.setPartnerInfo(partnerInfo);
+    this.setActiveConversation(fetchedConversation);
+    this.openChatModal(); */
+    if (!partnerInfo || !partnerInfo.partner_id) return
+    if(partnerInfo.connection_status === 'online') {
+      this.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED)
+    }
+       this.setPartnerInfo(partnerInfo);
+       this.setActiveConversation(conversation);
+     /*  this.openChatModal();  */
+    this.openChatModal();
+   /*  this.fetchChatByPartnerID(partnerInfo.partner_id).subscribe({
+      next: (response)=> {
+        if(response) {
+          const fetchedConversation = response[0];
+         this.setActiveConversation(fetchedConversation);
+        }
+      },
+      error: (err) => {
+        err
+      }
+
+    }) */
+
+    //
+   // this.openChatModal();
+  }
+
   // Function that fetch conversation by partner ID
   fetchChatByPartnerID (partnerId: number): Observable <Conversation [] | null> {
         return this.http.get<{ data: Conversation }>(`${this.ENV.apiUrl}/chats/users/${partnerId}`)
         .pipe(
           map(response => response.data),
-          switchMap(conversations => {
-              if (conversations && this.worker) {
+          switchMap(conversation => {
+              if (conversation && this.worker) {
+                const currentConversation = this.activeConversationSource.value;
+                const existingMessages = new Set(currentConversation?.messages?.map(msg => msg.id) || []);
+                // Filter out messages that are already in the current conversation
+                const newMessages = conversation?.messages?.filter(msg => !existingMessages.has(msg.id));
 
-                const data = [conversations]
-                return DecryptConversationsObserver.decryptConversation( data, this.worker)
+                if( newMessages && newMessages?.length > 0) {
+                  return DecryptConversationsObserver.decryptConversation( [{ ...conversation, messages: newMessages } ], this.worker)
+                  .pipe(
+                    map(decryptedConversation => {
+                        // Merge decrypted messages back into the conversation
+                        return decryptedConversation.map(decryptedConv => ({
+                          ...decryptedConv,
+                          messages: [...(currentConversation?.messages || []), ...decryptedConv?.messages || []]
+                        }));
+                    }),
+                  )
+                } else {
+                  return of(null);
+                }
+
               } else {
                 return of(null);
               }
@@ -137,6 +187,7 @@ export class ActiveConversationService {
 
   // Here we send a message to a current conversation
   sendMessage(data: CreateMessageData) {
+    if (!this.activeConversationSource.value) throw new Error("There is no chat.");
     return from (Preferences.get({key: 'authData'})).pipe(
       switchMap((storedData) => {
         if (!storedData || !storedData.value)  {
@@ -159,10 +210,11 @@ export class ActiveConversationService {
           senderPrivateKeyBase64: parsedData._privateKey,
           senderEmail: parsedData._email
         };
-
+        console.log( )
         // ==========
         return from (MessageEncryptDecrypt.encryptMessage(messageData)).pipe(
           switchMap((encryptedMessage) => {
+            console.log(this.partnerRoomStatusSource.value, "😍😍😍")
             const { encryptedMessageBase64 } = encryptedMessage;
 
             // ========== Here we store the original message

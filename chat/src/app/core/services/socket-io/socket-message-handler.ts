@@ -85,8 +85,10 @@ export class SocketMessageHandler {
   // This happen only when both user in the room
   handleMessageEvents(socket: any) {
     socket.on('message-read',async  (readMessage: any) => {
+
       try {
-        //console.log(readMessage)
+
+        console.log(readMessage, "hello frpm here")
         if (!readMessage) return
 
         // 1 Decrypt the message
@@ -100,7 +102,7 @@ export class SocketMessageHandler {
         };
 
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
-
+        console.log("hello",readMessage)
         const {encrypted_session_base64, ...rest} = readMessage;
         const decryptedMessage = {...rest, content: decryptedContent};
         console.log(decryptedMessage)
@@ -110,19 +112,17 @@ export class SocketMessageHandler {
         this.conversationService.updateConversationWithNewMessage(decryptedMessage);
 
       } catch (error) {
-
+        console.error("Error processing received message:", error);
       }
     });
 
     socket.on('message-delivered', (deliveredMessage: Message) => {
-      console.log('deliveredMessage', deliveredMessage);
       if (deliveredMessage) {
         this.setDeliveredMessage(deliveredMessage);
       }
     });
 
     socket.on('updated-chat-counter', (updatedChatCounter: Conversation) => {
-      console.log(updatedChatCounter,"hello")
       // When we hit this point, means the partner has already my messages and sent me message
       // thats why I am receiving this notification.
       // As a response to that, I updated all messages I sent as read by receiver and his, as read by me
@@ -149,7 +149,7 @@ export class SocketMessageHandler {
         this.conversationService.updateConversationWithNewMessage(decryptedMessage, true);
 
      } catch (error) {
-        console.error("Error processing received message:", error);
+        console.error("Error processing delivered message:", error);
      }
 
     });

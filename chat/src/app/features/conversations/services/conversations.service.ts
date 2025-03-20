@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
+import { BehaviorSubject, from, map, Observable, Subscription, switchMap, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
 import { Preferences } from "@capacitor/preferences";
 import { Message } from "../../active-conversation/interfaces/message.interface";
@@ -24,6 +24,7 @@ export class ConversationService {
   private ENV = environment;
   private conversationsMap = new Map<string, Conversation>();
   private conversationsSource = new BehaviorSubject< Conversation [] | null> (null);
+
 
   private worker: Worker | null = null;
 
@@ -83,6 +84,40 @@ export class ConversationService {
     )
   }
 
+  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation) {
+    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) {
+      console.error('Invalid conversation update data');
+      return;
+    }
+
+    // Get the current list of conversations
+    const currentConversations = this.conversationsSource.value;
+    if (!currentConversations) return;
+
+    // Find the conversation to update
+    const updatedConversations = currentConversations.map(conv => {
+      if (conv.id === updatedConversation.id) {
+        // Ensure messages are not null
+        const newMessages = updatedConversation.messages ?? [];
+        // Replace messages & update last_message
+        const updatedConv = {
+          ...conv,
+          messages: newMessages,
+          no_read_message: 0,
+          last_message:  newMessages.length > 0
+            ?  newMessages[ newMessages.length - 1]
+            : conv.last_message
+        };
+
+        // Update the map
+        this.conversationsMap.set( updatedConversation.id + '', updatedConv);
+        return updatedConv;
+      }
+      return conv;
+    });
+    // Emit updated conversations
+    this.conversationsSource.next(updatedConversations);
+  }
   setConversations (chats: Conversation[] | null) {
     this.conversationsSource.next(chats);
   }
@@ -102,7 +137,6 @@ export class ConversationService {
       const conversation = this.conversationsMap.get(conversationId);
 
       if(conversation){
-        console.log(conversation)
         // Create a shallow copy of the conversation to avoid mutation
         const updatedConversation = { ...conversation };
 
@@ -157,6 +191,12 @@ export class ConversationService {
           [...existingConversations, ...decryptedData.conversations]
           : decryptedData.conversations);
         this.initializeConversationsMap(this.conversationsSource.value || []);
+      }
+
+      // Ensure the worker exists before terminating
+      if (this.worker) {
+        this.worker.terminate();
+        this.worker = null; // Avoid keeping a reference to a terminated worker
       }
     };
   }

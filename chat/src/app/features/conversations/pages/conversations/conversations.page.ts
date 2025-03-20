@@ -22,6 +22,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
   private updateConversationWithNewMessageSubscription!: Subscription;
 
   private messageDeliverySubscription!: Subscription;
+
   userId: number | null = null;
 
 
@@ -96,8 +97,8 @@ export class ConversationsPage implements OnInit, OnDestroy {
   }
 
   private subscribeToConversations() {
-    this.conversationsSource = this.conversationService.getConversations.subscribe(chats => {
-      console.log(chats, "hello", this.userId)
+    this.conversationsSource = this.conversationService.getConversations
+    .subscribe(chats => {
       if(chats){
         this.conversations = [...chats];
         this.isEmpty = chats.length === 0 ;
