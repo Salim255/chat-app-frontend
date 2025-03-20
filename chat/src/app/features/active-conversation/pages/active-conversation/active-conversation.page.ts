@@ -46,6 +46,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private readMessageSubscription!:  Subscription;
   private deliveredMessageSubscription!: Subscription;
 
+
   private conversationRoomId: string | null = null;
   activeChat: Conversation | null = null;
   userId: number | null = null;
@@ -148,6 +149,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     const messages: Message[] = this.activeChat?.messages;
 
     let lastMessage = this.messageService.getLastMessage(messages);
+    //this.activeChat.messages.push(messages)
 
     if (!lastMessage) return;
 
@@ -219,7 +221,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private subscribeReadMessage() {
     this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe(message => {
       if (message) {
-        this.messageService.updateMessageStatus(this.messagesList(), message);
+       this.activeChat?.messages?.push(message)
       }
     })
   }

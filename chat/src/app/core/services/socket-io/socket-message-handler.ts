@@ -25,12 +25,8 @@ export class SocketMessageHandler {
   private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
 
-  constructor(
-    private conversationService: ConversationService,
+  constructor ( private conversationService: ConversationService ) { }
 
-  ) {
-
-  }
    // Message Subjects Getters
    get getReadMessage() {
     return this.readMessageSubject.asObservable();
@@ -86,10 +82,35 @@ export class SocketMessageHandler {
   }
 
   // Event Listeners for Messages and Status
+  // This happen only when both user in the room
   handleMessageEvents(socket: any) {
-    socket.on('message-read', (readMessage: Message) => {
-      if (readMessage) {
-        this.setReadMessageSource(readMessage);
+    socket.on('message-read',async  (readMessage: any) => {
+      try {
+        //console.log(readMessage)
+        if (!readMessage) return
+
+        // 1 Decrypt the message
+        const { _privateKey: privateKey,  _email: email } = await GetAuthData.getAuthData();
+
+        const decryptionData: MessageDecryptionData = {
+          encryptedMessageBase64: readMessage.content,
+          encryptedSessionKeyBase64: readMessage.encrypted_session_base64,
+          receiverPrivateKeyBase64: privateKey,
+          receiverEmail: email
+        };
+
+        const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
+
+        const {encrypted_session_base64, ...rest} = readMessage;
+        const decryptedMessage = {...rest, content: decryptedContent};
+        console.log(decryptedMessage)
+        // 2 Update the current conversion with this new message
+        this.setReadMessageSource(decryptedMessage);
+        // 3 Update conversation where this message belong in conversations services
+        this.conversationService.updateConversationWithNewMessage(decryptedMessage);
+
+      } catch (error) {
+
       }
     });
 
@@ -101,6 +122,10 @@ export class SocketMessageHandler {
     });
 
     socket.on('updated-chat-counter', (updatedChatCounter: Conversation) => {
+      console.log(updatedChatCounter,"hello")
+      // When we hit this point, means the partner has already my messages and sent me message
+      // thats why I am receiving this notification.
+      // As a response to that, I updated all messages I sent as read by receiver and his, as read by me
       this.setUpdatedChatCounter(updatedChatCounter);
     });
 

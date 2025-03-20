@@ -61,12 +61,6 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
     if(this.conversation?.messages?.length && this.conversation?.users ) {
       this.lastMessage.set(this.conversation.messages?.at(-1) || null) ;
       this.readMessagesCounter.set(this.conversation.no_read_messages ?? 0) ;
-      console.log('Conversation:',
-        this.readMessagesCounter(),
-         "userID:", this.userId,
-        "conversation-last-message:", this.lastMessage(),
-      "last-message:", this.conversation.last_message)
-
       this.setPartnerInfo();
     }
   }
