@@ -5,7 +5,6 @@ import { Member } from 'src/app/shared/interfaces/member.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 import { SendMessageEmitterData } from "./socket-io.service";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
-import { WorkerService } from "../../workers/worker.service";
 import { ReceivedMessage } from "../../workers/decrypt.worker";
 import { GetAuthData } from "src/app/shared/utils/get-auth-data";
 import { MessageDecryptionData, MessageEncryptDecrypt } from "../encryption/message-encrypt-decrypt-";
@@ -87,8 +86,6 @@ export class SocketMessageHandler {
     socket.on('message-read',async  (readMessage: any) => {
 
       try {
-
-        console.log(readMessage, "hello frpm here")
         if (!readMessage) return
 
         // 1 Decrypt the message
@@ -102,10 +99,8 @@ export class SocketMessageHandler {
         };
 
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
-        console.log("hello",readMessage)
         const {encrypted_session_base64, ...rest} = readMessage;
         const decryptedMessage = {...rest, content: decryptedContent};
-        console.log(decryptedMessage)
         // 2 Update the current conversion with this new message
         this.setReadMessageSource(decryptedMessage);
         // 3 Update conversation where this message belong in conversations services

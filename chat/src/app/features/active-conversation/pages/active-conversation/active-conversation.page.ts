@@ -3,7 +3,7 @@ import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { ActiveConversationService, PartnerRoomStatus } from "src/app/features/active-conversation/services/active-conversation.service";
-import { SendMessageEmitterData, SocketIoService, JoinRomData } from "src/app/core/services/socket-io/socket-io.service";
+import { SendMessageEmitterData, SocketIoService, JoinRomData, ConnectionStatus } from "src/app/core/services/socket-io/socket-io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
@@ -41,6 +41,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private conversationRoomIdSubscription!: Subscription;
   private userIdSubscription!: Subscription;
   private partnerInfoSubscription!: Subscription;
+  private partnerConnectionSubscription!: Subscription;
   private activeRoomMessagesSubscription!: Subscription ;
   private updatedMessagesToReadWithPartnerJoinSubscription!: Subscription;
   private readMessageSubscription!:  Subscription;
@@ -77,6 +78,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     // Sockets
     this.subscribeUpdatedMessagesToReadWithPartnerJoin();
     this.subscribeReadMessage();
+    this.subscribeToPartnerConnection();
  }
 
 
@@ -162,6 +164,23 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.onSendMessageEmitter(lastMessage);
   }
 
+ private subscribeToPartnerConnection() {
+    this.partnerConnectionSubscription = this.socketMessageHandler.getPartnerConnectionStatus.subscribe(updatedUser => {
+      if (updatedUser && this.partnerInfo) {
+        this.partnerInfo.connection_status = updatedUser.connection_status;
+        if (this.partnerInfo.connection_status === ConnectionStatus.Offline){
+          this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.OFFLINE)
+        } else {
+          if (this.activeChat) {
+            // Update active chat by reference
+             this.activeConversationService.updateMessagesStatusToDeliveredWithPartnerConnection(this.activeChat);
+          }
+          this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED);
+          // 2 Once partner reconnected, Update messages to delivered
+        }
+      }
+  })
+ }
   private subscribeToConversationRoom() {
     // Getting roomId from socket.service
     this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId
@@ -262,7 +281,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.updatedMessagesToReadWithPartnerJoinSubscription) this.updatedMessagesToReadWithPartnerJoinSubscription.unsubscribe();
     if (this.readMessageSubscription) this.readMessageSubscription.unsubscribe();
     if (this.deliveredMessageSubscription) this.deliveredMessageSubscription.unsubscribe();
-
+    if (this.partnerConnectionSubscription)this.partnerConnectionSubscription.unsubscribe();
     this.socketMessageHandler.setReadMessageSource(null);
     this.socketMessageHandler.setDeliveredMessage(null);
     this.socketRoomHandler.setUpdatedMessagesToReadAfterPartnerJoinedRoom(null);

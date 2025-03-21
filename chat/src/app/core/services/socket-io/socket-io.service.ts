@@ -21,7 +21,10 @@ export type SendMessageEmitterData = {
   toUserId: number;
 }
 
-export type ConnectionStatus = 'online' | 'offline';
+export enum ConnectionStatus {
+  Online ='online',
+  Offline =  'offline'
+}
 
 @Injectable({
   providedIn: 'root'
