@@ -3,19 +3,24 @@
 [partnerInfo]="partnerInfo" >
 </app-active-conversation-header>
 
-<ion-content>
+<ion-content [scrollY]="true">
   <app-chat-messages
   [messagesList]="activeChat?.messages ?? []"
   [userId]="userId">
   </app-chat-messages>
 </ion-content>
 
-<ion-item lines="none">
-    <app-form-input
+<ion-footer>
+ <ion-grid>
+  <ion-row>
+    <ion-col>
+      <app-form-input
       [toUserId]="partnerInfo?.partner_id ?? null"
       (submitObs)="onSubmit($event)">
     </app-form-input>
-</ion-item>
-
+    </ion-col>
+  </ion-row>
+ </ion-grid>
+</ion-footer>
 
 

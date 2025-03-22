@@ -1,17 +1,18 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges} from "@angular/core";
-
 import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Subscription } from "rxjs";
 import { ActiveConversationService } from "../../services/active-conversation.service";
 import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
 import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
+
 @Component({
     selector: 'app-active-conversation-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     standalone: false
 })
+
 export class headerComponent implements OnChanges, OnDestroy {
   @Input() partnerInfo: Partner | null = null;
   private partnerInfoSubscription!: Subscription;

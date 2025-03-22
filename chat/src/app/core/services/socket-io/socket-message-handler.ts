@@ -84,7 +84,6 @@ export class SocketMessageHandler {
   // This happen only when both user in the room
   handleMessageEvents(socket: any) {
     socket.on('message-read',async  (readMessage: any) => {
-
       try {
         if (!readMessage) return
 

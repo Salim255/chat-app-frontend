@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from "@angular/core";
+import { AfterViewChecked, Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
@@ -11,6 +11,7 @@ import { ChatService } from "src/app/features/active-conversation/services/chat.
 import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
 import { SocketRoomHandler } from "src/app/core/services/socket-io/socket-room-handler";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
+import { IonContent } from "@ionic/angular";
 
 export type CreateMessageData = {
   chatId: number;
@@ -35,7 +36,8 @@ export type ReadDeliveredMessage = Omit<CreateMessageData, 'content'>
     standalone: false
 })
 
-export class ActiveConversationPage implements OnInit, OnDestroy {
+export class ActiveConversationPage implements OnInit, AfterViewChecked, OnDestroy {
+  @ViewChild(IonContent, { static: false }) ionContent!: IonContent;
   private comingMessageEvent!: Subscription;
   private activeConversationSubscription!: Subscription;
   private conversationRoomIdSubscription!: Subscription;
@@ -68,8 +70,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-
-    this.subscribeDeliveredMessage();
     this.subscribeToConversation();
     this.subscribeToConversationRoom();
     this.subscribeToPartner();
@@ -80,6 +80,11 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeReadMessage();
     this.subscribeToPartnerConnection();
  }
+
+  ngAfterViewChecked() {
+   // this.scrollToBottom();
+   console.log()
+  }
 
 
   createNewChatObs(data: CreateChatInfo) {
@@ -107,6 +112,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   onSubmit(message: string) {
+
      if (!this.activeChat && this.userId && this.partnerInfo?.partner_id) {
         const createChatData: CreateChatInfo = {
            content: message,
@@ -114,6 +120,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
            fromUserId: this.userId
            };
         this.createNewChatObs(createChatData);
+
      } else  {
       this.sendMessageObs(message);
      }
@@ -157,7 +164,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
     let lastMessage = this.messageService.getLastMessage(messages);
     //this.activeChat.messages.push(messages)
-
     if (!lastMessage) return;
 
     // Trigger "send-message" emitter
@@ -174,9 +180,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
           if (this.activeChat) {
             // Update active chat by reference
              this.activeConversationService.updateMessagesStatusToDeliveredWithPartnerConnection(this.activeChat);
+             this.activeConversationService.setMessagePageScroll();
           }
           this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED);
-          // 2 Once partner reconnected, Update messages to delivered
         }
       }
   })
@@ -195,7 +201,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     .getActiveConversation.subscribe(data => {
 
       if (data && data?.messages ) {
-          this.activeChat = data;
+        this.activeChat = data;
       }
     });
   }
@@ -225,13 +231,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     });
   }
 
-  private subscribeDeliveredMessage () {
-    this.deliveredMessageSubscription = this.socketMessageHandler.getDeliveredMessage.subscribe(deliveredMessage => {
-      if (deliveredMessage) {
-        this.messageService.updateMessageStatus(this.messagesList(), deliveredMessage );
-      }
-    })
-  }
+
 
   private subscribeUpdatedMessagesToReadWithPartnerJoin() {
     this.updatedMessagesToReadWithPartnerJoinSubscription =  this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(updatedMessagesToRead => {
@@ -262,6 +262,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       if (message) {
         // Here we push received message during live chat
        this.activeChat?.messages?.push(message)
+       this.activeConversationService.setMessagePageScroll();
       }
     })
   }

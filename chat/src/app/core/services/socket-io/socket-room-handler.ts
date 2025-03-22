@@ -17,7 +17,6 @@ export class SocketRoomHandler {
 
   handleRoomEvent(socket: any) {
     socket.on('partner-joined-room', (updatedMessagesToRead: Message[]) => {
-      console.log('partner-joined-room event received:', updatedMessagesToRead);
       this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.IN_ROOM)
       if (updatedMessagesToRead && updatedMessagesToRead.length > 0) {
         // Get the active conversation

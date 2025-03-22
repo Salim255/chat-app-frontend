@@ -108,13 +108,11 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 }
 
   onProfilePreview() {
-  console.log("From preview")
     if (this.profileToView?.disableSwipe) return;
     this.discoverService.onDiscoverProfileToggle({profile: this.profile,  disableSwipe: true})
   }
 
   slideLeft() {
-    console.log("From left")
     this.slidePrev()
   }
 

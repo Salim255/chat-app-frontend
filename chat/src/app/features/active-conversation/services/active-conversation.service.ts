@@ -34,6 +34,7 @@ export class ActiveConversationService {
   private worker: Worker | null = null;
   // This is where we store messages in a Map, indexed by status
   private activeConversationMessageMap: Map<string, Message[]> = new Map();
+  private triggerMessagePageScrollSource = new BehaviorSubject < string>('scroll')
 
   constructor(
     private http: HttpClient,
@@ -187,6 +188,7 @@ export class ActiveConversationService {
                 // Update conversation that this message belongs to in the conversations list
                 this.conversationService.updateConversationWithNewMessage(sentMessage);
                 // Update active conversation messages
+                this.setMessagePageScroll();
                 return sentMessage;
               }))
           })
@@ -194,6 +196,7 @@ export class ActiveConversationService {
       })
     )
   }
+
   updateMessagesStatusToDeliveredWithPartnerConnection(activeChat: Conversation) {
     if (activeChat && activeChat.messages) {
       if (activeChat && activeChat.messages) {
@@ -210,6 +213,13 @@ export class ActiveConversationService {
     this.conversationService.updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom({...activeChat});
 
     return activeChat
+  }
+
+  setMessagePageScroll() {
+    this.triggerMessagePageScrollSource.next('scroll');
+  }
+  get getTriggerMessagePageScroll(){
+    return this.triggerMessagePageScrollSource.asObservable()
   }
   // Here we set conversation's partner information
   setPartnerInfo(data: Partner | null) {
