@@ -7,9 +7,9 @@ import { Member } from 'src/app/shared/interfaces/member.interface';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
 
-enum SwipeDirection {
-  'swipe-left' =  'swipe-left',
-  'swipe-right' = 'swipe-right'
+export enum SwipeDirection {
+  SwipeLeft =  'swipe-left',
+  SwipeRight = 'swipe-right'
 }
 
 @Component({
@@ -90,7 +90,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   handleDislikeProfile() {
     console.log(this.isAnimating(), "hello status")
    if (this.isAnimating()) return;
-    this.setSwipeAnimationStyle(SwipeDirection['swipe-left']);
+    this.setSwipeAnimationStyle(SwipeDirection.SwipeLeft);
 
     this.isAnimating.set(true) ;
    setTimeout(() => {
@@ -107,7 +107,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   handleLikeProfile() {
     if (this.isAnimating()) return;
     this.isAnimating.set(true);
-    this.setSwipeAnimationStyle(SwipeDirection['swipe-right']);
+    this.setSwipeAnimationStyle(SwipeDirection.SwipeRight);
     const profile = this.topProfile ?? null;
     if (profile ) {
     this.discoverService.likeProfile(profile)

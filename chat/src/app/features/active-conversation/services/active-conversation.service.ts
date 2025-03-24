@@ -33,7 +33,7 @@ export class ActiveConversationService {
   receiverPublicKey: string | null = null;
   private worker: Worker | null = null;
   // This is where we store messages in a Map, indexed by status
-  private activeConversationMessageMap: Map<string, Message[]> = new Map();
+  private activeConversationMessageMap: Map<string, Message[]> = new Map();// don't remove it🔥🔥🔥
   private triggerMessagePageScrollSource = new BehaviorSubject < string>('scroll')
 
   constructor(
@@ -49,6 +49,7 @@ export class ActiveConversationService {
 
 
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
+    console.log(conversation)
     /*  this.setPartnerInfo(partnerInfo);
      this.setActiveConversation(fetchedConversation);
      this.openChatModal(); */
@@ -126,6 +127,7 @@ export class ActiveConversationService {
     return from(GetAuthData.getAuthData()).pipe(
       switchMap((storedData) => {
         if(!storedData) throw new Error("There is no auth data");
+
         const messageData : MessageEncryptionData = {
           messageText: data.content,
           senderPublicKeyBase64: storedData._publicKey,
@@ -141,8 +143,18 @@ export class ActiveConversationService {
 
             return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {...data, ...rest }).pipe(
               tap((response) => {
-              if (response.data) {
-                this.setActiveConversation(response.data);
+              if (response?.data) {
+                const createdConversation = {
+                  ...response.data,
+                  messages: [
+                    {
+                      ...response.data.messages[0], // Keep all other fields from the API response
+                      content: messageData.messageText // Override only the content with the original text
+                    }
+                  ]
+                }
+                this.conversationService.fetchConversations();
+                this.setActiveConversation(createdConversation);
               }
             }));
           })
@@ -177,8 +189,8 @@ export class ActiveConversationService {
             // ========== Here we store the original message
             const originalMessage = data.content;
             // ========== Here we associate the encrypted message with the data object
-            data.content = encryptedMessageBase64;
-            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, data)
+            const requestData = { ...data, content: encryptedMessageBase64 };
+            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, requestData)
             .pipe(
               map(response => {
                 // ========== Here we return the original message

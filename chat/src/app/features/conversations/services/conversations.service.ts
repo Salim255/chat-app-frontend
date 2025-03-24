@@ -7,6 +7,7 @@ import { Preferences } from "@capacitor/preferences";
 import { Message } from "../../active-conversation/interfaces/message.interface";
 import { WorkerService } from "src/app/core/workers/worker.service";
 import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
+import { GetAuthData } from "src/app/shared/utils/get-auth-data";
 
 
 export type WorkerMessage = {
@@ -34,21 +35,13 @@ export class ConversationService {
 
   /** Fetch conversations from the server and decrypt them if necessary */
   fetchConversations (): Observable < Conversation [] | null > {
-    return from(Preferences.get({key: 'authData'})).pipe(
+    return from(GetAuthData.getAuthData()).pipe(
       switchMap((storedData ) => {
-        if (!storedData || !storedData.value) {
-          throw new Error('Something going wrong.')
-        }
-
-        const parsedData = JSON.parse(storedData.value) as {
-          _privateKey: string,
-          _publicKey: string,
-          _email: string
-        }
+        if(!storedData) throw new Error("There is no auth data");
 
         const decryptionData = {
-          email: parsedData._email,
-          privateKey: parsedData._privateKey
+          email: storedData._email,
+          privateKey: storedData._privateKey
         }
 
         return this.http.get<{ data: Conversation [] }>(`${this.ENV.apiUrl}/chats`)
@@ -58,7 +51,11 @@ export class ConversationService {
 
           tap ( (incomingConversations) => {
 
-            if (!incomingConversations || !this.worker) return;
+            if (!incomingConversations || !this.worker) {
+               if (!incomingConversations) {
+                  this.conversationsMap.clear();
+               }
+            };
 
             const existingConversations = this.conversationsSource.value;
             let conversationsToDecrypt = incomingConversations;

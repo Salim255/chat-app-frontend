@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
@@ -7,7 +7,6 @@ import { SendMessageEmitterData, SocketIoService, JoinRomData, ConnectionStatus 
 import { Partner } from "src/app/shared/interfaces/partner.interface";
 import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
 import { MessageService } from "src/app/features/active-conversation/services/message.service";
-import { ChatService } from "src/app/features/active-conversation/services/chat.service";
 import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
 import { SocketRoomHandler } from "src/app/core/services/socket-io/socket-room-handler";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
@@ -36,7 +35,7 @@ export type ReadDeliveredMessage = Omit<CreateMessageData, 'content'>
     standalone: false
 })
 
-export class ActiveConversationPage implements OnInit, AfterViewChecked, OnDestroy {
+export class ActiveConversationPage implements OnInit, OnDestroy {
   @ViewChild(IonContent, { static: false }) ionContent!: IonContent;
   private comingMessageEvent!: Subscription;
   private activeConversationSubscription!: Subscription;
@@ -59,7 +58,7 @@ export class ActiveConversationPage implements OnInit, AfterViewChecked, OnDestr
   constructor(
     private authService: AuthService, private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
-    private messageService: MessageService, private chatService: ChatService,
+    private messageService: MessageService,
     private socketMessageHandler:  SocketMessageHandler,
     private socketRoomHandler: SocketRoomHandler,
     private conversationService: ConversationService
@@ -81,21 +80,16 @@ export class ActiveConversationPage implements OnInit, AfterViewChecked, OnDestr
     this.subscribeToPartnerConnection();
  }
 
-  ngAfterViewChecked() {
-   // this.scrollToBottom();
-   console.log()
-  }
-
-
   createNewChatObs(data: CreateChatInfo) {
-    this.chatService.createNewChat(data).subscribe({
-      next: () => {
-        this.handleNewMessage();
+    this.activeConversationService.createConversation(data)
+    .subscribe({
+      next:(response)=> {
+        console.log(response)
       },
-      error: (err) => {
-        console.log(err)
-      },
-    })
+      error: () => {
+        //
+      }
+    });
   }
 
   onSendMessageEmitter (message: Message) {
@@ -199,9 +193,9 @@ export class ActiveConversationPage implements OnInit, AfterViewChecked, OnDestr
     // Here we get active conversation
     this.activeConversationSubscription = this.activeConversationService
     .getActiveConversation.subscribe(data => {
-
       if (data && data?.messages ) {
         this.activeChat = data;
+        console.log(data, "hello")
       }
     });
   }

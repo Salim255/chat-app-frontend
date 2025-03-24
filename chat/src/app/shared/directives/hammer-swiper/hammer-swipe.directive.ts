@@ -1,5 +1,6 @@
-import { Directive, ElementRef, HostListener, Output, EventEmitter, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Directive, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
 import * as Hammer from 'hammerjs';
+
 @Directive({
   selector: '[appHammerSwipe]',
   standalone: false
@@ -46,13 +47,9 @@ export class HammerSwipeDirective {
 
   @HostListener('pan', ['$event'])
   onPan(event: any): void {
-    console.log("Panning")
+    console.log(event, "Panning")
     const element = this.el.nativeElement;
     if (!element) return;
-   /*  if (this.isSwiping) {
-      this.currentTransformX = this.swipeStartPosition + event.deltaX;
-      element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
-    } */
 
     if (this.isSwiping) {
       this.currentTransformX = this.swipeStartPosition + event.deltaX;
@@ -65,7 +62,7 @@ export class HammerSwipeDirective {
 
   @HostListener('panmove', ['$event'])
   OnPanMove(event: any): void {
-    console.log(event)
+   // console.log(event)
   }
 
   @HostListener('panend', ['$event'])

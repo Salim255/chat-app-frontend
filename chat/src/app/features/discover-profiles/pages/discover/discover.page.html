@@ -3,7 +3,7 @@
  >
 </app-header>
 
-<ion-content #content fullscreen="true" *ngIf="isConnected()" scrollY="true" forceOverscroll="false" >
+<ion-content #content fullscreen="true"  scrollY="true" forceOverscroll="false" >
   <ng-container *ngIf="membersList().length > 0; else default" >
     <div
       class="profile-viewer"
@@ -22,6 +22,7 @@
     </div>
   </ng-template>
 </ion-content>
+
 
 <ion-footer  *ngIf="showTabs()" >
   <ion-grid  >
