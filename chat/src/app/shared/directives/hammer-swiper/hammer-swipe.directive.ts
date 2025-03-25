@@ -1,5 +1,7 @@
 import { Directive, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
+import { InteractionBtnService } from 'src/app/features/discover-profiles/services/interaction-btn.service';
 import * as Hammer from 'hammerjs';
+import { SwipeDirection } from 'src/app/features/discover-profiles/pages/discover/discover.page';
 
 @Directive({
   selector: '[appHammerSwipe]',
@@ -20,7 +22,9 @@ export class HammerSwipeDirective {
   private isAnimating: boolean = false;
   private resetProfileTimer: any;
   private hammerInstance: HammerManager | null = null;
-  constructor(private el: ElementRef) {
+  constructor(
+    private el: ElementRef,
+    private interactionBtnService: InteractionBtnService) {
     // Initialize Hammer instance
    this.hammerInstance =  new Hammer(this.el.nativeElement);
   }
@@ -53,6 +57,10 @@ export class HammerSwipeDirective {
 
     if (this.isSwiping) {
       this.currentTransformX = this.swipeStartPosition + event.deltaX;
+      if (event.deltaX !== 0 ) {
+        if (event.deltaX > 0) this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
+        else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft)
+      }
       element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
     } else if (this.isScrolling) {
       // Allow vertical scrolling
@@ -67,7 +75,7 @@ export class HammerSwipeDirective {
 
   @HostListener('panend', ['$event'])
   onPanEnd(event: any): void {
-    console.log(event, 'enendndndnd')
+
     this.isSwiping = false;
 
     const threshold = window.innerWidth / 4;
@@ -100,6 +108,7 @@ export class HammerSwipeDirective {
   this.isSwiping = false;
   this.isScrolling = false;
   this.isHorizontalSwipe = false;
+  this.interactionBtnService.setActionDirection(null);
   }
 
   @HostListener('click', ['$event'])

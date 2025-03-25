@@ -9,7 +9,9 @@ import { IonContent } from '@ionic/angular';
 
 export enum SwipeDirection {
   SwipeLeft =  'swipe-left',
-  SwipeRight = 'swipe-right'
+  SwipeRight = 'swipe-right',
+  SwipeUp =  'swipe-up',
+  SwipeDown = 'swipe-down',
 }
 
 @Component({

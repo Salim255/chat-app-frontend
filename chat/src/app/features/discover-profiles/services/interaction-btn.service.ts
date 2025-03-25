@@ -15,6 +15,6 @@ export class InteractionBtnService {
   }
 
   get getActionDirection() {
-      return this.actionDirectionSource.asObservable();
+    return this.actionDirectionSource.asObservable();
   }
 }

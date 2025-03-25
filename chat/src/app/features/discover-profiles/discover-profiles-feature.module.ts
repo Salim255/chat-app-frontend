@@ -10,7 +10,6 @@ import { ProfileViewerDescriptionComponent } from "./components/profile-viewer-d
 import { ProfileViewerFeatureModule } from "../profile-viewer/profile-viewer-feature.module";
 import { ProfileContentComponent } from "./components/profile-content/profile-content.component";
 import { InteractionBtnsComponent } from "./components/interaction-btns/interaction-btns.component";
-import { ActionBtnComponent } from "./components/interaction-btns/action-btn/action-btn.component";
 import { DiscoverHeaderComponent } from "./components/profile-header/discover-header.component";
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
@@ -21,7 +20,6 @@ import { DiscoverHeaderComponent } from "./components/profile-header/discover-he
     ProfileViewerDescriptionComponent,
     ProfileContentComponent,
     InteractionBtnsComponent,
-    ActionBtnComponent,
     DiscoverHeaderComponent
    ],
   declarations: [
@@ -30,7 +28,6 @@ import { DiscoverHeaderComponent } from "./components/profile-header/discover-he
     ProfileViewerDescriptionComponent,
     ProfileContentComponent,
     InteractionBtnsComponent,
-    ActionBtnComponent,
     DiscoverHeaderComponent
    ]
 })
