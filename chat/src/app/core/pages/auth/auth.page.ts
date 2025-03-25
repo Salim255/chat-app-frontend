@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { Location } from '@angular/common';
 
 @Component({
@@ -8,8 +8,9 @@ import { Location } from '@angular/common';
     standalone: false
 })
 
-export class AuthPage {
-  constructor( private location: Location) {}
+export class AuthPage  {
+  constructor(
+    private location: Location) {}
   customBack(){
     this.location.back();
   }

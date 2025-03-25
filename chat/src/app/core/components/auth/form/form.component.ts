@@ -1,11 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output, output } from "@angular/core";
+import { Component, OnInit, } from "@angular/core";
 import { NgForm } from '@angular/forms';
-import { Observable } from "rxjs";
-import { AuthPost } from "src/app/core/interfaces/auth.interface";
 import { AuthService } from "src/app/core/services/auth/auth.service";
 import { Router } from "@angular/router";
 import { AuthMode } from "src/app/core/services/auth/auth.service";
-
+import { LoadingSpinnerService } from "src/app/shared/components/app-loading-spinner/loading-spinner.service";
 
 interface FormField {
   label: string;
@@ -38,7 +36,10 @@ export class FormComponent implements OnInit {
   userInputs: UserInput = {};
   formFields: FormField[] = [];
 
-  constructor(private  authService:  AuthService, private router: Router ) {}
+  constructor(
+    private  authService: AuthService,
+    private router: Router,
+    private loadingSpinnerService: LoadingSpinnerService ) {}
 
   ngOnInit(): void {
     this.authService.getAuthMode.subscribe(mode => {
@@ -50,21 +51,27 @@ export class FormComponent implements OnInit {
    }
 
   onSubmit(f: NgForm) {
+    this.loadingSpinnerService.showSpinner();
     if(!f.valid || ! this.authMode ){
      return
     }
 
      this.authService.authenticate(this.authMode, this.userInputs )
-    .subscribe({
-     next: (res) => {
-      f.reset();
-      this.router.navigateByUrl('/tabs/discover')
-     },
-     error: (err) => {
-      f.reset();
-      console.log(err, "hello error 💥💥")
-      }
-    })
+        .subscribe({
+          next: (res) => {
+            f.reset();
+            this.router.navigateByUrl('/tabs/discover');
+            setTimeout(()=> {
+              this.loadingSpinnerService.hideSpinner();
+            }, 150)
+          },
+          error: (err) => {
+            f.reset();
+            this.loadingSpinnerService.hideSpinner();
+            // We need to deal with error message
+            console.log(err, "hello error 💥💥")
+            }
+        })
    }
 
   /**============

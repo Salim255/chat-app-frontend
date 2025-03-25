@@ -9,14 +9,14 @@ import { LoadingSpinnerComponent } from "./loading-spinner.component";
 export class LoadingSpinnerService {
   constructor (private modalController:  ModalController) {}
 
-  async onLoadingSpinner() {
+  async showSpinner() {
     const createdModel = await this.modalController.create({
       component: LoadingSpinnerComponent
     })
     await createdModel.present()
   }
 
-  async onCloseLoadingSpinner() {
+  async hideSpinner() {
     this.modalController.dismiss();
   }
 

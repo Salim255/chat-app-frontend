@@ -11,6 +11,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, JsonPipe } from '@angular/common';
 
+
 @NgModule({
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     declarations: [AppComponent],
@@ -44,8 +45,8 @@ import { CommonModule, JsonPipe } from '@angular/common';
       {
         provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig
       },
-      provideHttpClient(withInterceptorsFromDi()
-    )]
+      provideHttpClient(withInterceptorsFromDi())
+    ]
   }
 )
 export class AppModule {}

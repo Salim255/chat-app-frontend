@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { BehaviorSubject, from, map, Observable, switchMap, tap } from "rxjs";
+import { BehaviorSubject, finalize, from, map, Observable, switchMap, tap } from "rxjs";
 import { Conversation } from "../../active-conversation/models/active-conversation.model";
-import { Preferences } from "@capacitor/preferences";
 import { Message } from "../../active-conversation/interfaces/message.interface";
 import { WorkerService } from "src/app/core/workers/worker.service";
 import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
 import { GetAuthData } from "src/app/shared/utils/get-auth-data";
-
+import { LoadingSpinnerService } from "src/app/shared/components/app-loading-spinner/loading-spinner.service";
 
 export type WorkerMessage = {
   action: DecryptionActionType;
@@ -27,7 +26,10 @@ export class ConversationService {
   private conversationsSource = new BehaviorSubject< Conversation [] | null> (null);
   private worker: Worker | null = null;
 
-  constructor(private http: HttpClient, private workerService: WorkerService) {
+  constructor(
+    private http: HttpClient,
+     private workerService: WorkerService,
+     private loadingSpinnerService:  LoadingSpinnerService) {
     this.worker = this.workerService.getWorker();
     this.setConversations(null);
     this.conversationsMap.clear();
@@ -74,8 +76,11 @@ export class ConversationService {
             )
             }
           )
+          ,
+          finalize(() => this.loadingSpinnerService.hideSpinner())
         )
       }),
+      finalize(() => this.loadingSpinnerService.hideSpinner()) // Ensure the spinner hides even if there's an error
     )
   }
 
