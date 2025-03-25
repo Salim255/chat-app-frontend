@@ -15,9 +15,7 @@
       z-index: 1;
     }
   }
-  &__btn:first-child {
-    transform: scaleX(-1);
-  }
+
   &__btn:nth-child(even) {
     height: 3.5rem;
     width: 3.5rem;
@@ -32,6 +30,12 @@
     ion-icon {
       font-size: 1px;
       transform: translate(-50%, -50%) scale(20);
+    }
+  }
+
+  &__btn:first-child {
+    ion-icon {
+      transform: translate(-50%, -50%) scale(20)  scaleX(-1);
     }
   }
 
@@ -70,7 +74,7 @@
         &__3{
           background: linear-gradient(#098652, #c5f02a);
         }
-        &__4{
+        &__4 {
           background: rgb(255, 0, 166);  /* Change this to your desired color */
         }
     }

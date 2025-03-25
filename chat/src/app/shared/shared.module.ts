@@ -24,7 +24,7 @@ import { DistanceComponent } from "./components/profile/profile-coordination/dis
 import { NameAgeComponent } from "./components/profile/profile-coordination/name-age/name-age.component";
 import { HammerSwipeDirective } from "./directives/hammer-swiper/hammer-swipe.directive";
 import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.directive";
-
+import { LoadingSpinnerComponent } from "./components/app-loading-spinner/loading-spinner.component";
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA] ,
@@ -42,7 +42,8 @@ import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.
     DistanceComponent,
     NameAgeComponent,
     HammerSwipeDirective,
-    CustomSwiperDirective
+    CustomSwiperDirective,
+    LoadingSpinnerComponent
    ],
   exports: [
     SearchBarComponent,
@@ -58,7 +59,8 @@ import { CustomSwiperDirective } from "./directives/custom-swiper/custom-swiper.
     DistanceComponent,
     NameAgeComponent,
     HammerSwipeDirective,
-    CustomSwiperDirective
+    CustomSwiperDirective,
+    LoadingSpinnerComponent
    ],
   imports:
   [

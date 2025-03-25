@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, signal} from "@angular/core";
 import { DiscoverService } from "src/app/features/discover-profiles/services/discover.service";
 import { Member } from "src/app/shared/interfaces/member.interface";
-import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
 import { SwipeDirection } from "../../pages/discover/discover.page";
 import { Subscription } from "rxjs";
 import { InteractionBtnService } from "../../services/interaction-btn.service";
@@ -25,7 +24,6 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
 
   constructor (
     private discoverService: DiscoverService,
-    private tabsService: TabsService,
     private interactionBtnService: InteractionBtnService) {
 
   }
@@ -43,28 +41,24 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
         icon: `${this.path}close.svg`,
         isActiveIcon: `${this.path}clear-close.svg`,
         animationType: SwipeDirection.SwipeLeft,
-        background: '',
         onClick: () => { this.onSkip() }
       },
       { name: 'stars',
         icon: `${this.path}star.svg`,
         isActiveIcon: `${this.path}close.svg`,
         animationType: '',
-        background: '',
         onClick: () => {  }
       },
       { name: 'like',
         icon: `${this.path}heart.svg`,
         isActiveIcon: `${this.path}clear-heart.svg`,
         animationType: SwipeDirection.SwipeRight,
-        background: '',
         onClick: () => { this.onAddFriend() }
       },
       { name: 'boost',
         icon: `${this.path}flash.svg`,
         isActiveIcon: `${this.path}close.svg`,
         animationType: '',
-        background: '',
         onClick: () => {  }
       }
       ];
@@ -90,16 +84,15 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
     this.discoverService.setProfileInteractionType('like')
   }
 
-  setTapHidingStatus() {
-    this.tabsService.setTapHidingStatus('show')
-  }
+
   private subscribeToInteractionBtn(){
     this.interactiveBtnSource = this.interactionBtnService.getActionDirection
     .subscribe(action => {
        this.animationType.set(action) ;
     })
    }
+
   ngOnDestroy(): void {
-    console.log("he")
+    this.interactiveBtnSource?.unsubscribe();
   }
 }
