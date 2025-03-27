@@ -29,7 +29,9 @@ export class DiscoverService {
 
   private profileInteractionTypeSource = new  BehaviorSubject <InteractionType | null > (null);
 
-  constructor (private http: HttpClient, private itsMatchModalService: ItsMatchModalService) { }
+  constructor(
+    private http: HttpClient,
+    private itsMatchModalService: ItsMatchModalService) { }
 
   fetchUsers(){
     return this.http.get<any>(`${this.ENV.apiUrl}/friends/non-friends`)

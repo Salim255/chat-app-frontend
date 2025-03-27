@@ -1,23 +1,26 @@
 import { Injectable } from "@angular/core";
-import { ModalController } from "@ionic/angular";
-import { LoadingSpinnerComponent } from "./loading-spinner.component";
+
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class LoadingSpinnerService {
-  constructor (private modalController:  ModalController) {}
+  private spinnerSource = new BehaviorSubject<boolean>(false);
 
-  async showSpinner() {
-    const createdModel = await this.modalController.create({
-      component: LoadingSpinnerComponent
-    })
-    await createdModel.present()
+  constructor () {}
+
+  get getSpinnerStatus() {
+    return  this.spinnerSource.asObservable();
   }
 
-  async hideSpinner() {
-    this.modalController.dismiss();
+  showSpinner() {
+    this.spinnerSource.next(true)
+  }
+
+   hideSpinner() {
+    this.spinnerSource.next(false)
   }
 
 }

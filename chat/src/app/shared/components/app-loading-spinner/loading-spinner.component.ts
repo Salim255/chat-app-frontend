@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
-
+import { Component, OnInit, signal } from "@angular/core";
+import { LoadingSpinnerService } from "./loading-spinner.service";
+import { Subscription } from "rxjs";
 @Component({
   selector: "app-loading-spinner",
   templateUrl: './loading-spinner.component.html',
@@ -8,5 +9,5 @@ import { Component } from "@angular/core";
 })
 
 export class LoadingSpinnerComponent {
-  constructor (){}
+  constructor(){}
 }

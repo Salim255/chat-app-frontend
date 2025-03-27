@@ -38,7 +38,7 @@ export class ProfileSwipeComponent implements OnDestroy,AfterViewInit, OnChanges
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['profile']) {
-          console.log(this.profile, "hello");
+         // console.log(this.profile, "hello");
         }
 
       this.profileToView

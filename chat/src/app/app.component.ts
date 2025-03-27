@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { AuthService } from './core/services/auth/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { StatusBar, StatusBarStyle } from '@capacitor/status-bar';
-
+import { LoadingSpinnerService } from './shared/components/app-loading-spinner/loading-spinner.service';
 
 register();
 
@@ -16,12 +16,14 @@ register();
 })
 export class AppComponent implements OnInit, OnDestroy {
   private authSub!: Subscription;
+  private spinnerLoaderSubscription!: Subscription;
   private previousAuthState = false;
-
+  isVisibleSpinner = signal<boolean>(false);
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private loadingSpinnerService: LoadingSpinnerService
   ) {
   }
 
@@ -32,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     StatusBar.setOverlaysWebView({ overlay: true });
     StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.subscribeToAuth();
+    this.subscribeToSpinner()
   }
 
   ionViewWillEnter(){
@@ -46,7 +49,17 @@ export class AppComponent implements OnInit, OnDestroy {
     })
   }
 
+  private subscribeToSpinner() {
+    this.spinnerLoaderSubscription = this.loadingSpinnerService.getSpinnerStatus
+    .subscribe((status)=>
+     {
+      this.isVisibleSpinner.set(status)
+     }
+    )
+  }
+
   ngOnDestroy() {
-    if (this.authSub) this.authSub.unsubscribe();
+    this.authSub?.unsubscribe();
+    this.spinnerLoaderSubscription?.unsubscribe()
   }
 }
