@@ -19,7 +19,6 @@ export class HammerSwipeDirective {
   private isSwiping: boolean = false;
   private isScrolling: boolean = false;
   private isHorizontalSwipe: boolean = false;
-  private isAnimating: boolean = false;
   private resetProfileTimer: any;
   private hammerInstance: HammerManager | null = null;
   constructor(
@@ -32,7 +31,6 @@ export class HammerSwipeDirective {
 
   @HostListener('panstart', ['$event'])
   onPanStart(event: any): void {
-    console.log(event, "Hello start")
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
 
@@ -51,13 +49,13 @@ export class HammerSwipeDirective {
 
   @HostListener('pan', ['$event'])
   onPan(event: any): void {
-    console.log(event, "Panning")
     const element = this.el.nativeElement;
     if (!element) return;
 
     if (this.isSwiping) {
       this.currentTransformX = this.swipeStartPosition + event.deltaX;
       if (event.deltaX !== 0 ) {
+        // For interaction btns animations
         if (event.deltaX > 0) this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
         else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft)
       }
@@ -75,28 +73,17 @@ export class HammerSwipeDirective {
 
   @HostListener('panend', ['$event'])
   onPanEnd(event: any): void {
-
     this.isSwiping = false;
 
     const threshold = window.innerWidth / 4;
-    if (this.currentTransformX > threshold) {
-      this.swipeRight.emit();
-    } else if (this.currentTransformX < -threshold) {
-      //console.log("pans end  left called😍😍")
-      this.swipeLeft.emit();
-    } else {
-      this.resetProfilePosition();
-    }
 
     if (this.isHorizontalSwipe) {
-      // For horizontal swipes (left or right)
       if (this.currentTransformX > threshold) {
         this.swipeRight.emit();
       } else if (this.currentTransformX < -threshold) {
         this.swipeLeft.emit();
-      } else {
-        this.resetProfilePosition();
       }
+      this.resetProfilePosition();
     } else {
       // If it's vertical scroll, allow scrolling to happen naturally
       if (!this.isSwiping) {
@@ -147,6 +134,6 @@ export class HammerSwipeDirective {
         element.style.transition = 'transform 0.3s ease-out';
         element.style.transform = 'translateX(0) rotate(0)';
       }
-    }, 500);
+    }, 300);
   }
 }

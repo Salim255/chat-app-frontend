@@ -4,7 +4,7 @@ import { Member } from "src/app/shared/interfaces/member.interface";
 import { SwipeDirection } from "../../pages/discover/discover.page";
 import { Subscription } from "rxjs";
 import { InteractionBtnService } from "../../services/interaction-btn.service";
-
+import { InteractionType } from "src/app/features/discover-profiles/services/discover.service";
 @Component({
     selector: "app-interaction-btns",
     templateUrl: "./interaction-btns.component.html",
@@ -77,11 +77,11 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
   }
 
   onSkip () {
-     this.discoverService.setProfileInteractionType('dislike')
+     this.discoverService.setProfileInteractionType(InteractionType.DISLIKE)
   }
 
   onAddFriend () {
-    this.discoverService.setProfileInteractionType('like')
+    this.discoverService.setProfileInteractionType(InteractionType.LIKE)
   }
 
 

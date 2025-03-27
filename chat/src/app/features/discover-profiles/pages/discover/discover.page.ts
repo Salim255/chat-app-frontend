@@ -69,7 +69,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   trackById(i: number, item: Member): number {
-    return item.user_id; // Ensure user_id is unique
+    return item.user_id;
   }
 
   selectTab () {
@@ -80,20 +80,21 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.listenToProfileInteractionSource = this.discoverService.
       getProfileInteractionType
       .subscribe(interActionType => {
-        interActionType  && this.handleProfileInteraction(interActionType)
+       if (interActionType) {
+         this.handleProfileInteraction(interActionType)
+       }
       })
   }
 
   private handleProfileInteraction(actionType: InteractionType) {
-    if (actionType === 'dislike') this.handleDislikeProfile();
-    if (actionType === 'like') this.handleLikeProfile();
+    if (actionType === InteractionType.DISLIKE) this.handleDislikeProfile();
+    if (actionType === InteractionType.LIKE) this.handleLikeProfile();
+    this.discoverService.setProfileInteractionType(null);
   }
 
   handleDislikeProfile() {
-    console.log(this.isAnimating(), "hello status")
    if (this.isAnimating()) return;
     this.setSwipeAnimationStyle(SwipeDirection.SwipeLeft);
-
     this.isAnimating.set(true) ;
    setTimeout(() => {
       this.removeTopProfile();
@@ -108,27 +109,30 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   handleLikeProfile() {
     if (this.isAnimating()) return;
+
+    // To avoid many
     this.isAnimating.set(true);
+
+    // For interaction animation
     this.setSwipeAnimationStyle(SwipeDirection.SwipeRight);
+
     const profile = this.topProfile ?? null;
     if (profile ) {
-    this.discoverService.likeProfile(profile)
-    .pipe(take(1))
-    .subscribe({
-        next:(res) => {
-          this.removeTopProfile();
-          this.isAnimating.set(false) ;
-        },
-        error: () => {
-          console.log('Error 😇😇😇');
-          this.isAnimating.set(false) ;
-        }
-      });
+      this.discoverService.likeProfile(profile)
+      .subscribe({
+          next:(res) => {
+
+          },
+          error: () => {
+            //this.isAnimating.set(false) ;///
+          }
+        });
     }
 
     setTimeout(() => {
       this.removeTopProfile();
       this.animationClass.set(''); // Reset the animation class
+      this.isAnimating.set(false) ;//
    }, 500);
   }
 
