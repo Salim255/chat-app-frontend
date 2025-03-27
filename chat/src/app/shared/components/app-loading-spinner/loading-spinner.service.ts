@@ -1,5 +1,4 @@
-import { Injectable } from "@angular/core";
-
+import { Injectable, signal } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({
@@ -8,6 +7,7 @@ import { BehaviorSubject } from "rxjs";
 
 export class LoadingSpinnerService {
   private spinnerSource = new BehaviorSubject<boolean>(false);
+  private isVisibleSpinner = signal<boolean>(false);
 
   constructor () {}
 
@@ -16,11 +16,15 @@ export class LoadingSpinnerService {
   }
 
   showSpinner() {
-    this.spinnerSource.next(true)
+    if(this.isVisibleSpinner()) return;
+    this.spinnerSource.next(true);
+    this.isVisibleSpinner.set(true);
   }
 
-   hideSpinner() {
-    this.spinnerSource.next(false)
+  hideSpinner() {
+    if(!this.isVisibleSpinner()) return
+    this.spinnerSource.next(false);
+    this.isVisibleSpinner.set(false);
   }
 
 }

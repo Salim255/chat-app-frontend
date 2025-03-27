@@ -20,7 +20,6 @@ export class LoadingInterceptor implements HttpInterceptor {
     this.loadingService.showSpinner()
     return next.handle(req)
     .pipe(
-      delay(200),
       finalize(() => {
         this.loadingService.hideSpinner()
       })
