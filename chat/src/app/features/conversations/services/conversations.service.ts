@@ -8,7 +8,6 @@ import { WorkerService } from "src/app/core/workers/worker.service";
 import { DecryptionActionType } from "src/app/core/workers/decrypt.worker";
 import { GetAuthData } from "src/app/shared/utils/get-auth-data";
 
-
 export type WorkerMessage = {
   action: DecryptionActionType;
   email: string;
@@ -51,7 +50,7 @@ export class ConversationService {
           map( response => response.data || null ),
 
           tap ( (incomingConversations) => {
-
+            console.log("Hello world 😍😍", incomingConversations)
             if (!incomingConversations || !this.worker) {
                if (!incomingConversations) {
                   this.conversationsMap.clear();
@@ -79,7 +78,76 @@ export class ConversationService {
       })
     )
   }
-//
+
+  addNewlyCreatedConversation (conversation: Conversation){
+
+    if (!conversation || !this.worker) return;
+
+    // Get existing conversations
+    const existingConversations = this.conversationsSource.value ?? [];
+
+    // Get decryption data
+    GetAuthData.getAuthData().then((storedData) => {
+      if (!storedData) throw new Error("There is no auth data");
+      if (!this.worker){
+        console.log('Worker error', this.worker)
+        this.worker = this.workerService.getWorker();
+      }
+      const decryptionData = {
+        email: storedData._email,
+        privateKey: storedData._privateKey,
+      };
+
+      // Prepare worker message
+      const workerMessageData: WorkerMessage = {
+        action: DecryptionActionType.decryptConversations,
+        ...decryptionData,
+        conversations: [conversation], // Only decrypt the new conversation
+      };
+
+
+      if (this.worker) {
+        console.log("Hello", conversation)
+            // Send decryption request to the worker
+      this.worker.postMessage(workerMessageData);
+
+      // Handle the worker's response
+      this.worker!.onmessage = (event: MessageEvent) => {
+        const decryptedData = event.data;
+        console.log(decryptedData, "helof  helo from here")
+        if (!decryptedData?.conversations?.length) return
+
+          const decryptedConversation: Conversation = { ...decryptedData.conversations[0] };
+
+          if (!decryptedConversation?.id) return; // Ensure conversation has an ID
+          // Get the last message ID from the original conversation
+          const lastMessageId = decryptedConversation.last_message?.id;
+          if (!lastMessageId) return; // Ensure lastMessageId exists
+
+          // Find the decrypted message that matches the last_message ID
+          const decryptedLastMessage: Message | undefined =  decryptedConversation?.messages?.find((msg: Message) => msg.id === lastMessageId) ;
+
+          // Assign the decrypted last message
+          if (!decryptedLastMessage || !decryptedConversation.last_message) return
+
+          decryptedConversation.last_message = {
+            ...decryptedConversation.last_message,
+            content: decryptedLastMessage.content};
+
+          //const lastMessage = decryptedData.conversations[0].messages[lens]
+          //const decryptedConversation: Conversation = {...decryptedData.conversations[0], last_message: decryptedData.conversations[0].messages[] };
+
+          // Update conversationsMap
+          this.conversationsMap.set(decryptedConversation?.id.toString(), decryptedConversation);
+
+          // Update BehaviorSubject (conversationsSource) to trigger UI updates
+          this.setConversations([...existingConversations, decryptedConversation]);
+      };
+      }
+     });
+
+  }
+  //
   /** Update messages when the conversation partner joins */
   updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation) {
     if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) {
@@ -118,7 +186,7 @@ export class ConversationService {
 
   /** Update conversation with new message */
   updateConversationWithNewMessage(message: Message, actionTypeReceive = false) {
-    if (message ) {
+    if (!message)  return
 
     const conversationId = message.chat_id.toString();
     const conversation = this.conversationsMap.get(conversationId);
@@ -146,7 +214,7 @@ export class ConversationService {
 
       // Reflect the change in the UI array (this will trigger UI updates)
       this.setConversations(Array.from(this.conversationsMap.values()));
-    }
+
   }
 
   updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(activeChat: Conversation) {
@@ -171,7 +239,9 @@ export class ConversationService {
   }
   /** Set conversations in the BehaviorSubject */
   setConversations (chats: Conversation[] | null) {
-    this.conversationsSource.next(chats);
+    console.log("Hello world 😍😍", chats)
+    if (!chats) return;
+    this.conversationsSource.next(this.sortConversations(chats));
   }
   /** Get conversations as observable */
   get getConversations () {
@@ -191,7 +261,7 @@ export class ConversationService {
   /** Decrypt conversations using a worker */
   private decryptAndAddConversation (
     conversationsToDecrypt: Conversation [],
-    existingConversations: Conversation[] ,
+    existingConversations: Conversation [] ,
     decryptionData: any)
     {
 
@@ -201,7 +271,7 @@ export class ConversationService {
     {
       action: DecryptionActionType.decryptConversations,
       ...decryptionData,
-      conversations:  conversationsToDecrypt
+      conversations: conversationsToDecrypt
     }
 
     this.worker.postMessage(workerMessageData);
@@ -212,11 +282,23 @@ export class ConversationService {
 
       // Now update the conversations with decrypted data
       if (decryptedData && decryptedData.conversations) {
+
         this.setConversations(existingConversations ?
           [...existingConversations, ...decryptedData.conversations]
           : decryptedData.conversations);
+
         this.initializeConversationsMap(this.conversationsSource.value || []);
+
       }
     };
   }
+
+  private sortConversations(conversations: Conversation []) {
+   const sortedConversations =   conversations.sort((a, b) => {
+        return new Date(b.last_message?.updated_at ?? new Date(0)).getTime() - new Date(a.last_message?.updated_at ?? new Date(0)).getTime();
+      });
+   return sortedConversations
+  }
+
+
 }

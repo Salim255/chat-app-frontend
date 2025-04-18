@@ -30,7 +30,7 @@ import { SharedModule } from "./shared/shared.module";
         registrationStrategy: 'registerWhenStable:30000'
     }),
     SharedModule
-],
+    ],
 
     providers: [
        JsonPipe,

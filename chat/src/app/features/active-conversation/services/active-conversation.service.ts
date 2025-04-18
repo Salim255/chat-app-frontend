@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable, Optional } from "@angular/core";
 import { BehaviorSubject, from, map, Observable, of, switchMap, tap } from "rxjs";
 import { Conversation } from "../models/active-conversation.model";
 import { Partner } from "src/app/shared/interfaces/partner.interface";
@@ -14,6 +14,7 @@ import { DecryptConversationsObserver } from "./decryption-observer";
 import { WorkerService } from "src/app/core/workers/worker.service";
 import { GetAuthData } from "src/app/shared/utils/get-auth-data";
 import { Message } from "../interfaces/message.interface";
+
 
 export enum PartnerRoomStatus {
   OFFLINE = "offline",
@@ -40,7 +41,8 @@ export class ActiveConversationService {
     private http: HttpClient,
     private conversationService: ConversationService,
     private modalController:  ModalController,
-    private workerService: WorkerService
+    private workerService: WorkerService,
+
   ) {
     this.worker = this.workerService.getWorker();
     this.setPartnerInfo(null);
@@ -60,7 +62,6 @@ export class ActiveConversationService {
      this.setPartnerInfo(partnerInfo);
      this.setActiveConversation(conversation);
 
-      /*  this.openChatModal();  */
      this.openChatModal();
     /*  this.fetchChatByPartnerID(partnerInfo.partner_id).subscribe({
        next: (response)=> {
@@ -144,6 +145,7 @@ export class ActiveConversationService {
             return this.http.post<any>(`${this.ENV.apiUrl}/chats`, {...data, ...rest }).pipe(
               tap((response) => {
               if (response?.data) {
+
                 const createdConversation = {
                   ...response.data,
                   messages: [
@@ -165,6 +167,7 @@ export class ActiveConversationService {
 
   // Here we send a message to a current conversation
   sendMessage(data: CreateMessageData) {
+
     if (!this.activeConversationSource.value) throw new Error("There is no chat.");
 
     return from (GetAuthData.getAuthData()).pipe(

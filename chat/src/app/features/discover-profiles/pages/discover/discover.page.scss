@@ -1,6 +1,6 @@
 @use "../../../../../theme/queries" as *;
 ion-content {
-  --background: var(--ion-background-color-2);
+ --background: var(--ion-background-color-2);
 
   height: 100vh;
   position: relative;
@@ -28,6 +28,7 @@ ion-footer {
   padding-bottom: .5rem;
   position: absolute;
   bottom: 0;
+
   ion-grid {
     ion-row:first-child {
       margin-bottom: .5rem;

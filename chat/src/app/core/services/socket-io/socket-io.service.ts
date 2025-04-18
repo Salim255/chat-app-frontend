@@ -3,9 +3,11 @@ import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { SocketNewConversationHandler } from './socket-new-conversation-handler';
 import { SocketMessageHandler} from './socket-message-handler';
 import { SocketRoomHandler } from './socket-room-handler';
 import { SocketUserTypingHandler } from './socket-user-typing-handler';
+import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
 
 export type JoinRomData = {
   fromUserId: number ;
@@ -26,9 +28,7 @@ export enum ConnectionStatus {
   Offline =  'offline'
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 
 export class SocketIoService {
   private socket: Socket | null = null;
@@ -43,7 +43,9 @@ export class SocketIoService {
   constructor (
     private socketMessageHandler: SocketMessageHandler,
     private socketRoomHandler: SocketRoomHandler,
-    private socketUserTypingHandler: SocketUserTypingHandler ) { }
+    private socketUserTypingHandler: SocketUserTypingHandler,
+    private socketNewConversationHandler :  SocketNewConversationHandler
+    ) {}
 
   // ==== Connection & initialization ======
   // =======================================
@@ -82,33 +84,38 @@ export class SocketIoService {
     });
   }
 
-    private establishSocketConnection(){
-        // ====== Establish connection to socket service ======
-        return  io(`${this.ENV.socketUrl}`,  {
-          transports: ['websocket', 'polling'],
-          withCredentials: true // Ensure credentials are sent with the request
-        });
-    }
+  private establishSocketConnection(){
+      // ====== Establish connection to socket service ======
+     /*  return  io(`${this.ENV.socketUrl}`,  {
+        transports: ['websocket', 'polling'],
+        withCredentials: true // Ensure credentials are sent with the request
+      }); */
+      return  io(`http://localhost:3000/`,  {
+        transports: ['websocket', 'polling'],
+        withCredentials: true // Ensure credentials are sent with the request
+      });
+  }
 
-    private setupCommonListeners(): void {
-      this.setupPartnerConnectionListeners();
-      this.setupDisconnectListener();
+  private setupCommonListeners(): void {
+    this.setupPartnerConnectionListeners();
+    this.setupDisconnectListener();
 
-      if (this.socket) {
-        this.socketMessageHandler.handleMessageEvents(this.socket); // Delegate message event handling
-        this.socketRoomHandler.handleRoomEvent(this.socket)
-      }
+    if (this.socket) {
+      this.socketMessageHandler.handleMessageEvents(this.socket); // Delegate message event handling
+      this.socketRoomHandler.handleRoomEvent(this.socket);
+      this.socketNewConversationHandler.handleIncomingNewConversationEvent(this.socket)
     }
+  }
 
-    private setupPartnerConnectionListeners() {
-      // ===== Listen to user connection change =====
-      this.socket?.on('user_status_changed', result => {
-        console.log(result, "heleoeo 💥💥" )
-        if (result) {
-          this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
-        }}
-      );
-    }
+  private setupPartnerConnectionListeners() {
+    // ===== Listen to user connection change =====
+    this.socket?.on('user_status_changed', result => {
+      console.log(result, "heleoeo 💥💥" )
+      if (result) {
+        this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
+      }}
+    );
+  }
 
   private setupDisconnectListener() {
     this.socket?.on('disconnect', (reason) => {
@@ -128,6 +135,16 @@ export class SocketIoService {
       this.socket.emit('registerUser',  userId );
     }
   }
+
+  // ================================================
+  // ========== Handle new conversation emitter =====
+  createdConversationEmitter(conversation: Conversation){
+    console.log(conversation, "Hello from socket service")
+    if (!this.socket) return
+    this.socketNewConversationHandler.handleNewConversationEmitter(this.socket, conversation)
+  }
+
+  // ================================================
 
   // == Emits the "join-room" event  join a chat room
   userJoinChatRoom(usersData: JoinRomData) {

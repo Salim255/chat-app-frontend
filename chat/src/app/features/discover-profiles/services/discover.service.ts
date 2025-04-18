@@ -49,6 +49,7 @@ export class DiscoverService {
   }
 
   likeProfile (likedProfile: Member) {
+
     return this.http.post<any>(`${this.ENV.apiUrl}/friends`,
       { friend_id: likedProfile.user_id })
       .pipe(tap(response => {
@@ -76,7 +77,6 @@ export class DiscoverService {
     this.profileInteractionTypeSource.next(interActionType)
   }
 
-
   setDisplayedProfile (data: Member) {
     this.displayedProfileSource.next(data);
   }
@@ -88,7 +88,6 @@ export class DiscoverService {
   get getLikeProfileState() {
     return this.likeProfileSource.asObservable()
   }
-
 
   // We set the profile id of the current profile
   setProfileToRemove(profileId: number){

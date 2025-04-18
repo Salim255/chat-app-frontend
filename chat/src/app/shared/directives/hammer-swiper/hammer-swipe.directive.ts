@@ -66,11 +66,6 @@ export class HammerSwipeDirective {
     }
   }
 
-  @HostListener('panmove', ['$event'])
-  OnPanMove(event: any): void {
-   // console.log(event)
-  }
-
   @HostListener('panend', ['$event'])
   onPanEnd(event: any): void {
     this.isSwiping = false;

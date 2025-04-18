@@ -33,31 +33,37 @@ addEventListener('message', async ({ data }) => {
       postMessage({ error: "Invalid action or missing data" });
       return;
     }
-
+    console.log(data, "hello data from worker")
     switch (data.action) {
       case DecryptionActionType.decryptConversations:
+
         const decryptData : DecryptConversationsParams = {
           conversations: data.conversations,
           receiverPrivateKeyBase64: data.privateKey,
           decryptionEmail: data?.email
         }
         const decryptedConversations = await decryptConversations(decryptData);
+
         postMessage({ action: 'decrypted-conversations', conversations: decryptedConversations });
+        close()
         break;
 
       default:
         postMessage({ error: "Invalid action" });
+        close();
     }
 
   } catch (error) {
+    console.log(error, "hello eroore")
     postMessage({ error });
+    close()
   }
 });
 
 // Decrypt messages in each conversation asynchronously
 async function decryptConversations(data: DecryptConversationsParams) {
   const decryptedConversations = [];
-
+  console.log("Hello from decrypting...")
   for (const conversation of data.conversations) {
     if (!conversation.messages) {
       decryptedConversations.push(conversation);
@@ -75,11 +81,13 @@ async function decryptConversations(data: DecryptConversationsParams) {
       receiverEmail: data.decryptionEmail,
     };
 
-    // Decrypt all messages in a single pass
+    // Decrypt all messages in a single pass //
     const decryptedMessages = await Promise.all(
       conversation.messages.map(async (msg) => {
         try {
-          const decryptedContent = await MessageEncryptDecrypt.decryptMessage({
+          const decryptedContent = await MessageEncryptDecrypt
+          .decryptMessage(
+            {
             ...decryptionDataBase,
             encryptedMessageBase64: msg.content,
           });
@@ -94,6 +102,6 @@ async function decryptConversations(data: DecryptConversationsParams) {
 
     decryptedConversations.push({ ...conversation, messages: decryptedMessages });
   }
-
+  console.log('Well, decrypted 😍😍😍😍', decryptedConversations)
   return decryptedConversations;
 }

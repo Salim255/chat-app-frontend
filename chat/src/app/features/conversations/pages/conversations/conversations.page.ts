@@ -38,18 +38,16 @@ export class ConversationsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
   console.log("hello")
+  this.subscribeToConversations();
   }
 
   ionViewWillEnter () {
-    this.subscribeToConversations();
-    this.conversationService.fetchConversations().subscribe();
-    this.accountService.fetchAccount().subscribe();
-
+    this.conversationService.fetchConversations();
+    this.accountService.fetchAccount();
     this.subscribeToUserId();
     this.subscribeToMessageDelivery();
     this.subscribeToUpdateChatCounter();
     this.subscribeUpdatedUserDisconnection();;
-
   }
 
 
@@ -99,22 +97,26 @@ export class ConversationsPage implements OnInit, OnDestroy {
   private subscribeToConversations() {
     this.conversationsSource = this.conversationService.getConversations
     .subscribe(chats => {
-      if(chats){
+      console.log(chats, "hell chats")
+      if(chats) {
+
         this.conversations = [...chats];
-        this.isEmpty = chats.length === 0 ;
-        this.sortConversations();
+        this.isEmpty = chats.length === 0 ;//////
+       // this.sortConversations();
       }
     })
   }
 
   private subscribeUpdatedUserDisconnection() {
-    this.updatedUserDisconnectionSubscription = this.socketIoService.updatedUserDisconnectionGetter.subscribe(data => {
+    this.updatedUserDisconnectionSubscription = this.socketIoService
+    .updatedUserDisconnectionGetter.subscribe(data => {
       this.conversationService.fetchConversations().subscribe();
      })
   }
 
   private subscribeToUpdateChatCounter() {
-    this.updatedChatCounterSubscription = this.socketMessageHandler.getUpdatedChatCounter.subscribe(updatedChat => {
+    this.updatedChatCounterSubscription = this.socketMessageHandler
+    .getUpdatedChatCounter.subscribe(updatedChat => {
       console
       this.updateAndSortConversations(updatedChat);
     })
@@ -135,14 +137,9 @@ export class ConversationsPage implements OnInit, OnDestroy {
       return chat;
     });
 
-    this.sortConversations();
+   // this.sortConversations();
   }
 
-  private sortConversations() {
-    this.conversations.sort((a, b) => {
-      return new Date(b.updated_at ?? new Date(0)).getTime() - new Date(a.updated_at ?? new Date(0)).getTime();
-    });
-  }
 
 
 

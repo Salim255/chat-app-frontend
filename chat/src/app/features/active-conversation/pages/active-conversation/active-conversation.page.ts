@@ -56,13 +56,16 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   messagesList = signal< Message []> ([]) ;
 
   constructor(
-    private authService: AuthService, private socketIoService: SocketIoService,
+    private authService: AuthService,
+    private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
     private messageService: MessageService,
     private socketMessageHandler:  SocketMessageHandler,
     private socketRoomHandler: SocketRoomHandler,
     private conversationService: ConversationService
-    ){}
+    ){
+
+    }
 
   ngOnInit(): void {
     this.subscribeToUserId();
@@ -85,6 +88,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     .subscribe({
       next:(response)=> {
         console.log(response)
+        // Notify partner of newly created conversation
+        const newConversation : Conversation = {...response?.data};
+        this.socketIoService.createdConversationEmitter(newConversation)
       },
       error: () => {
         //

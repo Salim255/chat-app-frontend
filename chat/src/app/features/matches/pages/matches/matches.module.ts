@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { MatchesPageRoutingModule } from './matches-routing.module';
-
-import { MatchesPage } from './matches.page';
-
-import { MatchesFeatureModule } from 'src/app/features/matches/matches-feature.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatchesPage } from './matches.page';
+import { ItsMatchModalComponent } from '../../components/its-match-modal/its-match-modal.component';
+import { PairedPhotosComponent } from '../../components/paired-photos/paired-photos.component';
+import { MatchItemComponent } from '../../components/match-item/match-item.component';
+
 
 
 @NgModule({
@@ -18,9 +19,13 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     MatchesPageRoutingModule,
-    SharedModule,
-    MatchesFeatureModule
+    SharedModule
   ],
-  declarations: [ MatchesPage ]
+  declarations: [
+    MatchesPage,
+    PairedPhotosComponent,
+    MatchItemComponent,
+    ItsMatchModalComponent
+   ]
 })
 export class MatchesPageModule {}

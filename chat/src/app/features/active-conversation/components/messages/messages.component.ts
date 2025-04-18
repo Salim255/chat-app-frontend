@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { Message } from "../../interfaces/message.interface";
-import { Subscription } from "rxjs";
 import { IonContent } from "@ionic/angular";
 import { StringUtils } from "src/app/shared/utils/string-utils";
 import { ActiveConversationService } from "../../services/active-conversation.service";
