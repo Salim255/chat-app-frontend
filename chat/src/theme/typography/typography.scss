@@ -7,21 +7,16 @@
 }
 
 .card-bg {
-    background: linear-gradient(
-      to right bottom,
-      rgba(#0097b2, 0.2) 5%,
-      rgba(#ffffff, 0.5) 5%);
-
+  background: linear-gradient(to right bottom, rgba(#0097b2, 0.2) 5%, rgba(#ffffff, 0.5) 5%);
 }
 
 .left-align {
-  text-align:  left;
+  text-align: left;
 }
 
 .text-color-1 {
   color: var(--ion-text-color-1);
 }
 
- //--background: linear-gradient(#e8f4f3 50%, #fbf7f3 90%);
-  //clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-
+//--background: linear-gradient(#e8f4f3 50%, #fbf7f3 90%);
+//clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);

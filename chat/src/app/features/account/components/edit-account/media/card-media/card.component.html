@@ -1,4 +1,7 @@
 <ion-item lines="none">
-  <img *ngIf="mediaList[mediaIndex]"  src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D"/>
+  <img
+    *ngIf="mediaList[mediaIndex]"
+    src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D"
+  />
   <div class="media-placeholder" *ngIf="!mediaList[mediaIndex]"></div>
 </ion-item>

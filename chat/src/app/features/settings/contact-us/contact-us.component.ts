@@ -1,12 +1,11 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "app-contact-us",
-  templateUrl: "./contact-us.component.html",
-  styleUrls: ["./contact-us.component.scss"],
-  standalone: false
+  selector: 'app-contact-us',
+  templateUrl: './contact-us.component.html',
+  styleUrls: ['./contact-us.component.scss'],
+  standalone: false,
 })
-
 export class ContactUsComponent {
-  constructor(){}
+  constructor() {}
 }

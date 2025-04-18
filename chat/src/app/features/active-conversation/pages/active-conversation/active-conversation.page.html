@@ -1,26 +1,17 @@
-
-<app-active-conversation-header
-[partnerInfo]="partnerInfo" >
-</app-active-conversation-header>
+<app-active-conversation-header [partnerInfo]="partnerInfo"> </app-active-conversation-header>
 
 <ion-content [scrollY]="true">
-  <app-chat-messages
-  [messagesList]="activeChat?.messages ?? []"
-  [userId]="userId">
+  <app-chat-messages [messagesList]="activeChat?.messages ?? []" [userId]="userId">
   </app-chat-messages>
 </ion-content>
 
 <ion-footer>
- <ion-grid>
-  <ion-row>
-    <ion-col>
-      <app-form-input
-      [toUserId]="partnerInfo?.partner_id ?? null"
-      (submitObs)="onSubmit($event)">
-    </app-form-input>
-    </ion-col>
-  </ion-row>
- </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <app-form-input [toUserId]="partnerInfo?.partner_id ?? null" (submitObs)="onSubmit($event)">
+        </app-form-input>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-footer>
-
-

@@ -6,10 +6,8 @@ import { MatchesPage } from './matches.page';
 const routes: Routes = [
   {
     path: '',
-    component: MatchesPage ,
-
+    component: MatchesPage,
   },
-
 ];
 
 @NgModule({

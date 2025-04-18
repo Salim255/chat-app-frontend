@@ -1,21 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
-import { SendMessageEmitterData } from "./socket-io.service";
-import { ConversationService } from "src/app/features/conversations/services/conversations.service";
-import { ReceivedMessage } from "../../workers/decrypt.worker";
-import { GetAuthData } from "src/app/shared/utils/get-auth-data";
-import { MessageDecryptionData, MessageEncryptDecrypt } from "../encryption/message-encrypt-decrypt-";
+import { SendMessageEmitterData } from './socket-io.service';
+import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
+import { ReceivedMessage } from '../../workers/decrypt.worker';
+import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
+import {
+  MessageDecryptionData,
+  MessageEncryptDecrypt,
+} from '../encryption/message-encrypt-decrypt-';
 
-
-@Injectable(
-  {
-    providedIn: 'root'
-  }
-)
-
+@Injectable({
+  providedIn: 'root',
+})
 export class SocketMessageHandler {
   private readMessageSubject = new BehaviorSubject<Message | null>(null);
   private deliveredMessageSubject = new BehaviorSubject<Message | null>(null);
@@ -24,10 +23,10 @@ export class SocketMessageHandler {
   private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
 
-  constructor ( private conversationService: ConversationService ) { }
+  constructor(private conversationService: ConversationService) {}
 
-   // Message Subjects Getters
-   get getReadMessage() {
+  // Message Subjects Getters
+  get getReadMessage() {
     return this.readMessageSubject.asObservable();
   }
 
@@ -40,7 +39,6 @@ export class SocketMessageHandler {
     return this.messageDeliveredToReceiverSubject.asObservable();
   }
 
-
   get getPartnerConnectionStatus() {
     return this.partnerConnectionStatusSubject.asObservable();
   }
@@ -52,8 +50,6 @@ export class SocketMessageHandler {
   get getUpdatedChatCounter() {
     return this.updatedChatCounterSubject.asObservable();
   }
-
-
 
   // Message Handlers
   setReadMessageSource(readMessage: Message | null) {
@@ -83,30 +79,29 @@ export class SocketMessageHandler {
   // Event Listeners for Messages and Status
   // This happen only when both user in the room
   handleMessageEvents(socket: any) {
-    socket.on('message-read',async  (readMessage: any) => {
+    socket.on('message-read', async (readMessage: any) => {
       try {
-        if (!readMessage) return
+        if (!readMessage) return;
 
         // 1 Decrypt the message
-        const { _privateKey: privateKey,  _email: email } = await GetAuthData.getAuthData();
+        const { _privateKey: privateKey, _email: email } = await GetAuthData.getAuthData();
 
         const decryptionData: MessageDecryptionData = {
           encryptedMessageBase64: readMessage.content,
           encryptedSessionKeyBase64: readMessage.encrypted_session_base64,
           receiverPrivateKeyBase64: privateKey,
-          receiverEmail: email
+          receiverEmail: email,
         };
 
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
-        const {encrypted_session_base64, ...rest} = readMessage;
-        const decryptedMessage = {...rest, content: decryptedContent};
+        const { encrypted_session_base64, ...rest } = readMessage;
+        const decryptedMessage = { ...rest, content: decryptedContent };
         // 2 Update the current conversion with this new message
         this.setReadMessageSource(decryptedMessage);
         // 3 Update conversation where this message belong in conversations services
         this.conversationService.updateConversationWithNewMessage(decryptedMessage);
-
       } catch (error) {
-        console.error("Error processing received message:", error);
+        console.error('Error processing received message:', error);
       }
     });
 
@@ -124,38 +119,37 @@ export class SocketMessageHandler {
     });
 
     // To server by the receiver when the message is delivered to the receiver
-    socket.on('message-delivered-to-receiver', async (receivedMessage: ReceivedMessage ) => {
-     try {
-        if(!receivedMessage) return;
+    socket.on('message-delivered-to-receiver', async (receivedMessage: ReceivedMessage) => {
+      try {
+        if (!receivedMessage) return;
 
-        const { _privateKey: privateKey,  _email: email } = await GetAuthData.getAuthData();
+        const { _privateKey: privateKey, _email: email } = await GetAuthData.getAuthData();
 
         const decryptionData: MessageDecryptionData = {
           encryptedMessageBase64: receivedMessage.content,
           encryptedSessionKeyBase64: receivedMessage.encrypted_session_base64,
           receiverPrivateKeyBase64: privateKey,
-          receiverEmail: email
+          receiverEmail: email,
         };
 
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
-        const {encrypted_session_base64, ...rest} = receivedMessage;
-        const decryptedMessage = {...rest, content: decryptedContent};
+        const { encrypted_session_base64, ...rest } = receivedMessage;
+        const decryptedMessage = { ...rest, content: decryptedContent };
         this.conversationService.updateConversationWithNewMessage(decryptedMessage, true);
-
-     } catch (error) {
-        console.error("Error processing delivered message:", error);
-     }
-
+      } catch (error) {
+        console.error('Error processing delivered message:', error);
+      }
     });
 
-
     socket.on('user-online', (updatedUser: Member) => {
+      console.log( updatedUser, 'Hello')
       if (updatedUser) {
         this.setPartnerConnectionStatus(updatedUser);
       }
     });
 
     socket.on('user-offline', (updatedUser: Member) => {
+      console.log( updatedUser, 'Hello')
       if (updatedUser) {
         this.setPartnerConnectionStatus(updatedUser);
       }
@@ -174,8 +168,8 @@ export class SocketMessageHandler {
     });
   }
 
-  sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData ) {
-     // 2) Trigger emitter
-     socket?.emit('send-message', messageEmitterDada)
+  sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData) {
+    // 2) Trigger emitter
+    socket?.emit('send-message', messageEmitterDada);
   }
 }

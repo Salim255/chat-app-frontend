@@ -1,24 +1,25 @@
 <app-header [pageName]="'conversations'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid >
+  <ion-grid>
     <ion-row *ngIf="!isEmpty; else default">
-      <ion-col  >
-        <ion-list *ngIf="userId"  >
-          <app-conversation-item *ngFor="let conversation of conversations; trackBy: trackById"
+      <ion-col>
+        <ion-list *ngIf="userId">
+          <app-conversation-item
+            *ngFor="let conversation of conversations; trackBy: trackById"
             [conversation]="conversation"
-            [userId]="userId">
+            [userId]="userId"
+          >
           </app-conversation-item>
         </ion-list>
-
       </ion-col>
     </ion-row>
 
     <!-- Place holder section -->
     <ng-template #default>
-      <ion-row  class="place-holder">
+      <ion-row class="place-holder">
         <ion-col>
-          <app-place-holder ></app-place-holder>
+          <app-place-holder></app-place-holder>
         </ion-col>
       </ion-row>
     </ng-template>

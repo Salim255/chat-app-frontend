@@ -1,5 +1,5 @@
 ion-content {
- --background: var(--ion-color-grey-1);
+  --background: var(--ion-color-grey-1);
   ion-grid {
     position: fixed;
     left: 50%;
@@ -10,7 +10,7 @@ ion-content {
     padding: 0;
 
     ion-row:first-child {
-      background: var(  --ion-color-cyan-0);
+      background: var(--ion-color-cyan-0);
       //background-color: red;
       border-bottom-left-radius: 50%;
       border-bottom-right-radius: 50%;
@@ -20,7 +20,6 @@ ion-content {
       height: 100%;
       padding-bottom: 1rem;
       padding-top: 7rem;
-
     }
   }
 }

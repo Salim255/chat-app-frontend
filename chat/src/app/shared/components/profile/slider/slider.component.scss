@@ -5,11 +5,11 @@
 
   position: relative;
   width: 100%;
-  transition: all 1s ease-in-out forwards ;
+  transition: all 1s ease-in-out forwards;
   background-color: transparent;
 
   &__preview-enabled-height {
-    transition: all 1s ease-in-out forwards ;
+    transition: all 1s ease-in-out forwards;
     height: 60vh;
   }
   &__preview-disabled-height {
@@ -18,7 +18,6 @@
   }
 
   ion-card {
-
     top: 0;
     left: 0;
     right: 0;
@@ -26,7 +25,7 @@
     margin: 0;
     height: 100%;
     padding: 0;
-    box-shadow: none ;
+    box-shadow: none;
     --ion-box-shadow: none;
 
     ion-card-content {
@@ -47,16 +46,15 @@
         display: flex;
         gap: 10px;
 
-        &__bullet{
+        &__bullet {
           background: var(--ion-color-grey-6);
           flex: 1;
           justify-content: space-between;
           height: 4px;
           border-radius: 2px;
-         outline: .7px solid var(--ion-color-grey-3);
+          outline: 0.7px solid var(--ion-color-grey-3);
 
           &--active {
-
             background: var(--ion-color-grey-3);
           }
         }
@@ -67,7 +65,7 @@
         border-radius: 10px;
         object-fit: cover;
         object-position: top;
-        transition: all .3s ease-out;
+        transition: all 0.3s ease-out;
         width: 100%;
         height: 100%;
       }
@@ -76,12 +74,14 @@
         // === Start Background section
         padding-top: 2rem;
         padding-bottom: 2rem;
-        background: linear-gradient(to bottom,
-        rgba(0, 0, 0, 0) 10%,
-        rgba(0, 0, 0, 0.3) 30%,
-        rgba(0, 0, 0, 0.5) 50%,
-        rgba(0, 0, 0, 0.7) 70%,
-        rgba(0, 0, 0, 1) 90% );
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 10%,
+          rgba(0, 0, 0, 0.3) 30%,
+          rgba(0, 0, 0, 0.5) 50%,
+          rgba(0, 0, 0, 0.7) 70%,
+          rgba(0, 0, 0, 1) 90%
+        );
         position: absolute;
         left: 0;
         right: 0;
@@ -111,10 +111,8 @@
         // ===== End background section
       }
     }
-
   }
 }
-
 
 @keyframes showAnimation {
   0% {
@@ -145,6 +143,5 @@
     opacity: 0;
     pointer-events: none;
     transform: translateY(-100%);
-
   }
 }

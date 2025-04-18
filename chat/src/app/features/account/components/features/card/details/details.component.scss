@@ -5,19 +5,19 @@ ion-grid {
   .details {
     font-weight: bold;
     color: black;
-    padding-bottom: .5rem;
-    font-size: .9rem;
-    ion-col:first-child {
+    padding-bottom: 0.5rem;
+    font-size: 0.9rem;
+    ion-col:first-child  {
       div {
         text-align: left;
       }
       div {
-        padding-bottom: .5rem;
+        padding-bottom: 0.5rem;
       }
       div:not(:first-child) {
         font-weight: normal;
         color: black;
-        font-size: .8rem;
+        font-size: 0.8rem;
       }
     }
 
@@ -26,9 +26,7 @@ ion-grid {
       font-weight: bold;
     }
 
-
     ion-col:not(:first-child) {
-
       div:first-child {
         text-align: right;
         text-transform: capitalize;
@@ -45,13 +43,8 @@ ion-grid {
     ion-col {
       margin: 0;
       padding: 0;
-
     }
-
-
   }
-
-
 
   .details-btn {
     ion-col {
@@ -78,6 +71,4 @@ ion-grid {
       }
     }
   }
-
 }
-

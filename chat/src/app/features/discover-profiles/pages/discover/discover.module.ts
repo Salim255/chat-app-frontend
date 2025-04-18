@@ -9,11 +9,9 @@ import { DiscoverPage } from './discover.page';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
-
 import { DirectivesModule } from 'src/app/shared/directives/directives.module';
 
 import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profiles/discover-profiles-feature.module';
-
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -25,6 +23,6 @@ import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profile
     DirectivesModule,
     DiscoverProfilesFeatureModule,
   ],
-  declarations: [ DiscoverPage]
+  declarations: [DiscoverPage],
 })
 export class DiscoverPageModule {}

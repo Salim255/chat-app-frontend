@@ -6,8 +6,8 @@ import { DiscoverProfilesFeatureModule } from 'src/app/features/discover-profile
 const routes: Routes = [
   {
     path: '',
-    component: DiscoverPage
-  }
+    component: DiscoverPage,
+  },
 ];
 
 @NgModule({

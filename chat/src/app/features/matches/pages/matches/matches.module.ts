@@ -11,21 +11,8 @@ import { ItsMatchModalComponent } from '../../components/its-match-modal/its-mat
 import { PairedPhotosComponent } from '../../components/paired-photos/paired-photos.component';
 import { MatchItemComponent } from '../../components/match-item/match-item.component';
 
-
-
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    MatchesPageRoutingModule,
-    SharedModule
-  ],
-  declarations: [
-    MatchesPage,
-    PairedPhotosComponent,
-    MatchItemComponent,
-    ItsMatchModalComponent
-   ]
+  imports: [CommonModule, FormsModule, IonicModule, MatchesPageRoutingModule, SharedModule],
+  declarations: [MatchesPage, PairedPhotosComponent, MatchItemComponent, ItsMatchModalComponent],
 })
 export class MatchesPageModule {}

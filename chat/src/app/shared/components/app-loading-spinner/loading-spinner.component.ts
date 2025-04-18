@@ -1,13 +1,12 @@
-import { Component, OnInit, signal } from "@angular/core";
-import { LoadingSpinnerService } from "./loading-spinner.service";
-import { Subscription } from "rxjs";
+import { Component, OnInit, signal } from '@angular/core';
+import { LoadingSpinnerService } from './loading-spinner.service';
+import { Subscription } from 'rxjs';
 @Component({
-  selector: "app-loading-spinner",
+  selector: 'app-loading-spinner',
   templateUrl: './loading-spinner.component.html',
   styleUrls: ['./loading-spinner.component.scss'],
-  standalone: false
+  standalone: false,
 })
-
 export class LoadingSpinnerComponent {
-  constructor(){}
+  constructor() {}
 }

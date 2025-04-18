@@ -4,7 +4,7 @@ ion-content {
   ion-grid {
     ion-row:first-child {
       ion-col {
-        margin: .5rem;
+        margin: 0.5rem;
         ion-text {
           font-weight: 600;
           font-weight: 1rem;
@@ -14,17 +14,17 @@ ion-content {
     }
   }
   ion-list {
-    background:  var( --ion-color-grey-1);
+    background: var(--ion-color-grey-1);
     display: flex;
 
-    padding: 0 .7rem;
+    padding: 0 0.7rem;
     justify-content: space-between;
     flex-wrap: wrap;
 
     ion-item {
-        width:  calc(33.333% - .7rem);
-      --background: var( --ion-color-grey-1);
-      margin-bottom: .2rem;
+      width: calc(33.333% - 0.7rem);
+      --background: var(--ion-color-grey-1);
+      margin-bottom: 0.2rem;
       box-sizing: border-box; /* Prevents overflow */
       display: flex;
       align-items: center; /* Vertically center content */

@@ -1,36 +1,38 @@
-import { Component, Input, signal } from "@angular/core";
-import { DisableProfileSwipe, DiscoverService, InteractionType } from "../../services/discover.service";
-import { Member } from "src/app/shared/interfaces/member.interface";
+import { Component, Input, signal } from '@angular/core';
+import {
+  DisableProfileSwipe,
+  DiscoverService,
+  InteractionType,
+} from '../../services/discover.service';
+import { Member } from 'src/app/shared/interfaces/member.interface';
 
 @Component({
-selector: "app-profile-swipe",
-templateUrl: "./profile-swipe.component.html",
-styleUrls: ["./profile-swipe.component.scss"],
-standalone: false
+  selector: 'app-profile-swipe',
+  templateUrl: './profile-swipe.component.html',
+  styleUrls: ['./profile-swipe.component.scss'],
+  standalone: false,
 })
-
 export class ProfileSwipeComponent {
   @Input() profile!: Member;
   @Input() profileToView: DisableProfileSwipe | null = null;
 
-
   currentTransformX: number = 0; // Keeps track of the current of the card
-  isAnimating = signal<boolean> (false) ;
+  isAnimating = signal<boolean>(false);
   resetProfileTimer: any;
 
-  constructor (private discoverService: DiscoverService ) {}
+  constructor(private discoverService: DiscoverService) {}
 
   onSwipeLeft(event: any) {
-    this.discoverService.setProfileInteractionType(InteractionType.DISLIKE)
+    this.discoverService.setProfileInteractionType(InteractionType.DISLIKE);
   }
 
   onSwipeRight(event: any) {
-    this.discoverService.setProfileInteractionType(InteractionType.LIKE)
+    this.discoverService.setProfileInteractionType(InteractionType.LIKE);
   }
 
   disableHammerSwiper(profileToView: DisableProfileSwipe | null): string {
     if (!profileToView || this.profile?.user_id !== profileToView.profile.user_id) {
-      return 'hammer-swiper-container ';  // Return the default class if the condition doesn't match
+      return 'hammer-swiper-container '; // Return the default class if the condition doesn't match
     }
     if (profileToView.disableSwipe) {
       return 'hammer-swiper-container  hammer-swiper-container__disable-hammer-swipe';

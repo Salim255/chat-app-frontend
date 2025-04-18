@@ -1,27 +1,29 @@
 <ion-grid>
-  <ion-row  class="details">
-    <ion-col  size="7">
-        <div>
-          <ion-text >What's included</ion-text>
-        </div>
-        <div>
-          <ion-text> {{ getIncludeText1(category) }} </ion-text>
-        </div>
-        <div>
-          <ion-text>{{ getIncludeText2(category) }}</ion-text>
-        </div>
+  <ion-row class="details">
+    <ion-col size="7">
+      <div>
+        <ion-text>What's included</ion-text>
+      </div>
+      <div>
+        <ion-text> {{ getIncludeText1(category) }} </ion-text>
+      </div>
+      <div>
+        <ion-text>{{ getIncludeText2(category) }}</ion-text>
+      </div>
     </ion-col>
 
-    <ion-col  size="2">
-        <div><ion-text>Free</ion-text></div>
-        <div><ion-icon name="remove"></ion-icon></div>
-        <div> <ion-icon name="remove"></ion-icon></div>
+    <ion-col size="2">
+      <div><ion-text>Free</ion-text></div>
+      <div><ion-icon name="remove"></ion-icon></div>
+      <div><ion-icon name="remove"></ion-icon></div>
     </ion-col>
 
     <ion-col size="3">
-        <div><ion-text>{{ category }}</ion-text></div>
-        <div><ion-icon name="checkmark"></ion-icon></div>
-        <div><ion-icon name="checkmark"></ion-icon></div>
+      <div>
+        <ion-text>{{ category }}</ion-text>
+      </div>
+      <div><ion-icon name="checkmark"></ion-icon></div>
+      <div><ion-icon name="checkmark"></ion-icon></div>
     </ion-col>
   </ion-row>
 
@@ -30,5 +32,4 @@
       <ion-button size="small" fill="clear">See all features</ion-button>
     </ion-col>
   </ion-row>
-
 </ion-grid>

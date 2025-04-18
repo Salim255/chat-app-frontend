@@ -3,20 +3,17 @@ ion-card {
     text-align: left;
     ion-text {
       color: var(--ion-color-primary);
-      margin-left: .5rem;
+      margin-left: 0.5rem;
     }
     ion-icon {
-      fill: var(--ion-color-primary) ;
+      fill: var(--ion-color-primary);
     }
   }
 
   ion-item {
     --background: none;
     ion-text {
-      color: var(--ion-text-color-1)
+      color: var(--ion-text-color-1);
     }
   }
-
 }
-
-

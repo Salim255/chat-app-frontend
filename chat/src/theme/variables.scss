@@ -1,12 +1,13 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
-:root{
-  --ion-color-primary:    #0097b2  ;
-	--ion-color-secondary: #f4a261  /* #ff6699 */ /* #009db2 */ /* #b26700 */ /* #183244 */;
-	--ion-color-tertiary: #b2009d  /* #2a9d8f */ /* #ffcc00 */ /* #9db200 */ /* #6bb200 */ /* #006b72 */ /* */;
+:root {
+  --ion-color-primary: #0097b2;
+  --ion-color-secondary: #f4a261 /* #ff6699 */ /* #009db2 */ /* #b26700 */ /* #183244 */;
+  --ion-color-tertiary: #b2009d /* #2a9d8f */ /* #ffcc00 */ /* #9db200 */ /* #6bb200 */
+    /* #006b72 */ /* */;
 
   --ion-background-color: #f7fffffd;
-  --ion-background-color-2:   #d8f9f9fd;
+  --ion-background-color-2: #d8f9f9fd;
   --ion-text-color-1: #666666;
 
   // Grey
@@ -30,12 +31,12 @@
   --ion-color-cyan-6: #0b7285;
 
   // Online green
-  --ion-color-online: #4CAF50;
+  --ion-color-online: #4caf50;
 
   // Sender background color
-  --ion-sender-bg-color: #B8E6F2;
+  --ion-sender-bg-color: #b8e6f2;
 }
 
 body {
- font-family:  "Proxima Nova", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: 'Proxima Nova', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }

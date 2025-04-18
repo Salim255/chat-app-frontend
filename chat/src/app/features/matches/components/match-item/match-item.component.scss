@@ -1,22 +1,21 @@
-
 ion-card {
   box-shadow: none; /* Removes shadow */
   --box-shadow: none; /* Ensures Ionic's shadow is removed */
   min-height: 10rem;
   width: 100%;
 
-  background: var( --ion-color-grey-1);
-  border-radius: .4rem;
+  background: var(--ion-color-grey-1);
+  border-radius: 0.4rem;
   margin: 0;
   padding: 0;
   ion-card-header {
-    padding: .4rem;
+    padding: 0.4rem;
     ion-card-title {
-      font-size: .8rem;
+      font-size: 0.8rem;
       font-weight: 600;
       text-align: center;
       color: var(--ion-color-grey-7);
-   }
+    }
   }
 
   ion-card-content {
@@ -25,8 +24,8 @@ ion-card {
     img {
       height: 100%;
       width: 100%;
-      object-fit: cover ;
-      border-radius: .4rem;
+      object-fit: cover;
+      border-radius: 0.4rem;
     }
   }
 }

@@ -9,10 +9,10 @@ import { LoadingSpinnerService } from './shared/components/app-loading-spinner/l
 register();
 
 @Component({
-    selector: 'app-root',
-    templateUrl: 'app.component.html',
-    styleUrls: ['app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss'],
+  standalone: false,
 })
 export class AppComponent implements OnInit, OnDestroy {
   private authSub!: Subscription;
@@ -24,42 +24,38 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private loadingSpinnerService: LoadingSpinnerService
-  ) {
-  }
+  ) {}
 
-
-  ngOnInit () {
-
+  ngOnInit() {
     // Overlay the web view on the status bar
     StatusBar.setOverlaysWebView({ overlay: true });
     StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.subscribeToAuth();
-    this.subscribeToSpinner()
+    this.subscribeToSpinner();
   }
 
-  ionViewWillEnter(){
-    console.log("App enter 💥💥")
+  ionViewWillEnter() {
+    console.log('App enter 💥💥');
   }
   private subscribeToAuth() {
     this.authSub = this.authService.userIsAuthenticated.subscribe((isAuth) => {
       if (!isAuth && this.previousAuthState != isAuth) {
-        this.router.navigateByUrl("/landing-page")
+        this.router.navigateByUrl('/landing-page');
       }
-      this.previousAuthState = isAuth
-    })
+      this.previousAuthState = isAuth;
+    });
   }
 
   private subscribeToSpinner() {
-    this.spinnerLoaderSubscription = this.loadingSpinnerService.getSpinnerStatus
-    .subscribe((status)=>
-     {
-      this.isVisibleSpinner.set(status)
-     }
-    )
+    this.spinnerLoaderSubscription = this.loadingSpinnerService.getSpinnerStatus.subscribe(
+      (status) => {
+        this.isVisibleSpinner.set(status);
+      }
+    );
   }
 
   ngOnDestroy() {
     this.authSub?.unsubscribe();
-    this.spinnerLoaderSubscription?.unsubscribe()
+    this.spinnerLoaderSubscription?.unsubscribe();
   }
 }

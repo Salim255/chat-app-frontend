@@ -1,17 +1,30 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": [
+    "projects/**/*",
+    "www/**/*",
+    "dist/**/*",
+    "*.min.js",
+    "ios/App/App/public/**/*",
+    "node_modules/**/*",
+    "android/App/App/public/**/*"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": ["*.ts", "*.html"],
+      "parser": "@typescript-eslint/parser", // Specify the parser
       "parserOptions": {
-        "project": "**/tsconfig.json",
+        "project": "**/tsconfig.json", // Point to your TypeScript config
         "createDefaultProgram": true,
         "sourceType": "module"
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@typescript-eslint/recommended" // Extend the TypeScript ESLint plugin
+      ],
+      "plugins": [
+        "@typescript-eslint" // Add the TypeScript ESLint plugin
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": [
@@ -35,13 +48,20 @@
             "prefix": "app",
             "style": "camelCase"
           }
-        ]
+        ],
+        "@typescript-eslint/no-unused-vars": "warn", // Warns about unused variables
+        "@typescript-eslint/no-explicit-any": "warn", // Warns when 'any' type is used
+        "@typescript-eslint/explicit-module-boundary-types": "warn", // Enforces type annotations for function return types
+        "@typescript-eslint/ban-types": "error" // Disallows using certain types (e.g., `Object`, `Function`)
       }
     },
     {
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/no-call-expression": "error", // Disallows call expressions in templates
+        "@angular-eslint/template/no-negated-async": "error" // Disallows negation of async pipes
+      }
     }
   ]
 }

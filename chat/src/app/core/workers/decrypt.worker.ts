@@ -1,7 +1,6 @@
-import { Conversation } from "src/app/features/active-conversation/models/active-conversation.model";
-import { MessageEncryptDecrypt } from "../services/encryption/message-encrypt-decrypt-";
-import { Message } from "src/app/features/active-conversation/interfaces/message.interface";
-
+import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { MessageEncryptDecrypt } from '../services/encryption/message-encrypt-decrypt-';
+import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 
 //import { DecryptionActionType } from "src/app/features/conversations/services/conversations.service";
 
@@ -10,11 +9,11 @@ import { Message } from "src/app/features/active-conversation/interfaces/message
 export type ReceivedMessage = Message & { encrypted_session_base64: string };
 
 export enum DecryptionActionType {
-  decryptConversations = 'decrypt-conversations' ,
+  decryptConversations = 'decrypt-conversations',
   decryptedConversations = 'decrypted-conversations',
   decryptSingleMessage = 'decrypt-single-message',
-  decryptedSingleMessage = 'decrypted-single-message'
-};
+  decryptedSingleMessage = 'decrypted-single-message',
+}
 
 type DecryptConversationsParams = {
   conversations: Conversation[];
@@ -28,42 +27,39 @@ export type DecryptSingleMessageParams = Omit<DecryptConversationsParams, 'conve
 
 addEventListener('message', async ({ data }) => {
   try {
-
-    if (!data || !Object.values(DecryptionActionType).includes(data.action))  {
-      postMessage({ error: "Invalid action or missing data" });
+    if (!data || !Object.values(DecryptionActionType).includes(data.action)) {
+      postMessage({ error: 'Invalid action or missing data' });
       return;
     }
-    console.log(data, "hello data from worker")
+    console.log(data, 'hello data from worker');
     switch (data.action) {
       case DecryptionActionType.decryptConversations:
-
-        const decryptData : DecryptConversationsParams = {
+        const decryptData: DecryptConversationsParams = {
           conversations: data.conversations,
           receiverPrivateKeyBase64: data.privateKey,
-          decryptionEmail: data?.email
-        }
+          decryptionEmail: data?.email,
+        };
         const decryptedConversations = await decryptConversations(decryptData);
 
         postMessage({ action: 'decrypted-conversations', conversations: decryptedConversations });
-        close()
+        close();
         break;
 
       default:
-        postMessage({ error: "Invalid action" });
+        postMessage({ error: 'Invalid action' });
         close();
     }
-
   } catch (error) {
-    console.log(error, "hello eroore")
+    console.log(error, 'hello eroore');
     postMessage({ error });
-    close()
+    close();
   }
 });
 
 // Decrypt messages in each conversation asynchronously
 async function decryptConversations(data: DecryptConversationsParams) {
   const decryptedConversations = [];
-  console.log("Hello from decrypting...")
+  console.log('Hello from decrypting...');
   for (const conversation of data.conversations) {
     if (!conversation.messages) {
       decryptedConversations.push(conversation);
@@ -85,23 +81,21 @@ async function decryptConversations(data: DecryptConversationsParams) {
     const decryptedMessages = await Promise.all(
       conversation.messages.map(async (msg) => {
         try {
-          const decryptedContent = await MessageEncryptDecrypt
-          .decryptMessage(
-            {
+          const decryptedContent = await MessageEncryptDecrypt.decryptMessage({
             ...decryptionDataBase,
             encryptedMessageBase64: msg.content,
           });
 
           return { ...msg, content: decryptedContent };
         } catch (error) {
-          console.error("Decryption error for message:", msg.id, error);
-          return { ...msg, content: "Error decrypting message" };
+          console.error('Decryption error for message:', msg.id, error);
+          return { ...msg, content: 'Error decrypting message' };
         }
       })
     );
 
     decryptedConversations.push({ ...conversation, messages: decryptedMessages });
   }
-  console.log('Well, decrypted 😍😍😍😍', decryptedConversations)
+  console.log('Well, decrypted 😍😍😍😍', decryptedConversations);
   return decryptedConversations;
 }

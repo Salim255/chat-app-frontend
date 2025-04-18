@@ -1,34 +1,36 @@
 <form #f="ngForm" (ngSubmit)="onSubmit(f)">
   <ion-grid>
-     <ion-row>
-        <ion-col size-md="6" offset-md="3">
-           <ion-list>
-              <ion-item  *ngFor="let field of formFields">
-                <ion-label position="floating">{{ field.label }}</ion-label>
-                <ion-input
-                  [type]="field.type"
-                  [id]="field.id"
-                  [name]="field.name"
-                  [(ngModel)]="userInputs[field.model]"
-                  [required]="field.required"
-                  [email]="field.email">
-                </ion-input>
-              </ion-item>
-           </ion-list>
-        </ion-col>
-      </ion-row>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-list>
+          <ion-item *ngFor="let field of formFields">
+            <ion-label position="floating">{{ field.label }}</ion-label>
+            <ion-input
+              [type]="field.type"
+              [id]="field.id"
+              [name]="field.name"
+              [(ngModel)]="userInputs[field.model]"
+              [required]="field.required"
+              [email]="field.email"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
 
-     <ion-row>
-        <ion-col  size-md="6" offset-md="3">
-          <ion-button
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-button
           expand="full"
           type="submit"
           [disabled]="!f.valid"
           shape="round"
           fill="clear"
           size="small"
-          >{{ authMode === 'login' ? 'Sign in': 'Sign Up' }}</ion-button>
-        </ion-col>
-      </ion-row>
+          >{{ authMode === 'login' ? 'Sign in' : 'Sign Up' }}</ion-button
+        >
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </form>

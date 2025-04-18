@@ -5,17 +5,17 @@ import { Subscription } from 'rxjs';
 import { SocketIoService } from '../core/services/socket-io/socket-io.service';
 import { AuthService } from '../core/services/auth/auth.service';
 
-export type displayTap =  'show' | 'hide';
+export type displayTap = 'show' | 'hide';
 
 @Component({
-    selector: 'app-tabs',
-    templateUrl: './tabs.page.html',
-    styleUrls: ['./tabs.page.scss'],
-    standalone: false
+  selector: 'app-tabs',
+  templateUrl: './tabs.page.html',
+  styleUrls: ['./tabs.page.scss'],
+  standalone: false,
 })
-export class TabsPage implements OnInit, OnDestroy  {
-  @ViewChild("tabs") tabs!: IonTabs;
-  @ViewChild("tabsElement") tabsElement!: ElementRef;
+export class TabsPage implements OnInit, OnDestroy {
+  @ViewChild('tabs') tabs!: IonTabs;
+  @ViewChild('tabsElement') tabsElement!: ElementRef;
   selectedTab: any;
   showActionBtn = false;
   hidingTapStatus: displayTap = 'hide';
@@ -28,11 +28,12 @@ export class TabsPage implements OnInit, OnDestroy  {
   constructor(
     private tabsService: TabsService,
     private socketIoService: SocketIoService,
-    private  authService:  AuthService) { }
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-   // console.log('tabs, Hello tabs💥💥💥')
-    this.tapHidingStatusSource = this.tabsService.getHidingTapStatus.subscribe(status => {
+    // console.log('tabs, Hello tabs💥💥💥')
+    this.tapHidingStatusSource = this.tabsService.getHidingTapStatus.subscribe((status) => {
       this.hidingTapStatus = status;
     });
     ////////
@@ -41,11 +42,11 @@ export class TabsPage implements OnInit, OnDestroy  {
   }
 
   private subscribeToTabChange() {
-    this.tabChangeSubscription = this.tabsService.getNextPage.subscribe( selectedTab => {
-      console.log( selectedTab, "hello");
+    this.tabChangeSubscription = this.tabsService.getNextPage.subscribe((selectedTab) => {
+      console.log(selectedTab, 'hello');
       this.tabs?.select('account');
       this.isDiscoverActive = selectedTab === 'discover';
-     })
+    });
   }
 
   setCurrentTab(event: any) {
@@ -54,13 +55,12 @@ export class TabsPage implements OnInit, OnDestroy  {
   }
 
   private subscribeToUserId() {
-    this.userIdSubscription = this.authService.userId.subscribe(userId => {
+    this.userIdSubscription = this.authService.userId.subscribe((userId) => {
       this.userId = userId;
-      if (this.userId){
-         this.socketIoService.initializeSocket(this.userId);
-      };
-
-    })
+      if (this.userId) {
+        this.socketIoService.initializeSocket(this.userId);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -71,5 +71,4 @@ export class TabsPage implements OnInit, OnDestroy  {
     this.userIdSubscription?.unsubscribe();
     this.tabChangeSubscription?.unsubscribe();
   }
-
 }

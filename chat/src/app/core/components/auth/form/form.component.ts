@@ -1,9 +1,9 @@
-import { Component, OnInit, } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from "src/app/core/services/auth/auth.service";
-import { Router } from "@angular/router";
-import { AuthMode } from "src/app/core/services/auth/auth.service";
-import { LoadingSpinnerService } from "src/app/shared/components/app-loading-spinner/loading-spinner.service";
+import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { Router } from '@angular/router';
+import { AuthMode } from 'src/app/core/services/auth/auth.service';
+import { LoadingSpinnerService } from 'src/app/shared/components/app-loading-spinner/loading-spinner.service';
 
 interface FormField {
   label: string;
@@ -25,76 +25,112 @@ interface UserInput {
 }
 
 @Component({
-    selector: 'app-auth-form',
-    templateUrl: './form.component.html',
-    styleUrls: ['./form.component.scss'],
-    standalone: false
+  selector: 'app-auth-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.scss'],
+  standalone: false,
 })
-
 export class FormComponent implements OnInit {
   authMode: AuthMode | null = null;
   userInputs: UserInput = {};
   formFields: FormField[] = [];
 
   constructor(
-    private  authService: AuthService,
+    private authService: AuthService,
     private router: Router,
-    private loadingSpinnerService: LoadingSpinnerService ) {}
+    private loadingSpinnerService: LoadingSpinnerService
+  ) {}
 
   ngOnInit(): void {
-    this.authService.getAuthMode.subscribe(mode => {
+    this.authService.getAuthMode.subscribe((mode) => {
       if (mode) {
-       this.authMode = mode as AuthMode;
-       this.formFields = this.generateFormFields();
+        this.authMode = mode as AuthMode;
+        this.formFields = this.generateFormFields();
       }
-    })
-   }
+    });
+  }
 
-  onSubmit(f: NgForm) {
+  onSubmit(f: NgForm): void {
     this.loadingSpinnerService.showSpinner();
-    if(!f.valid || ! this.authMode ){
-     return
+    if (!f.valid || !this.authMode) {
+      return;
     }
 
-     this.authService.authenticate(this.authMode, this.userInputs )
-        .subscribe({
-          next: (res) => {
-            f.reset();
-            this.router.navigateByUrl('/tabs/discover');
-            setTimeout(()=> {
-              this.loadingSpinnerService.hideSpinner();
-            }, 150)
-          },
-          error: (err) => {
-            f.reset();
-            this.loadingSpinnerService.hideSpinner();
-            // We need to deal with error message
-            console.log(err, "hello error 💥💥")
-            }
-        })
-   }
+    this.authService.authenticate(this.authMode, this.userInputs).subscribe({
+      next: () => {
+        f.reset();
+        this.router.navigateByUrl('/tabs/discover');
+        setTimeout(() => {
+          this.loadingSpinnerService.hideSpinner();
+        }, 150);
+      },
+      error: (err) => {
+        f.reset();
+        this.loadingSpinnerService.hideSpinner();
+        // We need to deal with error message
+        console.log(err, 'hello error 💥💥');
+      },
+    });
+  }
 
   /**============
    * Returns the form fields based on the authentication mode.
    */
-  private generateFormFields(): FormField [] {
-    const fields: FormField [] = [
-      { label: 'Your email', id: 'e_mail', name: 'e_mail', model: 'email', type: 'email', required: true, email: true },
-      { label: 'Password', id: 'password', name: 'password', model: 'password', type: 'password', required: true, email: false },
+  private generateFormFields(): FormField[] {
+    const fields: FormField[] = [
+      {
+        label: 'Your email',
+        id: 'e_mail',
+        name: 'e_mail',
+        model: 'email',
+        type: 'email',
+        required: true,
+        email: true,
+      },
+      {
+        label: 'Password',
+        id: 'password',
+        name: 'password',
+        model: 'password',
+        type: 'password',
+        required: true,
+        email: false,
+      },
     ];
 
     if (this.authMode === 'signup') {
-
-    return [
-            { label: 'First name', id: 'first_name', name: 'first_name', model: 'first_name', type: 'text', required: true, email: false },
-            { label: 'Last name', id: 'last_name', name: 'last_name', model: 'last_name', type: 'text', required: true, email: false },
-            ...fields,
-            { label: 'Confirm password', id: 'confirm-password', name: 'confirm-password', model: 'confirm_password', type: 'password', required: true, email: false }
-          ]
-
-    } else  {
-      return fields
+      return [
+        {
+          label: 'First name',
+          id: 'first_name',
+          name: 'first_name',
+          model: 'first_name',
+          type: 'text',
+          required: true,
+          email: false,
+        },
+        {
+          label: 'Last name',
+          id: 'last_name',
+          name: 'last_name',
+          model: 'last_name',
+          type: 'text',
+          required: true,
+          email: false,
+        },
+        ...fields,
+        {
+          label: 'Confirm password',
+          id: 'confirm-password',
+          name: 'confirm-password',
+          model: 'confirm_password',
+          type: 'password',
+          required: true,
+          email: false,
+        },
+      ];
+    } else {
+      return fields;
     }
   }
-
 }

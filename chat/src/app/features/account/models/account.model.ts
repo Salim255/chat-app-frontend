@@ -7,7 +7,6 @@ export class Account {
     public avatar: string,
     private isStaff: boolean,
     private isActive: boolean,
-    public images: string []
-  ){}
-
+    public images: string[]
+  ) {}
 }

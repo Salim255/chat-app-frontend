@@ -1,41 +1,42 @@
 <ion-grid>
   <ion-row>
     <ion-col size="12">
-       <div class="account-avatar">
-          <img alt="user photo" [src]="photoPreview || setAccountImage()" />
-       </div>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-text *ngIf="accountData" > {{ accountData.firstName }}, 31</ion-text>
-      <div class="location-container">
-        <ion-icon name="location"></ion-icon>
-        <span class="city-name">{{ userLocation }}</span> <!-- City name -->
+      <div class="account-avatar">
+        <img alt="user photo" [src]="photoPreview || setAccountImage()" />
       </div>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-        <div>
-          <ion-button shape="round" fill="outline" >
-            <ion-icon slot="icon-only" name="cog"></ion-icon>
-          </ion-button>
-          <ion-text> Settings </ion-text>
-        </div>
-        <div>
-          <ion-button shape="round" fill="outline"   (click)="onEditProfile()">
-            <ion-icon slot="icon-only" name="create"></ion-icon>
-          </ion-button>
-          <ion-text> Profile</ion-text>
-        </div>
-        <div>
-          <ion-button fill="outline" shape="round" (click)="onTakePhoto()" >
-            <ion-icon slot="icon-only" name="camera"></ion-icon>
-            <ion-icon name="add" class="add-icon"></ion-icon>
-          </ion-button>
-          <ion-text> Photo</ion-text>
-        </div>
+      <ion-text *ngIf="accountData"> {{ accountData.firstName }}, 31</ion-text>
+      <div class="location-container">
+        <ion-icon name="location"></ion-icon>
+        <span class="city-name">{{ userLocation }}</span>
+        <!-- City name -->
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <div>
+        <ion-button shape="round" fill="outline">
+          <ion-icon slot="icon-only" name="cog"></ion-icon>
+        </ion-button>
+        <ion-text> Settings </ion-text>
+      </div>
+      <div>
+        <ion-button shape="round" fill="outline" (click)="onEditProfile()">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-button>
+        <ion-text> Profile</ion-text>
+      </div>
+      <div>
+        <ion-button fill="outline" shape="round" (click)="onTakePhoto()">
+          <ion-icon slot="icon-only" name="camera"></ion-icon>
+          <ion-icon name="add" class="add-icon"></ion-icon>
+        </ion-button>
+        <ion-text> Photo</ion-text>
+      </div>
     </ion-col>
   </ion-row>
 </ion-grid>

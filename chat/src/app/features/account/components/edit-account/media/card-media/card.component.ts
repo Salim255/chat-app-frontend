@@ -1,16 +1,16 @@
-import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-    selector: "app-card-media",
-    templateUrl: "./card.component.html",
-    styleUrls: ["./card.component.scss"],
-    standalone: false
+  selector: 'app-card-media',
+  templateUrl: './card.component.html',
+  styleUrls: ['./card.component.scss'],
+  standalone: false,
 })
 export class CardMediaComponent implements OnChanges {
   @Input() mediaIndex: any;
   mediaList: Array<any>;
-  constructor () {
-    this.mediaList = [1,2,3,4,5];
+  constructor() {
+    this.mediaList = [1, 2, 3, 4, 5];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -20,6 +20,4 @@ export class CardMediaComponent implements OnChanges {
     console.log(this.mediaIndex);
     console.log('====================================');
   }
-
-
 }

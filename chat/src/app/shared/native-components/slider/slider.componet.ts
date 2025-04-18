@@ -1,15 +1,15 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-slider',
   templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  styleUrls: ['./slider.component.scss'],
 })
 
-export class SliderComponent {
-  constructor(){}
 
-  ngOnInit() {
-    console.log('Hello from slider component');
+export class SliderComponent implements OnInit {
+  constructor() {}
+  ngOnInit(){
+    console.log("Hello from slider component");
   }
 }

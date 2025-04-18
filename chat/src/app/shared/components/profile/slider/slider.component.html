@@ -1,35 +1,33 @@
 <div
- appCustomSwiper
- (profilePreview)="onProfilePreview()"
+  appCustomSwiper
+  (profilePreview)="onProfilePreview()"
   (slideLeft)="slideLeft()"
   (slideRight)="slideRight()"
-
   [ngClass]="setSwiperContainerHeight(profileToView)"
-  >
-  <ion-card >
+>
+  <ion-card>
     <ion-card-content>
-      <div  class="swiper-pagination">
-        <div [ngClass]=" index !== currentIndex ?
-         'swiper-pagination__bullet' :
-        'swiper-pagination__bullet swiper-pagination__bullet--active'"
-          *ngFor="let item of setUserImages(profile); let index = index; trackBy: trackByIndex" >
-         </div>
-       </div>
+      <div class="swiper-pagination">
+        <div
+          [ngClass]="
+            index !== currentIndex
+              ? 'swiper-pagination__bullet'
+              : 'swiper-pagination__bullet swiper-pagination__bullet--active'
+          "
+          *ngFor="let item of setUserImages(profile); let index = index; trackBy: trackByIndex"
+        ></div>
+      </div>
       <img
         alt="Profile Image"
         loading="lazy"
         *ngIf="setUserImages(profile).length > 0"
         [ngClass]="setProfileImagesHeight(profileToView)"
-        [src]="setUserImages(profile)[currentIndex]"/>
+        [src]="setUserImages(profile)[currentIndex]"
+      />
 
       <div [ngClass]="setProfileDetailsStyle(profileToView)">
-        <app-profile-coordination
-        [profile]="profile"
-        >
-        </app-profile-coordination>
+        <app-profile-coordination [profile]="profile"> </app-profile-coordination>
       </div>
     </ion-card-content>
   </ion-card>
 </div>
-
-

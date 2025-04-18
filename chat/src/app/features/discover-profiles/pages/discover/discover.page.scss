@@ -1,6 +1,6 @@
-@use "../../../../../theme/queries" as *;
+@use '../../../../../theme/queries' as *;
 ion-content {
- --background: var(--ion-background-color-2);
+  --background: var(--ion-background-color-2);
 
   height: 100vh;
   position: relative;
@@ -14,7 +14,6 @@ ion-content {
     ///
   }
 
-
   .place-holder {
     position: absolute;
     left: 50%;
@@ -25,22 +24,21 @@ ion-content {
 }
 
 ion-footer {
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
   position: absolute;
   bottom: 0;
 
   ion-grid {
     ion-row:first-child {
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
     ion-row:last-child {
-     ion-col {
-      height: 4rem;
-     }
+      ion-col {
+        height: 4rem;
+      }
     }
   }
 }
-
 
 .interaction-btns {
   position: fixed;

@@ -1,9 +1,9 @@
-form{
-  border-radius: .5rem;
+form {
+  border-radius: 0.5rem;
   background: var(--ion-color-grey-3);
-  display:  flex;
+  display: flex;
   width: 100%;
-  padding: .3rem .5rem;
+  padding: 0.3rem 0.5rem;
   --background: var(--ion-background-color-2);
   ion-textarea {
     text-align: left;
@@ -15,7 +15,7 @@ form{
     --padding-bottom: 0px !important;
   }
 
-  ion-button{
+  ion-button {
     text-transform: uppercase;
     height: 1rem;
     align-self: center;
@@ -27,4 +27,3 @@ form{
     --margin: 0;
   }
 }
-

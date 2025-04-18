@@ -1,17 +1,16 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { SwipeDirection } from "../pages/discover/discover.page";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { SwipeDirection } from '../pages/discover/discover.page';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class InteractionBtnService {
-  private actionDirectionSource = new BehaviorSubject<SwipeDirection | null>(null)
-  constructor(){}
+  private actionDirectionSource = new BehaviorSubject<SwipeDirection | null>(null);
+  constructor() {}
 
   setActionDirection(action: SwipeDirection | null) {
-    this.actionDirectionSource.next(action)
+    this.actionDirectionSource.next(action);
   }
 
   get getActionDirection() {

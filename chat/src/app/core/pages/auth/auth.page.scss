@@ -9,7 +9,7 @@ ion-content {
 
         ion-icon {
           font-size: 2rem;
-          padding: 0 .5rem;
+          padding: 0 0.5rem;
           color: var(--ion-color-grey-7);
         }
       }
@@ -20,14 +20,10 @@ ion-content {
       ion-col {
         display: flex;
         flex-direction: column;
-        app-auth-form  {
+        app-auth-form {
           margin-top: auto;
         }
-
       }
     }
   }
 }
-
-
-

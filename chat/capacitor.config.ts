@@ -13,14 +13,14 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   plugins: {
     Keyboard: {
-      resize: KeyboardResize.Body,  // Use a valid resize option
+      resize: KeyboardResize.Body, // Use a valid resize option
     },
     SplashScreen: {
       launchShowDuration: 3000,
       launchAutoHide: true,
       splashFullScreen: true,
-      splashImmersive: true
-    }
+      splashImmersive: true,
+    },
   },
 };
 

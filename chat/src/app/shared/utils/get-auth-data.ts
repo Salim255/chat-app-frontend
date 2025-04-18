@@ -1,8 +1,7 @@
-import { Preferences } from "@capacitor/preferences";
+import { Preferences } from '@capacitor/preferences';
 
 export class GetAuthData {
-
-  public static async  getAuthData() {
+  public static async getAuthData() {
     try {
       const storedData = await Preferences.get({ key: 'authData' });
 

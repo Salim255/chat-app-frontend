@@ -6,22 +6,22 @@ ion-item {
   --inner-padding-start: 0;
   --inner-padding-end: 0;
   padding-right: 0;
-  img{
+  img {
     height: 10rem;
     width: 7rem;
-    border-radius: .8rem;
+    border-radius: 0.8rem;
     object-fit: cover;
     flex: 1;
   }
 
- .media-placeholder {
+  .media-placeholder {
     box-sizing: border-box;
     background: rgb(137, 137, 137);
     height: 10rem;
     width: 7rem;
-    border-radius: .8rem;
+    border-radius: 0.8rem;
     border-style: dashed;
     border-color: rgb(202, 200, 200);
-    border-width: .3rem;
- }
+    border-width: 0.3rem;
+  }
 }

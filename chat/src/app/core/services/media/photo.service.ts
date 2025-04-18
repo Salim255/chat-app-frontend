@@ -1,25 +1,26 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-import { BehaviorSubject } from "rxjs";
-import { AuthService } from "../auth/auth.service";
-import { AccountService } from "src/app/features/account/services/account.service";
-export type  TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
+import { BehaviorSubject } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
+import { AccountService } from 'src/app/features/account/services/account.service';
+export type TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class PhotoService {
   private takingPictureStateSource = new BehaviorSubject<TakingPictureStatus>('Off');
-  private takenPictureSource: Photo | null =  null;
+  private takenPictureSource: Photo | null = null;
 
-  constructor(private authService: AuthService, private accountService: AccountService){}
+  constructor(
+    private authService: AuthService,
+    private accountService: AccountService
+  ) {}
 
   async requestCameraPermissions() {
     const permissionStatus = await Camera.requestPermissions();
     return permissionStatus;
   }
-
 
   async takePicture() {
     const hasPermission = this.requestCameraPermissions();
@@ -27,7 +28,7 @@ export class PhotoService {
       return;
     }
 
-   /*  const image = await Camera.getPhoto({
+    /*  const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
       webUseInput: true,
@@ -41,9 +42,9 @@ export class PhotoService {
       webUseInput: true,
       resultType: CameraResultType.Base64, // Ensures the result is returned as Base64
       source: CameraSource.Prompt, // Gives the user the choice to take a photo or pick one
-      promptLabelPhoto: "Choose from library", // Label for the "Choose from library" option
-      promptLabelPicture: "Take a photo", // Label for the "Take a photo" option
-      promptLabelCancel: "Cancel", // Label for the "Cancel" option
+      promptLabelPhoto: 'Choose from library', // Label for the "Choose from library" option
+      promptLabelPicture: 'Take a photo', // Label for the "Take a photo" option
+      promptLabelCancel: 'Cancel', // Label for the "Cancel" option
     });
 
     if (image?.base64String) {
@@ -53,10 +54,10 @@ export class PhotoService {
       //this.processImage(image)
       this.setTakingPictureStatus('Pending');
       this.takenPictureSource = image;
-      return image.base64String
+      return image.base64String;
     }
     //this.prepareFormDataForBase64(image.base64String);
-     return null;
+    return null;
   }
 
   async processImage(photo: any) {
@@ -71,7 +72,7 @@ export class PhotoService {
 
     // Log the blob to see its details
     //console.log("Convert Image Blob",  imageBlob)
-    this.prepareFormData(imageBlob)
+    this.prepareFormData(imageBlob);
     return imageBlob;
   }
 
@@ -80,13 +81,15 @@ export class PhotoService {
     // atob(): its function that decode a base64-encoded string into a plain text string
     // where each character represents one byte of the original data
 
-    const byteNumbers = new Array(byteCharacters.length).fill(0).map((_, i) => byteCharacters.charCodeAt(i));
+    const byteNumbers = new Array(byteCharacters.length)
+      .fill(0)
+      .map((_, i) => byteCharacters.charCodeAt(i));
 
-    const byteArray = new Uint8Array(byteNumbers);// Required format for a Blob
+    const byteArray = new Uint8Array(byteNumbers); // Required format for a Blob
     // Unit8Array is typed array in JavaScript that represents an array of 8-bit unsigned integers
     // Its a way of storing byte values (0-255) in an array
 
-    return new Blob([ byteArray ], { type: contentType }); // Create the Blob with the correct type
+    return new Blob([byteArray], { type: contentType }); // Create the Blob with the correct type
     // Blob (binary large object): this binary data is used to create a Blob, which can be upload or saved as a file
     // Blob used to represent large chunks of binary data as audio, video or others
   }
@@ -96,8 +99,8 @@ export class PhotoService {
     const formData = new FormData();
 
     // Append the image blob to the form data, setting the field name as file
-    const fileName = `${Date.now()}-image.jpg`
-    formData.append('photo', imageBlob, fileName );
+    const fileName = `${Date.now()}-image.jpg`;
+    formData.append('photo', imageBlob, fileName);
 
     // At this point, the image is ready to be sent to the backend
     console.log(formData);
@@ -113,7 +116,7 @@ export class PhotoService {
     if (status === 'Success') {
       if (this.takenPictureSource) {
         //const formData = this.prepareFormDataForBase64(this.takenPictureSource);
-        const imageBlob =  await this.processImage(this.takenPictureSource);
+        const imageBlob = await this.processImage(this.takenPictureSource);
         if (imageBlob) {
           const formData = await this.prepareFormData(imageBlob);
           this.authService.updateMe(formData).subscribe({
@@ -126,11 +129,10 @@ export class PhotoService {
             },
             error: (error) => {
               console.error('Error uploading photo:', error);
-            }
+            },
           });
         }
       }
-
     }
     this.takingPictureStateSource.next(status);
   }

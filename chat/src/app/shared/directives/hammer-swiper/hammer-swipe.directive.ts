@@ -5,7 +5,7 @@ import { SwipeDirection } from 'src/app/features/discover-profiles/pages/discove
 
 @Directive({
   selector: '[appHammerSwipe]',
-  standalone: false
+  standalone: false,
 })
 export class HammerSwipeDirective {
   @Output() swipeLeft = new EventEmitter<void>();
@@ -23,11 +23,11 @@ export class HammerSwipeDirective {
   private hammerInstance: HammerManager | null = null;
   constructor(
     private el: ElementRef,
-    private interactionBtnService: InteractionBtnService) {
+    private interactionBtnService: InteractionBtnService
+  ) {
     // Initialize Hammer instance
-   this.hammerInstance =  new Hammer(this.el.nativeElement);
+    this.hammerInstance = new Hammer(this.el.nativeElement);
   }
-
 
   @HostListener('panstart', ['$event'])
   onPanStart(event: any): void {
@@ -37,13 +37,12 @@ export class HammerSwipeDirective {
     // Determine if it's more horizontal or vertical movement
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
       this.isHorizontalSwipe = true;
-      this.isSwiping = true;  // Start swipe
+      this.isSwiping = true; // Start swipe
       //console.log("Swiping")
     } else {
-
       this.isHorizontalSwipe = false;
-      this.isScrolling = true;  // Enable vertical scrolling
-     // console.log("Scolling")
+      this.isScrolling = true; // Enable vertical scrolling
+      // console.log("Scolling")
     }
   }
 
@@ -54,10 +53,11 @@ export class HammerSwipeDirective {
 
     if (this.isSwiping) {
       this.currentTransformX = this.swipeStartPosition + event.deltaX;
-      if (event.deltaX !== 0 ) {
+      if (event.deltaX !== 0) {
         // For interaction btns animations
-        if (event.deltaX > 0) this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
-        else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft)
+        if (event.deltaX > 0)
+          this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
+        else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft);
       }
       element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
     } else if (this.isScrolling) {
@@ -87,36 +87,34 @@ export class HammerSwipeDirective {
       }
     }
 
-  this.isSwiping = false;
-  this.isScrolling = false;
-  this.isHorizontalSwipe = false;
-  this.interactionBtnService.setActionDirection(null);
+    this.isSwiping = false;
+    this.isScrolling = false;
+    this.isHorizontalSwipe = false;
+    this.interactionBtnService.setActionDirection(null);
   }
 
   @HostListener('click', ['$event'])
   onClickProfile(event: MouseEvent): void {
-
     const clickedElement = event.target as HTMLElement;
     const swiperContainer = clickedElement?.querySelector('swiper-container');
 
-    if ( !swiperContainer)  return;
+    if (!swiperContainer) return;
 
     const cardWidth = swiperContainer?.clientWidth;
     const cardHeight = swiperContainer?.clientHeight;
     const clientY = event.clientY;
 
-    if (!cardWidth  || !cardHeight) return;
+    if (!cardWidth || !cardHeight) return;
 
     const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
 
     // Check if click is in the last quarter of the card
     if (clientY > lastQuarterY) {
-      console.log("Hello2")
-        this.profilePreview.emit(); // Trigger profile preview
-        return; // Exit to avoid sliding action
+      console.log('Hello2');
+      this.profilePreview.emit(); // Trigger profile preview
+      return; // Exit to avoid sliding action
     }
   }
-
 
   private resetProfilePosition(): void {
     if (this.resetProfileTimer) {

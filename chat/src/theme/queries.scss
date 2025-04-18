@@ -31,13 +31,13 @@
     }
   }
 
-  @if $breakpoint == bp-laptop-md  {
+  @if $breakpoint == bp-laptop-md {
     @media only screen and (max-width: 70em) {
       @content;
     }
   }
 
-  @if $breakpoint == bp-laptop-sm  {
+  @if $breakpoint == bp-laptop-sm {
     @media only screen and (max-width: 60em) {
       @content;
     }
