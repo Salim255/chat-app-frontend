@@ -2,9 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
-import { AuthPost, AuthResponse } from '../../interfaces/auth.interface';
+import {
+  AuthPost,
+  AuthResponseDto,
+  UpdatedUserDto,
+  UpdateMePayload,
+} from '../../interfaces/auth.interface';
 import { User } from 'src/app/core/models/user.model';
-import { BehaviorSubject, firstValueFrom, from, map, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  from,
+  map,
+  Observable,
+  switchMap,
+  tap,
+ } from 'rxjs';
 import { SocketIoService } from '../socket-io/socket-io.service';
 import { KeyPairManager } from '../encryption/key-pair-manager';
 
@@ -26,14 +39,14 @@ export class AuthService implements OnDestroy {
   private user = new BehaviorSubject<User | null>(null);
   private authModeSource = new BehaviorSubject<AuthMode | null>(null);
 
-  activeLogoutTimer: any;
+  activeLogoutTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private http: HttpClient,
     private socketIoService: SocketIoService
   ) {}
 
-  authenticate(mode: AuthMode, userInput: AuthPost) {
+  authenticate(mode: AuthMode, userInput: AuthPost): Observable<{ status: string, data: AuthResponseDto }> {
     if (mode === AuthMode.signup && userInput.email) {
       return from(KeyPairManager.getPrivatePublicKeys(userInput.email)).pipe(
         switchMap(({ publicKey, privateKey }) => {
@@ -46,28 +59,29 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  private authRequest(mode: AuthMode, userInput: AuthPost | AuthPostWithKeys) {
-    return this.http.post<any>(`${this.ENV.apiUrl}/users/${mode}`, userInput).pipe(
+  private authRequest(
+    mode: AuthMode,
+    userInput: AuthPost | AuthPostWithKeys,
+    ): Observable<{ status: string, data: AuthResponseDto }> {
+    return this.http.post<{
+      status: string,
+      data:  AuthResponseDto,
+     }>(`${this.ENV.apiUrl}/users/${mode}`, userInput).pipe(
       tap((response) => {
         this.setAuthData(response.data);
       })
     );
   }
 
-  private setAuthData(authData: AuthResponse) {
+  private setAuthData(authData: AuthResponseDto) {
     const expirationTime = new Date(new Date().getTime() + +authData.expireIn);
-    const userId = authData.id;
-    const privateKey = authData.privateKey;
-    const publicKey = authData.publicKey;
-    const email = authData.email;
-
     const buildUser = new User(
-      userId,
+      authData.id,
       authData.token,
       expirationTime,
-      privateKey,
-      publicKey,
-      email
+      authData.privateKey,
+      authData.publicKey,
+      authData.email
     );
     this.user.next(buildUser);
     this.storeAuthData(buildUser);
@@ -85,7 +99,7 @@ export class AuthService implements OnDestroy {
     await Preferences.remove({ key: 'authData' });
   };
 
-  get userIsAuthenticated() {
+  get userIsAuthenticated(): Observable<boolean> {
     return this.user.asObservable().pipe(
       map((user) => {
         if (user) {
@@ -96,18 +110,13 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  get userId() {
+  get userId(): Observable<number | null> {
     return this.user.asObservable().pipe(
-      map((user) => {
-        if (user) {
-          return user.id;
-        }
-        return null;
-      })
+      map((user) => user?.id ?? null)
     );
   }
 
-  private autoLogout(duration: number) {
+  private autoLogout(duration: number): void {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }
@@ -117,7 +126,7 @@ export class AuthService implements OnDestroy {
     }, duration);
   }
 
-  async logout() {
+  async logout(): Promise<void> {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }
@@ -129,7 +138,7 @@ export class AuthService implements OnDestroy {
     this.removeStoredData();
   }
 
-  autoLogin() {
+  autoLogin(): Observable<boolean> {
     return from(Preferences.get({ key: 'authData' })).pipe(
       map((storedData) => {
         if (!storedData || !storedData.value) {
@@ -174,51 +183,46 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  updateMe(userData: any) {
-    return from(Preferences.get({ key: 'authData' })).pipe(
-      map((storedData) => {
-        if (!storedData || !storedData.value) {
-          return null;
-        }
+  updateMe(userData: UpdateMePayload):
+    Observable<{ status: string, data: { user: UpdatedUserDto } }> {
+      return from(Preferences.get({ key: 'authData' })).pipe(
+        map((storedData) => {
+          if (!storedData || !storedData.value) {
+            return null;
+          }
 
-        const parseData = JSON.parse(storedData.value) as {
-          _token: string;
-          userId: string;
-          tokenExpirationDate: string;
-          _privateKey: string;
-          _publicKey: string;
-          _email: string;
-        };
+          const parseData = JSON.parse(storedData.value) as {
+            _token: string;
+            userId: string;
+            tokenExpirationDate: string;
+            _privateKey: string;
+            _publicKey: string;
+            _email: string;
+          };
 
-        let token = parseData._token;
+          const token = parseData._token;
 
-        return token;
-      }),
-      switchMap((token) => {
-        return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      }),
-      tap((response) => {
-        console.log('====================================');
-        console.log('Response:', response);
-        console.log('====================================');
-      })
+          return token;
+        }),
+        switchMap((token) => {
+          return this.http.patch<{ status: string, data: { user: UpdatedUserDto } }>(
+            `${this.ENV.apiUrl}/users/update-me`, userData,
+              {
+               headers: { Authorization: `Bearer ${token}`,},
+              });
+        })
     );
-    //return this.http.patch<any>(`${this.ENV.apiUrl}/users/updateMe`, userData)
   }
 
-  setAuthMode(authMode: AuthMode) {
+  setAuthMode(authMode: AuthMode): void {
     this.authModeSource.next(authMode);
   }
 
-  get getAuthMode() {
+  get getAuthMode(): Observable<string | null> {
     return this.authModeSource.asObservable();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.activeLogoutTimer) {
       clearTimeout(this.activeLogoutTimer);
     }

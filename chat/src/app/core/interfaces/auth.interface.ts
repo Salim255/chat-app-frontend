@@ -6,7 +6,7 @@ export interface AuthPost {
   confirm_password?: string;
 }
 
-export interface AuthResponse {
+export interface AuthResponseDto {
   expireIn: number;
   id: number;
   token: string;
@@ -14,3 +14,21 @@ export interface AuthResponse {
   publicKey: string;
   email: string;
 }
+
+export type UpdatedUserDto = {
+  id: 1,
+  first_name: 'Salim',
+  last_name: 'Hassan',
+  avatar: 'avatar',
+  connection_status: 'online',
+}
+
+export type UpdateMePayload =
+  | FormData
+  | {
+      first_name?: string;
+      last_name?: string;
+      connection_status?: string;
+    };
+
+

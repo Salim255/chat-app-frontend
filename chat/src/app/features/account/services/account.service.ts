@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Preferences } from '@capacitor/preferences';
-import { BehaviorSubject, from, map, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Account } from 'src/app/features/account/models/account.model';
+
+type AccountDto =  {
+  id: number;
+  first_name: string;
+  last_name: string;
+  avatar: string;
+ };
 
 @Injectable({
   providedIn: 'root',
@@ -14,49 +20,36 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  fetchAccount() {
-    return this.http.get<any>(`${this.ENV.apiUrl}/users/`).pipe(
+  fetchAccount(): Observable<{ status: string; data: { user: AccountDto }}> {
+    return this.http.get<{status: string, data: { user: AccountDto } }>(`${this.ENV.apiUrl}/users/`).pipe(
       tap((response) => {
-        this.setAccountInfo(response.data);
+        console.log(response.data.user, 'Hello from here')
+        const user = this.mapUserToAccount(response.data.user);
+        this.setAccountInfo(user);
       })
     );
   }
 
-  private setAccountInfo(data: any) {
-    const buildAccount = new Account(
-      data.id,
-      data.first_name,
-      data.last_name,
-      data.email,
-      data.avatar,
-      data.is_staff,
-      data.is_active,
-      []
-    );
-    this.account.next(buildAccount);
+  private setAccountInfo(user: Account): void{
+    this.account.next(user);
   }
 
-  get getAccount() {
+  get getAccount(): Observable<Account | null> {
+    return this.account.asObservable();
+  }
+
+  get getHostUserPhoto():Observable<string | null> {
     return this.account.asObservable().pipe(
-      map((account) => {
-        if (account) {
-          return account;
-        } else {
-          return null;
-        }
-      })
+      map((account) => account?.avatar ?? null)
     );
   }
 
-  get getHostUserPhoto() {
-    return this.account.asObservable().pipe(
-      map((account) => {
-        if (account?.avatar) {
-          return account.avatar;
-        } else {
-          return null;
-        }
-      })
+  private mapUserToAccount(userDto: AccountDto): Account {
+    return new Account(
+      userDto.id,
+      userDto.first_name,
+      userDto.last_name,
+      userDto.avatar
     );
-  }
+  };
 }

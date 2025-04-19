@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-import { BehaviorSubject } from 'rxjs';
+import {
+  Camera,
+  CameraResultType,
+  CameraSource,
+  Photo,
+ } from '@capacitor/camera';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
+
 export type TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
 
 @Injectable({
@@ -17,24 +23,22 @@ export class PhotoService {
     private accountService: AccountService
   ) {}
 
-  async requestCameraPermissions() {
-    const permissionStatus = await Camera.requestPermissions();
-    return permissionStatus;
+  async requestCameraPermissions(): Promise<{
+    camera: 'granted' | 'denied';
+    photos: 'granted' | 'denied';
+   }> {
+      const permissionStatus = await Camera.requestPermissions();
+      return {
+        camera: permissionStatus.camera === 'granted' ? 'granted' : 'denied',
+        photos: permissionStatus.photos === 'granted' ? 'granted' : 'denied',
+      };
   }
 
-  async takePicture() {
+  async takePicture(): Promise<string | null> {
     const hasPermission = this.requestCameraPermissions();
     if (!hasPermission) {
-      return;
+      return null;
     }
-
-    /*  const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      webUseInput: true,
-      resultType: CameraResultType.Base64,
-      promptLabelPhoto:"Please upload a photo of yourself"
-    }); */
 
     const image = await Camera.getPhoto({
       quality: 90,
@@ -60,11 +64,11 @@ export class PhotoService {
     return null;
   }
 
-  async processImage(photo: any) {
+  async processImage(photo: Photo): Promise<Blob | null> {
     // Enure that the base64 string is present
     if (!photo.base64String) {
       console.error('No base64 image data found');
-      return;
+      return null;
     }
 
     // Convert base64 to Blob
@@ -94,7 +98,7 @@ export class PhotoService {
     // Blob used to represent large chunks of binary data as audio, video or others
   }
 
-  async prepareFormData(imageBlob: Blob) {
+  async prepareFormData(imageBlob: Blob): Promise<FormData> {
     // Create a FormData object to send the image as 'multipart/form-data'
     const formData = new FormData();
 
@@ -110,7 +114,7 @@ export class PhotoService {
     return formData;
   }
 
-  async setTakingPictureStatus(status: TakingPictureStatus) {
+  async setTakingPictureStatus(status: TakingPictureStatus): Promise<void> {
     // Set the status of the image capture process
     // This can be used to to sure confirm and save the image
     if (status === 'Success') {
@@ -120,11 +124,7 @@ export class PhotoService {
         if (imageBlob) {
           const formData = await this.prepareFormData(imageBlob);
           this.authService.updateMe(formData).subscribe({
-            next: (response) => {
-              console.log('====================================');
-              console.log('Photo uploaded:', response);
-              console.log('====================================');
-              //this.authService.fetchAccount().subscribe();
+            next: () => {
               this.accountService.fetchAccount().subscribe();
             },
             error: (error) => {
@@ -137,10 +137,10 @@ export class PhotoService {
     this.takingPictureStateSource.next(status);
   }
 
-  get getTakingPictureStatus() {
+  get getTakingPictureStatus(): Observable<TakingPictureStatus> {
     return this.takingPictureStateSource.asObservable();
   }
-  onTakePicture() {
+  onTakePicture(): void{
     this.takePicture();
   }
 }
