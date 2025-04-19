@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { ItsMatchModalComponent } from '../components/its-match-modal/its-match-modal.component';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
@@ -13,16 +13,16 @@ export class ItsMatchModalService {
 
   constructor(private modalController: ModalController) {}
 
-  setProfileToDisplay(profile: Member) {
+  setProfileToDisplay(profile: Member): void {
     console.log(profile, 'From its match service');
 
     this.matchedProfileSource.next(profile);
   }
-  get getProfileToDisplay() {
+  get getProfileToDisplay(): Observable<Member | null> {
     return this.matchedProfileSource.asObservable();
   }
 
-  async openItsMatchModal(matchedData: Partner) {
+  async openItsMatchModal(matchedData: Partner): Promise<void> {
     const modal = await this.modalController.create({
       component: ItsMatchModalComponent,
       componentProps: {
@@ -33,7 +33,7 @@ export class ItsMatchModalService {
     await modal.present();
   }
 
-  async closeModal() {
+  async closeModal(): Promise<void> {
     await this.modalController.dismiss();
   }
 }

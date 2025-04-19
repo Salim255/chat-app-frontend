@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
+import { Match } from '../../models/match.model';
 
 @Component({
   selector: 'app-matches',
@@ -13,7 +12,7 @@ import { MatchesService } from 'src/app/features/matches/services/matches.servic
 export class MatchesPage implements OnInit, OnDestroy {
   private partnerSourceSubscription!: Subscription;
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
-  matchesArray = signal<Partner[]>([]);
+  matchesArray = signal<Match[]>([]);
 
   constructor(private matchesService: MatchesService) {}
 
@@ -27,12 +26,12 @@ export class MatchesPage implements OnInit, OnDestroy {
     return conversation.id;
   }
 
-  ionViewWillEnter() {
+  ionViewWillEnter(): void {
     this.subscribeToMatches();
     this.matchesService.fetchMatches().subscribe();
   }
 
-  ionViewWillLeave() {
+  ionViewWillLeave(): void {
     this.cleanUp();
   }
 
@@ -53,7 +52,7 @@ export class MatchesPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.cleanUp();
   }
 }
