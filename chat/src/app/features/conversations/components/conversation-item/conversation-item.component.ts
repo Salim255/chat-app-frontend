@@ -5,17 +5,17 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  Signal,
   SimpleChanges,
 } from '@angular/core';
-import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
+import {
+  ActiveConversationService,
+} from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation } from '../../../conversations/models/conversation.model';
 import { Subscription } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
-import { Member } from 'src/app/shared/interfaces/member.interface';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 
 @Component({
@@ -24,7 +24,8 @@ import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-mes
   styleUrls: ['./conversation-item.component.scss'],
   standalone: false,
 })
-export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
+export class ConversationItemComponent
+implements OnInit, OnDestroy, OnChanges {
   @Input() conversation: Conversation | null = null;
   @Input() userId: number | null = null;
 
@@ -45,34 +46,30 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
     this.subscribeToPartnerConnectionStatus();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.initializeConversation();
   }
 
   private subscribeToPartnerConnectionStatus() {
     this.updatedUserDisconnectionSubscription =
-      this.socketMessageHandler.getPartnerConnectionStatus.subscribe((updatedUser) => {
-        if (
-          updatedUser?.connection_status !== undefined &&
-          this.partnerInfo &&
-          updatedUser.user_id === this.partnerInfo.partner_id
-        ) {
-          this.partnerInfo = {
-            ...this.partnerInfo,
-            connection_status: updatedUser.connection_status,
-          };
-        }
-      });
+      this.socketMessageHandler
+        .getPartnerConnectionStatus.subscribe((updatedUser) => {
+          if (
+            updatedUser?.connection_status !== undefined &&
+            this.partnerInfo &&
+            updatedUser.user_id === this.partnerInfo.partner_id
+          ) {
+            this.partnerInfo = {
+              ...this.partnerInfo,
+              connection_status: updatedUser.connection_status,
+            };
+          }
+        });
   }
 
   // Initializes the conversation data.
   private initializeConversation(): void {
-    if (!this.conversation) {
-      this.conversation = new Conversation(null, null, null, null, null, null, null, null, null);
-    }
-
-
-
     if (this.conversation?.messages?.length && this.conversation?.users) {
       this.lastMessage.set(this.conversation.messages?.[-1] || null);
       this.readMessagesCounter.set(this.conversation.no_read_messages ?? 0);
@@ -82,7 +79,9 @@ export class ConversationItemComponent implements OnInit, OnDestroy, OnChanges {
 
   // Here we are filtering the users to get the partner info
   setPartnerInfo(): void {
-    const partner = this.conversation?.users?.find((user: Member) => user.user_id !== this.userId);
+    const partner = this.conversation?.users?.find(
+      (user) => user.user_id !== this.userId
+    );
 
     if (!partner) return;
     this.partnerInfo = ProfileUtils.setProfileData(partner);

@@ -1,9 +1,9 @@
-import { from, Observable, switchMap } from 'rxjs';
-import { Conversation } from '../models/active-conversation.model';
-import { Preferences } from '@capacitor/preferences';
+import { Observable } from 'rxjs';
+import { Conversation } from '../../conversations/models/conversation.model';
 import { DecryptionActionType } from 'src/app/core/workers/decrypt.worker';
+import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 
-type WorkerMessage = {
+type WorkerMessagePayload = {
   action: DecryptionActionType;
   email: string;
   privateKey: string;
@@ -11,42 +11,34 @@ type WorkerMessage = {
 };
 
 export class DecryptConversationsObserver {
-  static decryptConversation(
+  static async decryptConversation(
     conversations: Conversation[],
-    worker: Worker
-  ): Observable<Conversation[]> {
-    return from(Preferences.get({ key: 'authData' })).pipe(
-      switchMap((storedData) => {
-        if (!storedData || !storedData.value) {
-          throw new Error('Something went wrong');
-        }
-
-        const parsedData = JSON.parse(storedData.value) as {
-          _privateKey: string;
-          _email: string;
-        };
-
-        const decryptionData = {
-          email: parsedData._email,
-          privateKey: parsedData._privateKey,
-        };
+  ): Promise<Observable<Conversation[]>> {
+        const { _privateKey: privateKey, _email: email } = await GetAuthData.getAuthData();
 
         return new Observable<Conversation[]>((observer) => {
+          // Create a new worker instance for this specific task
+          const worker = new Worker(
+              new URL('../../../core/workers/decrypt.worker', import.meta.url), {type: 'module',},
+            );
+
           if (!worker) {
             observer.error(new Error('Web worker not available'));
             return;
           }
 
-          const workerMessageData: WorkerMessage = {
+          const workerMessageData: WorkerMessagePayload = {
             action: DecryptionActionType.decryptConversations,
-            ...decryptionData,
+            email,
+            privateKey,
             conversations: conversations,
           };
 
+          // Act
           worker.postMessage(workerMessageData);
 
           // Handle successful decryption
-          worker.onmessage = (event: MessageEvent) => {
+          const handleMessage = (event: MessageEvent) => {
             const decryptedData = event.data;
             if (decryptedData && decryptedData.conversations) {
               observer.next(decryptedData.conversations);
@@ -55,17 +47,26 @@ export class DecryptConversationsObserver {
               observer.error(new Error('Decryption failed'));
             }
             // Terminate worker safely
-            worker.terminate();
+            cleanup();
           };
 
           // Handle worker errors
-          worker.onerror = (error) => {
+          const handleError = (error: ErrorEvent) => {
             observer.error(new Error(`Worker error: ${error.message}`));
             // Ensure the worker is properly terminated
             worker.terminate();
           };
+
+          const cleanup = () => {
+            worker.removeEventListener('message', handleMessage);
+            worker.removeEventListener('error', handleError);
+            worker.terminate();
+          };
+          worker.addEventListener('message', handleMessage);
+          worker.addEventListener('error', handleError);
         });
-      })
-    );
+
   }
+
+
 }

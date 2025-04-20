@@ -22,8 +22,8 @@ export class MatchesPage implements OnInit, OnDestroy {
     console.log('hello', this.matchesArray().length);
   }
   // Add a trackBy function for better performance
-  trackById(index: number, conversation: any) {
-    return conversation.id;
+  trackById(index: number, match: Match): string | number {
+    return match.match_id;
   }
 
   ionViewWillEnter(): void {

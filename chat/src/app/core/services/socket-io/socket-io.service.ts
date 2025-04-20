@@ -7,7 +7,7 @@ import { SocketNewConversationHandler } from './socket-new-conversation-handler'
 import { SocketMessageHandler } from './socket-message-handler';
 import { SocketRoomHandler } from './socket-room-handler';
 import { SocketUserTypingHandler } from './socket-user-typing-handler';
-import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 
 export type JoinRomData = {
   fromUserId: number;

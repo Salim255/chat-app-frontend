@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Socket } from 'socket.io-client';
-import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 
 @Injectable({

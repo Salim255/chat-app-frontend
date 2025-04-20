@@ -1,6 +1,14 @@
-import { Inject, Injectable, Optional } from '@angular/core';
-import { BehaviorSubject, from, map, Observable, of, switchMap, tap } from 'rxjs';
-import { Conversation } from '../models/active-conversation.model';
+import { Injectable } from '@angular/core';
+import {
+  BehaviorSubject,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { Conversation } from '../../conversations/models/conversation.model';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -17,6 +25,8 @@ import { DecryptConversationsObserver } from './decryption-observer';
 import { WorkerService } from 'src/app/core/workers/worker.service';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 import { Message } from '../interfaces/message.interface';
+import { workerRequest } from 'src/app/core/workers/worker-request';
+import { off } from 'hammerjs';
 
 export enum PartnerRoomStatus {
   OFFLINE = 'offline',
@@ -44,39 +54,18 @@ export class ActiveConversationService {
     private modalController: ModalController,
     private workerService: WorkerService
   ) {
-    this.worker = this.workerService.getWorker();
     this.setPartnerInfo(null);
     this.setActiveConversation(null);
   }
 
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
-    console.log(conversation);
-    /*  this.setPartnerInfo(partnerInfo);
-     this.setActiveConversation(fetchedConversation);
-     this.openChatModal(); */
     if (!partnerInfo || !partnerInfo.partner_id) return;
     if (partnerInfo.connection_status === 'online') {
       this.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED);
     }
     this.setPartnerInfo(partnerInfo);
     this.setActiveConversation(conversation);
-
     this.openChatModal();
-    /*  this.fetchChatByPartnerID(partnerInfo.partner_id).subscribe({
-       next: (response)=> {
-         if(response) {
-           const fetchedConversation = response[0];
-          this.setActiveConversation(fetchedConversation);
-         }
-       },
-       error: (err) => {
-         err
-       }
-
-     }) */
-
-    //
-    // this.openChatModal();
   }
 
   // Function that fetch conversation by partner ID
@@ -86,38 +75,42 @@ export class ActiveConversationService {
       .pipe(
         map((response) => response.data),
         switchMap((conversation) => {
-          if (conversation && this.worker) {
-            const currentConversation = this.activeConversationSource.value;
-            const existingMessages = new Set(
-              currentConversation?.messages?.map((msg) => msg.id) || []
-            );
-            // Filter out messages that are already in the current conversation
-            const newMessages = conversation?.messages?.filter(
-              (msg) => !existingMessages.has(msg.id)
-            );
+          //const worker = this.workerService.createDecryptWorker();
+          if (!conversation) return of(null);
 
-            if (newMessages && newMessages?.length > 0) {
-              return DecryptConversationsObserver.decryptConversation(
-                [{ ...conversation, messages: newMessages }],
-                this.worker
-              ).pipe(
-                map((decryptedConversation) => {
-                  // Merge decrypted messages back into the conversation
-                  return decryptedConversation.map((decryptedConv) => ({
-                    ...decryptedConv,
-                    messages: [
-                      ...(currentConversation?.messages || []),
-                      ...(decryptedConv?.messages || []),
-                    ],
-                  }));
-                })
-              );
-            } else {
-              return of(null);
-            }
-          } else {
-            return of(null);
-          }
+          const currentConversation = this.activeConversationSource.value;
+          const existingMessages =
+            new Set(currentConversation?.messages?.map((msg) => msg.id) || []);
+
+          // Filter out messages that are already in the current conversation
+          const newMessages =
+            conversation?.messages?.filter((msg) => !existingMessages.has(msg.id));
+
+          if (!newMessages || newMessages.length === 0) return of(null);
+
+          const worker = this.workerService.createDecryptWorker();
+          if (!worker) return of(null);
+
+          const decryptPayload = {
+            action: 'decrypt-conversations',
+            conversations: [{ ...conversation, messages: newMessages }],
+            privateKey: 'YOUR_PRIVATE_KEY_HERE', // make sure you pass correct key
+            email: 'YOUR_EMAIL_HERE' // same here
+          };
+
+          return from(workerRequest<typeof decryptPayload, { action: string; conversations: Conversation[] }>(worker, decryptPayload))
+           .pipe(
+            map(response => {
+              // Merge decrypted messages back into the conversation
+              return response.conversations.map((decryptedConv) => ({
+                ...decryptedConv,
+                messages: [
+                  ...(currentConversation?.messages || []),
+                  ...(decryptedConv?.messages || []),
+                ],
+              }));
+            })
+          );
         }),
         tap((conversations) => {
           if (conversations && conversations?.length > 0) {

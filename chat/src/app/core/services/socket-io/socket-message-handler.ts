@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { Member } from 'src/app/shared/interfaces/member.interface';
-import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation } from '../../../features/conversations/models/conversation.model';
 import { SendMessageEmitterData } from './socket-io.service';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { ReceivedMessage } from '../../workers/decrypt.worker';

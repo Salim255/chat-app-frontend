@@ -14,10 +14,8 @@ export class MatchesService {
 
   fetchMatches(): Observable<{
     status: string,
-    data: {
-      matches: Match[],
-     },
-     }> {
+    data: { matches: Match[]},
+   }> {
       return this.http.get<{ status: string, data: { matches: Match[] } }>(
         `${this.ENV.apiUrl}/matches`).pipe(
           tap((response) => {

@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
@@ -13,7 +18,7 @@ import {
   ConnectionStatus,
 } from 'src/app/core/services/socket-io/socket-io.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
+import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { MessageService } from 'src/app/features/active-conversation/services/message.service';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 import { SocketRoomHandler } from 'src/app/core/services/socket-io/socket-room-handler';
@@ -75,7 +80,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeToUserId();
   }
 
-  ionViewWillEnter() {
+  ionViewWillEnter(): void {
     this.subscribeToConversation();
     this.subscribeToConversationRoom();
     this.subscribeToPartner();
@@ -87,7 +92,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeToPartnerConnection();
   }
 
-  createNewChatObs(data: CreateChatInfo) {
+  createNewChatObs(data: CreateChatInfo): void {
     this.activeConversationService.createConversation(data).subscribe({
       next: (response) => {
         console.log(response);
@@ -101,7 +106,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     });
   }
 
-  onSendMessageEmitter(message: Message) {
+  onSendMessageEmitter(message: Message): void {
     if (!(this.userId && this.partnerInfo?.partner_id && this.conversationRoomId)) return;
 
     const sendMessageEmitterData: SendMessageEmitterData = {
@@ -110,11 +115,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       fromUserId: this.userId,
       toUserId: this.partnerInfo.partner_id,
     };
-
     this.socketIoService.sentMessageEmitter(sendMessageEmitterData);
   }
 
-  onSubmit(message: string) {
+  onSubmit(message: string): void {
     if (!this.activeChat && this.userId && this.partnerInfo?.partner_id) {
       const createChatData: CreateChatInfo = {
         content: message,
@@ -127,7 +131,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     }
   }
 
-  sendMessageObs(message: string) {
+  sendMessageObs(message: string): void {
     if (!(this.partnerInfo?.partner_id && this.userId && this.activeChat?.id)) {
       return;
     }
@@ -143,7 +147,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         if (!response) return;
-        let sentMessage = response;
+        const sentMessage = response;
         if (
           this.activeConversationService?.partnerRoomStatusSource.value ===
           PartnerRoomStatus.IN_ROOM
@@ -160,12 +164,12 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     });
   }
 
-  private handleNewMessage() {
+  private handleNewMessage(): void {
     if (!(this.activeChat && this.activeChat.messages)) return;
 
     const messages: Message[] = this.activeChat?.messages;
 
-    let lastMessage = this.messageService.getLastMessage(messages);
+    const lastMessage = this.messageService.getLastMessage(messages);
     //this.activeChat.messages.push(messages)
     if (!lastMessage) return;
 
@@ -173,7 +177,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.onSendMessageEmitter(lastMessage);
   }
 
-  private subscribeToPartnerConnection() {
+  private subscribeToPartnerConnection(): void {
     this.partnerConnectionSubscription =
       this.socketMessageHandler.getPartnerConnectionStatus.subscribe((updatedUser) => {
         if (updatedUser && this.partnerInfo) {
@@ -193,7 +197,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
         }
       });
   }
-  private subscribeToConversationRoom() {
+  private subscribeToConversationRoom(): void {
     // Getting roomId from socket.service
     this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(
       (roomId) => {
@@ -202,7 +206,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeToConversation() {
+  private subscribeToConversation(): void {
     // Here we get active conversation
     this.activeConversationSubscription =
       this.activeConversationService.getActiveConversation.subscribe((data) => {
@@ -213,13 +217,13 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       });
   }
 
-  private subscribeToUserId() {
+  private subscribeToUserId(): void {
     this.userIdSubscription = this.authService.userId.subscribe((data) => {
       this.userId = data;
     });
   }
 
-  private subscribeToPartner() {
+  private subscribeToPartner(): void {
     // Here we get the partner information
     this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe(
       (partnerInfo) => {
@@ -240,7 +244,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeUpdatedMessagesToReadWithPartnerJoin() {
+  private subscribeUpdatedMessagesToReadWithPartnerJoin(): void {
     this.updatedMessagesToReadWithPartnerJoinSubscription =
       this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(
         (updatedMessagesToRead) => {
@@ -269,7 +273,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   // Here we push received message during live chat
-  private subscribeReadMessage() {
+  private subscribeReadMessage(): void {
     this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe((message) => {
       if (message) {
         // Here we push received message during live chat
@@ -279,7 +283,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     });
   }
 
-  private cleanUp() {
+  private cleanUp(): void {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
     if (this.conversationRoomIdSubscription) this.conversationRoomIdSubscription.unsubscribe();
@@ -302,12 +306,12 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.socketIoService.setConversationRoomId(null);
   }
 
-  ionViewWillLeave() {
+  ionViewWillLeave(): void {
     console.log('Leaving active conversation', this.partnerInfo);
     this.cleanUp();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.cleanUp();
   }
 }

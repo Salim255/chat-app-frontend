@@ -1,299 +1,172 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {
+  BehaviorSubject,
+  catchError,
+  from,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, from, map, Observable, switchMap, tap } from 'rxjs';
-import { Conversation } from '../../active-conversation/models/active-conversation.model';
+import { Conversation } from '../models/conversation.model';
 import { Message } from '../../active-conversation/interfaces/message.interface';
 import { WorkerService } from 'src/app/core/workers/worker.service';
-import { DecryptionActionType } from 'src/app/core/workers/decrypt.worker';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
+import { ConversationWorkerHandler } from './conversation.worker-handler';
+import { sortConversations, initializeConversationsMap } from '../utils/conversations.utils';
 
 export type WorkerMessage = {
-  action: DecryptionActionType;
+  action: string;
   email: string;
-  privateKey: string; // User's private key
-  conversations: Conversation[]; // Array of Conversation objects
+  privateKey: string;
+  conversations: Conversation[];
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ConversationService {
   private ENV = environment;
   private conversationsMap = new Map<string, Conversation>();
   private conversationsSource = new BehaviorSubject<Conversation[] | null>(null);
-  private worker: Worker | null = null;
+  private workerHandler!: ConversationWorkerHandler;
 
-  constructor(
-    private http: HttpClient,
-    private workerService: WorkerService
-  ) {
-    this.worker = this.workerService.getWorker();
+  constructor(private http: HttpClient, private workerService: WorkerService) {
     this.setConversations(null);
-    this.conversationsMap.clear();
   }
 
-  /** Fetch conversations from the server and decrypt them if necessary */
-  fetchConversations(): Observable<Conversation[] | null> {
+  fetchConversations(): Observable<{ status: string; data: { chats: Conversation[] } }> {
     return from(GetAuthData.getAuthData()).pipe(
-      switchMap((storedData) => {
-        if (!storedData) throw new Error('There is no auth data');
-
-        const decryptionData = {
-          email: storedData._email,
-          privateKey: storedData._privateKey,
-        };
-
-        return this.http.get<{ data: Conversation[] }>(`${this.ENV.apiUrl}/chats`).pipe(
-          map((response) => response.data || null),
-
-          tap((incomingConversations) => {
-            console.log('Hello world 😍😍', incomingConversations);
-            if (!incomingConversations || !this.worker) {
-              if (!incomingConversations) {
-                this.conversationsMap.clear();
-              }
-            }
-
-            const existingConversations = this.conversationsSource.value;
-            let conversationsToDecrypt = incomingConversations;
-            if (existingConversations && existingConversations.length > 0) {
-              // Store existing conversation IDs in a Set for O(1) lookup
-              const existingIds = new Set(existingConversations.map((conv) => conv.id));
-              conversationsToDecrypt = incomingConversations.filter(
-                (conv) => !existingIds.has(conv.id)
-              );
-
-              if (conversationsToDecrypt.length === 0) return; // No new conversations
-            }
-
-            this.decryptAndAddConversation(
-              conversationsToDecrypt,
-              existingConversations ?? [],
-              decryptionData
-            );
-          })
+      switchMap(authData => {
+        if (!authData) throw new Error('Missing auth data');
+        return this.http.get<{ status: string; data: { chats: Conversation[] } }>(`${this.ENV.apiUrl}/chats`).pipe(
+          tap(response => this.handleFetchedConversations(
+            response.data.chats,
+            { email: authData._email, privateKey: authData._privateKey },
+          ))
         );
       })
     );
   }
 
-  addNewlyCreatedConversation(conversation: Conversation) {
-    if (!conversation || !this.worker) return;
+  private handleFetchedConversations(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    const existing = this.conversationsSource.value || [];
+    const existingIds = new Set(existing.map(conversation => conversation.id));
+    const newConversations = conversations.filter(conversation => !existingIds.has(conversation.id));
 
-    // Get existing conversations
-    const existingConversations = this.conversationsSource.value ?? [];
+    if (newConversations.length > 0) {
+      this.workerHandler.decryptConversations(newConversations, authData)
+      .pipe(
+        catchError(err => {
+          console.error('Decryption failed', err);
+          return [];  // Or use: of([]) if you want to continue silently
+        }
+      ))
+      .subscribe(decrypted => {
+          this.mergeAndSetConversations(existing, decrypted);
+      });
+    }
+  }
 
-    // Get decryption data
-    GetAuthData.getAuthData().then((storedData) => {
-      if (!storedData) throw new Error('There is no auth data');
-      if (!this.worker) {
-        console.log('Worker error', this.worker);
-        this.worker = this.workerService.getWorker();
-      }
-      const decryptionData = {
-        email: storedData._email,
-        privateKey: storedData._privateKey,
-      };
+  private mergeAndSetConversations(
+    existing: Conversation[],
+    newOnes: Conversation[]) {
+    const combined = [...existing, ...newOnes];
+    this.setConversations(combined);
+    this.conversationsMap = initializeConversationsMap(combined);
+  }
 
-      // Prepare worker message
-      const workerMessageData: WorkerMessage = {
-        action: DecryptionActionType.decryptConversations,
-        ...decryptionData,
-        conversations: [conversation], // Only decrypt the new conversation
-      };
+  setConversations(chats: Conversation[] | null): void {
+    if (!chats) return;
+    this.conversationsSource.next(sortConversations(chats));
+  }
 
-      if (this.worker) {
-        console.log('Hello', conversation);
-        // Send decryption request to the worker
-        this.worker.postMessage(workerMessageData);
+  get getConversations(): Observable<Conversation[] | null> {
+    return this.conversationsSource.asObservable();
+  }
 
-        // Handle the worker's response
-        this.worker!.onmessage = (event: MessageEvent) => {
-          const decryptedData = event.data;
-          console.log(decryptedData, 'helof  helo from here');
-          if (!decryptedData?.conversations?.length) return;
+  addNewlyCreatedConversation(conversation: Conversation): void {
+    if (!conversation) return;
 
-          const decryptedConversation: Conversation = { ...decryptedData.conversations[0] };
+    GetAuthData.getAuthData().then(authData => {
+      if (!authData) throw new Error('Missing auth data');
+      this.workerHandler.decryptConversations(
+        [ conversation ],
+        { email: authData._email,
+          privateKey: authData._privateKey,
+        }).subscribe(decrypted => {
+          if (!decrypted.length) return;
 
-          if (!decryptedConversation?.id) return; // Ensure conversation has an ID
-          // Get the last message ID from the original conversation
+          const decryptedConversation = decrypted[0];
           const lastMessageId = decryptedConversation.last_message?.id;
-          if (!lastMessageId) return; // Ensure lastMessageId exists
+          const decryptedLastMessage = decryptedConversation.messages?.find(msg => msg.id === lastMessageId);
 
-          // Find the decrypted message that matches the last_message ID
-          const decryptedLastMessage: Message | undefined = decryptedConversation?.messages?.find(
-            (msg: Message) => msg.id === lastMessageId
-          );
-
-          // Assign the decrypted last message
-          if (!decryptedLastMessage || !decryptedConversation.last_message) return;
+          if (!lastMessageId || !decryptedLastMessage) return;
 
           decryptedConversation.last_message = {
             ...decryptedConversation.last_message,
             content: decryptedLastMessage.content,
           };
 
-          //const lastMessage = decryptedData.conversations[0].messages[lens]
-          //const decryptedConversation: Conversation = {...decryptedData.conversations[0], last_message: decryptedData.conversations[0].messages[] };
+          this.conversationsMap.set(decryptedConversation.id.toString(), decryptedConversation);
+          const current = this.conversationsSource.value || [];
+          this.setConversations([...current, decryptedConversation]);
 
-          // Update conversationsMap
-          this.conversationsMap.set(decryptedConversation?.id.toString(), decryptedConversation);
-
-          // Update BehaviorSubject (conversationsSource) to trigger UI updates
-          this.setConversations([...existingConversations, decryptedConversation]);
-        };
-      }
+        });
     });
   }
-  //
-  /** Update messages when the conversation partner joins */
-  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation) {
-    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) {
-      console.error('Invalid conversation update data');
-      return;
-    }
 
-    // Get the current list of conversations
-    const currentConversations = this.conversationsSource.value;
-    if (!currentConversations) return;
-
-    // Find the conversation to update
-    const updatedConversations = currentConversations.map((conv) => {
-      if (conv.id === updatedConversation.id) {
-        // Ensure messages are not null
-        const newMessages = updatedConversation.messages ?? [];
-        // Replace messages & update last_message
-        const updatedConv = {
-          ...conv,
-          messages: newMessages,
-          no_read_messages: 0,
-          last_message:
-            newMessages.length > 0 ? newMessages[newMessages.length - 1] : conv.last_message,
-        };
-
-        // Update the map
-        this.conversationsMap.set(updatedConversation.id + '', updatedConv);
-        return updatedConv;
-      }
-      return conv;
-    });
-    // Emit updated conversations
-    this.conversationsSource.next(updatedConversations);
-  }
-
-  /** Update conversation with new message */
-  updateConversationWithNewMessage(message: Message, actionTypeReceive = false) {
+  updateConversationWithNewMessage(message: Message, received = false): void {
     if (!message) return;
 
-    const conversationId = message.chat_id.toString();
-    const conversation = this.conversationsMap.get(conversationId);
-
+    const id = message.chat_id.toString();
+    const conversation = this.conversationsMap.get(id);
     if (!conversation) return;
 
-    // Create a shallow copy of the conversation to avoid mutation
-    const updatedConversation = { ...conversation };
+    const updatedConversation = {
+      ...conversation,
+      messages: [...(conversation.messages || []), message],
+      last_message: message,
+      no_read_messages: received ? (conversation.no_read_messages || 0) + 1 : 0
+    };
 
-    // Update the messages array with the new message
-    updatedConversation.messages = [...(updatedConversation.messages || []), message];
-
-    // Update the last message of the conversation
-    updatedConversation.last_message = message;
-
-    if (actionTypeReceive) {
-      // If the message is received, increment the unread message count
-      updatedConversation.no_read_messages = (updatedConversation.no_read_messages || 0) + 1;
-    } else {
-      // If the change is due to a sent message, reset the unread message count
-      updatedConversation.no_read_messages = 0;
-    }
-    // Set the updated conversation back into the Map
-    this.conversationsMap.set(conversationId, updatedConversation);
-
-    // Reflect the change in the UI array (this will trigger UI updates)
+    this.conversationsMap.set(id, updatedConversation);
     this.setConversations(Array.from(this.conversationsMap.values()));
   }
 
-  updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(activeChat: Conversation) {
-    if (!activeChat.id || !activeChat.messages) return;
-    // 1. Update the messages in the active conversation (in conversationsMap)
-    const conversationId = activeChat.id.toString(); // Ensure it's a string
-    const conversation = this.conversationsMap.get(conversationId);
+  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation): void {
+    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) return;
 
-    if (!conversation) return; // If the conversation doesn't exist, exit early
-
-    // Create a shallow copy of the conversation to avoid mutation
-    const updatedConversation = { ...conversation };
-
-    // Replace the messages in the conversation with updated activeChat.messages
-    updatedConversation.messages = [...activeChat.messages];
-
-    // Set the updated conversation back into the Map
-    this.conversationsMap.set(conversationId, updatedConversation);
-    // Reflect the change in the UI array (this will trigger UI updates)
-    this.setConversations(Array.from(this.conversationsMap.values()));
-  }
-  /** Set conversations in the BehaviorSubject */
-  setConversations(chats: Conversation[] | null) {
-    console.log('Hello world 😍😍', chats);
-    if (!chats) return;
-    this.conversationsSource.next(this.sortConversations(chats));
-  }
-  /** Get conversations as observable */
-  get getConversations() {
-    return this.conversationsSource.asObservable();
-  }
-
-  /** Initialize the conversation map from the array */
-  private initializeConversationsMap(conversations: Conversation[]) {
-    this.conversationsMap.clear();
-    conversations.forEach((convo) => {
-      if (convo.id) {
-        this.conversationsMap.set(convo.id.toString(), convo);
+    const updatedList = (this.conversationsSource.value || []).map(conversation => {
+      if (conversation.id === updatedConversation.id) {
+        const newConversation = {
+          ...conversation,
+          messages: [...updatedConversation.messages],
+          no_read_messages: 0,
+          last_message: updatedConversation.messages[updatedConversation.messages.length - 1]
+        };
+        this.conversationsMap.set(updatedConversation.id.toString(), newConversation);
+        return newConversation;
       }
+      return conversation;
     });
+
+    this.conversationsSource.next(updatedList);
   }
 
-  /** Decrypt conversations using a worker */
-  private decryptAndAddConversation(
-    conversationsToDecrypt: Conversation[],
-    existingConversations: Conversation[],
-    decryptionData: any
-  ) {
-    if (!this.worker) return;
+  updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(
+    activeChat: Conversation,
+    ): void {
+      if (!activeChat.id || !activeChat.messages) return;
 
-    const workerMessageData: WorkerMessage = {
-      action: DecryptionActionType.decryptConversations,
-      ...decryptionData,
-      conversations: conversationsToDecrypt,
-    };
+      const updatedConversation: Conversation = {
+        ...this.conversationsMap.get(activeChat.id.toString()),
+        messages: [...activeChat.messages]
+      } as Conversation;
 
-    this.worker.postMessage(workerMessageData);
-
-    // Listen for the worker's response and update conversations
-    this.worker.onmessage = (event: MessageEvent) => {
-      const decryptedData = event.data;
-
-      // Now update the conversations with decrypted data
-      if (decryptedData && decryptedData.conversations) {
-        this.setConversations(
-          existingConversations
-            ? [...existingConversations, ...decryptedData.conversations]
-            : decryptedData.conversations
-        );
-
-        this.initializeConversationsMap(this.conversationsSource.value || []);
-      }
-    };
-  }
-
-  private sortConversations(conversations: Conversation[]) {
-    const sortedConversations = conversations.sort((a, b) => {
-      return (
-        new Date(b.last_message?.updated_at ?? new Date(0)).getTime() -
-        new Date(a.last_message?.updated_at ?? new Date(0)).getTime()
-      );
-    });
-    return sortedConversations;
+      this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
+      this.setConversations(Array.from(this.conversationsMap.values()));
   }
 }
