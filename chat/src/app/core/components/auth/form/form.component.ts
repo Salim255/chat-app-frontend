@@ -24,6 +24,8 @@ interface UserInput {
   confirm_password?: string;
 }
 
+
+
 @Component({
   selector: 'app-auth-form',
   templateUrl: './form.component.html',
@@ -52,11 +54,23 @@ export class FormComponent implements OnInit {
 
   onSubmit(f: NgForm): void {
     this.loadingSpinnerService.showSpinner();
-    if (!f.valid || !this.authMode) {
-      return;
+    if (!f.valid || !this.authMode ) {
+      return ;
     }
 
-    this.authService.authenticate(this.authMode, this.userInputs).subscribe({
+
+  // Check password match for signup
+  if (
+    this.authMode === 'signup' &&
+    this.userInputs.password !== this.userInputs.confirm_password
+   ) {
+    this.loadingSpinnerService.hideSpinner();
+    return; // Stop submission if not matching
+  }
+  // Create a copy without confirm_password
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { confirm_password, ...userInputsWithoutConfirm } = this.userInputs;
+  this.authService.authenticate(this.authMode, userInputsWithoutConfirm).subscribe({
       next: () => {
         f.reset();
         this.router.navigateByUrl('/tabs/discover');
@@ -73,9 +87,7 @@ export class FormComponent implements OnInit {
     });
   }
 
-  /**============
-   * Returns the form fields based on the authentication mode.
-   */
+  //Returns the form fields based on the authentication mode.
   private generateFormFields(): FormField[] {
     const fields: FormField[] = [
       {

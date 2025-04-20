@@ -3,7 +3,11 @@ export interface AuthPost {
   last_name?: string;
   email?: string;
   password?: string;
-  confirm_password?: string;
+}
+
+export interface AuthPostWithKeys extends Omit< AuthPost, 'password_confirm'> {
+  public_key: string;
+  private_key: string;
 }
 
 export interface AuthResponseDto {

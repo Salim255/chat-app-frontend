@@ -4,6 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 import { environment } from '../../../../environments/environment';
 import {
   AuthPost,
+  AuthPostWithKeys,
   AuthResponseDto,
   UpdatedUserDto,
   UpdateMePayload,
@@ -26,11 +27,6 @@ export enum AuthMode {
   signup = 'signup',
 }
 
-export interface AuthPostWithKeys extends AuthPost {
-  publicKey: string;
-  privateKey: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -49,8 +45,9 @@ export class AuthService implements OnDestroy {
   authenticate(mode: AuthMode, userInput: AuthPost): Observable<{ status: string, data: AuthResponseDto }> {
     if (mode === AuthMode.signup && userInput.email) {
       return from(KeyPairManager.getPrivatePublicKeys(userInput.email)).pipe(
-        switchMap(({ publicKey, privateKey }) => {
-          const userInputWithKeys: AuthPostWithKeys = { publicKey, privateKey, ...userInput };
+        switchMap(({ publicKey: public_key, privateKey: private_key }) => {
+          const userInputWithKeys: AuthPostWithKeys = { public_key, private_key, ...userInput };
+          console.log(userInputWithKeys)
           return this.authRequest(mode, userInputWithKeys);
         })
       );
