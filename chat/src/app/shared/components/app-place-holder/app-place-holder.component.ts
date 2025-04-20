@@ -8,11 +8,11 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class AppPlaceHolderComponent {
-  @Input() pageName: any;
-  placeHolderText: any;
+  @Input() pageName!: string;
+  placeHolderText!: string;
   constructor(private router: Router) {}
 
-  setPlaceHolderText() {
+  setPlaceHolderText(): string {
     if (this.pageName === 'discover') {
       return `There's no one around you. Expand your Discover Settings to see more people`;
     } else {
@@ -20,11 +20,11 @@ export class AppPlaceHolderComponent {
     }
   }
 
-  onExplore() {
+  onExplore(): void {
     this.router.navigate(['tabs/discover']);
   }
 
-  setBtnText() {
+  setBtnText(): string {
     if (this.pageName === 'discover') {
       return `Go to Settings`;
     } else {

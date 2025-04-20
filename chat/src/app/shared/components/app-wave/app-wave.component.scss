@@ -7,8 +7,8 @@
   align-items: center;
 
   ion-avatar {
-    height: 6rem;
-    width: 6rem;
+    height: 10rem;
+    width: 10rem;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -35,26 +35,26 @@
     }
 
     &__2 {
-      width: 7.375rem;
-      height: 7.375rem;
-      animation-delay: 0.4s;
+      width: 8.375rem;
+      height: 8.375rem;
+      animation-delay: 0.8s;
     }
 
     &__3 {
-      width: 8.5rem;
-      height: 8.5rem;
+     // width: 10.5rem;
+      //height: 10.5rem;
       animation-delay: 0.8s;
     }
 
     &__4 {
-      width: 10.625rem;
-      height: 10.625rem;
+       //width: 14.625rem;
+      //height: 14.625rem;
       animation-delay: 1.2s;
     }
 
     &__5 {
-      width: 16.85rem;
-      height: 16.85rem;
+      width: 22.85rem;
+      height: 22.85rem;
       animation-delay: 1.6s;
     }
   }

@@ -1,8 +1,11 @@
-import { Preferences } from '@capacitor/preferences';
 import { EncryptionUtils } from './utils';
 
+export type GeneratedKeyPair = {
+  privateKey: ArrayBuffer,
+  publicKey: string
+}
 export class KeyPairManager {
-  static async generateKeyPair() {
+  static async generateKeyPair(): Promise<GeneratedKeyPair> {
     // Generates an RSA key pair and exports the public and private keys in Base64 format
     const keyPair = await self.crypto.subtle.generateKey(
       {
@@ -26,28 +29,14 @@ export class KeyPairManager {
     };
   }
 
-  static async getPrivatePublicKeys(email: string) {
-    // Generate keys ///
-    const { publicKey, privateKey } = await this.generateKeyPair();
+  static async getPrivatePublicKeys(email: string):
+    Promise<{ publicKey: string, privateKey: string }> {
+      // Generate keys ///
+      const { publicKey, privateKey } = await this.generateKeyPair();
 
-    // Derive key from email
-    const encryptedPrivateKey = await this.encryptPrivateKey(privateKey, email);
-    return { publicKey, privateKey: encryptedPrivateKey };
-  }
-
-  static async GetCurrentUserKeys() {
-    const userPublicKey = await Preferences.get({ key: 'authData' });
-    if (!userPublicKey.value) return;
-
-    const parsedData = JSON.parse(userPublicKey.value) as {
-      _privateKey: string;
-      _publicKey: string;
-    };
-
-    const publicKey = parsedData._publicKey;
-    const privateKey = parsedData._privateKey;
-
-    return { privateKey, publicKey };
+      // Derive key from email
+      const encryptedPrivateKey = await this.encryptPrivateKey(privateKey, email);
+      return { publicKey, privateKey: encryptedPrivateKey };
   }
 
   // Encrypts the private key with the user's password using AES-GCM
@@ -73,7 +62,10 @@ export class KeyPairManager {
   }
 
   // Derives an AES key from the user email using PBKDF2 (Email-Based Key Derivation Function 2)
-  static async deriveKeyFromEmail(email: string, salt: Uint8Array) {
+  static async deriveKeyFromEmail(
+    email: string,
+    salt: Uint8Array,
+    ): Promise<CryptoKey> {
     const encoder = new TextEncoder();
     // Convert the email string into a Uint8Array (this will be used as key material)
     const emailBytes = encoder.encode(email);
