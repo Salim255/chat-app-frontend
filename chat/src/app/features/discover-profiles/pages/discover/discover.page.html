@@ -14,7 +14,7 @@
     >
       <app-profile-swipe
         [profile]="item"
-        [profileToView]="profileToView()?.profile?.user_id === item.user_id ? profileToView(): null "
+        [profileToView]="profileToView()?.profile?.id === item.id ? profileToView(): null "
       >
       </app-profile-swipe>
     </div>

@@ -3,7 +3,7 @@
     <ion-col>
       <app-profile-slider
         *ngIf="profile"
-        [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+        [profileToView]="profile.id === profileToView?.profile?.id ? profileToView : null"
         [profile]="profile"
         [pageName]="'discover'"
       >

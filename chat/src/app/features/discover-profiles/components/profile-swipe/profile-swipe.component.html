@@ -8,7 +8,7 @@
 >
   <app-profile-content
     [profile]="profile"
-    [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+    [profileToView]="profile.id === profileToView?.profile?.id ? profileToView : null"
   >
   </app-profile-content>
 </div>

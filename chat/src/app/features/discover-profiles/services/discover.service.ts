@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, tap } from 'rxjs';
-import { Member } from 'src/app/shared/interfaces/member.interface';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { ItsMatchModalService } from '../../matches/services/its-match-modal.service';
+import { Discover } from '../model/discover.model';
 
 export type DisableProfileSwipe = {
   disableSwipe: boolean;
-  profile: Member;
+  profile: Discover;
 };
 
 export enum InteractionType {
@@ -25,8 +25,8 @@ export enum InteractionType {
 })
 export class DiscoverService {
   private ENV = environment;
-  private noConnectedFriendsArray = new BehaviorSubject<Member[]>([]);
-  private displayedProfileSource = new BehaviorSubject<Member | null>(null);
+  private potentialMatches = new BehaviorSubject<Discover[]>([]);
+  private displayedProfileSource = new BehaviorSubject<Discover | null>(null);
   private profileToRemoveSource = new BehaviorSubject<number | null>(null);
 
   private likeProfileSource = new BehaviorSubject<InteractionType | null>(null);
@@ -39,20 +39,20 @@ export class DiscoverService {
     private itsMatchModalService: ItsMatchModalService
   ) {}
 
-  fetchUsers() {
-    return this.http.get<any>(`${this.ENV.apiUrl}/friends/non-friends`).pipe(
+  fetchPotentialMatches():Observable<{ status: string, data: { users: Discover[] }}> {
+    return this.http.get<{ status: string, data: { users: Discover[] }}>(`${this.ENV.apiUrl}/users/discover`).pipe(
       tap((response) => {
-        this.noConnectedFriendsArray.next(response.data);
+        this.potentialMatches.next(response.data.users);
       })
     );
   }
 
-  likeProfile(likedProfile: Member) {
+  likeProfile(likedProfile: Discover) {
     return this.http
-      .post<any>(`${this.ENV.apiUrl}/friends`, { friend_id: likedProfile.user_id })
+      .post<any>(`${this.ENV.apiUrl}/friends`, { friend_id: likedProfile.id })
       .pipe(
         tap((response) => {
-          this.setProfileToRemove(likedProfile.user_id);
+          this.setProfileToRemove(likedProfile.id);
           if (response?.data && response.data.status === 2) {
             const matchedData: Partner = ProfileUtils.setProfileData(likedProfile);
             this.itsMatchModalService.openItsMatchModal(matchedData);
@@ -77,7 +77,7 @@ export class DiscoverService {
     this.profileInteractionTypeSource.next(interActionType);
   }
 
-  setDisplayedProfile(data: Member) {
+  setDisplayedProfile(data: Discover) {
     this.displayedProfileSource.next(data);
   }
 
@@ -106,7 +106,7 @@ export class DiscoverService {
     return this.displayedProfileSource.asObservable();
   }
 
-  get getNoConnectedFriendsArray() {
-    return this.noConnectedFriendsArray.asObservable();
+  get getPotentialMatchesArray() {
+    return this.potentialMatches.asObservable();
   }
 }

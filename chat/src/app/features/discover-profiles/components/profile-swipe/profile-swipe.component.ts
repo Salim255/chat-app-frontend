@@ -4,7 +4,8 @@ import {
   DiscoverService,
   InteractionType,
 } from '../../services/discover.service';
-import { Member } from 'src/app/shared/interfaces/member.interface';
+import { Discover } from '../../model/discover.model';
+
 
 @Component({
   selector: 'app-profile-swipe',
@@ -13,7 +14,7 @@ import { Member } from 'src/app/shared/interfaces/member.interface';
   standalone: false,
 })
 export class ProfileSwipeComponent {
-  @Input() profile!: Member;
+  @Input() profile!: Discover;
   @Input() profileToView: DisableProfileSwipe | null = null;
 
   currentTransformX: number = 0; // Keeps track of the current of the card
@@ -22,7 +23,7 @@ export class ProfileSwipeComponent {
 
   constructor(private discoverService: DiscoverService) {}
 
-  onSwipeLeft(event: any) {
+  onSwipeLeft(event: any): void {
     this.discoverService.setProfileInteractionType(InteractionType.DISLIKE);
   }
 
@@ -31,7 +32,7 @@ export class ProfileSwipeComponent {
   }
 
   disableHammerSwiper(profileToView: DisableProfileSwipe | null): string {
-    if (!profileToView || this.profile?.user_id !== profileToView.profile.user_id) {
+    if (!profileToView || this.profile?.id !== profileToView.profile.id) {
       return 'hammer-swiper-container '; // Return the default class if the condition doesn't match
     }
     if (profileToView.disableSwipe) {

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Member } from 'src/app/shared/interfaces/member.interface';
 import { DisableProfileSwipe } from '../../services/discover.service';
+import { Discover } from '../../model/discover.model';
 
 @Component({
   selector: 'app-profile-content',
@@ -9,7 +9,7 @@ import { DisableProfileSwipe } from '../../services/discover.service';
   standalone: false,
 })
 export class ProfileContentComponent implements OnChanges {
-  @Input() profile!: Member;
+  @Input() profile!: Discover;
   @Input() profileToView: DisableProfileSwipe | null = null;
   constructor() {}
 
@@ -23,7 +23,7 @@ export class ProfileContentComponent implements OnChanges {
   }
 
   onCollapseProfileDetails(profileToView: DisableProfileSwipe | null) {
-    if (this.profile.user_id === profileToView?.profile?.user_id && profileToView.disableSwipe) {
+    if (this.profile.id === profileToView?.profile?.id && profileToView.disableSwipe) {
       return 'profile-details profile-details__expand';
     }
     return 'profile-details profile-details__collapse';
