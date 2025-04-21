@@ -7,7 +7,7 @@ export class Match {
     public connection_status: "online" | "offline" | "away",
     public public_key: string,
     public match_id: number,
-    public match_status: 1 | 2,
+    public match_status: number,
     public match_created_at: Date,
     public match_updated_at: Date,
   ){}

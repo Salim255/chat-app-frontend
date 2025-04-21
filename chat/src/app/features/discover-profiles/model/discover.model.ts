@@ -6,5 +6,6 @@ export class Discover {
     public avatar: string,
     public connection_status: string,
     public match_status: number,
+    public match_id: number
   ){}
 }

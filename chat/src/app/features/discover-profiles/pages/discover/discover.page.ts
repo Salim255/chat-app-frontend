@@ -118,21 +118,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   handleLikeProfile(): void {
     if (this.isAnimating()) return;
-
     // To avoid many
     this.isAnimating.set(true);
-
     // For interaction animation
     this.setSwipeAnimationStyle(SwipeDirection.SwipeRight);
-
     const profile = this.topProfile ?? null;
     if (profile) {
-      this.discoverService.likeProfile(profile).subscribe({
-        next: () => {},
-        error: () => {
-          //this.isAnimating.set(false) ;///
-        },
-      });
+      if(!profile.match_status) this.discoverService.initiateMatchRequest(profile).subscribe();
+      if(profile?.match_status === 1) this.discoverService.acceptMatchRequest(profile).subscribe();
     }
 
     setTimeout(() => {
@@ -143,6 +136,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private removeTopProfile(): void {
+
     if (this.membersList().length > 0) {
       this.membersList.update((members) => {
         if (members.length > 0) {
@@ -151,9 +145,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
         return members;
       });
     }
+    console.log('Hello from here',  this.membersList())
     if (this.membersList().length === 0) {
       this.discoverService.fetchPotentialMatches().subscribe();
     }
+    console.log('Hello from here',  this.membersList())
   }
 
   private subscribeToDiscoverProfileToggle(): void {
@@ -187,7 +183,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   private loadForeignersList(): void {
     this.membersSource = this.discoverService.getPotentialMatchesArray.subscribe((profiles) => {
+      console.log(profiles)
       this.membersList.set([...profiles]);
+      console.log( this.membersList())
     });
   }
 

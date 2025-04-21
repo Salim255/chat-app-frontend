@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { ItsMatchModalService } from '../../matches/services/its-match-modal.service';
 import { Discover } from '../model/discover.model';
+import { Match } from '../../matches/models/match.model';
+import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 
 export type DisableProfileSwipe = {
   disableSwipe: boolean;
@@ -19,6 +19,14 @@ export enum InteractionType {
   SuperLike = 'super-like',
   MESSAGE = 'message',
 }
+
+export type InitiatedMatchDto =  {
+  id: number;
+  to_user_id: number;
+  from_user_id: number;
+  status: 1;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -47,18 +55,38 @@ export class DiscoverService {
     );
   }
 
-  likeProfile(likedProfile: Discover) {
+  acceptMatchRequest(likedProfile: Discover): Observable<{ status: string, data: { match: Match } }>{
     return this.http
-      .post<any>(`${this.ENV.apiUrl}/friends`, { friend_id: likedProfile.id })
+    .patch<{ status: string, data: { match: Match } }>(
+      `${this.ENV.apiUrl}/matches/${likedProfile.match_id}/accept`, {}
+    ).pipe(
+      tap((response) => {
+        console.log(response.data, "hello")
+        this.profileToRemoveSource.next(likedProfile.id);
+      if (response?.data) {
+          //const matchedData: Match = ProfileUtils.setProfileData(likedProfile);
+         // this.itsMatchModalService.openItsMatchModal(matchedData);
+        }
+      })
+  );
+  }
+
+  initiateMatchRequest(
+    likedProfile: Discover,
+  ): Observable<{ status: string; data: { match: InitiatedMatchDto } }>
+  {
+    return this.http
+      .post<{ status: string; data: { match: InitiatedMatchDto } }>(`${this.ENV.apiUrl}/matches/initiate-match`, {  to_user_id: likedProfile.id })
       .pipe(
         tap((response) => {
-          this.setProfileToRemove(likedProfile.id);
-          if (response?.data && response.data.status === 2) {
+          console.log(response)
+          this.profileToRemoveSource.next(likedProfile.id);
+       /*    if (response?.data && response.data.status === 2) {
             const matchedData: Partner = ProfileUtils.setProfileData(likedProfile);
             this.itsMatchModalService.openItsMatchModal(matchedData);
-          }
+          } */
         })
-      );
+    );
   }
 
   onDiscoverProfileToggle(actionType: DisableProfileSwipe) {
@@ -89,12 +117,9 @@ export class DiscoverService {
     return this.likeProfileSource.asObservable();
   }
 
-  // We set the profile id of the current profile
-  setProfileToRemove(profileId: number) {
-    this.profileToRemoveSource.next(profileId);
-  }
+
   // We get the Id of the current profile
-  get getProfileToRemoveId() {
+  get getProfileToRemoveId(): Observable<number | null> {
     return this.profileToRemoveSource.asObservable();
   }
 
