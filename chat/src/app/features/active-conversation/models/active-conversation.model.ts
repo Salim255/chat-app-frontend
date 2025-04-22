@@ -1,5 +1,5 @@
 import { Member } from 'src/app/shared/interfaces/member.interface';
-import { Message } from '../interfaces/message.interface';
+import { Message } from '../../messages/model/message.model';
 
 export class Conversation {
   constructor(

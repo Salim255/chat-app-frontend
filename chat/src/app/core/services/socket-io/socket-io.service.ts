@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../features/messages/model/message.model';
 import { SocketNewConversationHandler } from './socket-new-conversation-handler';
 import { SocketMessageHandler } from './socket-message-handler';
 import { SocketRoomHandler } from './socket-room-handler';

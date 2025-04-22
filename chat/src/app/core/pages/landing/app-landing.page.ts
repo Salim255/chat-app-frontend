@@ -13,10 +13,9 @@ import { SocketIoService } from '../../services/socket-io/socket-io.service';
 export class AppLandingPage {
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private socketIoService: SocketIoService
+    private router: Router
   ) {
-    this.socketIoService.initializeSocket(1);
+
   }
 
   onCreate(): void {

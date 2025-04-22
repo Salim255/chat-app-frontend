@@ -13,7 +13,7 @@ import {
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from '../../../conversations/models/conversation.model';
 import { Subscription } from 'rxjs';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
@@ -26,7 +26,7 @@ import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-mes
 })
 export class ConversationItemComponent
 implements OnInit, OnDestroy, OnChanges {
-  @Input() conversation: Conversation | null = null;
+  @Input() conversation!: Conversation;
   @Input() userId: number | null = null;
 
   lastMessage = signal<Message | null>(null);
@@ -71,7 +71,11 @@ implements OnInit, OnDestroy, OnChanges {
   // Initializes the conversation data.
   private initializeConversation(): void {
     if (this.conversation?.messages?.length && this.conversation?.users) {
-      this.lastMessage.set(this.conversation.messages?.[-1] || null);
+      this.lastMessage.set(
+        this.conversation.messages[
+          this.conversation.messages.length-1
+        ],
+      );
       this.readMessagesCounter.set(this.conversation.no_read_messages ?? 0);
       this.setPartnerInfo();
     }

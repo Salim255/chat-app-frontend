@@ -11,7 +11,7 @@
     <ion-text> {{ lastMessage()?.content }} </ion-text>
   </ion-label>
 
-  @if (readMessagesCounter() && (conversation?.last_message?.from_user_id ?? -1) !== userId) {
+  @if (readMessagesCounter() && lastMessage()?.from_user_id !== userId) {
     <ion-text class="messages_number">
       <span> {{ readMessagesCounter() }} </span>
     </ion-text>

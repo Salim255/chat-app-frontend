@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../features/messages/model/message.model';
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { Conversation } from '../../../features/conversations/models/conversation.model';
 import { SendMessageEmitterData } from './socket-io.service';
@@ -135,7 +135,7 @@ export class SocketMessageHandler {
         const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
         const { encrypted_session_base64, ...rest } = receivedMessage;
         const decryptedMessage = { ...rest, content: decryptedContent };
-        this.conversationService.updateConversationWithNewMessage(decryptedMessage, true);
+        this.conversationService.updateConversationWithNewMessage(decryptedMessage);
       } catch (error) {
         console.error('Error processing delivered message:', error);
       }

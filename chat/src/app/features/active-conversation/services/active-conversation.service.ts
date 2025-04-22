@@ -12,21 +12,19 @@ import { Conversation } from '../../conversations/models/conversation.model';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { CreateMessageData } from '../pages/active-conversation/active-conversation.page';
+import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
 import { ConversationService } from '../../conversations/services/conversations.service';
-import { CreateChatInfo } from '../pages/active-conversation/active-conversation.page';
+import { CreateChatDto } from '../pages/active-conversation/active-conversation.page';
 import { ModalController } from '@ionic/angular';
 import { ActiveConversationPage } from '../pages/active-conversation/active-conversation.page';
 import {
   MessageEncryptDecrypt,
   MessageEncryptionData,
 } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
-import { DecryptConversationsObserver } from './decryption-observer';
 import { WorkerService } from 'src/app/core/workers/worker.service';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
-import { Message } from '../interfaces/message.interface';
+import { Message } from '../../messages/model/message.model';
 import { workerRequest } from 'src/app/core/workers/worker-request';
-import { off } from 'hammerjs';
 
 export enum PartnerRoomStatus {
   OFFLINE = 'offline',
@@ -123,7 +121,7 @@ export class ActiveConversationService {
   }
 
   // A function that create a new conversation
-  createConversation(data: CreateChatInfo) {
+  createConversation(data: CreateChatDto): Observable<{ status: string, data: { chat: Conversation } }> {
     return from(GetAuthData.getAuthData()).pipe(
       switchMap((storedData) => {
         if (!storedData) throw new Error('There is no auth data');
@@ -140,15 +138,20 @@ export class ActiveConversationService {
           switchMap((encryptedData) => {
             const { encryptedMessageBase64, ...rest } = encryptedData;
             data.content = encryptedMessageBase64;
-
-            return this.http.post<any>(`${this.ENV.apiUrl}/chats`, { ...data, ...rest }).pipe(
+            console.log(data)
+            return this.http.post<{ status: string, data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats`,
+              {
+                ...data,
+                session_key_sender: rest.encryptedSessionKeyForSenderBase64,
+                session_key_receiver: rest.encryptedSessionKeyForReceiverBase64
+               }).pipe(
               tap((response) => {
-                if (response?.data) {
+                if (response?.data.chat) {
                   const createdConversation = {
-                    ...response.data,
+                    ...response.data.chat,
                     messages: [
                       {
-                        ...response.data.messages[0], // Keep all other fields from the API response
+                        ...response.data.chat.messages[0], // Keep all other fields from the API response
                         content: messageData.messageText, // Override only the content with the original text
                       },
                     ],
@@ -165,7 +168,8 @@ export class ActiveConversationService {
   }
 
   // Here we send a message to a current conversation
-  sendMessage(data: CreateMessageData) {
+  sendMessage(data: CreateMessageDto):
+    Observable<{ status: string, data: { message: Message }}> {
     if (!this.activeConversationSource.value) throw new Error('There is no chat.');
 
     return from(GetAuthData.getAuthData()).pipe(
@@ -190,17 +194,18 @@ export class ActiveConversationService {
             const originalMessage = data.content;
             // ========== Here we associate the encrypted message with the data object
             const requestData = { ...data, content: encryptedMessageBase64 };
-            return this.http.post<any>(`${this.ENV.apiUrl}/messages`, requestData).pipe(
+            console.log(requestData, 'Hello message data')
+            return this.http.post<{ status: string, data: { message: Message }}>(`${this.ENV.apiUrl}/messages`, requestData).pipe(
               map((response) => {
                 // ========== Here we return the original message
                 // avoiding decryption of the message
                 // and returning the message as it was sent
-                const sentMessage = { ...response.data, content: originalMessage };
+                const sentMessage = { ...response.data.message, content: originalMessage };
                 // Update conversation that this message belongs to in the conversations list
                 this.conversationService.updateConversationWithNewMessage(sentMessage);
                 // Update active conversation messages
                 this.setMessagePageScroll();
-                return sentMessage;
+                return { status: 'success', data: { message: sentMessage } };
               })
             );
           })
@@ -229,24 +234,24 @@ export class ActiveConversationService {
     return activeChat;
   }
 
-  setMessagePageScroll() {
+  setMessagePageScroll(): void {
     this.triggerMessagePageScrollSource.next('scroll');
   }
   get getTriggerMessagePageScroll() {
     return this.triggerMessagePageScrollSource.asObservable();
   }
   // Here we set conversation's partner information
-  setPartnerInfo(data: Partner | null) {
+  setPartnerInfo(data: Partner | null): void {
     this.receiverPublicKey = data?.public_key ?? null;
     this.partnerInfoSource.next(data);
   }
 
-  setPartnerInRoomStatus(status: PartnerRoomStatus) {
+  setPartnerInRoomStatus(status: PartnerRoomStatus): void {
     this.partnerRoomStatusSource.next(status);
   }
 
   // Here we set the active conversation
-  setActiveConversation(conversation: Conversation | null) {
+  setActiveConversation(conversation: Conversation | null): void {
     if (!conversation?.id) {
       this.activeConversationSource.next(null);
     } else {
@@ -259,18 +264,18 @@ export class ActiveConversationService {
     return this.partnerInfoSource.asObservable();
   }
 
-  get getActiveConversation() {
+  get getActiveConversation(): Observable<Conversation | null> {
     return this.activeConversationSource.asObservable();
   }
 
-  async openChatModal() {
+  async openChatModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: ActiveConversationPage,
     });
     await modal.present();
   }
 
-  async closeModal() {
+  async closeModal(): Promise<void> {
     await this.modalController.dismiss();
   }
 }

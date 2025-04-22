@@ -5,7 +5,7 @@ import { Component,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../messages/model/message.model';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import {
   ActiveConversationService,
@@ -19,27 +19,27 @@ import {
 } from 'src/app/core/services/socket-io/socket-io.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
-import { MessageService } from 'src/app/features/active-conversation/services/message.service';
+import { MessageService } from 'src/app/features/messages/services/message.service';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 import { SocketRoomHandler } from 'src/app/core/services/socket-io/socket-room-handler';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
 
-export type CreateMessageData = {
-  chatId: number;
-  fromUserId: number;
-  toUserId: number;
+export type CreateMessageDto = {
+  chat_id: number;
+  from_user_id: number;
+  to_user_id: number;
   content: string;
-  partnerConnectionStatus: string;
+  partner_connection_status: string;
 };
 
-export type CreateChatInfo = {
+export type CreateChatDto = {
   content: string;
-  fromUserId: number;
-  toUserId: number;
+  from_user_id: number;
+  to_user_id: number;
 };
 
-export type ReadDeliveredMessage = Omit<CreateMessageData, 'content'>;
+export type ReadDeliveredMessage = Omit<CreateMessageDto , 'content'>;
 
 @Component({
   selector: 'app-active-conversation',
@@ -92,12 +92,12 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeToPartnerConnection();
   }
 
-  createNewChatObs(data: CreateChatInfo): void {
+  createNewChatObs(data: CreateChatDto): void {
     this.activeConversationService.createConversation(data).subscribe({
       next: (response) => {
         console.log(response);
         // Notify partner of newly created conversation
-        const newConversation: Conversation = { ...response?.data };
+        const newConversation: Conversation = { ...response?.data.chat };
         this.socketIoService.createdConversationEmitter(newConversation);
       },
       error: () => {
@@ -120,10 +120,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   onSubmit(message: string): void {
     if (!this.activeChat && this.userId && this.partnerInfo?.partner_id) {
-      const createChatData: CreateChatInfo = {
+      const createChatData: CreateChatDto = {
         content: message,
-        toUserId: this.partnerInfo.partner_id,
-        fromUserId: this.userId,
+        to_user_id: this.partnerInfo.partner_id,
+        from_user_id: this.userId,
       };
       this.createNewChatObs(createChatData);
     } else {
@@ -136,18 +136,18 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       return;
     }
 
-    const data: CreateMessageData = {
+    const data: CreateMessageDto = {
       content: message,
-      fromUserId: this.userId,
-      toUserId: this.partnerInfo.partner_id,
-      chatId: this.activeChat?.id,
-      partnerConnectionStatus: this.partnerInfo.connection_status ?? 'offline',
+      from_user_id: this.userId,
+      to_user_id: this.partnerInfo.partner_id,
+      chat_id: this.activeChat?.id,
+      partner_connection_status: this.partnerInfo.connection_status ?? 'offline',
     };
 
     this.messageService.sendMessage(data).subscribe({
       next: (response) => {
         if (!response) return;
-        const sentMessage = response;
+        const sentMessage = response.data.message;
         if (
           this.activeConversationService?.partnerRoomStatusSource.value ===
           PartnerRoomStatus.IN_ROOM
@@ -236,7 +236,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
             toUserId: this.partnerInfo?.partner_id,
             chatId: this.activeChat && this.activeChat.id,
             lastMessageSenderId:
-              (this.activeChat && this.activeChat.last_message?.from_user_id) ?? null,
+              (this.activeChat && this.activeChat.messages[-1]?.from_user_id) ?? null,
           };
           this.socketIoService.userJoinChatRoom(usersData);
         }

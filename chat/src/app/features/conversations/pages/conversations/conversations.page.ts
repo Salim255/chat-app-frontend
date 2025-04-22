@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Conversation } from '../../models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
@@ -6,7 +6,7 @@ import { AccountService } from 'src/app/features/account/services/account.servic
 import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../messages/model/message.model'
 
 @Component({
   selector: 'app-conversations',
@@ -14,7 +14,7 @@ import { Message } from 'src/app/features/active-conversation/interfaces/message
   styleUrls: ['./conversations.page.scss'],
   standalone: false,
 })
-export class ConversationsPage implements OnInit, OnDestroy {
+export class ConversationsPage implements OnDestroy {
   private conversationsSource!: Subscription;
   private updatedUserDisconnectionSubscription!: Subscription;
   private updatedChatCounterSubscription!: Subscription;
@@ -36,11 +36,6 @@ export class ConversationsPage implements OnInit, OnDestroy {
     private socketMessageHandler: SocketMessageHandler
   ) {}
 
-  ngOnInit(): void {
-    console.log('hello');
-    this.subscribeToConversations();
-  }
-
   ionViewWillEnter(): void {
     this.conversationService.fetchConversations();
     this.accountService.fetchAccount();
@@ -48,6 +43,7 @@ export class ConversationsPage implements OnInit, OnDestroy {
     this.subscribeToMessageDelivery();
     this.subscribeToUpdateChatCounter();
     this.subscribeUpdatedUserDisconnection();
+    this.subscribeToConversations();
   }
 
   // Subscribe to message delivery
@@ -102,10 +98,13 @@ export class ConversationsPage implements OnInit, OnDestroy {
   private subscribeToConversations(): void {
     this.conversationsSource = this.conversationService
       .getConversations.subscribe((conversation) => {
-        if (conversation) {
+        if (conversation && conversation?.length > 0) {
           this.conversations = [...conversation];
           this.isEmpty = conversation.length === 0; //////
-          // this.sortConversations();
+        }
+        else {
+          this.conversations = [];
+          this.isEmpty =  true; //////
         }
       });
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Message } from '../interfaces/message.interface';
-import { ActiveConversationService } from './active-conversation.service';
+import { Message } from '../../messages/model/message.model';
+import { ActiveConversationService } from '../../active-conversation/services/active-conversation.service';
 import { Observable } from 'rxjs';
-import { CreateMessageData } from '../pages/active-conversation/active-conversation.page';
+import { CreateMessageDto } from '../../active-conversation/pages/active-conversation/active-conversation.page';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class MessageService {
     return messages.length > 0 ? messages[messages.length - 1] : null;
   }
 
-  sendMessage(data: CreateMessageData): Observable<any> {
+  sendMessage(data: CreateMessageDto): Observable<any> {
     return this.activeConversationService.sendMessage(data);
   }
 

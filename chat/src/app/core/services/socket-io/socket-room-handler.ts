@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Message } from 'src/app/features/active-conversation/interfaces/message.interface';
+import { Message } from '../../../features/messages/model/message.model';
 import { JoinRomData } from './socket-io.service';
 import {
   ActiveConversationService,
