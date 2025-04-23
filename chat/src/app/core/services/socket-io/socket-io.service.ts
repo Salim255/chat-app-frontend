@@ -28,16 +28,27 @@ export enum ConnectionStatus {
   Offline = 'offline',
 }
 
+export enum SocketEvents {
+  UserStatusChanged = 'user_status_changed',
+  RegisterUser = 'register-user',
+  Disconnect = 'disconnect',
+  Connect = 'connect',
+  Reconnect = 'reconnect',
+  ReconnectAttempt = 'reconnect_attempt',
+}
+
 @Injectable({ providedIn: 'root' })
 export class SocketIoService {
   private socket: Socket | null = null;
   private userId: number | null = null;
-  private ENV = environment;
+  private readonly ENV = environment;
 
-  // ====== Other behaviorSubjects =======
   private currentRoomId: string = '';
-  private roomIdSource = new BehaviorSubject<string | null>(null);
-  private updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject<any>(null);
+  private readonly roomIdSource = new BehaviorSubject<string | null>(null);
+  //readonly roomId$ = this.roomIdSource.asObservable();
+
+  private readonly updateUserConnectionStatusWithDisconnectionSubject = new BehaviorSubject<any>(null);
+  readonly updatedUserDisconnection$ = this.updateUserConnectionStatusWithDisconnectionSubject.asObservable();
 
   constructor(
     private socketMessageHandler: SocketMessageHandler,
@@ -50,6 +61,131 @@ export class SocketIoService {
   // =======================================
   // ---------------------------------------
   initializeSocket(userId: number): void {
+    this.userId = userId;
+    if (this.socket?.connected) return;
+    this.connectSocket();
+  }
+
+  private connectSocket(): void {
+    this.socket = this.createSocketInstance();
+
+    this.socket.on(SocketEvents.Connect, this.onConnect.bind(this));
+    this.socket.on(SocketEvents.Disconnect, this.onDisconnect.bind(this));
+    this.socket.on(SocketEvents.Reconnect, this.onReconnect.bind(this));
+    this.socket.on(SocketEvents.ReconnectAttempt, this.onReconnectAttempt.bind(this));
+  }
+
+  private createSocketInstance(): Socket {
+    return io(`${this.ENV.socketUrl}`, {
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      transports: ['websocket', 'polling'],
+      withCredentials: true,
+    });
+  }
+
+  private onConnect(): void {
+    console.log(`✅ Connected as User: ${this.userId}`);
+    if (this.userId) this.registerUser(this.userId);
+    this.setupEventListeners();
+  }
+
+  private onDisconnect(reason: string): void {
+    console.log(`❌ Disconnected: ${reason}`);
+    // Let socket.io handle reconnection. Don't nullify socket here.
+  }
+
+  private onReconnect(): void {
+    console.log(`🔁 Reconnected!`);
+    if (this.userId) this.registerUser(this.userId);
+  }
+
+  private onReconnectAttempt(attempt: number): void {
+    console.log(`🔄 Reconnect attempt #${attempt}`);
+  }
+
+  private setupEventListeners(): void {
+    this.socket?.on(SocketEvents.UserStatusChanged, (result) => {
+      console.log(result, '💥 User status changed');
+      if (result) this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
+    });
+
+    this.socketMessageHandler.handleMessageEvents(this.socket!);
+    this.socketRoomHandler.handleRoomEvent(this.socket!);
+    this.socketNewConversationHandler.handleIncomingNewConversationEvent(this.socket!);
+  }
+
+  private registerUser(userId: number): void {
+    if (this.socket && userId) {
+      console.log('Registering user: ', userId);
+      this.socket.emit(SocketEvents.RegisterUser, userId);
+    }
+  }
+
+  clearAllListeners(): void {
+    this.socket?.removeAllListeners();
+  }
+
+  disconnectUser(userId: number): void {
+    if (this.socket) {
+      console.log('Disconnecting socket for user 💥💥', userId);
+      this.emitUserDisconnected(userId);
+      this.clearAllListeners();
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  }
+  private emitUserDisconnected(userId: number): void {
+    if (this.socket && userId) {
+      console.log('Emitting user _disconnected for: ', userId);
+      this.socket.emit('user_disconnected', { userId });
+    }
+  }
+
+  setConversationRoomId(roomId: string | null): void {
+    this.roomIdSource.next(roomId);
+  }
+
+  userJoinChatRoom(usersData: JoinRomData): void {
+    this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
+    this.setConversationRoomId(this.currentRoomId);
+    this.socketRoomHandler.handleJoinRoomEmit(this.socket!, usersData);
+  }
+
+  sentMessageEmitter(data: SendMessageEmitterData): void {
+    this.socketMessageHandler.sentMessageEmitter(this.socket!, data);
+  }
+
+  userLeftChatRoomEmitter(): void {
+    if (!this.socket || !this.userId) return;
+    this.socketRoomHandler.handleLeaveRoomEmit(this.socket, this.currentRoomId, this.userId);
+  }
+
+  userTyping(toUserId: number): void {
+    this.getConversationRoomId.subscribe((roomId) => {
+      if (!roomId || !this.socket) return;
+      this.socketUserTypingHandler.handleTypingEmitters(this.socket, {
+        roomId,
+        toUserId,
+        typingStatus: 'typing',
+      });
+    });
+  }
+
+  userStopTyping(toUserId: number): void {
+    this.getConversationRoomId.subscribe((roomId) => {
+      if (!roomId || !this.socket) return;
+      this.socketUserTypingHandler.handleTypingListeners(this.socket, {
+        roomId,
+        toUserId,
+        typingStatus: 'stop-typing',
+      });
+    });
+  }
+/*   initializeSocket(userId: number): void {
     // ===== Current connected user id =======
     this.userId = userId;
 
@@ -58,10 +194,10 @@ export class SocketIoService {
 
     // ==== Establish socket connection =========
     this.socket = this.establishSocketConnection();
-
+    console.log('Socket assigned:', this.socket);
     // ===== Setup socket connection events =====
     this.socket.on('connect', () => {
-      console.log('Connected 😍😍', this.socket);
+      console.log('Connected 😍😍', this.socket, this.userId);
       // ===========================
       if (this.userId) {
         this.registerUser(this.userId);
@@ -76,22 +212,32 @@ export class SocketIoService {
 
     // ===== Listen to reconnect to server event ====
     this.socket.on('reconnect', () => {
+
       if (this.userId) {
         this.registerUser(this.userId);
         // this.broadcastingUserOnline();
       }
     });
-  }
 
-  private establishSocketConnection() {
+    this.socket.on('reconnect_attempt', (attempt) => {
+      console.log(`🔁 Reconnection attempt ${attempt}`);
+    });
+  } */
+
+/*   private establishSocketConnection() {
     // ====== Establish connection to socket service ======
     return io(`${this.ENV.socketUrl}`, {
+      reconnection: true,
+      reconnectionAttempts: Infinity,  // unlimited tries
+      reconnectionDelay: 1000,         // 1 sec between attempts
+      reconnectionDelayMax: 5000,      // max delay
+      timeout: 20000,
       transports: ['websocket', 'polling'],
       withCredentials: true, // Ensure credentials are sent with the request
     });
-  }
+  } */
 
-  private setupCommonListeners(): void {
+/*   private setupCommonListeners(): void {
     this.setupPartnerConnectionListeners();
     this.setupDisconnectListener();
 
@@ -100,8 +246,8 @@ export class SocketIoService {
       this.socketRoomHandler.handleRoomEvent(this.socket);
       this.socketNewConversationHandler.handleIncomingNewConversationEvent(this.socket);
     }
-  }
-
+  } */
+/*
   private setupPartnerConnectionListeners() {
     // ===== Listen to user connection change =====
     this.socket?.on('user_status_changed', (result) => {
@@ -110,110 +256,106 @@ export class SocketIoService {
         this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
       }
     });
-  }
+  } */
 
-  private setupDisconnectListener() {
+/*   private setupDisconnectListener() {
     this.socket?.on('disconnect', (reason) => {
       console.log('Disconnected: ', reason);
       this.socket = null;
     });
   }
-
+ */
   // =============================================
   // Emitters & Room Handling
   // ==================================
   // === Register the current user on the socket server
-  private registerUser(userId: number) {
+ /*  private registerUser(userId: number) {
     console.log(this.socket?.connected, 'hello 1 ');
     if (this.socket && userId) {
       console.log('Registering user: ', userId);
       this.socket.emit('register-user', userId);
     }
-  }
+  } */
 
   // ================================================
   // ========== Handle new conversation emitter =====
-  createdConversationEmitter(conversation: Conversation): void {
+ createdConversationEmitter(conversation: Conversation): void {
     console.log(conversation, 'Hello from socket service');
     if (!this.socket) return;
     this.socketNewConversationHandler.handleNewConversationEmitter(this.socket, conversation);
   }
-
   // ================================================
 
   // == Emits the "join-room" event  join a chat room
-  userJoinChatRoom(usersData: JoinRomData): void {
+/*   userJoinChatRoom(usersData: JoinRomData): void {
     // Construct the roomId
     this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
     this.setConversationRoomId(this.currentRoomId);
     this.socketRoomHandler.handleJoinRoomEmit(this.socket, usersData);
-  }
+  } */
 
   // === Emit the "send-message" event to socket server ===
-  sentMessageEmitter(messageEmitterDada: SendMessageEmitterData): void {
+/*   sentMessageEmitter(messageEmitterDada: SendMessageEmitterData): void {
     this.socketMessageHandler.sentMessageEmitter(this.socket, messageEmitterDada);
-  }
+  } */
 
   // === Emit user left Chat Room event ===
-  userLeftChatRoomEmitter(): void {
+/*   userLeftChatRoomEmitter(): void {
     if (!this.socket || !this.userId) return;
     this.socketRoomHandler.handleLeaveRoomEmit(this.socket, this.currentRoomId, this.userId);
-  }
+  } */
 
   // ==== Emit User typing event =====
-  userTyping(toUserId: number): void {
+/*   userTyping(toUserId: number): void {
     this.getConversationRoomId.subscribe((roomId) => {
-      if (roomId) {
-        this.socketUserTypingHandler.handleTypingEmitters(this.socket, {
-          roomId,
-          toUserId,
-          typingStatus: 'typing',
-        });
-      }
+      console.log('User typing...')
+      if (!roomId || !this.socket) return
+      this.socketUserTypingHandler.handleTypingEmitters(this.socket, {
+        roomId,
+        toUserId,
+        typingStatus: 'typing',
+      });
     });
-  }
+  } */
 
   // ====Emits user stop typing event ====
-  userStopTyping(toUserId: number): void {
+/*   userStopTyping(toUserId: number): void {
     this.getConversationRoomId.subscribe((roomId) => {
-      if (roomId) {
-        this.socketUserTypingHandler.handleTypingListeners(this.socket, {
-          roomId,
-          toUserId,
-          typingStatus: 'stop-typing',
-        });
-      }
+      if (!roomId || !this.socket) return
+      this.socketUserTypingHandler.handleTypingListeners(this.socket, {
+        roomId,
+        toUserId,
+        typingStatus: 'stop-typing',
+      });
     });
-  }
+  } */
 
   // ==== Emit user disconnected event =====
-  private emitUserDisconnected(userId: number) {
+/*   private emitUserDisconnected(userId: number) {
     if (userId && this.socket) {
       console.log('Emitting user _disconnected for: ', userId);
       this.socket.emit('user_disconnected', { userId });
     }
-  }
+  } */
 
   //  ===== Manually disconnect when user logout =====
-  disconnectUser(userId: number): void {
+/*   disconnectUser(userId: number): void {
     if (this.socket) {
       console.log('Disconnecting socket for user 💥💥', userId);
       this.emitUserDisconnected(userId);
       this.socket.disconnect();
       this.socket = null;
     }
-  }
+  } */
 
   // ====================================
   // Observables & Getters
   // ==============================
-  get updatedUserDisconnectionGetter(): Observable<any> {
+   get updatedUserDisconnectionGetter(): Observable<any> {
     return this.updateUserConnectionStatusWithDisconnectionSubject.asObservable();
   }
 
-  setConversationRoomId(roomId: string | null): void {
-    this.roomIdSource.next(roomId);
-  }
+
   get getConversationRoomId(): Observable<string | null> {
     return this.roomIdSource.asObservable();
   }

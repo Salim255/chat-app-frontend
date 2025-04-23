@@ -24,6 +24,7 @@ import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-mes
 import { SocketRoomHandler } from 'src/app/core/services/socket-io/socket-room-handler';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
+import { SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -73,7 +74,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private messageService: MessageService,
     private socketMessageHandler: SocketMessageHandler,
     private socketRoomHandler: SocketRoomHandler,
-    private conversationService: ConversationService
+    private conversationService: ConversationService,
+    private socketRoomService: SocketRoomService,
   ) {}
 
   ngOnInit(): void {
@@ -238,7 +240,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
             lastMessageSenderId:
               (this.activeChat && this.activeChat.messages[-1]?.from_user_id) ?? null,
           };
-          this.socketIoService.userJoinChatRoom(usersData);
+          this.socketRoomService.initiateRoom(usersData);
         }
       }
     );

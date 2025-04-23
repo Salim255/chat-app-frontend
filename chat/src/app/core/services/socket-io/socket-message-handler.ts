@@ -20,7 +20,6 @@ export class SocketMessageHandler {
   private deliveredMessageSubject = new BehaviorSubject<Message | null>(null);
   private messageDeliveredToReceiverSubject = new BehaviorSubject<Message | null>(null);
   private partnerConnectionStatusSubject = new BehaviorSubject<Member | null>(null);
-  private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
   private updatedChatCounterSubject = new BehaviorSubject<Conversation | null>(null);
 
   constructor(private conversationService: ConversationService) {}
@@ -43,9 +42,6 @@ export class SocketMessageHandler {
     return this.partnerConnectionStatusSubject.asObservable();
   }
 
-  get getUserTypingStatus() {
-    return this.userTypingStatusSubject.asObservable();
-  }
 
   get getUpdatedChatCounter() {
     return this.updatedChatCounterSubject.asObservable();
@@ -64,9 +60,6 @@ export class SocketMessageHandler {
     this.partnerConnectionStatusSubject.next(updatedUser);
   }
 
-  setUserTypingStatus(status: boolean) {
-    this.userTypingStatusSubject.next(status);
-  }
 
   setUpdatedChatCounter(updatedChatCounter: Conversation | null) {
     this.updatedChatCounterSubject.next(updatedChatCounter);
@@ -155,17 +148,7 @@ export class SocketMessageHandler {
       }
     });
 
-    socket.on('notify-user-typing', (status: boolean) => {
-      if (status) {
-        this.setUserTypingStatus(true);
-      }
-    });
 
-    socket.on('notify-user-stop-typing', (status: boolean) => {
-      if (status) {
-        this.setUserTypingStatus(false);
-      }
-    });
   }
 
   sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData) {

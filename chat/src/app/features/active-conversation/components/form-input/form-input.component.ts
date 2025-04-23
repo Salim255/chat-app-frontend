@@ -11,6 +11,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { IonTextarea } from '@ionic/angular';
 import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-form-input',
@@ -18,7 +19,7 @@ import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.servi
   styleUrls: ['./form-input.component.scss'],
   standalone: false,
 })
-export class FormInputComponent implements OnChanges {
+export class FormInputComponent {
   @ViewChild('inputArea', { static: false }) inputArea!: IonTextarea;
   @Output() submitObs = new EventEmitter<any>();
   @Input() toUserId: number | null = null;
@@ -30,16 +31,12 @@ export class FormInputComponent implements OnChanges {
 
   message: string = '';
 
-  constructor(private socketIoService: SocketIoService) {}
+  constructor(private socketTypingService : SocketTypingService ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('On change');
-  }
-
-  onTextChange(text: any) {
+  onTextChange(text: any):void {
     // Debouncing: Emit "typing" only once until the user stops typing
     if (!this.isTypingDebounced() && this.toUserId) {
-      this.socketIoService.userTyping(this.toUserId);
+      this.socketTypingService.userTyping(this.toUserId);
       this.isTypingDebounced.set(true);
     }
 
@@ -62,11 +59,11 @@ export class FormInputComponent implements OnChanges {
 
     this.isTypingDebounced.set(false);
     if (this.toUserId) {
-      this.socketIoService.userStopTyping(this.toUserId);
+      this.socketTypingService.userStopTyping(this.toUserId);
     }
   }
 
-  onSubmit(f: NgForm) {
+  onSubmit(f: NgForm): void {
     this.stopTyping();
     if (!f.valid || this.message.trim().length === 0) {
       return;

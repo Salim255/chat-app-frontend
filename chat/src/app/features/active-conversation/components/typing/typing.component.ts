@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
-import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-typing',
@@ -13,23 +12,16 @@ export class TypingComponent implements OnInit, OnDestroy {
   isTyping: boolean = false;
   private typingSubscription!: Subscription;
 
-  constructor(
-    private socketIoService: SocketIoService,
-    private socketMessageHandler: SocketMessageHandler
-  ) {}
+  constructor( private socketTypingService: SocketTypingService) {}
 
   ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
     this.subscribeToTyping();
   }
 
-  ionViewWillEnter() {
-    if (!this.typingSubscription || this.typingSubscription.closed) {
-      this.subscribeToTyping();
-    }
-  }
-
-  private subscribeToTyping() {
-    this.typingSubscription = this.socketMessageHandler.getUserTypingStatus.subscribe(
+  private subscribeToTyping():void {
+    this.typingSubscription = this.socketTypingService.getUserTypingStatus.subscribe(
       (typingStatus) => {
         console.log('typingStatus', typingStatus);
         this.isTyping = typingStatus;
@@ -37,7 +29,7 @@ export class TypingComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy():void {
     this.typingSubscription?.unsubscribe();
   }
 }

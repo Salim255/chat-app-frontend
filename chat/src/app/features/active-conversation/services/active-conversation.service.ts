@@ -43,7 +43,6 @@ export class ActiveConversationService {
   receiverPublicKey: string | null = null;
   private worker: Worker | null = null;
   // This is where we store messages in a Map, indexed by status
-  private activeConversationMessageMap: Map<string, Message[]> = new Map(); // don't remove it🔥🔥🔥
   private triggerMessagePageScrollSource = new BehaviorSubject<string>('scroll');
 
   constructor(

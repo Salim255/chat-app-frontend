@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Socket } from 'socket.io-client';
 
 export type TypingData = {
   roomId: string;
@@ -12,11 +13,11 @@ export type TypingData = {
 export class SocketUserTypingHandler {
   constructor() {}
 
-  handleTypingListeners(socket: any, data: TypingData) {
+  handleTypingListeners(socket: Socket, data: TypingData):void {
     socket?.emit('user-stop-typing', data);
   }
 
-  handleTypingEmitters(socket: any, data: TypingData) {
+  handleTypingEmitters(socket: Socket, data: TypingData): void {
     socket?.emit('user-typing', data);
   }
 }

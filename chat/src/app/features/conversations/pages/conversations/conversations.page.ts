@@ -98,6 +98,7 @@ export class ConversationsPage implements OnDestroy {
   private subscribeToConversations(): void {
     this.conversationsSource = this.conversationService
       .getConversations.subscribe((conversation) => {
+        console.log(conversation, 'Hello from conversations, 👹👹👹')
         if (conversation && conversation?.length > 0) {
           this.conversations = [...conversation];
           this.isEmpty = conversation.length === 0; //////

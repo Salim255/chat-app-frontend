@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { Message } from '../../../messages/model/message.model';
 import { IonContent } from '@ionic/angular';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
@@ -19,13 +25,14 @@ export class MessagesComponent implements OnChanges {
 
   constructor(private activeConversationService: ActiveConversationService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(_changes: SimpleChanges): void {
     this.activeConversationService.getTriggerMessagePageScroll.subscribe((event) => {
       this.scrollToBottom();
     });
   }
 
-  scrollToBottom() {
+  scrollToBottom():void {
     setTimeout(() => {
       if (this.messageContainer) {
         this.messageContainer.scrollToBottom(300); // Smooth scroll
@@ -33,11 +40,11 @@ export class MessagesComponent implements OnChanges {
     }, 100);
   }
 
-  trackById(index: number, message: Message) {
+  trackById(index: number, message: Message): number {
     return message.id; // Use a unique ID to track messages
   }
 
-  getMessageStatus(message: string) {
+  getMessageStatus(message: string): string {
     return StringUtils.getMessageIcon(message);
   }
 }

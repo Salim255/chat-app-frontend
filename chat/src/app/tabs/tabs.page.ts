@@ -3,6 +3,7 @@ import { IonTabs } from '@ionic/angular';
 import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
 import { SocketIoService } from '../core/services/socket-io/socket-io.service';
+import { SocketCoreService } from '../core/services/socket-io/socket-core.service';
 import { AuthService } from '../core/services/auth/auth.service';
 
 export type displayTap = 'show' | 'hide';
@@ -27,7 +28,7 @@ export class TabsPage implements OnInit, OnDestroy {
   isDiscoverActive = true;
   constructor(
     private tabsService: TabsService,
-    private socketIoService: SocketIoService,
+    private socketCoreService: SocketCoreService,
     private authService: AuthService
   ) {}
 
@@ -58,7 +59,7 @@ export class TabsPage implements OnInit, OnDestroy {
     this.userIdSubscription = this.authService.userId.subscribe((userId) => {
       this.userId = userId;
       if (this.userId) {
-        this.socketIoService.initializeSocket(this.userId);
+        this.socketCoreService.initialize(this.userId);
       }
     });
   }
