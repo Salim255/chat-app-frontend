@@ -73,7 +73,7 @@ export class FormInputComponent {
       return;
     }
 
-    //this.submitObs.emit(this.message);
+    this.submitObs.emit(this.message);
     f.reset();
   }
 }

@@ -5,16 +5,16 @@ import { Conversation } from '../../conversations/models/conversation.model';
 import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
 import { Message } from '../../messages/model/message.model';
 
-
 export function buildMessageEncryptionData(
   content: string,
   authData: AuthData,
-  partner:  Partner | null
+  partner:  Partner | null,
+  activeConversation: Conversation | null,
 ): MessageEncryptionData {
   return {
     messageText: content,
     senderPublicKeyBase64: authData._publicKey,
-    encryptedSessionKey: null,
+    encryptedSessionKey: activeConversation?.encrypted_session_base64 ?? null,
     receiverPublicKeyBase64: partner?.public_key ?? null,
     senderPrivateKeyBase64: authData._privateKey,
     senderEmail: authData._email,
@@ -40,7 +40,7 @@ export function builtEncryptedMessageData(
 
     const payload =  {
       content: encryptedMessageBase64,
-      from_user_id: Number(authData.userId),
+      from_user_id: Number(authData.id),
       to_user_id: Number(partner.partner_id),
       partner_connection_status: partner.connection_status,
       session_key_sender: encryptedSessionKeyForSenderBase64,

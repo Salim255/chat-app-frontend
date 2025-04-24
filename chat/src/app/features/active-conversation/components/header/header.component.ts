@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
+import { SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -22,17 +23,18 @@ export class headerComponent implements OnChanges, OnDestroy {
   partnerConnectionStatus: ConnectionStatus = ConnectionStatus.Offline;
 
   constructor(
-    private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
     private profileViewerService: ProfileViewerService,
-    private socketMessageHandler: SocketMessageHandler
+    private socketMessageHandler: SocketMessageHandler,
+    private socketRoomService: SocketRoomService
   ) {}
 
-  onBackArrow() {
-    this.socketIoService.userLeftChatRoomEmitter();
+  onBackArrow():void {
+    this.socketRoomService.emitLeaveRoom();
     this.activeConversationService.closeModal();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.socketMessageHandler.getPartnerConnectionStatus.subscribe((updatedUser) => {
       if (updatedUser && this.partnerInfo) {
@@ -41,9 +43,7 @@ export class headerComponent implements OnChanges, OnDestroy {
     });
   }
 
-  // It's function that responsible of viewing details of the clicked profile
-  //
-  onDisplayProfile(profile: Partner | null) {
+  onDisplayProfile(profile: Partner | null): void {
     if (!profile || !profile.partner_id) return;
     const { partner_id, ...rest } = profile;
     this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest });

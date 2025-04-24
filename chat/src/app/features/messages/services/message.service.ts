@@ -31,9 +31,6 @@ export class MessageService {
     return messages.length > 0 ? messages[messages.length - 1] : null;
   }
 
-  sendMessage(data: CreateMessageDto): Observable<any> {
-    return this.activeConversationService.sendMessage(data);
-  }
 
   handleNewMessages(messages: any[], pushMessage: Function) {
     const message = this.getLastMessage(messages);

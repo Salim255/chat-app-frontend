@@ -2,10 +2,10 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { IonTabs } from '@ionic/angular';
 import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
-import { SocketIoService } from '../core/services/socket-io/socket-io.service';
+import { SocketPresenceService } from '../core/services/socket-io/socket-presence.service';
 import { SocketCoreService } from '../core/services/socket-io/socket-core.service';
 import { AuthService } from '../core/services/auth/auth.service';
-
+import { SocketRoomService } from '../core/services/socket-io/socket-room.service';
 export type displayTap = 'show' | 'hide';
 
 @Component({
@@ -29,8 +29,12 @@ export class TabsPage implements OnInit, OnDestroy {
   constructor(
     private tabsService: TabsService,
     private socketCoreService: SocketCoreService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private socketPresenceService: SocketPresenceService,
+    private socketRoomService: SocketRoomService
+  ) {
+
+  }
 
   ngOnInit(): void {
     // console.log('tabs, Hello tabs💥💥💥')
@@ -50,7 +54,7 @@ export class TabsPage implements OnInit, OnDestroy {
     });
   }
 
-  setCurrentTab(event: any) {
+  setCurrentTab(event: any):void {
     this.selectedTab = this.tabs.getSelected();
     this.isDiscoverActive = this.selectedTab === 'discover';
   }
@@ -60,6 +64,8 @@ export class TabsPage implements OnInit, OnDestroy {
       this.userId = userId;
       if (this.userId) {
         this.socketCoreService.initialize(this.userId);
+        this.socketPresenceService.initializePresenceListener();
+        this.socketRoomService.initializeRoomListeners();
       }
     });
   }

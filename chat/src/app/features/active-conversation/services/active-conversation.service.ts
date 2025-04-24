@@ -30,19 +30,15 @@ import {
   processConversationResponse,
   restoreOriginalMessageContent,
 } from './active-conversation.utils';
-import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
+import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
 
-export enum PartnerRoomStatus {
-  OFFLINE = 'offline',
-  CONNECTED = 'connected',
-  IN_ROOM = 'in_room',
-}
+
 
 export type AuthData = {
   _privateKey: string;
   _publicKey: string;
   _email: string;
-  userId: string;
+  id: string;
 }
 
 export type ConversationDto = {
@@ -69,8 +65,8 @@ export type EncryptedMessageData = {
 })
 export class ActiveConversationService {
   private ENV = environment;
-  private partnerInfoSource = new BehaviorSubject<Partner | null>(null);
-  partnerRoomStatusSource = new BehaviorSubject<PartnerRoomStatus>(PartnerRoomStatus.OFFLINE);
+  partnerInfoSource = new BehaviorSubject<Partner | null>(null);
+  partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus>(PartnerConnectionStatus.OFFLINE);
   private activeConversationSource = new BehaviorSubject<Conversation | null>(null);
   receiverPublicKey: string | null = null;
   // This is where we store messages in a Map, indexed by status
@@ -79,8 +75,7 @@ export class ActiveConversationService {
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
-    private modalController: ModalController,
-    private socketIoService: SocketIoService
+    private modalController: ModalController
   ) {
     this.setPartnerInfo(null);
     this.setActiveConversation(null);
@@ -89,7 +84,7 @@ export class ActiveConversationService {
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
     if (!partnerInfo || !partnerInfo.partner_id) return;
     if (partnerInfo.connection_status === 'online') {
-      this.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED);
+      this.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
     }
     this.setPartnerInfo(partnerInfo);
     this.setActiveConversation(conversation);
@@ -115,7 +110,7 @@ export class ActiveConversationService {
           throw new Error('Missing authentication data');
         }
         const messagePayload: MessageEncryptionData =
-          buildMessageEncryptionData(content, authData, this.partnerInfoSource.value);
+          buildMessageEncryptionData(content, authData, this.partnerInfoSource.value, this.activeConversationSource.value);
         return from(MessageEncryptDecrypt.encryptMessage(messagePayload))
         .pipe(
             switchMap((encryptedData) => {
@@ -125,7 +120,7 @@ export class ActiveConversationService {
               const chat: Conversation = processConversationResponse(response, content);
               this.setActiveConversation(chat);
               this.conversationService.fetchConversations();
-              this.socketIoService.createdConversationEmitter(response.data.chat);
+              //this.socketIoService.createdConversationEmitter(response.data.chat);
             })
         );
       })
@@ -133,12 +128,23 @@ export class ActiveConversationService {
   }
 
   // Here we send a message to a current conversation
-  sendMessage(data: CreateMessageDto):
+  sendMessage(message: string):
     Observable<{ status: string, data: { message: Message }}> {
-    if (!this.activeConversationSource.value) throw new Error('There is no chat.');
     return from(GetAuthData.getAuthData()).pipe(
       switchMap((authData) => {
         if (!authData) throw new Error('There is no auth data');
+        if (
+          !this.activeConversationSource.value
+          || !this.partnerInfoSource.value?.partner_id
+        ) throw new Error('Missing chat information');
+        const data: CreateMessageDto =
+          {
+            chat_id: this.activeConversationSource?.value?.id,
+            from_user_id:Number(authData.id),
+            to_user_id: this.partnerInfoSource.value.partner_id,
+            content: message,
+            partner_connection_status: this.partnerRoomStatusSource.value,
+          }
           return this.sendSingleEncryptedMessage(data, authData);
       })
     );
@@ -148,7 +154,9 @@ export class ActiveConversationService {
     data: CreateMessageDto,
     authData: AuthData
   ): Observable<{ status: string; data: { message: Message } }> {
-    const messageData = buildMessageEncryptionData(data.content,authData, this.partnerInfoSource.value);
+    const messageData =
+      buildMessageEncryptionData(data.content, authData, this.partnerInfoSource.value, this.activeConversationSource?.value);
+    console.log(this.activeConversationSource.value, 'Hello', messageData)
     return from(MessageEncryptDecrypt.encryptMessage(messageData))
       .pipe(
         switchMap((encryptedMessage) => {
@@ -168,10 +176,20 @@ export class ActiveConversationService {
   }
 
   private handlePostMessageSent(message: Message): void {
+    if (!this.activeConversationSource?.value?.messages) return
+    const updatedConversation: Conversation =
+     {
+      ...this.activeConversationSource.value,
+      messages:
+        [ ...this.activeConversationSource.value.messages, message ]
+    }
+    this.setActiveConversation(updatedConversation);
     // Update conversation that this message belongs to in the conversations list
     this.conversationService.updateConversationWithNewMessage(message);
     // Update active conversation messages
     this.setMessagePageScroll();
+    // TODO
+    //this.onSendMessageEmitter(lastMessage);
   }
 
 
@@ -204,7 +222,7 @@ export class ActiveConversationService {
     this.partnerInfoSource.next(data);
   }
 
-  setPartnerInRoomStatus(status: PartnerRoomStatus): void {
+  setPartnerInRoomStatus(status: PartnerConnectionStatus): void {
     this.partnerRoomStatusSource.next(status);
   }
 

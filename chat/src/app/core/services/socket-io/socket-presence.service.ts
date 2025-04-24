@@ -1,25 +1,46 @@
 import { Injectable } from "@angular/core";
 import { SocketCoreService } from "./socket-core.service";
-import { Observable } from "rxjs";
+import { Member } from "src/app/shared/interfaces/member.interface";
+import { Socket } from "socket.io-client";
+import { SocketRoomService } from "./socket-room.service";
 
 @Injectable({ providedIn: 'root' })
 export class SocketPresenceService {
-  constructor(private socketCore: SocketCoreService) {}
+  private socket: Socket | null = null;
+  constructor(
+    private socketRoomService: SocketRoomService,
+    private socketCore: SocketCoreService) {
+    this.initializePresenceListener();
+    console.log('Hello from Presence')
+  }
 
-  listenForUserStatusChanges(): Observable<{ userId: string; status: string }> {
-    return new Observable(observer => {
-      const socket = this.socketCore.getSocket();
-      if (!socket) return;
-
-      const listener = (status: { userId: string; status: string }) => observer.next(status);
-      socket.on('user_status_changed', listener);
-
-      return () => socket.off('user_status_changed', listener);
-    });
+  initializePresenceListener():void{
+    this.socket = this.socketCore.getSocket();
+    this.randomUserGoesOnline();
+    this.randomUserGoesOffline();
+    this.sendPing();
   }
 
   sendPing(): void {
-    const socket = this.socketCore.getSocket();
-    socket?.emit('ping', { time: new Date() });
+    this.socket?.emit('ping', { time: new Date() });
+  }
+
+  randomUserGoesOffline(): void{
+    this.socket?.on('user-offline', (updatedUser: Member) => {
+
+      if (updatedUser) {
+        console.log( updatedUser, 'Hello from random user goes offline')
+       // this.setPartnerConnectionStatus(updatedUser);
+      }
+    });
+  }
+
+  randomUserGoesOnline():void {
+    this.socket?.on('user-online', (updatedUser: any) => {
+      console.log( updatedUser, 'Hello from random user goes online')
+      if (updatedUser) {
+       // this.setPartnerConnectionStatus(updatedUser);
+      }
+    });
   }
 }

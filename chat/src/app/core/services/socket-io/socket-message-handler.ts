@@ -134,12 +134,12 @@ export class SocketMessageHandler {
       }
     });
 
-    socket.on('user-online', (updatedUser: Member) => {
+  /*   socket.on('user-online', (updatedUser: Member) => {
       console.log( updatedUser, 'Hello')
       if (updatedUser) {
         this.setPartnerConnectionStatus(updatedUser);
       }
-    });
+    }); */
 
     socket.on('user-offline', (updatedUser: Member) => {
       console.log( updatedUser, 'Hello')

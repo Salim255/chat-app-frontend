@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Message } from '../../../features/messages/model/message.model';
 import { JoinRomData } from './socket-io.service';
-import {
-  ActiveConversationService,
-  PartnerRoomStatus,
-} from 'src/app/features/active-conversation/services/active-conversation.service';
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
+import { AuthService } from '../auth/auth.service';
+import { Account } from 'src/app/features/account/models/account.model';
+import { Member } from 'src/app/shared/interfaces/member.interface';
+
+export enum PartnerConnectionStatus {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+  InRoom = 'in-room',
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,20 +21,25 @@ import { Socket } from 'socket.io-client';
 export class SocketRoomService {
   private roomIdSource = new BehaviorSubject<string | null>(null);
   private socket: Socket | null = null;
+  private userId: number | null = null;
   private updatedMessagesToReadAfterPartnerJoinedRoomSubject =
     new BehaviorSubject< Message[] | null>(null);
 
   constructor(
     private readonly socketCoreService:  SocketCoreService,
     private activeConversationService: ActiveConversationService,
+    private readonly authService: AuthService
+
   ) {
-    this.initializeRoomListeners();
+    this.authService.userId.subscribe(userId => this.userId = userId);
   }
 
-  private initializeRoomListeners(){
+  initializeRoomListeners(): void{
     this.socket = this.socketCoreService.getSocket();
     this.partnerJoinRoom();
     this.partnerLeftRoom();
+    this.partnerGoesOffline();
+    this.partnerGoesOnline();
   }
 
   initiateRoom(usersData: JoinRomData): void {
@@ -40,7 +51,7 @@ export class SocketRoomService {
   private partnerJoinRoom():void{
     this.socket?.on('partner-joined-room', (updatedMessagesToRead: Message[]) => {
       console.log(updatedMessagesToRead, 'Hello from joinig room')
-      this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.IN_ROOM);
+      this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
       if (updatedMessagesToRead && updatedMessagesToRead.length > 0) {
         // Get the active conversation
         this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
@@ -48,12 +59,29 @@ export class SocketRoomService {
     });
   }
 
-  private partnerLeftRoom(): void{
+  private partnerLeftRoom():void{
     this.socket?.on('partner-left-room', (data: any) => {
-      this.activeConversationService.setPartnerInRoomStatus(PartnerRoomStatus.CONNECTED);
+      console.log('left room')
+      this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
     });
   }
 
+  private partnerGoesOffline():void {
+    this.socket?.on('user-offline', (data: any) => {
+      console.log('Hello from user-offline',)
+      this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
+    });
+  }
+
+  private partnerGoesOnline():void {
+    this.socket?.on('user-online', (data: {userId: number, status: string}) => {
+      console.log('partner going onine', data)
+      const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+      if (currentPartnerId === data.userId) {
+        this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
+      }
+    })
+  }
   setUpdatedMessagesToReadAfterPartnerJoinedRoom(messages: Message[] | null):void {
     this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(messages);
   }
@@ -69,10 +97,10 @@ export class SocketRoomService {
     this.socket?.emit('join-room', usersData);
   }
 
-  emitLeaveRoom( userId: number):void {
+  emitLeaveRoom():void {
     this.socket = this.socketCoreService.getSocket();
     const roomId = this.roomIdSource.value;
-    this.socket?.emit('leave-room', { roomId, userId });
+    this.socket?.emit('leave-room', { roomId, userId: this.userId });
   }
 
   get getRoom(): string | null {

@@ -9,7 +9,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <app-form-input [toUserId]="partnerInfo?.partner_id ?? null">
+        <app-form-input [toUserId]="partnerInfo?.partner_id ?? null" (submitObs)="onSubmit($event)">
         </app-form-input>
       </ion-col>
     </ion-row>

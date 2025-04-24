@@ -5,8 +5,6 @@ import { environment } from 'src/environments/environment';
 import { Message } from '../../../features/messages/model/message.model';
 import { SocketNewConversationHandler } from './socket-new-conversation-handler';
 import { SocketMessageHandler } from './socket-message-handler';
-import { SocketRoomHandler } from './socket-room-handler';
-import { SocketUserTypingHandler } from './socket-user-typing-handler';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 
 export type JoinRomData = {
@@ -52,7 +50,6 @@ export class SocketIoService {
 
   constructor(
     private socketMessageHandler: SocketMessageHandler,
-    private socketRoomHandler: SocketRoomHandler,
     private socketNewConversationHandler: SocketNewConversationHandler
   ) {}
 
@@ -113,7 +110,6 @@ export class SocketIoService {
     });
 
     this.socketMessageHandler.handleMessageEvents(this.socket!);
-    this.socketRoomHandler.handleRoomEvent(this.socket!);
     this.socketNewConversationHandler.handleIncomingNewConversationEvent(this.socket!);
   }
 
@@ -148,20 +144,12 @@ export class SocketIoService {
     this.roomIdSource.next(roomId);
   }
 
-  userJoinChatRoom(usersData: JoinRomData): void {
-    this.currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
-    this.setConversationRoomId(this.currentRoomId);
-    this.socketRoomHandler.handleJoinRoomEmit(this.socket!, usersData);
-  }
 
   /* sentMessageEmitter(data: SendMessageEmitterData): void {
     this.socketMessageHandler.sentMessageEmitter(this.socket!, data);
   } */
 
-  userLeftChatRoomEmitter(): void {
-    if (!this.socket || !this.userId) return;
-    this.socketRoomHandler.handleLeaveRoomEmit(this.socket, this.currentRoomId, this.userId);
-  }
+
 
 
 
