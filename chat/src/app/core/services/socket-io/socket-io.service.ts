@@ -53,7 +53,6 @@ export class SocketIoService {
   constructor(
     private socketMessageHandler: SocketMessageHandler,
     private socketRoomHandler: SocketRoomHandler,
-    private socketUserTypingHandler: SocketUserTypingHandler,
     private socketNewConversationHandler: SocketNewConversationHandler
   ) {}
 
@@ -155,36 +154,18 @@ export class SocketIoService {
     this.socketRoomHandler.handleJoinRoomEmit(this.socket!, usersData);
   }
 
-  sentMessageEmitter(data: SendMessageEmitterData): void {
+  /* sentMessageEmitter(data: SendMessageEmitterData): void {
     this.socketMessageHandler.sentMessageEmitter(this.socket!, data);
-  }
+  } */
 
   userLeftChatRoomEmitter(): void {
     if (!this.socket || !this.userId) return;
     this.socketRoomHandler.handleLeaveRoomEmit(this.socket, this.currentRoomId, this.userId);
   }
 
-  userTyping(toUserId: number): void {
-    this.getConversationRoomId.subscribe((roomId) => {
-      if (!roomId || !this.socket) return;
-      this.socketUserTypingHandler.handleTypingEmitters(this.socket, {
-        roomId,
-        toUserId,
-        typingStatus: 'typing',
-      });
-    });
-  }
 
-  userStopTyping(toUserId: number): void {
-    this.getConversationRoomId.subscribe((roomId) => {
-      if (!roomId || !this.socket) return;
-      this.socketUserTypingHandler.handleTypingListeners(this.socket, {
-        roomId,
-        toUserId,
-        typingStatus: 'stop-typing',
-      });
-    });
-  }
+
+
 /*   initializeSocket(userId: number): void {
     // ===== Current connected user id =======
     this.userId = userId;
@@ -294,10 +275,6 @@ export class SocketIoService {
     this.socketRoomHandler.handleJoinRoomEmit(this.socket, usersData);
   } */
 
-  // === Emit the "send-message" event to socket server ===
-/*   sentMessageEmitter(messageEmitterDada: SendMessageEmitterData): void {
-    this.socketMessageHandler.sentMessageEmitter(this.socket, messageEmitterDada);
-  } */
 
   // === Emit user left Chat Room event ===
 /*   userLeftChatRoomEmitter(): void {

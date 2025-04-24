@@ -15,15 +15,12 @@ export class TypingComponent implements OnInit, OnDestroy {
   constructor( private socketTypingService: SocketTypingService) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.subscribeToTyping();
   }
 
   private subscribeToTyping():void {
     this.typingSubscription = this.socketTypingService.getUserTypingStatus.subscribe(
       (typingStatus) => {
-        console.log('typingStatus', typingStatus);
         this.isTyping = typingStatus;
       }
     );

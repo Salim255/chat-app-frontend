@@ -1,8 +1,4 @@
-import {
-  UserInChatDto,
-  LastMessageDto,
-  MessageDto,
-} from "../interfaces/conversations.dto";
+import { UserInChatDto, MessageDto } from "../interfaces/conversations.dto";
 export class Conversation {
   constructor(
     public id: number,

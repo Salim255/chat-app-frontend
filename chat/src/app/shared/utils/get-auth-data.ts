@@ -1,7 +1,12 @@
 import { Preferences } from '@capacitor/preferences';
 
 export class GetAuthData {
-  public static async getAuthData() {
+  public static async getAuthData(): Promise<{
+    _privateKey: string;
+    _publicKey: string;
+    _email: string;
+    userId: string;
+  }> {
     try {
       const storedData = await Preferences.get({ key: 'authData' });
 
@@ -19,6 +24,7 @@ export class GetAuthData {
         _privateKey: string;
         _publicKey: string;
         _email: string;
+        userId: string;
       };
     } catch (error) {
       console.error('Failed to retrieve auth data:', error);

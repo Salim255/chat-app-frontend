@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 import { IonTextarea } from '@ionic/angular';
 import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
+import { ActiveConversationService } from '../../services/active-conversation.service';
 
 @Component({
   selector: 'app-form-input',
@@ -31,7 +32,10 @@ export class FormInputComponent {
 
   message: string = '';
 
-  constructor(private socketTypingService : SocketTypingService ) {}
+  constructor(
+    private activeConversationService : ActiveConversationService ,
+    private socketTypingService : SocketTypingService,
+   ) {}
 
   onTextChange(text: any):void {
     // Debouncing: Emit "typing" only once until the user stops typing
@@ -69,7 +73,7 @@ export class FormInputComponent {
       return;
     }
 
-    this.submitObs.emit(this.message);
+    //this.submitObs.emit(this.message);
     f.reset();
   }
 }

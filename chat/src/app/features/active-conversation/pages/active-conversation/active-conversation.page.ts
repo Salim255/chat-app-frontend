@@ -12,7 +12,6 @@ import {
   PartnerRoomStatus,
 } from 'src/app/features/active-conversation/services/active-conversation.service';
 import {
-  SendMessageEmitterData,
   SocketIoService,
   JoinRomData,
   ConnectionStatus,
@@ -25,6 +24,10 @@ import { SocketRoomHandler } from 'src/app/core/services/socket-io/socket-room-h
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
+import {
+  SendMessageEmitterData,
+  SocketMessageService,
+} from 'src/app/core/services/socket-io/socket-message.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -38,6 +41,7 @@ export type CreateChatDto = {
   content: string;
   from_user_id: number;
   to_user_id: number;
+  partner_connection_status: string;
 };
 
 export type ReadDeliveredMessage = Omit<CreateMessageDto , 'content'>;
@@ -76,6 +80,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private socketRoomHandler: SocketRoomHandler,
     private conversationService: ConversationService,
     private socketRoomService: SocketRoomService,
+    private socketMessageService: SocketMessageService,
   ) {}
 
   ngOnInit(): void {
@@ -94,43 +99,28 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeToPartnerConnection();
   }
 
-  createNewChatObs(data: CreateChatDto): void {
-    this.activeConversationService.createConversation(data).subscribe({
-      next: (response) => {
-        console.log(response);
-        // Notify partner of newly created conversation
-        const newConversation: Conversation = { ...response?.data.chat };
-        this.socketIoService.createdConversationEmitter(newConversation);
-      },
-      error: () => {
-        //
-      },
+  onSubmit(message: string): void {
+    if (!this.activeChat) {
+      this.createNewChatObs(message);
+    } else {
+      this.sendMessageObs(message);
+    }
+  }
+
+  createNewChatObs(message: string): void {
+    this.activeConversationService.createConversation(message).subscribe(newChat => {
+      console.log(newChat);
     });
   }
 
   onSendMessageEmitter(message: Message): void {
-    if (!(this.userId && this.partnerInfo?.partner_id && this.conversationRoomId)) return;
-
+    if (!(this.userId && this.partnerInfo?.partner_id)) return;
     const sendMessageEmitterData: SendMessageEmitterData = {
       message: message,
-      roomId: this.conversationRoomId,
       fromUserId: this.userId,
       toUserId: this.partnerInfo.partner_id,
     };
-    this.socketIoService.sentMessageEmitter(sendMessageEmitterData);
-  }
-
-  onSubmit(message: string): void {
-    if (!this.activeChat && this.userId && this.partnerInfo?.partner_id) {
-      const createChatData: CreateChatDto = {
-        content: message,
-        to_user_id: this.partnerInfo.partner_id,
-        from_user_id: this.userId,
-      };
-      this.createNewChatObs(createChatData);
-    } else {
-      this.sendMessageObs(message);
-    }
+    this.socketMessageService.sentMessageEmitter(sendMessageEmitterData);
   }
 
   sendMessageObs(message: string): void {
@@ -138,7 +128,8 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       return;
     }
 
-    const data: CreateMessageDto = {
+    console.log(this.partnerInfo.connection_status,  this.activeConversationService?.partnerRoomStatusSource.value )
+    const messagePayload: CreateMessageDto = {
       content: message,
       from_user_id: this.userId,
       to_user_id: this.partnerInfo.partner_id,
@@ -146,7 +137,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       partner_connection_status: this.partnerInfo.connection_status ?? 'offline',
     };
 
-    this.messageService.sendMessage(data).subscribe({
+    this.messageService.sendMessage(messagePayload).subscribe({
       next: (response) => {
         if (!response) return;
         const sentMessage = response.data.message;
@@ -158,6 +149,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
         }
         // Add the new message to the chat
         this.activeChat?.messages?.push(sentMessage);
+
         this.handleNewMessage();
       },
       error: (err) => {
@@ -168,13 +160,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   private handleNewMessage(): void {
     if (!(this.activeChat && this.activeChat.messages)) return;
-
     const messages: Message[] = this.activeChat?.messages;
-
     const lastMessage = this.messageService.getLastMessage(messages);
     //this.activeChat.messages.push(messages)
     if (!lastMessage) return;
-
     // Trigger "send-message" emitter
     this.onSendMessageEmitter(lastMessage);
   }

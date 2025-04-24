@@ -151,8 +151,8 @@ export class SocketMessageHandler {
 
   }
 
-  sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData) {
+ /*  sentMessageEmitter(socket: any, messageEmitterDada: SendMessageEmitterData) {
     // 2) Trigger emitter
     socket?.emit('send-message', messageEmitterDada);
-  }
+  } */
 }
