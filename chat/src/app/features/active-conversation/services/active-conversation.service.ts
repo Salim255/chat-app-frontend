@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  catchError,
   from,
   map,
   Observable,
@@ -31,6 +32,7 @@ import {
   restoreOriginalMessageContent,
 } from './active-conversation.utils';
 import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
+import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 
 
 
@@ -71,6 +73,7 @@ export class ActiveConversationService {
   receiverPublicKey: string | null = null;
   // This is where we store messages in a Map, indexed by status
   private triggerMessagePageScrollSource = new BehaviorSubject<string>('scroll');
+  private workerHandler!: ConversationWorkerHandler;
 
   constructor(
     private http: HttpClient,
@@ -79,7 +82,59 @@ export class ActiveConversationService {
   ) {
     this.setPartnerInfo(null);
     this.setActiveConversation(null);
+    this.workerHandler = new ConversationWorkerHandler;
   }
+
+  fetchActiveConversation(): Observable<{ status: string; data: { chat: Conversation } }> {
+    return from(GetAuthData.getAuthData()).pipe(
+      switchMap(authData => {
+        if (!authData) throw new Error('Missing auth data');
+        const activeChatId = this.activeConversationSource.value?.id;
+        return this.http
+        .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${activeChatId}`).pipe(
+          tap(response => {
+           this.handleFetchedConversation(
+              [response.data.chat],
+              { email: authData._email, privateKey: authData._privateKey },
+            )
+          })
+        );
+      })
+    );
+  }
+
+    private handleFetchedConversation(
+      conversations: Conversation[],
+      authData: { email: string; privateKey: string },
+    ) {
+      if (conversations.length > 0) {
+       this.workerHandler.decryptConversations(conversations, authData)
+        .pipe(
+          catchError(() => {
+            return [];
+          }
+        ))
+        .subscribe(decrypted => {
+         this.setActiveConversation(decrypted[0])
+        });
+      }
+    }
+    //
+
+  /*   updateActiveConversationMessageToDelivered(
+      toUserId: number,
+    ): Observable<{ status: string, data:{ messages: Message[] }}> {
+      return from(GetAuthData.getAuthData()).pipe(
+        switchMap((authData) => {
+          if (!authData) {
+            throw new Error('Missing authentication data');
+          }
+          return this.http.get<{ status: string; data: { chats: Conversation[] } }>(
+            `${this.ENV.apiUrl}/chats/update-active-chat/messages/to-delivered`
+          )
+        })
+      )
+    } */
 
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
     if (!partnerInfo || !partnerInfo.partner_id) return;

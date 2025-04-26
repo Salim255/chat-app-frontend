@@ -11,18 +11,17 @@ export class ConversationWorkerHandler {
     authData: { email: string; privateKey: string },
   ): Observable<Conversation[]> {
 
-    return new Observable<Conversation []>((observer) => {
+    return new Observable<Conversation[]>((observer) => {
       const worker = new Worker(
         new URL('../../../core/workers/decrypt.worker.ts', import.meta.url),
         { type: 'module' }
       );
-
+      console.log(worker,'Hello from workrer',DecryptionActionType );
       const message: WorkerMessage = {
         action: DecryptionActionType.decryptConversations,
         ...authData,
         conversations,
       };
-      //if (worker) return observer.error();
       const handleMessage = (event: MessageEvent) => {
         const decrypted = event.data?.conversations;
         if (decrypted) {

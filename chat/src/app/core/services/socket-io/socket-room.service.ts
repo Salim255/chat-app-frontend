@@ -6,8 +6,7 @@ import { ActiveConversationService } from 'src/app/features/active-conversation/
 import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
-import { Account } from 'src/app/features/account/models/account.model';
-import { Member } from 'src/app/shared/interfaces/member.interface';
+import { MessageService } from 'src/app/features/messages/services/message.service';
 
 export enum PartnerConnectionStatus {
   ONLINE = 'online',
@@ -28,7 +27,8 @@ export class SocketRoomService {
   constructor(
     private readonly socketCoreService:  SocketCoreService,
     private activeConversationService: ActiveConversationService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private messageService: MessageService
 
   ) {
     this.authService.userId.subscribe(userId => this.userId = userId);
@@ -78,6 +78,12 @@ export class SocketRoomService {
       console.log('partner going onine', data)
       const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
       if (currentPartnerId === data.userId) {
+        console.log('formuserID: ',2 , 'ToUserId: ', data.userId )
+       /*  this.messageService.updateActiveChatMessageToDelivered(currentPartnerId).subscribe(messages => {
+          console.log(messages);
+        }); */
+        this.activeConversationService.fetchActiveConversation().subscribe();
+        //this.activeConversationService.
         this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     })

@@ -56,69 +56,17 @@ export class SocketIoService {
   // ==== Connection & initialization ======
   // =======================================
   // ---------------------------------------
-  initializeSocket(userId: number): void {
-    this.userId = userId;
-    if (this.socket?.connected) return;
-    this.connectSocket();
-  }
 
-  private connectSocket(): void {
-    this.socket = this.createSocketInstance();
 
-    this.socket.on(SocketEvents.Connect, this.onConnect.bind(this));
-    this.socket.on(SocketEvents.Disconnect, this.onDisconnect.bind(this));
-    this.socket.on(SocketEvents.Reconnect, this.onReconnect.bind(this));
-    this.socket.on(SocketEvents.ReconnectAttempt, this.onReconnectAttempt.bind(this));
-  }
 
-  private createSocketInstance(): Socket {
-    return io(`${this.ENV.socketUrl}`, {
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      timeout: 20000,
-      transports: ['websocket', 'polling'],
-      withCredentials: true,
-    });
-  }
 
-  private onConnect(): void {
-    console.log(`✅ Connected as User: ${this.userId}`);
-    if (this.userId) this.registerUser(this.userId);
-    this.setupEventListeners();
-  }
 
-  private onDisconnect(reason: string): void {
-    console.log(`❌ Disconnected: ${reason}`);
-    // Let socket.io handle reconnection. Don't nullify socket here.
-  }
-
-  private onReconnect(): void {
-    console.log(`🔁 Reconnected!`);
-    if (this.userId) this.registerUser(this.userId);
-  }
-
-  private onReconnectAttempt(attempt: number): void {
-    console.log(`🔄 Reconnect attempt #${attempt}`);
-  }
-
-  private setupEventListeners(): void {
-    this.socket?.on(SocketEvents.UserStatusChanged, (result) => {
-      console.log(result, '💥 User status changed');
-      if (result) this.updateUserConnectionStatusWithDisconnectionSubject.next(result);
-    });
-
-    this.socketMessageHandler.handleMessageEvents(this.socket!);
-    this.socketNewConversationHandler.handleIncomingNewConversationEvent(this.socket!);
-  }
-
-  private registerUser(userId: number): void {
+ /*  private registerUser(userId: number): void {
     if (this.socket && userId) {
       console.log('Registering user: ', userId);
       this.socket.emit(SocketEvents.RegisterUser, userId);
     }
-  }
+  } */
 
   clearAllListeners(): void {
     this.socket?.removeAllListeners();
