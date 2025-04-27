@@ -6,10 +6,10 @@ import { Message } from '../../features/messages/model/message.model';
 
 export type ReceivedMessage = Message & { encrypted_session_base64: string };
 export enum DecryptionActionType {
-  decryptConversations = 'decrypt-conversations',
-  decryptedConversations = 'decrypted-conversations',
-  decryptSingleMessage = 'decrypt-single-message',
-  decryptedSingleMessage = 'decrypted-single-message',
+  DecryptConversations = 'decrypt-conversations',
+  DecryptedConversations = 'decrypted-conversations',
+  DecryptSingleMessage = 'decrypt-single-message',
+  DecryptedSingleMessage = 'decrypted-single-message',
 }
 export type DecryptConversationsParams = {
   conversations: Conversation[];
@@ -28,7 +28,7 @@ addEventListener('message', async ({ data }) => {
 
   try {
     switch (data.action) {
-      case DecryptionActionType.decryptConversations:
+      case DecryptionActionType.DecryptConversations:
         await handleDecryptConversations(data);
         break;
       default:
@@ -56,7 +56,7 @@ async function handleDecryptConversations(data: any){
   const result = await decryptConversations(params);
 
   postMessage({
-    action: DecryptionActionType.decryptedConversations,
+    action: DecryptionActionType.DecryptedConversations,
     conversations: result,
   });
 }

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../../../features/messages/model/message.model';
 import { SocketNewConversationHandler } from './socket-new-conversation-handler';
-import { SocketMessageHandler } from './socket-message-handler';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 
 export type JoinRomData = {
@@ -49,7 +48,6 @@ export class SocketIoService {
   readonly updatedUserDisconnection$ = this.updateUserConnectionStatusWithDisconnectionSubject.asObservable();
 
   constructor(
-    private socketMessageHandler: SocketMessageHandler,
     private socketNewConversationHandler: SocketNewConversationHandler
   ) {}
 

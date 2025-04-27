@@ -120,37 +120,17 @@ export class ConversationService {
 
   }
 
-  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation): void {
-    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) return;
-
-    const updatedList = (this.conversationsSource.value || []).map(conversation => {
-      if (conversation.id === updatedConversation.id) {
-        const newConversation = {
-          ...conversation,
-          messages: [...updatedConversation.messages],
-          no_read_messages: 0,
-          last_message: updatedConversation.messages[updatedConversation.messages.length - 1]
-        };
-        this.conversationsMap.set(updatedConversation.id.toString(), newConversation);
-        return newConversation;
-      }
-      return conversation;
-    });
-
-    this.conversationsSource.next(updatedList);
-  }
-
   updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(
     activeChat: Conversation,
     ): void {
-      if (!activeChat.id || !activeChat.messages) return;
+    if (!activeChat.id || !activeChat.messages) return;
 
-      const updatedConversation: Conversation = {
-        ...this.conversationsMap.get(activeChat.id.toString()),
-        messages: [...activeChat.messages]
-      } as Conversation;
+    const updatedConversation: Conversation = {
+      ...this.conversationsMap.get(activeChat.id.toString()),
+      messages: [...activeChat.messages]
+    } as Conversation;
 
-      this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
-      this.setConversations(Array.from(this.conversationsMap.values()));
+    this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
+    this.setConversations(Array.from(this.conversationsMap.values()));
   }
 }

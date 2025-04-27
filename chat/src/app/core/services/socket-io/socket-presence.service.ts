@@ -3,10 +3,13 @@ import { SocketCoreService } from "./socket-core.service";
 import { Member } from "src/app/shared/interfaces/member.interface";
 import { Socket } from "socket.io-client";
 import { SocketRoomService } from "./socket-room.service";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class SocketPresenceService {
   private socket: Socket | null = null;
+  private randomUserConnectionStatusSubject = new BehaviorSubject<Member | null>(null);
+
   constructor(
     private socketRoomService: SocketRoomService,
     private socketCore: SocketCoreService) {
@@ -30,7 +33,7 @@ export class SocketPresenceService {
 
       if (updatedUser) {
         console.log( updatedUser, 'Hello from random user goes offline')
-       // this.setPartnerConnectionStatus(updatedUser);
+       this.setRandomUserConnectionStatus(updatedUser);
       }
     });
   }
@@ -39,8 +42,17 @@ export class SocketPresenceService {
     this.socket?.on('user-online', (updatedUser: any) => {
       console.log( updatedUser, 'Hello from random user goes online')
       if (updatedUser) {
-       // this.setPartnerConnectionStatus(updatedUser);
+        this.setRandomUserConnectionStatus(updatedUser);
       }
     });
   }
+
+  setRandomUserConnectionStatus(updatedUser: Member | null): void {
+    this.randomUserConnectionStatusSubject.next(updatedUser);
+  }
+
+  get getRandomUserConnectionStatus(): Observable<Member | null> {
+    return this.randomUserConnectionStatusSubject.asObservable();
+  }
+
 }

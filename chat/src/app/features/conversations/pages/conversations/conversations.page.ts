@@ -5,7 +5,6 @@ import { ConversationService } from 'src/app/features/conversations/services/con
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 import { Message } from '../../../messages/model/message.model'
 
 @Component({
@@ -33,30 +32,16 @@ export class ConversationsPage implements OnDestroy {
     private accountService: AccountService,
     private socketIoService: SocketIoService,
     private authService: AuthService,
-    private socketMessageHandler: SocketMessageHandler
   ) {}
 
   ionViewWillEnter(): void {
     this.conversationService.fetchConversations();
     this.accountService.fetchAccount();
     this.subscribeToUserId();
-    this.subscribeToMessageDelivery();
-    this.subscribeToUpdateChatCounter();
     this.subscribeUpdatedUserDisconnection();
     this.subscribeToConversations();
   }
 
-  // Subscribe to message delivery
-  private subscribeToMessageDelivery(): void {
-    this.messageDeliverySubscription =
-      this.socketMessageHandler.getMessageDeliveredToReceiver
-        .subscribe((message) => {
-          if (message) {
-            this.updateGlobalConversations(message);
-            this.updateChatWithReceivedMessage(message);
-          }
-        });
-  }
 
   private updateChatWithReceivedMessage(message: Message): void {
     message && this.updateGlobalConversations(message);
@@ -118,14 +103,6 @@ export class ConversationsPage implements OnDestroy {
       });
   }
 
-  private subscribeToUpdateChatCounter(): void{
-    this.updatedChatCounterSubscription = this.socketMessageHandler
-      .getUpdatedChatCounter.subscribe(
-        (conversation) => {
-          this.updateAndSortConversations(conversation);
-        }
-      );
-  }
 
   // Function to update a conversation, sort the list
   private updateAndSortConversations(updatedChat: Conversation | null) {

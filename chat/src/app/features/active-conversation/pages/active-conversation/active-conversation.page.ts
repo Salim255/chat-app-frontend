@@ -15,7 +15,6 @@ import {
 } from 'src/app/core/services/socket-io/socket-io.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
-import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
@@ -70,7 +69,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
-    private socketMessageHandler: SocketMessageHandler,
     private conversationService: ConversationService,
     private socketRoomService: SocketRoomService,
     private socketMessageService: SocketMessageService,
@@ -85,11 +83,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.subscribeToConversationRoom();
     this.subscribeToPartner();
     this.subscribeToUserId();
-
-    // Sockets
-    this.subscribeUpdatedMessagesToReadWithPartnerJoin();
-    this.subscribeReadMessage();
-    this.subscribeToPartnerConnection();
   }
 
   onSubmit(message: string): void {
@@ -110,26 +103,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.socketMessageService.sentMessageEmitter(sendMessageEmitterData);
   }
 
-  private subscribeToPartnerConnection(): void {
-    this.partnerConnectionSubscription =
-      this.socketMessageHandler.getPartnerConnectionStatus.subscribe((updatedUser) => {
-        if (updatedUser && this.partnerInfo) {
-          this.partnerInfo.connection_status = updatedUser.connection_status;
-          if (this.partnerInfo.connection_status === ConnectionStatus.Offline) {
-            this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
-          } else {
-            if (this.activeChat) {
-              // Update active chat by reference
-              this.activeConversationService.updateMessagesStatusToDeliveredWithPartnerConnection(
-                this.activeChat
-              );
-              this.activeConversationService.setMessagePageScroll();
-            }
-            this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
-          }
-        }
-      });
-  }
   private subscribeToConversationRoom(): void {
     // Getting roomId from socket.service
     this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(
@@ -173,45 +146,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeUpdatedMessagesToReadWithPartnerJoin(): void {
-  /*   this.updatedMessagesToReadWithPartnerJoinSubscription =
-      this.socketRoomHandler.getUpdatedMessagesToReadAfterPartnerJoinedRoom.subscribe(
-        (updatedMessagesToRead) => {
-          // Update chat messages
-          if (updatedMessagesToRead && updatedMessagesToRead.length > 0) {
-            // Get the active conversation
-            const activeConversation = this.activeChat;
-            if (!activeConversation) return;
-
-            // Update only the status of messages that match
-            activeConversation?.messages?.forEach((msg) => {
-              const updatedMsg = updatedMessagesToRead.find((updated) => updated.id === msg.id);
-              if (updatedMsg) {
-                msg.status = 'read'; // Set the status to "read"
-              }
-            });
-
-            // Update the active conversation to reflect changes
-            this.activeChat = { ...activeConversation };
-            this.conversationService.updatedActiveConversationMessagesToReadWithPartnerJoin(
-              this.activeChat
-            );
-          }
-        }
-      ); */
-  }
-
-  // Here we push received message during live chat
-  private subscribeReadMessage(): void {
-    this.readMessageSubscription = this.socketMessageHandler.getReadMessage.subscribe((message) => {
-      if (message) {
-        // Here we push received message during live chat
-        this.activeChat?.messages?.push(message);
-        this.activeConversationService.setMessagePageScroll();
-      }
-    });
-  }
-
   private cleanUp(): void {
     if (this.comingMessageEvent) this.comingMessageEvent.unsubscribe();
     if (this.activeConversationSubscription) this.activeConversationSubscription.unsubscribe();
@@ -229,8 +163,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.readMessageSubscription) this.readMessageSubscription.unsubscribe();
     if (this.deliveredMessageSubscription) this.deliveredMessageSubscription.unsubscribe();
     if (this.partnerConnectionSubscription) this.partnerConnectionSubscription.unsubscribe();
-    this.socketMessageHandler.setReadMessageSource(null);
-    this.socketMessageHandler.setDeliveredMessage(null);
     this.socketIoService.setConversationRoomId(null);
   }
 

@@ -6,7 +6,6 @@ import { ActiveConversationService } from 'src/app/features/active-conversation/
 import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
-import { MessageService } from 'src/app/features/messages/services/message.service';
 
 export enum PartnerConnectionStatus {
   ONLINE = 'online',
@@ -21,14 +20,11 @@ export class SocketRoomService {
   private roomIdSource = new BehaviorSubject<string | null>(null);
   private socket: Socket | null = null;
   private userId: number | null = null;
-  private updatedMessagesToReadAfterPartnerJoinedRoomSubject =
-    new BehaviorSubject< Message[] | null>(null);
 
   constructor(
     private readonly socketCoreService:  SocketCoreService,
     private activeConversationService: ActiveConversationService,
     private readonly authService: AuthService,
-    private messageService: MessageService
 
   ) {
     this.authService.userId.subscribe(userId => this.userId = userId);
@@ -49,13 +45,19 @@ export class SocketRoomService {
     this.emitJoinRoom(usersData);
   }
   private partnerJoinRoom():void{
-    this.socket?.on('partner-joined-room', (updatedMessagesToRead: Message[]) => {
-      console.log(updatedMessagesToRead, 'Hello from joinig room')
+    this.socket?.on(
+      'partner-joined-room',
+       (data: {
+      fromUserId: number;
+      toUserId: number;
+      chatId: number;
+    }) => {
+      console.log(data, 'Hello from joinig room')
       this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
-      if (updatedMessagesToRead && updatedMessagesToRead.length > 0) {
+      if (!data.chatId) return;
         // Get the active conversation
-        this.setUpdatedMessagesToReadAfterPartnerJoinedRoom(updatedMessagesToRead);
-      }
+       this.activeConversationService.updateMessagesToReadWithPartnerJoinRoom(data.chatId).subscribe();
+
     });
   }
 
@@ -68,32 +70,18 @@ export class SocketRoomService {
 
   private partnerGoesOffline():void {
     this.socket?.on('user-offline', (data: any) => {
-      console.log('Hello from user-offline',)
       this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
     });
   }
 
   private partnerGoesOnline():void {
     this.socket?.on('user-online', (data: {userId: number, status: string}) => {
-      console.log('partner going onine', data)
       const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
       if (currentPartnerId === data.userId) {
-        console.log('formuserID: ',2 , 'ToUserId: ', data.userId )
-       /*  this.messageService.updateActiveChatMessageToDelivered(currentPartnerId).subscribe(messages => {
-          console.log(messages);
-        }); */
         this.activeConversationService.fetchActiveConversation().subscribe();
-        //this.activeConversationService.
         this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     })
-  }
-  setUpdatedMessagesToReadAfterPartnerJoinedRoom(messages: Message[] | null):void {
-    this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.next(messages);
-  }
-
-  get getUpdatedMessagesToReadAfterPartnerJoinedRoom():Observable<Message [] | null> {
-    return this.updatedMessagesToReadAfterPartnerJoinedRoomSubject.asObservable();
   }
 
   emitJoinRoom(usersData: JoinRomData):void {

@@ -5,6 +5,7 @@ import {
   from,
   map,
   Observable,
+  of,
   switchMap,
   tap,
 } from 'rxjs';
@@ -103,38 +104,23 @@ export class ActiveConversationService {
     );
   }
 
-    private handleFetchedConversation(
-      conversations: Conversation[],
-      authData: { email: string; privateKey: string },
-    ) {
-      if (conversations.length > 0) {
-       this.workerHandler.decryptConversations(conversations, authData)
-        .pipe(
-          catchError(() => {
-            return [];
-          }
-        ))
-        .subscribe(decrypted => {
-         this.setActiveConversation(decrypted[0])
-        });
-      }
+  private handleFetchedConversation(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    if (conversations.length > 0) {
+      this.workerHandler.decryptConversations(conversations, authData)
+      .pipe(
+        catchError(() => {
+          return [];
+        }
+      ))
+      .subscribe(decrypted => {
+        this.setActiveConversation(decrypted[0])
+      });
     }
+  }
     //
-
-  /*   updateActiveConversationMessageToDelivered(
-      toUserId: number,
-    ): Observable<{ status: string, data:{ messages: Message[] }}> {
-      return from(GetAuthData.getAuthData()).pipe(
-        switchMap((authData) => {
-          if (!authData) {
-            throw new Error('Missing authentication data');
-          }
-          return this.http.get<{ status: string; data: { chats: Conversation[] } }>(
-            `${this.ENV.apiUrl}/chats/update-active-chat/messages/to-delivered`
-          )
-        })
-      )
-    } */
 
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
     if (!partnerInfo || !partnerInfo.partner_id) return;
@@ -243,26 +229,70 @@ export class ActiveConversationService {
     this.conversationService.updateConversationWithNewMessage(message);
     // Update active conversation messages
     this.setMessagePageScroll();
-    // TODO
-    //this.onSendMessageEmitter(lastMessage);
   }
 
-
-  updateMessagesStatusToDeliveredWithPartnerConnection(
-    activeChat: Conversation,
-   ): Conversation {
-    if (activeChat && activeChat.messages) {
-      // Directly update the status of 'sent' messages to 'delivered'
-      activeChat.messages.forEach((message) => {
-        if (message.status === 'sent') {
-          message.status = 'delivered'; // Update status in place
+  updateMessagesToReadWithPartnerJoinRoom(
+    chatId: number,
+  ): Observable<{ status: string, data: { messages: Message[] } }>{
+    console.log(chatId)
+    return from(GetAuthData.getAuthData()).pipe(
+      switchMap((authData) => {
+        if (!authData) {
+          throw new Error('Missing authentication data');
         }
+        ///
+        return this.http.patch<{ status: string; data: { messages: Message[] } }>(
+          `${this.ENV.apiUrl}/chats/${chatId}/update-ms-to-read`,
+           {},
+        ).pipe(
+          tap(res => {
+            console.log(res.data)
+            if (!this.activeConversationSource.value) return
+            const conversationInfo: Conversation =
+              {
+                ...this.activeConversationSource.value,
+                messages: res.data.messages,
+              };
+            this.handleUpdatedMessagesConversation(
+              [conversationInfo],
+              {
+                email: authData._email,
+                privateKey: authData._privateKey,
+              });
+          })
+        );
+    }));
+  }
+
+  private handleUpdatedMessagesConversation(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    if (conversations.length > 0) {
+      this.workerHandler.decryptConversations(conversations, authData)
+      .pipe(
+        catchError(() => {
+          return of([]);
+        }
+      ))
+      .subscribe(decryptedConversations => {
+        if (!decryptedConversations.length) return;
+        // 1: Get the updated message
+        const updatedMessages = decryptedConversations[0].messages;
+        const activeConversation = this.activeConversationSource.value;
+        if (!activeConversation) return;
+
+        activeConversation.messages = activeConversation.messages.map(msg => {
+          const updatedMsg = updatedMessages.find(m=> m.id = msg.id);
+          if (updatedMsg) {
+            return {...msg, status: updatedMsg.status}
+          }
+          return msg;
+        })
+        // Update the active conversation
+        this.setActiveConversation(activeConversation)
       });
     }
-    // 1 Update conversion in conversations
-    this.conversationService
-      .updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom({ ...activeChat });
-    return activeChat;
   }
 
   setMessagePageScroll(): void {
@@ -291,6 +321,9 @@ export class ActiveConversationService {
     }
   }
 
+  get getPartnerConnectionStatus(): Observable<PartnerConnectionStatus> {
+    return this.partnerRoomStatusSource.asObservable();
+  }
   get getPartnerInfo():Observable<Partner| null> {
     return this.partnerInfoSource.asObservable();
   }

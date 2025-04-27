@@ -7,8 +7,7 @@ import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Subscription } from 'rxjs';
 import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
-import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
-import { SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
+import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -25,7 +24,6 @@ export class headerComponent implements OnChanges, OnDestroy {
   constructor(
     private activeConversationService: ActiveConversationService,
     private profileViewerService: ProfileViewerService,
-    private socketMessageHandler: SocketMessageHandler,
     private socketRoomService: SocketRoomService
   ) {}
 
@@ -36,10 +34,10 @@ export class headerComponent implements OnChanges, OnDestroy {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    this.socketMessageHandler.getPartnerConnectionStatus.subscribe((updatedUser) => {
-      if (updatedUser && this.partnerInfo) {
-        this.partnerInfo.connection_status = updatedUser.connection_status;
-      }
+    this.activeConversationService.getPartnerConnectionStatus.subscribe((status:PartnerConnectionStatus) => {
+      if (!this.partnerInfo) return;
+        if (status === PartnerConnectionStatus.OFFLINE ) this.partnerInfo.connection_status = 'offline';
+        else this.partnerInfo.connection_status = 'online';
     });
   }
 

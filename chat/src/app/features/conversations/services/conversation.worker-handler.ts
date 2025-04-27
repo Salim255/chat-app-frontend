@@ -16,9 +16,8 @@ export class ConversationWorkerHandler {
         new URL('../../../core/workers/decrypt.worker.ts', import.meta.url),
         { type: 'module' }
       );
-      console.log(worker,'Hello from workrer',DecryptionActionType );
       const message: WorkerMessage = {
-        action: DecryptionActionType.decryptConversations,
+        action: DecryptionActionType.DecryptConversations,
         ...authData,
         conversations,
       };

@@ -111,28 +111,6 @@ export class SocketMessageHandler {
       this.setUpdatedChatCounter(updatedChatCounter);
     });
 
-    // To server by the receiver when the message is delivered to the receiver
-    socket.on('message-delivered-to-receiver', async (receivedMessage: ReceivedMessage) => {
-      try {
-        if (!receivedMessage) return;
-
-        const { _privateKey: privateKey, _email: email } = await GetAuthData.getAuthData();
-
-        const decryptionData: MessageDecryptionData = {
-          encryptedMessageBase64: receivedMessage.content,
-          encryptedSessionKeyBase64: receivedMessage.encrypted_session_base64,
-          receiverPrivateKeyBase64: privateKey,
-          receiverEmail: email,
-        };
-
-        const decryptedContent = await MessageEncryptDecrypt.decryptMessage(decryptionData);
-        const { encrypted_session_base64, ...rest } = receivedMessage;
-        const decryptedMessage = { ...rest, content: decryptedContent };
-        this.conversationService.updateConversationWithNewMessage(decryptedMessage);
-      } catch (error) {
-        console.error('Error processing delivered message:', error);
-      }
-    });
 
   /*   socket.on('user-online', (updatedUser: Member) => {
       console.log( updatedUser, 'Hello')
@@ -141,12 +119,7 @@ export class SocketMessageHandler {
       }
     }); */
 
-    socket.on('user-offline', (updatedUser: Member) => {
-      console.log( updatedUser, 'Hello')
-      if (updatedUser) {
-        this.setPartnerConnectionStatus(updatedUser);
-      }
-    });
+
 
 
   }

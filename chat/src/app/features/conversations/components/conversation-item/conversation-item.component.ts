@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
-import { SocketMessageHandler } from 'src/app/core/services/socket-io/socket-message-handler';
+import { SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 
 @Component({
   selector: 'app-conversation-item',
@@ -38,8 +38,8 @@ implements OnInit, OnDestroy, OnChanges {
   private messageDeliverySubscription!: Subscription;
 
   constructor(
+    private socketPresenceService: SocketPresenceService,
     private activeConversationService: ActiveConversationService,
-    private socketMessageHandler: SocketMessageHandler
   ) {}
 
   ngOnInit(): void {
@@ -53,19 +53,18 @@ implements OnInit, OnDestroy, OnChanges {
 
   private subscribeToPartnerConnectionStatus() {
     this.updatedUserDisconnectionSubscription =
-      this.socketMessageHandler
-        .getPartnerConnectionStatus.subscribe((updatedUser) => {
-          if (
-            updatedUser?.connection_status !== undefined &&
-            this.partnerInfo &&
-            updatedUser.user_id === this.partnerInfo.partner_id
-          ) {
-            this.partnerInfo = {
-              ...this.partnerInfo,
-              connection_status: updatedUser.connection_status,
-            };
-          }
-        });
+      this.socketPresenceService.getRandomUserConnectionStatus.subscribe((updatedUser) => {
+        if (
+          updatedUser?.connection_status !== undefined &&
+          this.partnerInfo &&
+          updatedUser.user_id === this.partnerInfo.partner_id
+        ) {
+          this.partnerInfo = {
+            ...this.partnerInfo,
+            connection_status: updatedUser.connection_status,
+          };
+        }
+      });
   }
 
   // Initializes the conversation data.
