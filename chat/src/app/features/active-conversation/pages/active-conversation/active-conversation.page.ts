@@ -8,16 +8,11 @@ import { Subscription } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
-import {
-  SocketIoService,
-  JoinRomData,
-  ConnectionStatus,
-} from 'src/app/core/services/socket-io/socket-io.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
-import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
+import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
 import {
   SendMessageEmitterData,
   SocketMessageService,
@@ -67,9 +62,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private socketIoService: SocketIoService,
     private activeConversationService: ActiveConversationService,
-    private conversationService: ConversationService,
     private socketRoomService: SocketRoomService,
     private socketMessageService: SocketMessageService,
   ) {}
@@ -80,7 +73,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   ionViewWillEnter(): void {
     this.subscribeToConversation();
-    this.subscribeToConversationRoom();
     this.subscribeToPartner();
     this.subscribeToUserId();
   }
@@ -101,15 +93,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       toUserId: this.partnerInfo.partner_id,
     };
     this.socketMessageService.sentMessageEmitter(sendMessageEmitterData);
-  }
-
-  private subscribeToConversationRoom(): void {
-    // Getting roomId from socket.service
-    this.conversationRoomIdSubscription = this.socketIoService.getConversationRoomId.subscribe(
-      (roomId) => {
-        this.conversationRoomId = roomId;
-      }
-    );
   }
 
   private subscribeToConversation(): void {
@@ -137,8 +120,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
             fromUserId: this.userId,
             toUserId: this.partnerInfo?.partner_id,
             chatId: this.activeChat && this.activeChat.id,
-            lastMessageSenderId:
-              (this.activeChat && this.activeChat.messages[-1]?.from_user_id) ?? null,
           };
           this.socketRoomService.initiateRoom(usersData);
         }
@@ -163,7 +144,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     if (this.readMessageSubscription) this.readMessageSubscription.unsubscribe();
     if (this.deliveredMessageSubscription) this.deliveredMessageSubscription.unsubscribe();
     if (this.partnerConnectionSubscription) this.partnerConnectionSubscription.unsubscribe();
-    this.socketIoService.setConversationRoomId(null);
+    this.socketRoomService.setConversationRoomId(null)
   }
 
   ionViewWillLeave(): void {

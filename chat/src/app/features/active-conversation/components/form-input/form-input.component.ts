@@ -2,15 +2,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   Output,
   signal,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IonTextarea } from '@ionic/angular';
-import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 import { ActiveConversationService } from '../../services/active-conversation.service';
 

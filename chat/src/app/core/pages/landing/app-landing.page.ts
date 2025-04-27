@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { AuthMode } from '../../services/auth/auth.service';
-import { SocketIoService } from '../../services/socket-io/socket-io.service';
 
 @Component({
   selector: 'app-landing-page',

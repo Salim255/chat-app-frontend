@@ -2,7 +2,12 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { io, Socket } from "socket.io-client";
 import { environment } from "src/environments/environment";
-import { ConnectionStatus } from "./socket-io.service";
+
+
+export enum ConnectionStatus {
+  Online = 'online',
+  Offline = 'offline',
+}
 
 @Injectable({ providedIn: 'root' })
 export class SocketCoreService {

@@ -3,9 +3,8 @@ import { Subscription } from 'rxjs';
 import { Conversation } from '../../models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { SocketIoService } from 'src/app/core/services/socket-io/socket-io.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
-import { Message } from '../../../messages/model/message.model'
+import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
 
 @Component({
   selector: 'app-conversations',
@@ -20,8 +19,6 @@ export class ConversationsPage implements OnDestroy {
   private userIdSubscription!: Subscription;
   private updateConversationWithNewMessageSubscription!: Subscription;
 
-  private messageDeliverySubscription!: Subscription;
-
   userId: number | null = null;
 
   conversations: Conversation[] = [];
@@ -30,38 +27,17 @@ export class ConversationsPage implements OnDestroy {
   constructor(
     private conversationService: ConversationService,
     private accountService: AccountService,
-    private socketIoService: SocketIoService,
     private authService: AuthService,
+    private socketCoreService: SocketCoreService
   ) {}
 
   ionViewWillEnter(): void {
-    this.conversationService.fetchConversations();
-    this.accountService.fetchAccount();
+    this.conversationService.fetchConversations().subscribe();
+    this.accountService.fetchAccount().subscribe();
+
     this.subscribeToUserId();
     this.subscribeUpdatedUserDisconnection();
     this.subscribeToConversations();
-  }
-
-
-  private updateChatWithReceivedMessage(message: Message): void {
-    message && this.updateGlobalConversations(message);
-  }
-
-  private updateGlobalConversations(message: Message): void {
-    this.conversations = this.conversations.map((conversation) => {
-      if (conversation.id === message.chat_id) {
-        const messageExits = conversation.messages?.some((msg) => msg.id === message.id);
-        const currentMessages = conversation.messages || [];
-        return {
-          ...conversation,
-          last_message: message,
-          messages: messageExits
-            ? currentMessages.map((msg) => (msg.id === message.id ? message : msg))
-            : [...(conversation.messages || []), message],
-        };
-      }
-      return conversation;
-    });
   }
 
   // Subscribe to the user ID from aAuthservice
@@ -83,7 +59,6 @@ export class ConversationsPage implements OnDestroy {
   private subscribeToConversations(): void {
     this.conversationsSource = this.conversationService
       .getConversations.subscribe((conversation) => {
-        console.log(conversation, 'Hello from conversations, 👹👹👹')
         if (conversation && conversation?.length > 0) {
           this.conversations = [...conversation];
           this.isEmpty = conversation.length === 0; //////
@@ -96,28 +71,7 @@ export class ConversationsPage implements OnDestroy {
   }
 
   private subscribeUpdatedUserDisconnection(): void {
-    this.updatedUserDisconnectionSubscription =
-      this.socketIoService.updatedUserDisconnectionGetter
-        .subscribe(() => {
-          this.conversationService.fetchConversations().subscribe();
-      });
-  }
-
-
-  // Function to update a conversation, sort the list
-  private updateAndSortConversations(updatedChat: Conversation | null) {
-    if (!updatedChat) return;
-    this.conversations = this.conversations.map((conversation) => {
-      if (conversation.id === updatedChat?.id) {
-        return {
-          ...conversation,
-          updated_at: updatedChat?.updated_at,
-          no_read_messages: updatedChat?.no_read_messages,
-        };
-      }
-      return conversation;
-    });
-    // this.sortConversations();
+    this.socketCoreService.connectionStatus$.subscribe(user => console.log(user));
   }
 
   private cleanUp() {

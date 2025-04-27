@@ -5,7 +5,9 @@ import {
   catchError,
   from,
   Observable,
+  of,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -35,13 +37,14 @@ export class ConversationService {
   }
 
   fetchConversations(): Observable<{ status: string; data: { chats: Conversation[] } }> {
+
     return from(GetAuthData.getAuthData()).pipe(
       switchMap(authData => {
         if (!authData) throw new Error('Missing auth data');
-        return this.http.get<{ status: string; data: { chats: Conversation[] } }>(`${this.ENV.apiUrl}/chats`).pipe(
+        return this.http
+        .get<{ status: string; data: { chats: Conversation[] } }>(`${this.ENV.apiUrl}/chats`)
+        .pipe(
           tap(response => {
-            console.log(response.data.chats, authData);
-
             this.handleFetchedConversations(
               response.data.chats,
               { email: authData._email, privateKey: authData._privateKey },
@@ -59,8 +62,10 @@ export class ConversationService {
     if (conversations.length > 0) {
       this.workerHandler.decryptConversations(conversations, authData)
       .pipe(
-        catchError(() => {
-          return [];  // Or use: of([]) if you want to continue silently
+        take(1),
+        catchError((err) => {
+          console.error(err)
+          return of([]);
         }
       ))
       .subscribe(decrypted => {
@@ -120,17 +125,37 @@ export class ConversationService {
 
   }
 
+  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation): void {
+    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) return;
+
+    const updatedList = (this.conversationsSource.value || []).map(conversation => {
+      if (conversation.id === updatedConversation.id) {
+        const newConversation = {
+          ...conversation,
+          messages: [...updatedConversation.messages],
+          no_read_messages: 0,
+          last_message: updatedConversation.messages[updatedConversation.messages.length - 1]
+        };
+        this.conversationsMap.set(updatedConversation.id.toString(), newConversation);
+        return newConversation;
+      }
+      return conversation;
+    });
+
+    this.conversationsSource.next(updatedList);
+  }
+
   updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(
     activeChat: Conversation,
     ): void {
-    if (!activeChat.id || !activeChat.messages) return;
+      if (!activeChat.id || !activeChat.messages) return;
 
-    const updatedConversation: Conversation = {
-      ...this.conversationsMap.get(activeChat.id.toString()),
-      messages: [...activeChat.messages]
-    } as Conversation;
+      const updatedConversation: Conversation = {
+        ...this.conversationsMap.get(activeChat.id.toString()),
+        messages: [...activeChat.messages]
+      } as Conversation;
 
-    this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
-    this.setConversations(Array.from(this.conversationsMap.values()));
+      this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
+      this.setConversations(Array.from(this.conversationsMap.values()));
   }
 }

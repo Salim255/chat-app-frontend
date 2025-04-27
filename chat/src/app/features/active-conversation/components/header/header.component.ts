@@ -1,10 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import {
-  ConnectionStatus,
-  SocketIoService,
-} from 'src/app/core/services/socket-io/socket-io.service';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { Subscription } from 'rxjs';
 import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
@@ -15,11 +10,9 @@ import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/service
   styleUrls: ['./header.component.scss'],
   standalone: false,
 })
-export class headerComponent implements OnChanges, OnDestroy {
+export class headerComponent implements OnChanges {
   @Input() partnerInfo: Partner | null = null;
-  private partnerInfoSubscription!: Subscription;
 
-  partnerConnectionStatus: ConnectionStatus = ConnectionStatus.Offline;
 
   constructor(
     private activeConversationService: ActiveConversationService,
@@ -46,9 +39,5 @@ export class headerComponent implements OnChanges, OnDestroy {
     const { partner_id, ...rest } = profile;
     this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest });
     this.profileViewerService.openProfileViewerModal();
-  }
-
-  ngOnDestroy(): void {
-    this.partnerInfoSubscription?.unsubscribe();
   }
 }

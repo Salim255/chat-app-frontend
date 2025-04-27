@@ -19,8 +19,8 @@ import {
   switchMap,
   tap,
  } from 'rxjs';
-import { SocketIoService } from '../socket-io/socket-io.service';
 import { KeyPairManager } from '../encryption/key-pair-manager';
+import { SocketCoreService } from '../socket-io/socket-core.service';
 
 export enum AuthMode {
   login = 'login',
@@ -39,7 +39,7 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private socketIoService: SocketIoService
+    private socketCoreService: SocketCoreService
   ) {}
 
   authenticate(mode: AuthMode, userInput: AuthPost): Observable<{ status: string, data: AuthResponseDto }> {
@@ -129,7 +129,7 @@ export class AuthService implements OnDestroy {
     }
     // ===== To disconnect user from socket server ====
     const currentUserId = await firstValueFrom(this.userId);
-    if (currentUserId) this.socketIoService.disconnectUser(currentUserId);
+   if (currentUserId) this.socketCoreService.disconnect();
 
     this.user.next(null);
     this.removeStoredData();

@@ -7,6 +7,7 @@ import {
   Observable,
   of,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
@@ -111,6 +112,7 @@ export class ActiveConversationService {
     if (conversations.length > 0) {
       this.workerHandler.decryptConversations(conversations, authData)
       .pipe(
+        take(1),
         catchError(() => {
           return [];
         }
@@ -186,6 +188,7 @@ export class ActiveConversationService {
             content: message,
             partner_connection_status: this.partnerRoomStatusSource.value,
           }
+          console.log('hello from ', this.partnerRoomStatusSource.value)
           return this.sendSingleEncryptedMessage(data, authData);
       })
     );
@@ -196,8 +199,12 @@ export class ActiveConversationService {
     authData: AuthData
   ): Observable<{ status: string; data: { message: Message } }> {
     const messageData =
-      buildMessageEncryptionData(data.content, authData, this.partnerInfoSource.value, this.activeConversationSource?.value);
-    console.log(this.activeConversationSource.value, 'Hello', messageData)
+      buildMessageEncryptionData(
+        data.content,
+        authData,
+        this.partnerInfoSource.value,
+        this.activeConversationSource?.value,
+      );
     return from(MessageEncryptDecrypt.encryptMessage(messageData))
       .pipe(
         switchMap((encryptedMessage) => {
@@ -246,7 +253,6 @@ export class ActiveConversationService {
            {},
         ).pipe(
           tap(res => {
-            console.log(res.data)
             if (!this.activeConversationSource.value) return
             const conversationInfo: Conversation =
               {
