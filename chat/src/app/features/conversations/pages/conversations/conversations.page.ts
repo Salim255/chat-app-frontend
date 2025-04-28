@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Conversation } from '../../models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
+import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 
 @Component({
   selector: 'app-conversations',
@@ -20,15 +21,16 @@ export class ConversationsPage implements OnDestroy {
   private updateConversationWithNewMessageSubscription!: Subscription;
 
   userId: number | null = null;
-
   conversations: Conversation[] = [];
   isEmpty: boolean = true;
+  partnerConnection = signal<RandomUserConnectionStatus | null>(null)
 
   constructor(
     private conversationService: ConversationService,
     private accountService: AccountService,
     private authService: AuthService,
-    private socketCoreService: SocketCoreService
+    private socketCoreService: SocketCoreService,
+    private socketPresenceService: SocketPresenceService
   ) {}
 
   ionViewWillEnter(): void {
@@ -38,6 +40,8 @@ export class ConversationsPage implements OnDestroy {
     this.subscribeToUserId();
     this.subscribeUpdatedUserDisconnection();
     this.subscribeToConversations();
+
+    this.subscribeToPartnerConnectionStatus()
   }
 
   // Subscribe to the user ID from aAuthservice
@@ -72,6 +76,15 @@ export class ConversationsPage implements OnDestroy {
 
   private subscribeUpdatedUserDisconnection(): void {
     this.socketCoreService.connectionStatus$.subscribe(user => console.log(user));
+  }
+
+  private subscribeToPartnerConnectionStatus() {
+    this.updatedUserDisconnectionSubscription =
+      this.socketPresenceService.getRandomUserConnectionStatus
+      .subscribe((updatedUser) => {
+        if (updatedUser) return;
+        this.partnerConnection.set(updatedUser);
+      });
   }
 
   private cleanUp() {

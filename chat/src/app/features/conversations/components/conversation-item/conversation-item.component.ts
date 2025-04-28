@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
-import { SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
+import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 
 @Component({
   selector: 'app-conversation-item',
@@ -28,13 +28,12 @@ export class ConversationItemComponent
 implements OnInit, OnDestroy, OnChanges {
   @Input() conversation!: Conversation;
   @Input() userId: number | null = null;
+  @Input() partnerConnection: RandomUserConnectionStatus | null  = null;
 
   lastMessage = signal<Message | null>(null);
   readMessagesCounter = signal<number>(0);
 
   partnerInfo: Partner | null = null;
-
-  private updatedUserDisconnectionSubscription!: Subscription;
   private messageDeliverySubscription!: Subscription;
 
   constructor(
@@ -43,28 +42,28 @@ implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.subscribeToPartnerConnectionStatus();
+    console.log()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.initializeConversation();
+    this.subscribeToPartnerConnectionStatus();
+
   }
 
   private subscribeToPartnerConnectionStatus() {
-    this.updatedUserDisconnectionSubscription =
-      this.socketPresenceService.getRandomUserConnectionStatus.subscribe((updatedUser) => {
-        if (
-          updatedUser?.connection_status !== undefined &&
-          this.partnerInfo &&
-          updatedUser.user_id === this.partnerInfo.partner_id
-        ) {
-          this.partnerInfo = {
-            ...this.partnerInfo,
-            connection_status: updatedUser.connection_status,
-          };
-        }
-      });
+    console.log(this.partnerInfo?.partner_id == this.partnerConnection?.userId)
+    console.log(this.partnerConnection?.status)
+    if (
+      !this.partnerInfo
+      || !this.partnerConnection
+      || (this.partnerInfo.partner_id !== this.partnerConnection.userId)
+    )  return
+    this.partnerInfo = {
+      ...this.partnerInfo,
+      connection_status: this.partnerConnection.status,
+    };
   }
 
   // Initializes the conversation data.
@@ -98,7 +97,6 @@ implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.updatedUserDisconnectionSubscription?.unsubscribe();
     this.messageDeliverySubscription?.unsubscribe();
   }
 }

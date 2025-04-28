@@ -9,6 +9,7 @@
             *ngFor="let conversation of conversations; trackBy: trackById"
             [conversation]="conversation"
             [userId]="userId"
+            [partnerConnection]="partnerConnection()"
           >
           </app-conversation-item>
         </ion-list>
