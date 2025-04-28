@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'socket.io-client';
 import { SocketCoreService } from './socket-core.service';
-import { SocketRoomService } from './socket-room.service';
-import { BehaviorSubject } from 'rxjs';
-import { Message } from 'src/app/features/messages/model/message.model';
+import { JoinRomData } from './socket-room.service';
+import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 
-
-export type SendMessageEmitterData = {
-  message: Message;
-  fromUserId: number;
-  toUserId: number;
-};
+export type  MessageNotifierPayload = Omit<JoinRomData, 'chatId'> & {
+  chatId: number
+}
 
 @Injectable({
   providedIn: 'root',
@@ -18,19 +14,27 @@ export type SendMessageEmitterData = {
 export class SocketMessageService {
   private socket: Socket | null = null;
   constructor(
-    private socketRoomService: SocketRoomService,
+    private conversationService: ConversationService,
     private socketCoreService: SocketCoreService,
-   ) {
-    this.initializeMessageListener();
-  }
+   ) { }
 
-  private initializeMessageListener(){
+  initializeMessageListener(): void{
     this.socket = this.socketCoreService.getSocket();
+    this.listenToComingMessage();
   }
 
-  sentMessageEmitter( messageDada: SendMessageEmitterData): void {
-    const roomId = this.socketRoomService.getRoom;
-    if (!roomId) return;
-    this.socket?.emit('send-message', { ...messageDada, roomId });
+  notifyPartnerOfComingMessage(notificationData: MessageNotifierPayload): void {
+    console.log(notificationData, 'hello wrold', this.socket)
+    this.socket = this.socketCoreService.getSocket();
+    this.socket?.emit('coming-message', notificationData);
+  }
+
+  listenToComingMessage(): void{
+    this.socket?.on('coming-message', (comingNotification: MessageNotifierPayload)=> {
+      console.log(comingNotification, 'Hello from coming notificationnotification😍😍😍');
+      if (!comingNotification.chatId) return
+      this.conversationService.fetchConversationChatById(comingNotification.chatId).subscribe();
+
+    });
   }
 }

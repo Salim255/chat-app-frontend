@@ -10,13 +10,9 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
-import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
-import {
-  SendMessageEmitterData,
-  SocketMessageService,
-} from 'src/app/core/services/socket-io/socket-message.service';
+
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -54,7 +50,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private readMessageSubscription!: Subscription;
   private deliveredMessageSubscription!: Subscription;
 
-  private conversationRoomId: string | null = null;
   activeChat: Conversation | null = null;
   userId: number | null = null;
   partnerInfo: Partner | null = null;
@@ -64,7 +59,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private activeConversationService: ActiveConversationService,
     private socketRoomService: SocketRoomService,
-    private socketMessageService: SocketMessageService,
   ) {}
 
   ngOnInit(): void {
@@ -83,16 +77,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     } else {
       this.activeConversationService.sendMessage(message).subscribe();
     }
-  }
-
-  onSendMessageEmitter(message: Message): void {
-    if (!(this.userId && this.partnerInfo?.partner_id)) return;
-    const sendMessageEmitterData: SendMessageEmitterData = {
-      message: message,
-      fromUserId: this.userId,
-      toUserId: this.partnerInfo.partner_id,
-    };
-    this.socketMessageService.sentMessageEmitter(sendMessageEmitterData);
   }
 
   private subscribeToConversation(): void {

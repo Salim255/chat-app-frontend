@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, take } from 'rxjs';
-import { Message } from '../../../features/messages/model/message.model';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
@@ -47,7 +46,6 @@ export class SocketRoomService {
 
   initiateRoom(usersData: JoinRomData): void {
     const currentRoomId = [usersData.fromUserId, usersData.toUserId].sort().join('-');
-   // console.log('rooom: ',currentRoomId, 'Hello' , this.socket)
     this.setConversationRoomId(currentRoomId);
     this.emitJoinRoom(usersData);
   }
@@ -59,14 +57,15 @@ export class SocketRoomService {
       this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
       if (!data.chatId) return;
        // Get the active conversation
-       this.activeConversationService.updateMessagesToReadWithPartnerJoinRoom(data.chatId).subscribe();
+      this.activeConversationService.updateMessagesToReadWithPartnerJoinRoom(data.chatId).subscribe();
 
     });
   }
 
   private partnerLeftRoom():void{
     this.socket?.on('partner-left-room', (data: JoinRomData) => {
-      if (this.activeConversationService.partnerInfoSource.value?.partner_id === data.fromUserId) {
+      const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+      if (currentPartnerId === data.toUserId) {
         this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     });

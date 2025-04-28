@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, take } from "rxjs";
 import { io, Socket } from "socket.io-client";
 import { environment } from "src/environments/environment";
+import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 
 
 export enum ConnectionStatus {
@@ -16,7 +17,7 @@ export class SocketCoreService {
 
   private readonly connectionStatusSubject = new BehaviorSubject<ConnectionStatus>(ConnectionStatus.Offline);
   readonly connectionStatus$ = this.connectionStatusSubject.asObservable();
-  constructor(){}
+  constructor(private conversationService : ConversationService ){}
 
   initialize(userId: number): void {
     if (this.socket?.connected) return;
@@ -32,7 +33,9 @@ export class SocketCoreService {
     this.socket?.on('connect', () => {
       console.log(`✅ Connected as User: ${userId}`);
       this.connectionStatusSubject.next(ConnectionStatus.Online);
+      this.conversationService.fetchConversations().pipe(take(1)).subscribe();
       this.socket?.emit('register-user', userId);
+
     });
 
     this.socket?.on('disconnect', () => {

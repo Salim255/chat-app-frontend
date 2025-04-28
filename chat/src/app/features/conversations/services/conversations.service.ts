@@ -55,6 +55,24 @@ export class ConversationService {
     );
   }
 
+  fetchConversationChatById(chatId: number): Observable<{ status: string, data: { chat: Conversation }}>{
+    return from(GetAuthData.getAuthData()).pipe(
+      switchMap(authData => {
+        if (!authData) throw new Error('Missing auth data');
+        return this.http
+        .get<{ status: string, data: { chat: Conversation }}>(`${this.ENV.apiUrl}/chats/${chatId}`)
+        .pipe(
+          tap(response => {
+            console.log('Hello from chat by id', response.data.chat);
+            this.handleFetchedSingleConversation(
+              [response.data.chat],
+              { email: authData._email, privateKey: authData._privateKey },
+            )
+          })
+        );
+      })
+    );
+  }
   private handleFetchedConversations(
     conversations: Conversation[],
     authData: { email: string; privateKey: string },
@@ -75,6 +93,40 @@ export class ConversationService {
       this.setConversations(null)
     }
   }
+
+  private handleFetchedSingleConversation(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    if (!conversations.length) return
+
+    this.workerHandler.decryptConversations(conversations, authData)
+    .pipe(
+      take(1),
+      catchError((err) => {
+        console.error(err)
+        return of([]);
+      }
+    ))
+    .subscribe(decryptedConversations => {
+      const updatedConversation = decryptedConversations[0]
+      let conversations = this.conversationsSource.value;
+      if (!conversations) {
+        if (updatedConversation.id) this.setConversations(decryptedConversations);
+        return;
+      };
+      conversations = conversations?.map(chat => {
+        if (chat.id === updatedConversation.id) {
+          return {...chat, messages: updatedConversation.messages};
+        } else {
+          return chat
+        }
+      })
+     this.setConversations(conversations);
+    });
+
+  }
+
 
   setConversations(chats: Conversation[] | null): void {
     if (!chats) {
@@ -123,39 +175,5 @@ export class ConversationService {
       this.setConversations(sortConversations(updatedConversations));
     }
 
-  }
-
-  updatedActiveConversationMessagesToReadWithPartnerJoin(updatedConversation: Conversation): void {
-    if (!updatedConversation || !updatedConversation.id || !updatedConversation.messages) return;
-
-    const updatedList = (this.conversationsSource.value || []).map(conversation => {
-      if (conversation.id === updatedConversation.id) {
-        const newConversation = {
-          ...conversation,
-          messages: [...updatedConversation.messages],
-          no_read_messages: 0,
-          last_message: updatedConversation.messages[updatedConversation.messages.length - 1]
-        };
-        this.conversationsMap.set(updatedConversation.id.toString(), newConversation);
-        return newConversation;
-      }
-      return conversation;
-    });
-
-    this.conversationsSource.next(updatedList);
-  }
-
-  updatedActiveConversationMessagesToDeliveredWithPartnerRejoinRoom(
-    activeChat: Conversation,
-    ): void {
-      if (!activeChat.id || !activeChat.messages) return;
-
-      const updatedConversation: Conversation = {
-        ...this.conversationsMap.get(activeChat.id.toString()),
-        messages: [...activeChat.messages]
-      } as Conversation;
-
-      this.conversationsMap.set(activeChat.id.toString(), updatedConversation);
-      this.setConversations(Array.from(this.conversationsMap.values()));
   }
 }

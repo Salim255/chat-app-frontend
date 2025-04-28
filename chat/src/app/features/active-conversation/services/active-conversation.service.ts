@@ -35,8 +35,8 @@ import {
 } from './active-conversation.utils';
 import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
-
-
+import { MessageNotifierPayload, SocketMessageService } from 'src/app/core/services/socket-io/socket-message.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 export type AuthData = {
   _privateKey: string;
@@ -44,12 +44,10 @@ export type AuthData = {
   _email: string;
   id: string;
 }
-
 export type ConversationDto = {
   status: string;
   data: { chat: Conversation }
 }
-
 export type CreateConversationPost = {
   content: string;
   from_user_id: number;
@@ -69,6 +67,7 @@ export type EncryptedMessageData = {
 })
 export class ActiveConversationService {
   private ENV = environment;
+  private userId: number | null= null;
   partnerInfoSource = new BehaviorSubject<Partner | null>(null);
   partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus>(PartnerConnectionStatus.OFFLINE);
   private activeConversationSource = new BehaviorSubject<Conversation | null>(null);
@@ -80,11 +79,14 @@ export class ActiveConversationService {
   constructor(
     private http: HttpClient,
     private conversationService: ConversationService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private socketMessageService: SocketMessageService,
+    private authService: AuthService,
   ) {
     this.setPartnerInfo(null);
     this.setActiveConversation(null);
     this.workerHandler = new ConversationWorkerHandler;
+    this.authService.userId.subscribe(userId => this.userId = userId);
   }
 
   fetchActiveConversation(): Observable<{ status: string; data: { chat: Conversation } }> {
@@ -208,13 +210,15 @@ export class ActiveConversationService {
     return from(MessageEncryptDecrypt.encryptMessage(messageData))
       .pipe(
         switchMap((encryptedMessage) => {
-          const requestData = prepareEncryptedMessagePayload(data, encryptedMessage.encryptedMessageBase64);
+          const requestData =
+            prepareEncryptedMessagePayload(data, encryptedMessage.encryptedMessageBase64);
           return this.http.post<{
               status: string,
               data: { message: Message }
             }>(`${this.ENV.apiUrl}/messages`, requestData).pipe(
             map((response) => {
-              const sentMessage = restoreOriginalMessageContent(response.data.message, data.content);
+              const sentMessage =
+                restoreOriginalMessageContent(response.data.message, data.content);
               this.handlePostMessageSent(sentMessage);
               return { status: 'success', data: { message: sentMessage } };
             })
@@ -236,6 +240,20 @@ export class ActiveConversationService {
     this.conversationService.updateConversationWithNewMessage(message);
     // Update active conversation messages
     this.setMessagePageScroll();
+    // Notify partner of this message, if its not in room
+    if (this.partnerRoomStatusSource.value === PartnerConnectionStatus.ONLINE) {
+      this. handlePartnerNotification();
+    }
+  }
+
+  handlePartnerNotification(): void {
+    const toUserId = this.partnerInfoSource.value?.partner_id;
+    const chatId = this.activeConversationSource.value?.id;
+    const fromUserId = this.userId;
+    if (!(this.userId && toUserId && chatId && fromUserId)) return;
+    const notificationData: MessageNotifierPayload =
+      { fromUserId, toUserId, chatId }
+    this.socketMessageService.notifyPartnerOfComingMessage(notificationData);
   }
 
   updateMessagesToReadWithPartnerJoinRoom(

@@ -6,8 +6,9 @@ import { SocketPresenceService } from '../core/services/socket-io/socket-presenc
 import { SocketCoreService } from '../core/services/socket-io/socket-core.service';
 import { AuthService } from '../core/services/auth/auth.service';
 import { SocketRoomService } from '../core/services/socket-io/socket-room.service';
-export type displayTap = 'show' | 'hide';
+import { SocketMessageService } from '../core/services/socket-io/socket-message.service';
 
+export type displayTap = 'show' | 'hide';
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
@@ -31,7 +32,8 @@ export class TabsPage implements OnInit, OnDestroy {
     private socketCoreService: SocketCoreService,
     private authService: AuthService,
     private socketPresenceService: SocketPresenceService,
-    private socketRoomService: SocketRoomService
+    private socketRoomService: SocketRoomService,
+    private socketMessageService: SocketMessageService
   ) {
 
   }
@@ -66,6 +68,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.socketCoreService.initialize(this.userId);
         this.socketPresenceService.initializePresenceListener();
         this.socketRoomService.initializeRoomListeners();
+        this.socketMessageService.initializeMessageListener();
       }
     });
   }
