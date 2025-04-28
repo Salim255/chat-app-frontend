@@ -3,7 +3,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   signal,
   SimpleChanges,
 } from '@angular/core';
@@ -16,7 +15,7 @@ import { Subscription } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
-import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
+import { RandomUserConnectionStatus } from 'src/app/core/services/socket-io/socket-presence.service';
 
 @Component({
   selector: 'app-conversation-item',
@@ -25,25 +24,16 @@ import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/
   standalone: false,
 })
 export class ConversationItemComponent
-implements OnInit, OnDestroy, OnChanges {
+implements OnDestroy, OnChanges {
   @Input() conversation!: Conversation;
   @Input() userId: number | null = null;
   @Input() partnerConnection: RandomUserConnectionStatus | null  = null;
 
   lastMessage = signal<Message | null>(null);
-  readMessagesCounter = signal<number>(0);
-
   partnerInfo: Partner | null = null;
   private messageDeliverySubscription!: Subscription;
 
-  constructor(
-    private socketPresenceService: SocketPresenceService,
-    private activeConversationService: ActiveConversationService,
-  ) {}
-
-  ngOnInit(): void {
-    console.log()
-  }
+  constructor(private activeConversationService: ActiveConversationService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
@@ -53,30 +43,21 @@ implements OnInit, OnDestroy, OnChanges {
   }
 
   private subscribeToPartnerConnectionStatus() {
-    console.log(this.partnerInfo?.partner_id == this.partnerConnection?.userId)
-    console.log(this.partnerConnection?.status)
     if (
       !this.partnerInfo
       || !this.partnerConnection
       || (this.partnerInfo.partner_id !== this.partnerConnection.userId)
     )  return
-    this.partnerInfo = {
-      ...this.partnerInfo,
-      connection_status: this.partnerConnection.status,
-    };
+    this.partnerInfo =
+      { ...this.partnerInfo, connection_status: this.partnerConnection.status };
   }
 
-  // Initializes the conversation data.
   private initializeConversation(): void {
-    if (this.conversation?.messages?.length && this.conversation?.users) {
-      this.lastMessage.set(
-        this.conversation.messages[
-          this.conversation.messages.length-1
-        ],
-      );
-      this.readMessagesCounter.set(this.conversation.no_read_messages ?? 0);
-      this.setPartnerInfo();
-    }
+    if (!this.conversation?.messages?.length || !this.conversation?.users) return;
+
+    this.lastMessage
+    .set(this.conversation.messages [this.conversation.messages.length - 1]);
+    this.setPartnerInfo();
   }
 
   // Here we are filtering the users to get the partner info

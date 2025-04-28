@@ -137,10 +137,11 @@ export class ActiveConversationService {
   }
 
   private sendEncryptedMessage(
-    encryptedData: EncryptedMessageData,
+    encryptedMessage: EncryptedMessageData,
     authData: AuthData
   ) {
-    const payload = builtEncryptedMessageData(encryptedData, authData, this.partnerInfoSource.value);
+    const payload =
+       builtEncryptedMessageData(encryptedMessage, authData, this.partnerInfoSource.value);
     if (!payload) throw new Error('Missing chat creation data');
     return this.http
       .post<{ status: string, data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats`,payload);
@@ -154,8 +155,14 @@ export class ActiveConversationService {
         if (!authData) {
           throw new Error('Missing authentication data');
         }
+
         const messagePayload: MessageEncryptionData =
-          buildMessageEncryptionData(content, authData, this.partnerInfoSource.value, this.activeConversationSource.value);
+          buildMessageEncryptionData(
+            content,
+            authData,
+            this.partnerInfoSource.value,
+            this.activeConversationSource.value
+          );
         return from(MessageEncryptDecrypt.encryptMessage(messagePayload))
         .pipe(
             switchMap((encryptedData) => {

@@ -68,7 +68,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.socketCoreService.initialize(this.userId);
         this.socketPresenceService.initializePresenceListener();
         this.socketRoomService.initializeRoomListeners();
-        this.socketMessageService.initializeMessageListener();
+        this.socketMessageService.initializeMessageListener()
       }
     });
   }
