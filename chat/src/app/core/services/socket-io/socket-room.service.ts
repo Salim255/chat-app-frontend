@@ -56,6 +56,7 @@ export class SocketRoomService {
        (data: JoinRomData) => {
       this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
       if (!data.chatId) return;
+      console.log('Hello partner');
        // Get the active conversation
       this.activeConversationService.updateMessagesToReadWithPartnerJoinRoom(data.chatId).subscribe();
 
@@ -64,8 +65,13 @@ export class SocketRoomService {
 
   private partnerLeftRoom():void{
     this.socket?.on('partner-left-room', (data: JoinRomData) => {
+
       const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
-      if (currentPartnerId === data.toUserId) {
+      if(!currentPartnerId) {
+        this.activeConversationService.setPartnerInRoomStatus(null);
+        return
+      };
+      if(currentPartnerId === data.toUserId) {
         this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     });

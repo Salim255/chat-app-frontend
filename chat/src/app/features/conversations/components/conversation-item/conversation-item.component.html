@@ -12,7 +12,10 @@
   </ion-label>
 
 
-    <ion-text class="messages_number">
+    <ion-text
+      class="messages_number"
+      *ngIf="conversation.messages[conversation.messages.length - 1].status !== 'read'"
+    >
       <span> {{ conversation.delivered_messages_count }} </span>
     </ion-text>
 

@@ -82,7 +82,7 @@ export class ConversationsPage implements OnDestroy {
     this.updatedUserDisconnectionSubscription =
       this.socketPresenceService.getRandomUserConnectionStatus
       .subscribe((updatedUser) => {
-        if (updatedUser) return;
+        if (!updatedUser) return;
         this.partnerConnection.set(updatedUser);
       });
   }

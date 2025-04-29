@@ -69,7 +69,7 @@ export class ActiveConversationService {
   private ENV = environment;
   private userId: number | null= null;
   partnerInfoSource = new BehaviorSubject<Partner | null>(null);
-  partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus>(PartnerConnectionStatus.OFFLINE);
+  partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus | null>(null);
   private activeConversationSource = new BehaviorSubject<Conversation | null>(null);
   receiverPublicKey: string | null = null;
   // This is where we store messages in a Map, indexed by status
@@ -95,7 +95,8 @@ export class ActiveConversationService {
         if (!authData) throw new Error('Missing auth data');
         const activeChatId = this.activeConversationSource.value?.id;
         return this.http
-        .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${activeChatId}`).pipe(
+        .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${activeChatId}`)
+        .pipe(
           tap(response => {
            this.handleFetchedConversation(
               [response.data.chat],
@@ -113,8 +114,7 @@ export class ActiveConversationService {
   ) {
     if (conversations.length > 0) {
       this.workerHandler.decryptConversations(conversations, authData)
-      .pipe(
-        take(1),
+      .pipe(take(1),
         catchError(() => {
           return [];
         }
@@ -128,8 +128,14 @@ export class ActiveConversationService {
 
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
     if (!partnerInfo || !partnerInfo.partner_id) return;
+
     if (partnerInfo.connection_status === 'online') {
       this.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
+    } else {
+      this.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
+    }
+    if(conversation) {
+      this.updateMessagesToReadWithPartnerJoinRoom(conversation.id).subscribe();
     }
     this.setPartnerInfo(partnerInfo);
     this.setActiveConversation(conversation);
@@ -172,7 +178,6 @@ export class ActiveConversationService {
               const chat: Conversation = processConversationResponse(response, content);
               this.setActiveConversation(chat);
               this.conversationService.fetchConversations();
-              //this.socketIoService.createdConversationEmitter(response.data.chat);
             })
         );
       })
@@ -185,10 +190,13 @@ export class ActiveConversationService {
     return from(GetAuthData.getAuthData()).pipe(
       switchMap((authData) => {
         if (!authData) throw new Error('There is no auth data');
+
         if (
           !this.activeConversationSource.value
           || !this.partnerInfoSource.value?.partner_id
+          || !this.partnerRoomStatusSource.value
         ) throw new Error('Missing chat information');
+
         const data: CreateMessageDto =
           {
             chat_id: this.activeConversationSource?.value?.id,
@@ -197,7 +205,6 @@ export class ActiveConversationService {
             content: message,
             partner_connection_status: this.partnerRoomStatusSource.value,
           }
-          console.log('hello from ', this.partnerRoomStatusSource.value)
           return this.sendSingleEncryptedMessage(data, authData);
       })
     );
@@ -248,25 +255,32 @@ export class ActiveConversationService {
     // Update active conversation messages
     this.setMessagePageScroll();
     // Notify partner of this message, if its not in room
-    if (this.partnerRoomStatusSource.value === PartnerConnectionStatus.ONLINE) {
-      this. handlePartnerNotification();
+    if (
+      (this.partnerRoomStatusSource.value === PartnerConnectionStatus.ONLINE)
+      || (this.partnerRoomStatusSource.value === PartnerConnectionStatus.InRoom)
+     ) {
+      this. handlePartnerNotification(this.partnerRoomStatusSource.value);
     }
   }
 
-  handlePartnerNotification(): void {
+  handlePartnerNotification(partnerInRoomStatus: 'in-room'| 'online'): void {
     const toUserId = this.partnerInfoSource.value?.partner_id;
     const chatId = this.activeConversationSource.value?.id;
     const fromUserId = this.userId;
     if (!(this.userId && toUserId && chatId && fromUserId)) return;
     const notificationData: MessageNotifierPayload =
-      { fromUserId, toUserId, chatId }
+      {
+        fromUserId,
+        toUserId,
+        chatId,
+        partnerStatus: partnerInRoomStatus,
+       }
     this.socketMessageService.notifyPartnerOfComingMessage(notificationData);
   }
 
   updateMessagesToReadWithPartnerJoinRoom(
     chatId: number,
   ): Observable<{ status: string, data: { messages: Message[] } }>{
-    console.log(chatId)
     return from(GetAuthData.getAuthData()).pipe(
       switchMap((authData) => {
         if (!authData) {
@@ -278,6 +292,7 @@ export class ActiveConversationService {
            {},
         ).pipe(
           tap(res => {
+            console.log(res.data.messages, 'Hello')
             if (!this.activeConversationSource.value) return
             const conversationInfo: Conversation =
               {
@@ -322,6 +337,10 @@ export class ActiveConversationService {
         })
         // Update the active conversation
         this.setActiveConversation(activeConversation)
+
+        // Set conversations with updated conversation
+        console.log(activeConversation, 'Hello conversation')
+        //this.conversationService.updateConversationsList(activeConversation);
       });
     }
   }
@@ -338,7 +357,8 @@ export class ActiveConversationService {
     this.partnerInfoSource.next(data);
   }
 
-  setPartnerInRoomStatus(status: PartnerConnectionStatus): void {
+  setPartnerInRoomStatus(status: PartnerConnectionStatus | null): void {
+    console.log(status, 'Hello from status')
     this.partnerRoomStatusSource.next(status);
   }
 
@@ -352,7 +372,7 @@ export class ActiveConversationService {
     }
   }
 
-  get getPartnerConnectionStatus(): Observable<PartnerConnectionStatus> {
+  get getPartnerConnectionStatus(): Observable<PartnerConnectionStatus | null> {
     return this.partnerRoomStatusSource.asObservable();
   }
   get getPartnerInfo():Observable<Partner| null> {

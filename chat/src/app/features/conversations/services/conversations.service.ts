@@ -37,7 +37,7 @@ export class ConversationService {
   }
 
   fetchConversations(): Observable<{ status: string; data: { chats: Conversation[] } }> {
-
+    console.log('Hello from conversations services😍😍😍')
     return from(GetAuthData.getAuthData()).pipe(
       switchMap(authData => {
         if (!authData) throw new Error('Missing auth data');
@@ -73,6 +73,7 @@ export class ConversationService {
       })
     );
   }
+
   private handleFetchedConversations(
     conversations: Conversation[],
     authData: { email: string; privateKey: string },
@@ -87,7 +88,8 @@ export class ConversationService {
         }
       ))
       .subscribe(decrypted => {
-        this.setConversations(decrypted)
+        console.log(decrypted, 'hello fetched conversation')
+        this.setConversations([...decrypted])
       });
     } else {
       this.setConversations(null)
@@ -110,25 +112,35 @@ export class ConversationService {
     ))
     .subscribe(decryptedConversations => {
       const updatedConversation = decryptedConversations[0]
-      let conversations = this.conversationsSource.value;
-      if (!conversations) {
-        if (updatedConversation.id) this.setConversations(decryptedConversations);
-        return;
-      };
-      conversations = conversations?.map(chat => {
-        if (chat.id === updatedConversation.id) {
-          return {...chat, messages: updatedConversation.messages};
-        } else {
-          return chat
-        }
-      })
-     this.setConversations(conversations);
+      const updatedConversations = this.updateConversationsList(updatedConversation);
+     this.setConversations([...updatedConversations]);
     });
 
   }
 
+  updateConversationsList(
+     updatedConversation: Conversation
+    ): Conversation[] {
+      const conversations = this.conversationsSource.value;
+    if (!conversations) {
+      return updatedConversation.id ? [updatedConversation] : [];
+    }
+
+    return conversations.map(chat => {
+      if (chat.id === updatedConversation.id) {
+        return {
+          ...chat,
+          messages: updatedConversation.messages,
+          delivered_messages_count: updatedConversation.delivered_messages_count,
+        };
+      } else {
+        return chat;
+      }
+    });
+  }
 
   setConversations(chats: Conversation[] | null): void {
+    console.log("conversation",)
     if (!chats) {
       this.conversationsSource.next([])
     } else {

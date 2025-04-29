@@ -28,7 +28,6 @@ export class AccountService {
   fetchAccount(): Observable<{ status: string; data: { user: AccountDto }}> {
     return this.http.get<{status: string, data: { user: AccountDto } }>(`${this.ENV.apiUrl}/users/`).pipe(
       tap((response) => {
-        console.log(response.data.user, 'Hello from here')
         const user = this.mapUserToAccount(response.data.user);
         this.setAccountInfo(user);
       })

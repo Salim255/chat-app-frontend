@@ -27,10 +27,13 @@ export class headerComponent implements OnChanges {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    this.activeConversationService.getPartnerConnectionStatus.subscribe((status:PartnerConnectionStatus) => {
+    this.activeConversationService
+    .getPartnerConnectionStatus
+    .subscribe((status) => {
       if (!this.partnerInfo) return;
-        if (status === PartnerConnectionStatus.OFFLINE ) this.partnerInfo.connection_status = 'offline';
-        else this.partnerInfo.connection_status = 'online';
+
+      if (status === PartnerConnectionStatus.OFFLINE ) this.partnerInfo.connection_status = 'offline';
+      else this.partnerInfo.connection_status = 'online';
     });
   }
 
