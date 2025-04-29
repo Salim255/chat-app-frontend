@@ -7,12 +7,10 @@ import {
   Observable,
   of,
   switchMap,
-  take,
   tap,
 } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import {
   CreateMessageDto,
@@ -37,6 +35,8 @@ import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { MessageNotifierPayload, SocketMessageService } from 'src/app/core/services/socket-io/socket-message.service';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { MessageEncryptionService } from './message-encryption.service';
+import { ActiveConversationHttpService } from './active-conversation-http-service';
 
 export type AuthData = {
   _privateKey: string;
@@ -48,14 +48,7 @@ export type ConversationDto = {
   status: string;
   data: { chat: Conversation }
 }
-export type CreateConversationPost = {
-  content: string;
-  from_user_id: number;
-  to_user_id: number;
-  partner_connection_status: string;
-  session_key_sender: string;
-  session_key_receiver: string;
-}
+
 export type EncryptedMessageData = {
   encryptedMessageBase64: string;
   encryptedSessionKeyForSenderBase64: string | undefined;
@@ -68,37 +61,40 @@ export type EncryptedMessageData = {
 export class ActiveConversationService {
   private ENV = environment;
   private userId: number | null= null;
-  partnerInfoSource = new BehaviorSubject<Partner | null>(null);
-  partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus | null>(null);
-  private activeConversationSource = new BehaviorSubject<Conversation | null>(null);
   receiverPublicKey: string | null = null;
-  // This is where we store messages in a Map, indexed by status
-  private triggerMessagePageScrollSource = new BehaviorSubject<string>('scroll');
   private workerHandler!: ConversationWorkerHandler;
 
+  // Observables and BehaviorSubjects
+  partnerInfoSource = new BehaviorSubject<Partner | null>(null);
+  partnerRoomStatusSource = new BehaviorSubject<PartnerConnectionStatus | null>(null);
+  private readonly activeConversationSource = new BehaviorSubject<Conversation | null>(null);
+  // This is where we store messages in a Map, indexed by status
+  private triggerMessagePageScrollSource = new BehaviorSubject<string>('scroll');
+
   constructor(
-    private http: HttpClient,
+
     private conversationService: ConversationService,
     private modalController: ModalController,
     private socketMessageService: SocketMessageService,
     private authService: AuthService,
+    private messageEncryptionService: MessageEncryptionService,
+    private activeConversationHttpService: ActiveConversationHttpService
   ) {
-    this.setPartnerInfo(null);
-    this.setActiveConversation(null);
-    this.workerHandler = new ConversationWorkerHandler;
+    this.workerHandler = new ConversationWorkerHandler();
     this.authService.userId.subscribe(userId => this.userId = userId);
   }
 
+  // Fetch Active conversation and handle Decryption
   fetchActiveConversation(): Observable<{ status: string; data: { chat: Conversation } }> {
     return from(GetAuthData.getAuthData()).pipe(
       switchMap(authData => {
-        if (!authData) throw new Error('Missing auth data');
         const activeChatId = this.activeConversationSource.value?.id;
-        return this.http
-        .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${activeChatId}`)
+        if (!authData || !activeChatId) throw new Error('Missing auth data');
+
+        return this.activeConversationHttpService.fetchActiveConversation(activeChatId)
         .pipe(
           switchMap(response =>
-            this.handleFetchedConversation(
+            this.messageEncryptionService.decryptConversation(
               [response.data.chat],
               { email: authData._email, privateKey: authData._privateKey },
             ).pipe(
@@ -108,58 +104,38 @@ export class ActiveConversationService {
               }))
             )
           ),
-          tap(response => {
-           const decryptedConversation = response.data.chat;
-           console.log(decryptedConversation, 'Hello updated conversation 😍😍😍😍')
-           this.setActiveConversation(decryptedConversation);
-          })
+          tap(response => this.setActiveConversation(response.data.chat))
         );
       })
     );
   }
 
-  private handleFetchedConversation(
-    conversations: Conversation[],
-    authData: { email: string; privateKey: string },
-  ): Observable<Conversation | null> {
-    if (conversations.length === 0) return of(null);
-
-    return this.workerHandler.decryptConversations(conversations, authData)
-    .pipe(
-        take(1),
-        map(decrypted => decrypted[0] || null),
-        catchError(() => of(null))
-      );
-  }
-    //
-
+  // Open Conversation (Handle Room status and Messages)
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
-    if (!partnerInfo || !partnerInfo.partner_id) return;
+    if (!partnerInfo?.partner_id) return;
 
-    if (partnerInfo.connection_status === 'online') {
-      this.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
-    } else {
-      this.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
-    }
-
+    this.updatePartnerConnectionStatus(partnerInfo.connection_status);
     if(conversation && conversation.delivered_messages_count !== 0) {
-      // To avoid call updated with sender join room
-      this.updateMessagesToReadWithPartnerJoinRoom(conversation.id).subscribe();
+      // Avoid call updated with sender join room
+      this.markMessagesAsRead(conversation.id).subscribe();
     }
+
     this.setPartnerInfo(partnerInfo);
     this.setActiveConversation(conversation);
     this.openChatModal();
   }
 
-  private sendEncryptedMessage(
-    encryptedMessage: EncryptedMessageData,
-    authData: AuthData
-  ) {
+  // Update Partner Connection Status
+  private updatePartnerConnectionStatus(status: string): void {
+    this.partnerRoomStatusSource
+    .next(status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE);
+  }
+
+  private createConversationPost( encryptedMessage: EncryptedMessageData,authData: AuthData) {
     const payload =
        builtEncryptedMessageData(encryptedMessage, authData, this.partnerInfoSource.value);
     if (!payload) throw new Error('Missing chat creation data');
-    return this.http
-      .post<{ status: string, data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats`,payload);
+    return this.activeConversationHttpService.createChat(payload) ;
   }
 
   // A function that create a new conversation
@@ -181,7 +157,7 @@ export class ActiveConversationService {
         return from(MessageEncryptDecrypt.encryptMessage(messagePayload))
         .pipe(
             switchMap((encryptedData) => {
-              return this.sendEncryptedMessage(encryptedData as EncryptedMessageData, authData);
+              return this.createConversationPost(encryptedData as EncryptedMessageData, authData);
             }),
             tap((response) => {
               const chat: Conversation = processConversationResponse(response, content);
@@ -206,7 +182,7 @@ export class ActiveConversationService {
           || !this.partnerRoomStatusSource.value
         ) throw new Error('Missing chat information');
 
-        const data: CreateMessageDto =
+        const messageData: CreateMessageDto =
           {
             chat_id: this.activeConversationSource?.value?.id,
             from_user_id:Number(authData.id),
@@ -214,31 +190,24 @@ export class ActiveConversationService {
             content: message,
             partner_connection_status: this.partnerRoomStatusSource.value,
           }
-          return this.sendSingleEncryptedMessage(data, authData);
+          return this.encryptAndSendMessage(messageData, authData);
       })
     );
   }
 
-  private sendSingleEncryptedMessage(
+  private encryptAndSendMessage(
     data: CreateMessageDto,
     authData: AuthData
   ): Observable<{ status: string; data: { message: Message } }> {
-    const messageData =
-      buildMessageEncryptionData(
-        data.content,
-        authData,
-        this.partnerInfoSource.value,
-        this.activeConversationSource?.value,
-      );
-    return from(MessageEncryptDecrypt.encryptMessage(messageData))
+    return this.messageEncryptionService.encryptMessage(
+      data.content,
+      authData,
+      this.partnerInfoSource?.value,
+      this.activeConversationSource?.value)
       .pipe(
         switchMap((encryptedMessage) => {
-          const requestData =
-            prepareEncryptedMessagePayload(data, encryptedMessage.encryptedMessageBase64);
-          return this.http.post<{
-              status: string,
-              data: { message: Message }
-            }>(`${this.ENV.apiUrl}/messages`, requestData).pipe(
+        return this.sendEncryptedMessage(data, encryptedMessage.encryptedMessageBase64)
+        .pipe(
             map((response) => {
               const sentMessage =
                 restoreOriginalMessageContent(response.data.message, data.content);
@@ -248,6 +217,14 @@ export class ActiveConversationService {
           );
         })
     );
+  }
+
+  private sendEncryptedMessage(
+    originalData: CreateMessageDto,
+    encryptedBase64: string,
+  ): Observable<{ status: string; data: { message: Message } }> {
+    const requestData = prepareEncryptedMessagePayload(originalData, encryptedBase64);
+    return this.activeConversationHttpService.createMessage(requestData);
   }
 
   private handlePostMessageSent(message: Message): void {
@@ -287,7 +264,8 @@ export class ActiveConversationService {
     this.socketMessageService.notifyPartnerOfComingMessage(notificationData);
   }
 
-  updateMessagesToReadWithPartnerJoinRoom(
+  // Mark Messages as Read
+  markMessagesAsRead(
     chatId: number,
   ): Observable<{ status: string, data: { messages: Message[] } }>{
     return from(GetAuthData.getAuthData()).pipe(
@@ -296,10 +274,7 @@ export class ActiveConversationService {
           throw new Error('Missing authentication data');
         }
         ///
-        return this.http.patch<{ status: string; data: { messages: Message[] } }>(
-          `${this.ENV.apiUrl}/chats/${chatId}/update-ms-to-read`,
-           {},
-        ).pipe(
+        return this.activeConversationHttpService.updateChatMessagesToRead(chatId).pipe(
           tap(res => {
             const updatedMessages = res.data.messages;
             if (!this.activeConversationSource.value) return

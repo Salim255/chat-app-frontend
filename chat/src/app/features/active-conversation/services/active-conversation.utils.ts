@@ -1,9 +1,14 @@
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { AuthData, ConversationDto, CreateConversationPost, EncryptedMessageData } from './active-conversation.service';
+import {
+  AuthData,
+  ConversationDto,
+  EncryptedMessageData,
+ } from './active-conversation.service';
 import { MessageEncryptionData } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
 import { Conversation } from '../../conversations/models/conversation.model';
 import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
 import { Message } from '../../messages/model/message.model';
+import { CreateConversationPost } from './active-conversation-http-service';
 
 export function buildMessageEncryptionData(
   content: string,

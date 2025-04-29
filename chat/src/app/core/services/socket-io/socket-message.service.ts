@@ -4,7 +4,6 @@ import { SocketCoreService } from './socket-core.service';
 import { JoinRomData } from './socket-room.service';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
-import { take } from 'rxjs';
 
 export type  MessageNotifierPayload = Omit<JoinRomData, 'chatId'> & {
   chatId: number;
@@ -42,14 +41,16 @@ export class SocketMessageService {
       }
       if (comingNotification.partnerStatus === 'online') {
         console.log('Hello from reciver in update conversations')
-        this.conversationService.fetchConversationChatById(comingNotification.chatId).subscribe(()=>{
+        this.conversationService.fetchConversationChatById(comingNotification.chatId)
+        .subscribe(()=>{
           ack();
           return
         });
 
       }
       if (comingNotification.partnerStatus === 'in-room') {
-       this.getActiveConversationService().fetchActiveConversation().subscribe((response)=>{
+       this.getActiveConversationService().fetchActiveConversation()
+       .subscribe((response)=>{
           console.log(response.data.chat);
           // update the conversation with updated conversation
           const updatedConversations =  this.conversationService.updateConversationsList(response.data.chat);

@@ -58,7 +58,7 @@ export class SocketRoomService {
       if (!data.chatId) return;
       console.log('Hello partner');
        // Get the active conversation
-      this.activeConversationService.updateMessagesToReadWithPartnerJoinRoom(data.chatId).subscribe();
+      this.activeConversationService.markMessagesAsRead(data.chatId).subscribe();
 
     });
   }
