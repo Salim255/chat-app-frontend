@@ -41,7 +41,8 @@ export class ConversationsPage implements OnDestroy {
     this.subscribeUpdatedUserDisconnection();
     this.subscribeToConversations();
 
-    this.subscribeToPartnerConnectionStatus()
+    this.subscribeToPartnerConnectionStatus();
+    console.log('Hello from will enter');
   }
 
   // Subscribe to the user ID from aAuthservice

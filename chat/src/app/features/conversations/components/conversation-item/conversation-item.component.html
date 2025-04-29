@@ -10,11 +10,9 @@
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>
     <ion-text> {{ lastMessage()?.content }} </ion-text>
   </ion-label>
-
-
     <ion-text
       class="messages_number"
-      *ngIf="conversation.messages[conversation.messages.length - 1].status !== 'read'"
+      *ngIf="conversation.delivered_messages_count > 0"
     >
       <span> {{ conversation.delivered_messages_count }} </span>
     </ion-text>

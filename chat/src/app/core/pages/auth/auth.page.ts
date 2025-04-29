@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 })
 export class AuthPage {
   constructor(private location: Location) {}
-  customBack() {
+  customBack(): void  {
     this.location.back();
   }
 }

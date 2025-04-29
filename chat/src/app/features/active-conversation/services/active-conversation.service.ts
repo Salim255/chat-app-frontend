@@ -97,11 +97,21 @@ export class ActiveConversationService {
         return this.http
         .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${activeChatId}`)
         .pipe(
-          tap(response => {
-           this.handleFetchedConversation(
+          switchMap(response =>
+            this.handleFetchedConversation(
               [response.data.chat],
               { email: authData._email, privateKey: authData._privateKey },
+            ).pipe(
+              map(decryptedConversation => ({
+                status: response.status,
+                data: { chat: decryptedConversation as Conversation }
+              }))
             )
+          ),
+          tap(response => {
+           const decryptedConversation = response.data.chat;
+           console.log(decryptedConversation, 'Hello updated conversation 😍😍😍😍')
+           this.setActiveConversation(decryptedConversation);
           })
         );
       })
@@ -111,18 +121,15 @@ export class ActiveConversationService {
   private handleFetchedConversation(
     conversations: Conversation[],
     authData: { email: string; privateKey: string },
-  ) {
-    if (conversations.length > 0) {
-      this.workerHandler.decryptConversations(conversations, authData)
-      .pipe(take(1),
-        catchError(() => {
-          return [];
-        }
-      ))
-      .subscribe(decrypted => {
-        this.setActiveConversation(decrypted[0])
-      });
-    }
+  ): Observable<Conversation | null> {
+    if (conversations.length === 0) return of(null);
+
+    return this.workerHandler.decryptConversations(conversations, authData)
+    .pipe(
+        take(1),
+        map(decrypted => decrypted[0] || null),
+        catchError(() => of(null))
+      );
   }
     //
 
@@ -134,7 +141,9 @@ export class ActiveConversationService {
     } else {
       this.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
     }
-    if(conversation) {
+
+    if(conversation && conversation.delivered_messages_count !== 0) {
+      // To avoid call updated with sender join room
       this.updateMessagesToReadWithPartnerJoinRoom(conversation.id).subscribe();
     }
     this.setPartnerInfo(partnerInfo);
@@ -292,19 +301,19 @@ export class ActiveConversationService {
            {},
         ).pipe(
           tap(res => {
-            console.log(res.data.messages, 'Hello')
+            const updatedMessages = res.data.messages;
             if (!this.activeConversationSource.value) return
             const conversationInfo: Conversation =
               {
                 ...this.activeConversationSource.value,
-                messages: res.data.messages,
+                messages: updatedMessages,
+                delivered_messages_count: 0,
               };
+
             this.handleUpdatedMessagesConversation(
               [conversationInfo],
-              {
-                email: authData._email,
-                privateKey: authData._privateKey,
-              });
+              { email: authData._email, privateKey: authData._privateKey}
+            );
           })
         );
     }));
@@ -336,11 +345,12 @@ export class ActiveConversationService {
           return msg;
         })
         // Update the active conversation
-        this.setActiveConversation(activeConversation)
+        this.setActiveConversation(activeConversation);
+
 
         // Set conversations with updated conversation
-        console.log(activeConversation, 'Hello conversation')
-        //this.conversationService.updateConversationsList(activeConversation);
+        activeConversation.delivered_messages_count = 0;
+        this.conversationService.restActiveConversationCounterWithJoinRoom(activeConversation);
       });
     }
   }

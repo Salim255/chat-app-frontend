@@ -118,9 +118,15 @@ export class ConversationService {
 
   }
 
+  restActiveConversationCounterWithJoinRoom(updatedConversation: Conversation): void{
+    const updatedConversations = this.updateConversationsList(updatedConversation);
+    this.setConversations([...updatedConversations]);
+  }
+
   updateConversationsList(
      updatedConversation: Conversation
     ): Conversation[] {
+      console.log(updatedConversation, 'Hello world');
       const conversations = this.conversationsSource.value;
     if (!conversations) {
       return updatedConversation.id ? [updatedConversation] : [];

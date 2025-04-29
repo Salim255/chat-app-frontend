@@ -27,7 +27,7 @@ export class AppLandingPage {
     this.navigateToAuthPage();
   }
 
-  navigateToAuthPage() {
+  navigateToAuthPage(): void {
     this.router.navigate(['/auth']);
   }
 }
