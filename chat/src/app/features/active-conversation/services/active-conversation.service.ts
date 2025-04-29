@@ -343,7 +343,6 @@ export class ActiveConversationService {
   }
 
   setPartnerInRoomStatus(status: PartnerConnectionStatus | null): void {
-    console.log(status, 'Hello from status')
     this.partnerRoomStatusSource.next(status);
   }
 

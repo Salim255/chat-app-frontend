@@ -6,6 +6,26 @@ import { environment } from 'src/environments/environment';
 import { Message } from "../../messages/model/message.model";
 import { CreateMessageDto } from "../pages/active-conversation/active-conversation.page";
 
+
+export type ConversationResponse = {
+  status: string;
+  data: { chat: Conversation };
+}
+
+export type CreateMessageResponse = {
+   status: string;
+  data: {
+    message: Message
+  };
+
+}
+
+export type UpdateChatMessagesResponse = {
+   status: string;
+  data: {
+       messages: Message[]
+  }
+}
 export type CreateConversationPost = {
   content: string;
   from_user_id: number;
@@ -21,30 +41,30 @@ export type CreateConversationPost = {
 
 export class ActiveConversationHttpService {
   private ENV = environment;
+  private readonly basePath = `${this.ENV.apiUrl}/chats`;
   constructor(private http:  HttpClient){}
 
-  createChat(payload: CreateConversationPost  ): Observable< {status: string, data: { chat: Conversation } }>{
+  createChat(payload: CreateConversationPost  ): Observable<ConversationResponse>{
     return this.http
-    .post<{ status: string, data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats`,payload);
+    .post<ConversationResponse>(`${this.basePath}`,payload);
   }
 
-  fetchActiveConversation(chatId: number): Observable<{ status: string; data: { chat: Conversation } }>{
+  fetchActiveConversation(chatId: number): Observable< ConversationResponse >{
     return this.http
-    .get<{ status: string; data: { chat: Conversation } }>(`${this.ENV.apiUrl}/chats/${chatId}`)
+    .get<ConversationResponse>(`${this.basePath}/${chatId}`)
   }
 
   updateChatMessagesToRead(
     chatId: number,
-  ): Observable<{ status: string, data: { messages: Message[] } }>{
+  ): Observable<UpdateChatMessagesResponse>{
     return this.http
-    .patch<{ status: string; data: { messages: Message[] } }>(
-      `${this.ENV.apiUrl}/chats/${chatId}/update-ms-to-read`,{});
+    .patch<UpdateChatMessagesResponse>(`${this.basePath}/${chatId}/update-ms-to-read`,{});
  }
 
  createMessage(
   requestData: CreateMessageDto,
-  ): Observable<{ status: string; data: { message: Message } }>{
+  ): Observable<CreateMessageResponse>{
     return this.http
-    .post<{ status: string; data: { message: Message } }>(`${this.ENV.apiUrl}/messages`, requestData)
+    .post<CreateMessageResponse>(`${this.ENV.apiUrl}/messages`, requestData)
  }
 }

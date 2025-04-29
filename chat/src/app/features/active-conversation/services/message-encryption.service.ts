@@ -1,4 +1,3 @@
-// src/app/services/message-encryption.service.ts
 import { Injectable } from '@angular/core';
 import { catchError, from, map, Observable, of } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
@@ -7,7 +6,6 @@ import { AuthData } from './active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { MessageEncryptDecrypt } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
 import { buildMessageEncryptionData } from './active-conversation.utils';
-
 
 @Injectable({
   providedIn: 'root'
