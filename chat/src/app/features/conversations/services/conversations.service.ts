@@ -88,7 +88,6 @@ export class ConversationService {
         }
       ))
       .subscribe(decrypted => {
-        console.log(decrypted, 'hello fetched conversation')
         this.setConversations([...decrypted])
       });
     } else {

@@ -12,6 +12,7 @@ import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
+import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 
 
 export type CreateMessageDto = {
@@ -59,6 +60,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private activeConversationService: ActiveConversationService,
     private socketRoomService: SocketRoomService,
+    private activeConversationPartnerService: ActiveConversationPartnerService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +96,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   private subscribeToPartner(): void {
     // Here we get the partner information
-    this.partnerInfoSubscription = this.activeConversationService.getPartnerInfo.subscribe(
+    this.partnerInfoSubscription = this.activeConversationPartnerService.getPartnerInfo.subscribe(
       (partnerInfo) => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;

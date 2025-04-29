@@ -8,7 +8,7 @@ import { MessageEncryptionData } from 'src/app/core/services/encryption/message-
 import { Conversation } from '../../conversations/models/conversation.model';
 import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
 import { Message } from '../../messages/model/message.model';
-import { CreateConversationPost } from './active-conversation-http-service';
+import { CreateConversationPost } from './active-conversation-http.service';
 
 export function buildMessageEncryptionData(
   content: string,

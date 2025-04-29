@@ -5,6 +5,7 @@ import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
 import { AuthService } from '../auth/auth.service';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
+import { ActiveConversationPartnerService } from 'src/app/features/active-conversation/services/active-conversation-partner.service';
 
 export enum PartnerConnectionStatus {
   ONLINE = 'online',
@@ -31,6 +32,7 @@ export class SocketRoomService {
     private readonly socketCoreService:  SocketCoreService,
     private activeConversationService: ActiveConversationService,
     private readonly authService: AuthService,
+    private activeConversationPartnerService: ActiveConversationPartnerService
 
   ) {
     this.authService.userId.subscribe(userId => this.userId = userId);
@@ -54,11 +56,10 @@ export class SocketRoomService {
     this.socket?.on(
       'partner-joined-room',
        (data: JoinRomData) => {
-      this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
+      this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
       if (!data.chatId) return;
-      console.log('Hello partner');
        // Get the active conversation
-      this.activeConversationService.markMessagesAsRead(data.chatId).subscribe();
+      this.activeConversationService.markMessagesAsRead(data.chatId).pipe(take(1)).subscribe();
 
     });
   }
@@ -66,32 +67,32 @@ export class SocketRoomService {
   private partnerLeftRoom():void{
     this.socket?.on('partner-left-room', (data: JoinRomData) => {
 
-      const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
       if(!currentPartnerId) {
-        this.activeConversationService.setPartnerInRoomStatus(null);
+        this.activeConversationPartnerService.setPartnerInRoomStatus(null);
         return
       };
       if(currentPartnerId === data.toUserId) {
-        this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
+        this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     });
   }
 
   private partnerGoesOffline():void {
     this.socket?.on('user-offline', (data: { userId: number, status: string }) => {
-      const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
       if (currentPartnerId === data.userId) {
-        this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
+        this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
       }
     });
   }
 
   private partnerGoesOnline():void {
     this.socket?.on('user-online', (data: {userId: number, status: string}) => {
-      const currentPartnerId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
       if (currentPartnerId === data.userId) {
-        this.activeConversationService.fetchActiveConversation().subscribe();
-        this.activeConversationService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
+        this.activeConversationService.fetchActiveConversation().pipe(take(1)).subscribe();
+        this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
       }
     })
   }
@@ -103,7 +104,7 @@ export class SocketRoomService {
 
  emitLeaveRoom():void {
     this.socket = this.socketCoreService.getSocket();
-    const fromUserId = this.activeConversationService.partnerInfoSource.value?.partner_id;
+    const fromUserId = this.activeConversationPartnerService.partnerInfo?.partner_id;
     let chatId!: number;
     this.activeConversationService.getActiveConversation
     .pipe(take(1)).subscribe((chat: Conversation | null) => {
@@ -112,7 +113,7 @@ export class SocketRoomService {
     });
 
     if (
-        !this.activeConversationService.partnerInfoSource?.value
+        !this.activeConversationPartnerService.partnerInfo
         || !fromUserId
         || !chatId
         || !this.userId

@@ -3,6 +3,8 @@ import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
+import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
+import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -17,17 +19,19 @@ export class headerComponent implements OnChanges {
   constructor(
     private activeConversationService: ActiveConversationService,
     private profileViewerService: ProfileViewerService,
-    private socketRoomService: SocketRoomService
+    private socketRoomService: SocketRoomService,
+    private activeConversationUIService: ActiveConversationUIService,
+    private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {}
 
   onBackArrow():void {
     this.socketRoomService.emitLeaveRoom();
-    this.activeConversationService.closeModal();
+    this.activeConversationUIService.closeModal();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    this.activeConversationService
+    this.activeConversationPartnerService
     .getPartnerConnectionStatus
     .subscribe((status) => {
       if (!this.partnerInfo) return;

@@ -8,7 +8,7 @@ import {
 import { Message } from '../../../messages/model/message.model';
 import { IonContent } from '@ionic/angular';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
-import { ActiveConversationService } from '../../services/active-conversation.service';
+import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 
 @Component({
   selector: 'app-chat-messages',
@@ -23,11 +23,11 @@ export class MessagesComponent implements OnChanges {
 
   date: Date | null = null;
 
-  constructor(private activeConversationService: ActiveConversationService) {}
+  constructor(private activeConversationUIService : ActiveConversationUIService ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(_changes: SimpleChanges): void {
-    this.activeConversationService.getTriggerMessagePageScroll.subscribe((event) => {
+    this.activeConversationUIService.getTriggerMessagePageScroll.subscribe(() => {
       this.scrollToBottom();
     });
   }

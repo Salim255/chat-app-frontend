@@ -6,14 +6,18 @@ import { environment } from 'src/environments/environment';
 import { Message } from "../../messages/model/message.model";
 import { CreateMessageDto } from "../pages/active-conversation/active-conversation.page";
 
+export enum RequestStatus {
+  Success = 'success',
+  Error = 'fail',
+}
 
 export type ConversationResponse = {
-  status: string;
+  status: RequestStatus;
   data: { chat: Conversation };
 }
 
 export type CreateMessageResponse = {
-   status: string;
+   status: RequestStatus
   data: {
     message: Message
   };
@@ -21,7 +25,7 @@ export type CreateMessageResponse = {
 }
 
 export type UpdateChatMessagesResponse = {
-   status: string;
+   status: RequestStatus;
   data: {
        messages: Message[]
   }
