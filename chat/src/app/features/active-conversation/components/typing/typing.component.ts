@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, signal, SimpleChanges } from '@angular/core';
-import { Subscription, take } from 'rxjs';
+import { Component, Input} from '@angular/core';
 import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({

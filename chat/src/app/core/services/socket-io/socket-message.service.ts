@@ -29,7 +29,6 @@ export class SocketMessageService {
   }
 
   notifyPartnerOfComingMessage(notificationData: MessageNotifierPayload): void {
-    console.log(notificationData, 'hello wrold', this.socket)
     this.socket = this.socketCoreService.getSocket();
     this.socket?.emit('coming-message', notificationData);
   }
@@ -41,7 +40,6 @@ export class SocketMessageService {
         return
       }
       if (comingNotification.partnerStatus === 'online') {
-        console.log('Hello from reciver in update conversations')
         this.conversationService.fetchConversationChatById(comingNotification.chatId)
         .pipe(take(1))
         .subscribe(()=>{

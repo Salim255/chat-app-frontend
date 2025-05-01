@@ -17,6 +17,8 @@ import { WorkerService } from 'src/app/core/workers/worker.service';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 import { ConversationWorkerHandler } from './conversation.worker-handler';
 import { sortConversations } from '../utils/conversations.utils';
+import { ConversationResponse, FetchedConversationsResponse } from '../interfaces/conversations.dto';
+import { ConversationsHttpService } from './conversation-http.service';
 
 export type WorkerMessage = {
   action: string;
@@ -27,40 +29,35 @@ export type WorkerMessage = {
 
 @Injectable({ providedIn: 'root' })
 export class ConversationService {
-  private ENV = environment;
-  private conversationsMap = new Map<string,Conversation>();
   private conversationsSource = new BehaviorSubject<Conversation[] | null>(null);
   private workerHandler!: ConversationWorkerHandler;
 
-  constructor(private http: HttpClient, private workerService: WorkerService) {
+  constructor(private conversationsHttpService: ConversationsHttpService) {
     this.workerHandler = new ConversationWorkerHandler;
   }
 
-  fetchConversations(): Observable<{ status: string; data: { chats: Conversation[] } }> {
-    console.log('Hello from conversations services😍😍😍')
+  fetchConversations(): Observable<FetchedConversationsResponse> {
     return from(GetAuthData.getAuthData()).pipe(
       switchMap(authData => {
         if (!authData) throw new Error('Missing auth data');
-        return this.http
-        .get<{ status: string; data: { chats: Conversation[] } }>(`${this.ENV.apiUrl}/chats`)
-        .pipe(
-          tap(response => {
-            this.handleFetchedConversations(
-              response.data.chats,
-              { email: authData._email, privateKey: authData._privateKey },
-            )
-          })
-        );
+        return this.conversationsHttpService.fetchConversations()
+          .pipe(
+            tap(response => {
+              this.handleFetchedConversations(
+                response.data.chats,
+                { email: authData._email, privateKey: authData._privateKey },
+              )
+            })
+          );
       })
     );
   }
 
-  fetchConversationChatById(chatId: number): Observable<{ status: string, data: { chat: Conversation }}>{
+  fetchConversationChatById(chatId: number): Observable<ConversationResponse>{
     return from(GetAuthData.getAuthData()).pipe(
       switchMap(authData => {
         if (!authData) throw new Error('Missing auth data');
-        return this.http
-        .get<{ status: string, data: { chat: Conversation }}>(`${this.ENV.apiUrl}/chats/${chatId}`)
+        return this.conversationsHttpService.fetchSingleConversation(chatId)
         .pipe(
           tap(response => {
             console.log('Hello from chat by id', response.data.chat);
@@ -125,7 +122,6 @@ export class ConversationService {
   updateConversationsList(
      updatedConversation: Conversation
     ): Conversation[] {
-      console.log(updatedConversation, 'Hello world');
       const conversations = this.conversationsSource.value;
     if (!conversations) {
       return updatedConversation.id ? [updatedConversation] : [];
@@ -145,7 +141,6 @@ export class ConversationService {
   }
 
   setConversations(chats: Conversation[] | null): void {
-    console.log("conversation",)
     if (!chats) {
       this.conversationsSource.next([])
     } else {

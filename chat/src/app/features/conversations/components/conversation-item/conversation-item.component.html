@@ -1,10 +1,11 @@
 <ion-item
-  role="button"
+  (keydown.enter)="onOpenChat()"
+  (keydown.space)="onOpenChat()"
   (click)="onOpenChat()"
   [style.--status-color-dimension]="partnerInfo?.connection_status === 'online' ? '.7rem' : '0'"
 >
   <ion-avatar slot="start">
-    <img alt="User image" [src]="partnerInfo?.avatar" />
+    <img alt="Partner" [src]="partnerInfo?.avatar" />
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>

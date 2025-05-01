@@ -15,9 +15,7 @@ import { ActiveConversationPartnerService } from '../../services/active-conversa
 export class headerComponent implements OnChanges {
   @Input() partnerInfo: Partner | null = null;
 
-
   constructor(
-    private activeConversationService: ActiveConversationService,
     private profileViewerService: ProfileViewerService,
     private socketRoomService: SocketRoomService,
     private activeConversationUIService: ActiveConversationUIService,

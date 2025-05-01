@@ -9,7 +9,7 @@ import { Message } from '../../../messages/model/message.model';
 import { IonContent } from '@ionic/angular';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
-import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
+import { TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-chat-messages',

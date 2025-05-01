@@ -1,3 +1,6 @@
+import { RequestStatus } from "../../active-conversation/services/active-conversation-http.service";
+import { Conversation } from "../models/conversation.model";
+
 export type UserInChatDto = {
   user_id: number;
   avatar: string | null;
@@ -19,3 +22,15 @@ export type MessageDto = {
   status: string;
   chat_id: number;
 }
+
+export type FetchedConversationsResponse = {
+  status: string;
+  data: {
+    chats: Conversation[]
+  }
+ }
+
+ export type ConversationResponse = {
+   status: RequestStatus;
+   data: { chat: Conversation };
+ }
