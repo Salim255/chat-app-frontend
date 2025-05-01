@@ -4,7 +4,7 @@ import { Component,
   signal,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
@@ -13,7 +13,7 @@ import { Conversation } from 'src/app/features/conversations/models/conversation
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
-
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -55,12 +55,13 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   userId: number | null = null;
   partnerInfo: Partner | null = null;
   messagesList = signal<Message[]>([]);
+  isTyping = signal<boolean>(false);
 
   constructor(
     private authService: AuthService,
     private activeConversationService: ActiveConversationService,
     private socketRoomService: SocketRoomService,
-    private activeConversationPartnerService: ActiveConversationPartnerService
+    private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {}
 
   ngOnInit(): void {

@@ -39,7 +39,6 @@ implements OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
-
   }
 
   private subscribeToPartnerConnectionStatus() {

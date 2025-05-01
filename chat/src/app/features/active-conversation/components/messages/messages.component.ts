@@ -9,6 +9,7 @@ import { Message } from '../../../messages/model/message.model';
 import { IonContent } from '@ionic/angular';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
+import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-chat-messages',
@@ -20,14 +21,15 @@ export class MessagesComponent implements OnChanges {
   @ViewChild(IonContent, { static: false }) messageContainer!: IonContent;
   @Input() messagesList: Message[] = [];
   @Input() userId: number | null = null;
-
   date: Date | null = null;
+  isTypingPayload: TypingStatus | null = null;
 
-  constructor(private activeConversationUIService : ActiveConversationUIService ) {}
+  constructor(private activeConversationUIService : ActiveConversationUIService) { }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(_changes: SimpleChanges): void {
-    this.activeConversationUIService.getTriggerMessagePageScroll.subscribe(() => {
+    this.activeConversationUIService
+    .getTriggerMessagePageScroll.subscribe(() => {
       this.scrollToBottom();
     });
   }
@@ -46,5 +48,9 @@ export class MessagesComponent implements OnChanges {
 
   getMessageStatus(message: string): string {
     return StringUtils.getMessageIcon(message);
+  }
+
+  getChatId(): number | null{
+    return this.messagesList[0]?.chat_id ?? null;
   }
 }

@@ -28,5 +28,5 @@
       </div>
     </ion-item>
   </ion-list>
-  <app-typing></app-typing>
+  <app-typing [chatId]="getChatId()"  *ngIf="getChatId()"></app-typing>
 </ion-content>

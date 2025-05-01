@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'socket.io-client';
 import { SocketCoreService } from './socket-core.service';
 import { SocketRoomService } from './socket-room.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 
-export type TypingData = {
+export type TypingPayload = {
+  chatId: number;
   roomId: string;
   toUserId: number;
   typingStatus: TypingStatus;
+
 };
 
 export enum TypingStatus  {
@@ -20,10 +23,13 @@ export enum TypingStatus  {
 })
 export class SocketTypingService {
   private socket: Socket | null = null;
-  private userTypingStatusSubject = new BehaviorSubject<boolean>(false);
+  private userTypingStatusSubject = new BehaviorSubject< TypingPayload | null>(null);
+  getUserTypingStatus$ = this.userTypingStatusSubject.asObservable();
+
   constructor(
     private socketRoomService: SocketRoomService,
     private socketCoreService: SocketCoreService,
+    private activeConversationService: ActiveConversationService,
    ) {
     this.initializeTypingListener();
   }
@@ -32,42 +38,54 @@ export class SocketTypingService {
     this.socket = this.socketCoreService.getSocket();
     this.notifyTyping();
   }
+
   userTyping(toUserId: number):void {
-    this.socket = this.socketCoreService.getSocket();
-    const roomString = this.socketRoomService.getRoom;
-    if (!roomString) return;
-    const typingDto: TypingData  =
-    { roomId: roomString, toUserId, typingStatus: TypingStatus.Typing }
-    this.socket?.emit('user-typing', typingDto);
+    const typingPayload: TypingPayload | null =
+    this.buildTypingNotification(toUserId, TypingStatus.Typing);
+    if (!typingPayload) return;
+    this.socket?.emit('user-typing', typingPayload);
   }
 
   userStopTyping( toUserId: number): void {
-    this.socket = this.socketCoreService.getSocket();
-    const roomString = this.socketRoomService.getRoom;
-    if (!roomString) return;
-    const stopTypingDto: TypingData  =
-    { roomId: roomString, toUserId, typingStatus: TypingStatus.StopTyping }
-    console.log('Hello from stop  typing', roomString)
-    this.socket?.emit('user-stop-typing', stopTypingDto)
+   const typingPayload: TypingPayload | null =
+     this.buildTypingNotification(toUserId, TypingStatus.StopTyping);
+   if (!typingPayload) return;
+   this.socket?.emit('user-stop-typing', typingPayload)
   }
 
   notifyTyping(): void {
-    this.socket?.on('notify-user-typing', (data: TypingData) => {
+    this.socket?.on('notify-user-typing', (data: TypingPayload) => {
+      console.log('Hello user tyoing', data)
       if (data.typingStatus) {
-        this.userTypingStatusSubject.next(data.typingStatus === TypingStatus.Typing);
-        console.log('Hello from data typing', data,this.userTypingStatusSubject.value )
+        this.userTypingStatusSubject.next(data);
       }
     });
 
-    this.socket?.on('notify-user-stop-typing', (data: TypingData) => {
+    this.socket?.on('notify-user-stop-typing', (data: TypingPayload) => {
       if (data.typingStatus) {
-        console.log('Hello from data stop typing', data)
-        this.userTypingStatusSubject.next(data.typingStatus === TypingStatus.StopTyping);
+        this.userTypingStatusSubject
+        .next(data);
       }
     });
   }
 
-  get getUserTypingStatus():Observable<boolean> {
-    return this.userTypingStatusSubject.asObservable();
+  buildTypingNotification(toUserId: number, typingStatus: TypingStatus): TypingPayload | null  {
+    this.socket = this.socketCoreService.getSocket();
+    const roomString = this.socketRoomService.getRoom;
+    const chatId = this.getActiveConversationId();
+    if (!roomString || !chatId) return null;
+
+    const typingPayload: TypingPayload =
+    {
+      chatId: chatId,
+      roomId: roomString,
+      toUserId,
+      typingStatus: typingStatus
+    }
+    return typingPayload;
+  }
+  getActiveConversationId(): number | null{
+    const chatId = this.activeConversationService.getActiveConversationValue?.id;
+    return chatId ?? null;
   }
 }

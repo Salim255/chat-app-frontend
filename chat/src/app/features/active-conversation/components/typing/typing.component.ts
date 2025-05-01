@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
+import { Component, Input, OnChanges, OnDestroy, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Subscription, take } from 'rxjs';
+import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-typing',
@@ -8,25 +8,20 @@ import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typi
   styleUrls: ['./typing.component.scss'],
   standalone: false,
 })
-export class TypingComponent implements OnInit, OnDestroy {
-  isTyping: boolean = false;
-  private typingSubscription!: Subscription;
-
-  constructor( private socketTypingService: SocketTypingService) {}
-
-  ngOnInit(): void {
+export class TypingComponent {
+  @Input() chatId!: number | null;
+   isTyping: boolean = false;
+  constructor(private socketTypingService: SocketTypingService ) {
     this.subscribeToTyping();
   }
 
   private subscribeToTyping():void {
-    this.typingSubscription = this.socketTypingService.getUserTypingStatus.subscribe(
-      (typingStatus) => {
-        this.isTyping = typingStatus;
-      }
-    );
-  }
-
-  ngOnDestroy():void {
-    this.typingSubscription?.unsubscribe();
-  }
+    this.socketTypingService
+   .getUserTypingStatus$.subscribe(
+     (typingStatus) => {
+      if(!typingStatus || (this.chatId !== typingStatus?.chatId)) return;
+      this.isTyping = (typingStatus.typingStatus === TypingStatus.Typing);
+    }
+   );
+ }
 }

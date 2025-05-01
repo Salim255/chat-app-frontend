@@ -347,6 +347,9 @@ export class ActiveConversationService {
   get getActiveConversation(): Observable<Conversation | null> {
     return this.activeConversationSource.asObservable();
   }
+  get getActiveConversationValue(): Conversation | null{
+      return this.activeConversationSource.value;
+  }
 
   resetState(): void {
     this.activeConversationPartnerService.setPartnerInfo(null);

@@ -36,6 +36,4 @@ export class ActiveConversationPartnerService {
   get getPartnerConnectionStatus(): Observable<PartnerConnectionStatus | null> {
     return this.partnerRoomStatusSource.asObservable();
   }
-
-
 }

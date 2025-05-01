@@ -23,20 +23,28 @@ export class FormInputComponent {
   @Input() toUserId: number | null = null;
 
   private isTypingDebounced = signal<boolean>(false);
-
   private typingTimeout = 2000;
   private typingTimer: ReturnType<typeof setTimeout> | null = null; // Timer for "stop typing"
 
   message: string = '';
 
-  constructor(
-    private activeConversationService : ActiveConversationService ,
-    private socketTypingService : SocketTypingService,
-   ) {}
+  constructor( private socketTypingService : SocketTypingService) {}
 
+  onSubmit(f: NgForm): void {
+    this.stopTyping();
+    if (!f.valid || this.message.trim().length === 0) {
+      return;
+    }
+
+    this.submitObs.emit(this.message);
+    f.reset();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   onTextChange(text: any):void {
     // Debouncing: Emit "typing" only once until the user stops typing
     if (!this.isTypingDebounced() && this.toUserId) {
+      console.log('From start typing', text)
       this.socketTypingService.userTyping(this.toUserId);
       this.isTypingDebounced.set(true);
     }
@@ -64,13 +72,5 @@ export class FormInputComponent {
     }
   }
 
-  onSubmit(f: NgForm): void {
-    this.stopTyping();
-    if (!f.valid || this.message.trim().length === 0) {
-      return;
-    }
 
-    this.submitObs.emit(this.message);
-    f.reset();
-  }
 }
