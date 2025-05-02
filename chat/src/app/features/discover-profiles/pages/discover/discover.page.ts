@@ -64,7 +64,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.showTabs.set(true);
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
-    this.subscribeToDiscoverProfileToggle();
+
   }
 
   ionViewWillEnter(): void {
@@ -72,6 +72,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.discoverService.fetchPotentialMatches().subscribe();
     this.accountService.fetchAccount().subscribe();
     this.subscribeToInteraction();
+    this.subscribeToDiscoverProfileToggle();
   }
 
   get topProfile(): Discover | null {

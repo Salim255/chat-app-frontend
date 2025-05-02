@@ -88,8 +88,8 @@ export class DiscoverService {
       return builtPartner;
   }
 
-  onDiscoverProfileToggle(actionType: DisableProfileSwipe): void {
-    this.discoverProfileToggleSource.next(actionType);
+  onDiscoverProfileToggle(actionPayload: DisableProfileSwipe): void {
+    this.discoverProfileToggleSource.next(actionPayload);
   }
 
   get getDiscoverProfileToggleStatus(): Observable<DisableProfileSwipe | null>  {

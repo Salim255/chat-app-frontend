@@ -1,6 +1,6 @@
 <div
   appCustomSwiper
-  (profilePreview)="onProfilePreview()"
+  (profilePreview)="onProfileView()"
   (slideLeft)="slideLeft()"
   (slideRight)="slideRight()"
   [ngClass]="setSwiperContainerHeight(profileToView)"
@@ -18,7 +18,7 @@
         ></div>
       </div>
       <img
-        alt="Profile Image"
+        alt="Profile avatar"
         loading="lazy"
         *ngIf="setUserImages(profile).length > 0"
         [ngClass]="setProfileImagesHeight(profileToView)"

@@ -93,7 +93,7 @@ export class HammerSwipeDirective {
     this.interactionBtnService.setActionDirection(null);
   }
 
-  @HostListener('click', ['$event'])
+/*   @HostListener('click', ['$event'])
   onClickProfile(event: MouseEvent): void {
     const clickedElement = event.target as HTMLElement;
     const swiperContainer = clickedElement?.querySelector('swiper-container');
@@ -114,7 +114,7 @@ export class HammerSwipeDirective {
       this.profilePreview.emit(); // Trigger profile preview
       return; // Exit to avoid sliding action
     }
-  }
+  } */
 
   private resetProfilePosition(): void {
     if (this.resetProfileTimer) {
