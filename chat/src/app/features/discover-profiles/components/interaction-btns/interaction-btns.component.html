@@ -3,7 +3,6 @@
     <ion-col class="interaction-container">
       <ng-container *ngFor="let btn of buttons; let index = index">
         <div
-          role="button"
           (click)="btn.onClick()"
           class="interaction-container interaction-container__btn"
           [ngClass]="isHidden(btn.animationType)"

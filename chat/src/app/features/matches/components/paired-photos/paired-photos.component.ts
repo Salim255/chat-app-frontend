@@ -1,8 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { Subscription } from 'rxjs';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-paired-photos',
@@ -10,25 +9,20 @@ import { StringUtils } from 'src/app/shared/utils/string-utils';
   styleUrls: ['./paired-photos.component.scss'],
   standalone: false,
 })
-export class PairedPhotosComponent implements OnChanges, OnDestroy {
-  @Input() matchedProfile!: Partner;
-
+export class PairedPhotosComponent implements OnChanges {
+  @Input() matchedAvatar: string | null = null;
   hostUserPhoto: string | null = null;
-  private hostProfileSubscription!: Subscription;
-
   constructor(private accountService: AccountService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.subscribeToHostProfile();
   }
 
   private subscribeToHostProfile() {
-    this.hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe((avatar) => {
+   this.accountService.getHostUserPhoto.pipe(take(1)).subscribe((avatar) => {
       this.hostUserPhoto = StringUtils.getAvatarUrl(avatar);
+      if (!this.matchedAvatar) this.matchedAvatar = StringUtils.getAvatarUrl(this.matchedAvatar)
     });
-  }
-
-  ngOnDestroy(): void {
-    this.hostProfileSubscription?.unsubscribe();
   }
 }

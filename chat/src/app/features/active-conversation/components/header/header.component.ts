@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
@@ -13,7 +12,7 @@ import { ActiveConversationPartnerService } from '../../services/active-conversa
   standalone: false,
 })
 export class headerComponent implements OnChanges {
-  @Input() partnerInfo: Partner | null = null;
+  @Input() partnerInfo!: Partner ;
 
   constructor(
     private profileViewerService: ProfileViewerService,
@@ -22,13 +21,17 @@ export class headerComponent implements OnChanges {
     private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ngOnChanges(changes: SimpleChanges): void {
+    this.subscribeToPartnerConnectionStatus();
+  }
+
   onBackArrow():void {
     this.socketRoomService.emitLeaveRoom();
     this.activeConversationUIService.closeModal();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ngOnChanges(changes: SimpleChanges): void {
+  private subscribeToPartnerConnectionStatus() {
     this.activeConversationPartnerService
     .getPartnerConnectionStatus
     .subscribe((status) => {

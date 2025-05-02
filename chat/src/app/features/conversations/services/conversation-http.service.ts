@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 import { ConversationResponse, FetchedConversationsResponse } from "../interfaces/conversations.dto";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
+
 @Injectable({'providedIn': 'root'})
 export class ConversationsHttpService {
   private ENV =  environment;

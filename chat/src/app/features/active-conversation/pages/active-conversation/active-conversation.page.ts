@@ -13,7 +13,6 @@ import { Conversation } from 'src/app/features/conversations/models/conversation
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
-import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -53,7 +52,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   activeChat: Conversation | null = null;
   userId: number | null = null;
-  partnerInfo: Partner | null = null;
+  partnerInfo!: Partner;
   messagesList = signal<Message[]>([]);
   isTyping = signal<boolean>(false);
 

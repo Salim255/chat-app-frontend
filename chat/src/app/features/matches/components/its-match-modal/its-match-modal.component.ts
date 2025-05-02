@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ItsMatchModalService } from '../../services/its-match-modal.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { MatchesService } from '../../services/matches.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 
 @Component({
@@ -26,12 +25,13 @@ export class ItsMatchModalComponent implements OnInit {
     }
   }
 
-  onSendMessage() {
-    this.activeConversationService.openConversation(this.matchedProfile, null);
+  onSendMessage(): void {
+    this.activeConversationService
+    .openConversation(this.matchedProfile, null);
     this.itsMatchModalService.closeModal();
   }
 
-  onKeepSwiping() {
+  onKeepSwiping(): void {
     this.itsMatchModalService.closeModal();
   }
 }

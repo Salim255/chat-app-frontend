@@ -14,8 +14,6 @@ export class ItsMatchModalService {
   constructor(private modalController: ModalController) {}
 
   setProfileToDisplay(profile: Member): void {
-    console.log(profile, 'From its match service');
-
     this.matchedProfileSource.next(profile);
   }
   get getProfileToDisplay(): Observable<Member | null> {

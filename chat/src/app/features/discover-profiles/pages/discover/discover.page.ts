@@ -123,11 +123,11 @@ export class DiscoverPage implements OnInit, OnDestroy {
     // For interaction animation
     this.setSwipeAnimationStyle(SwipeDirection.SwipeRight);
     const profile = this.topProfile ?? null;
+    if (!profile) return;
     if (profile) {
       if(!profile.match_status) this.discoverService.initiateMatchRequest(profile).subscribe();
-      if(profile?.match_status === 1) this.discoverService.acceptMatchRequest(profile).subscribe();
+      if(profile.match_status === 1) this.discoverService.acceptMatchRequest(profile).subscribe();
     }
-
     setTimeout(() => {
       this.removeTopProfile();
       this.animationClass.set(''); // Reset the animation class
@@ -145,11 +145,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
         return members;
       });
     }
-    console.log('Hello from here',  this.membersList())
     if (this.membersList().length === 0) {
       this.discoverService.fetchPotentialMatches().subscribe();
     }
-    console.log('Hello from here',  this.membersList())
   }
 
   private subscribeToDiscoverProfileToggle(): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SwipeDirection } from '../pages/discover/discover.page';
 
 @Injectable({
@@ -9,11 +9,11 @@ export class InteractionBtnService {
   private actionDirectionSource = new BehaviorSubject<SwipeDirection | null>(null);
   constructor() {}
 
-  setActionDirection(action: SwipeDirection | null) {
+  setActionDirection(action: SwipeDirection | null): void {
     this.actionDirectionSource.next(action);
   }
 
-  get getActionDirection() {
+  get getActionDirection(): Observable<SwipeDirection | null> {
     return this.actionDirectionSource.asObservable();
   }
 }

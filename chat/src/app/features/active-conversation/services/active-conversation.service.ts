@@ -6,7 +6,6 @@ import {
   map,
   Observable,
   of,
-  pipe,
   switchMap,
   take,
   tap,
@@ -78,7 +77,7 @@ export class ActiveConversationService {
     private messageEncryptionService: MessageEncryptionService,
     private activeConversationHttpService: ActiveConversationHttpService,
     private activeConversationNotificationService: ActiveConversationNotificationService,
-    private activeConversationPartnerService: ActiveConversationPartnerService
+    private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {
     this.workerHandler = new ConversationWorkerHandler();
     this.authService.userId.subscribe(userId => this.userId = userId);
@@ -89,7 +88,7 @@ export class ActiveConversationService {
     if (!partnerInfo?.partner_id) return;
 
     this.updatePartnerConnectionStatus(partnerInfo.connection_status);
-    if(conversation && conversation.delivered_messages_count !== 0) {
+    if(conversation && conversation.delivered_messages_count > 0) {
       // Avoid call updated with sender join room
       this.markMessagesAsRead(conversation.id).pipe(take(1)).subscribe();
     }

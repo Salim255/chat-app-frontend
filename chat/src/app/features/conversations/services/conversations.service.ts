@@ -10,10 +10,8 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Conversation } from '../models/conversation.model';
 import { Message } from '../../messages/model/message.model';
-import { WorkerService } from 'src/app/core/workers/worker.service';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 import { ConversationWorkerHandler } from './conversation.worker-handler';
 import { sortConversations } from '../utils/conversations.utils';

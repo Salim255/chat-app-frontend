@@ -1,11 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ItsMatchModalService } from '../../matches/services/its-match-modal.service';
 import { Discover } from '../model/discover.model';
+import {
+  AcceptedMatchResponse,
+  DiscoverHttpService,
+  InitiateMatchResponse,
+  PotentialMatchesResponse,
+} from './discover-http.service';
 import { Match } from '../../matches/models/match.model';
-import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 export type DisableProfileSwipe = {
   disableSwipe: boolean;
@@ -32,106 +37,87 @@ export type InitiatedMatchDto =  {
   providedIn: 'root',
 })
 export class DiscoverService {
-  private ENV = environment;
   private potentialMatches = new BehaviorSubject<Discover[]>([]);
   private displayedProfileSource = new BehaviorSubject<Discover | null>(null);
   private profileToRemoveSource = new BehaviorSubject<number | null>(null);
-
-  private likeProfileSource = new BehaviorSubject<InteractionType | null>(null);
   private discoverProfileToggleSource = new BehaviorSubject<DisableProfileSwipe | null>(null);
-
   private profileInteractionTypeSource = new BehaviorSubject<InteractionType | null>(null);
 
   constructor(
-    private http: HttpClient,
-    private itsMatchModalService: ItsMatchModalService
+    private itsMatchModalService: ItsMatchModalService,
+    private  discoverHttpService:  DiscoverHttpService,
   ) {}
 
-  fetchPotentialMatches():Observable<{ status: string, data: { users: Discover[] }}> {
-    return this.http.get<{ status: string, data: { users: Discover[] }}>(`${this.ENV.apiUrl}/users/discover`).pipe(
+  initiateMatchRequest(likedProfile: Discover): Observable<InitiateMatchResponse>{
+    return this.discoverHttpService.postMatch( likedProfile.id)
+     .pipe(tap(() => this.profileToRemoveSource.next(likedProfile.id)));
+  }
+
+  fetchPotentialMatches(): Observable<PotentialMatchesResponse> {
+    return this.discoverHttpService.getPotentialMatches().pipe(
       tap((response) => {
         this.potentialMatches.next(response.data.users);
       })
     );
   }
 
-  acceptMatchRequest(likedProfile: Discover): Observable<{ status: string, data: { match: Match } }>{
-    return this.http
-    .patch<{ status: string, data: { match: Match } }>(
-      `${this.ENV.apiUrl}/matches/${likedProfile.match_id}/accept`, {}
-    ).pipe(
+  acceptMatchRequest(likedProfile: Discover): Observable<AcceptedMatchResponse>{
+    return this.discoverHttpService.patchMatch(likedProfile.match_id).pipe(
       tap((response) => {
-        console.log(response.data, "hello")
         this.profileToRemoveSource.next(likedProfile.id);
-      if (response?.data) {
-          //const matchedData: Match = ProfileUtils.setProfileData(likedProfile);
-         // this.itsMatchModalService.openItsMatchModal(matchedData);
+        if (response?.data.match) {
+            this.itsMatchModalService.openItsMatchModal(this.buildPartner(response?.data.match));
         }
       })
   );
   }
 
-  initiateMatchRequest(
-    likedProfile: Discover,
-  ): Observable<{ status: string; data: { match: InitiatedMatchDto } }>
-  {
-    return this.http
-      .post<{ status: string; data: { match: InitiatedMatchDto } }>(`${this.ENV.apiUrl}/matches/initiate-match`, {  to_user_id: likedProfile.id })
-      .pipe(
-        tap((response) => {
-          console.log(response)
-          this.profileToRemoveSource.next(likedProfile.id);
-       /*    if (response?.data && response.data.status === 2) {
-            const matchedData: Partner = ProfileUtils.setProfileData(likedProfile);
-            this.itsMatchModalService.openItsMatchModal(matchedData);
-          } */
-        })
-    );
+  private buildPartner(match: Match): Partner {
+      const builtPartner: Partner  =
+      {
+        partner_id: match.partner_id,
+        created_at: match.match_created_at,
+        updated_at: match.match_updated_at,
+        first_name: match.first_name,
+        last_name: match.last_name,
+        avatar: match.avatar ?? StringUtils.getAvatarUrl(match.avatar),
+        connection_status: match.connection_status,
+        public_key: match.public_key,
+        images: []
+      }
+      return builtPartner;
   }
 
-  onDiscoverProfileToggle(actionType: DisableProfileSwipe) {
+  onDiscoverProfileToggle(actionType: DisableProfileSwipe): void {
     this.discoverProfileToggleSource.next(actionType);
   }
 
-  get getDiscoverProfileToggleStatus() {
+  get getDiscoverProfileToggleStatus(): Observable<DisableProfileSwipe | null>  {
     return this.discoverProfileToggleSource.asObservable();
   }
 
-  get getProfileInteractionType() {
+  get getProfileInteractionType(): Observable<InteractionType | null> {
     return this.profileInteractionTypeSource.asObservable();
   }
 
-  setProfileInteractionType(interActionType: InteractionType | null) {
+  setProfileInteractionType(interActionType: InteractionType | null): void {
     this.profileInteractionTypeSource.next(interActionType);
   }
 
-  setDisplayedProfile(data: Discover) {
+  setDisplayedProfile(data: Discover): void {
     this.displayedProfileSource.next(data);
   }
-
-  fireLikeDislikeProfile(action: InteractionType | null) {
-    this.likeProfileSource.next(action);
-  }
-
-  get getLikeProfileState() {
-    return this.likeProfileSource.asObservable();
-  }
-
 
   // We get the Id of the current profile
   get getProfileToRemoveId(): Observable<number | null> {
     return this.profileToRemoveSource.asObservable();
   }
 
-  get getDisLikeProfileState() {
-    return this.likeProfileSource.asObservable();
-  }
-
-  get getDisplayedProfile() {
+  get getDisplayedProfile(): Observable<Discover | null> {
     return this.displayedProfileSource.asObservable();
   }
 
-  get getPotentialMatchesArray() {
+  get getPotentialMatchesArray(): Observable<Discover[]> {
     return this.potentialMatches.asObservable();
   }
 }

@@ -1,25 +1,30 @@
-import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { SwipeDirection } from '../../pages/discover/discover.page';
-import { Subscription } from 'rxjs';
+import { take } from 'rxjs';
 import { InteractionBtnService } from '../../services/interaction-btn.service';
 import { InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
+
+interface ButtonContent {
+  name: string;
+  icon: string;
+  animationType: SwipeDirection | null;
+  isActiveIcon: string;
+  onClick: () => void;
+}
+
 @Component({
   selector: 'app-interaction-btns',
   templateUrl: './interaction-btns.component.html',
   styleUrls: ['./interaction-btns.component.scss'],
   standalone: false,
 })
-export class InteractionBtnsComponent implements OnInit, OnDestroy {
+export class InteractionBtnsComponent implements OnInit {
   @Input() profile!: Member;
-
-  foreignersListStatus: any;
-  hidingTapStatus: any = 'show';
   path = '/assets/icon/';
-  buttons: any[] = [];
+  buttons: ButtonContent[] = [];
   animationType = signal<SwipeDirection | null>(null);
-  private interactiveBtnSource!: Subscription;
 
   constructor(
     private discoverService: DiscoverService,
@@ -32,8 +37,8 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
       {
         name: 'undo',
         icon: `${this.path}undo.svg`,
-        animationType: '',
-        background: '',
+        animationType: null,
+        isActiveIcon: '',
         onClick: () => {},
       },
       {
@@ -49,7 +54,7 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
         name: 'stars',
         icon: `${this.path}star.svg`,
         isActiveIcon: `${this.path}close.svg`,
-        animationType: '',
+        animationType: null,
         onClick: () => {},
       },
       {
@@ -65,41 +70,34 @@ export class InteractionBtnsComponent implements OnInit, OnDestroy {
         name: 'boost',
         icon: `${this.path}flash.svg`,
         isActiveIcon: `${this.path}close.svg`,
-        animationType: '',
+        animationType: null,
         onClick: () => {},
       },
     ];
   }
 
-  isActiveIcon(buttonName: SwipeDirection): boolean {
+  isActiveIcon(buttonName: SwipeDirection | null): boolean {
     // Check if the button is active (highlighted)
     return this.animationType() === buttonName;
   }
 
-  isHidden(buttonName: SwipeDirection): string {
+  isHidden(buttonName: SwipeDirection | null): string {
     if (!this.animationType()) {
       return 'visible'; // Default: all buttons visible
     }
     return this.animationType() === buttonName ? 'visible highlight' : 'hidden';
   }
 
-  onSkip() {
+  onSkip(): void {
     this.discoverService.setProfileInteractionType(InteractionType.DISLIKE);
   }
 
-  onAddFriend() {
+  onAddFriend(): void {
     this.discoverService.setProfileInteractionType(InteractionType.LIKE);
   }
 
   private subscribeToInteractionBtn() {
-    this.interactiveBtnSource = this.interactionBtnService.getActionDirection.subscribe(
-      (action) => {
-        this.animationType.set(action);
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.interactiveBtnSource?.unsubscribe();
+    this.interactionBtnService.getActionDirection.pipe(take(1))
+    .subscribe((action) => this.animationType.set(action) );
   }
 }
