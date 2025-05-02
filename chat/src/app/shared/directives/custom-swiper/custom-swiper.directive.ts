@@ -27,7 +27,6 @@ export class CustomSwiperDirective {
 
     // Check if click is in the last quarter of the card
     if (clientY > lastQuarterY) {
-      console.log('Hello2, Salim');
       this.profilePreview.emit(); // Trigger profile preview
       return; // Exit to avoid sliding action
     }

@@ -47,6 +47,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 
   constructor(private discoverService: DiscoverService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.currentIndex = 0;
     this.profileViewerIsActive = this.profileToView?.disableSwipe ?? false;
