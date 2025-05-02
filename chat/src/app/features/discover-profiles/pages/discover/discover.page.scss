@@ -1,11 +1,9 @@
-@use "../../../../../theme/queries" as *;
+@use '../../../../../theme/queries' as *;
 ion-content {
-  --background: var(--ion-background-color-2);
   --background: var(--ion-background-color-2);
 
   height: 100vh;
   position: relative;
-  //
 
   .profile-viewer {
     position: absolute;
@@ -14,10 +12,7 @@ ion-content {
     width: 100%;
     height: 100%;
     ///
-    ///
-
   }
-
 
   .place-holder {
     position: absolute;
@@ -29,21 +24,21 @@ ion-content {
 }
 
 ion-footer {
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
   position: absolute;
   bottom: 0;
+
   ion-grid {
     ion-row:first-child {
-      margin-bottom: .5rem;
+      margin-bottom: 0.5rem;
     }
     ion-row:last-child {
-     ion-col {
-      height: 4rem;
-     }
+      ion-col {
+        height: 4rem;
+      }
     }
   }
 }
-
 
 .interaction-btns {
   position: fixed;

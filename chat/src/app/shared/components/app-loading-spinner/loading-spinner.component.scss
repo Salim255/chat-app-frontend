@@ -1,0 +1,14 @@
+ion-content {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  --background: var(--ion-color-grey-0);
+  ion-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 4rem;
+    height: 4rem;
+    transform: translate(-50%, -50%);
+  }
+}

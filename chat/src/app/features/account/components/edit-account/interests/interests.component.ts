@@ -1,11 +1,9 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-account-interests',
-    templateUrl: './interests.component.html',
-    styleUrls: ['./interests.component.scss'],
-    standalone: false
+  selector: 'app-account-interests',
+  templateUrl: './interests.component.html',
+  styleUrls: ['./interests.component.scss'],
+  standalone: false,
 })
-export class InterestsComponent {
-
-}
+export class InterestsComponent {}

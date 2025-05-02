@@ -11,13 +11,7 @@ import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    TabsPageRoutingModule,
-    SharedModule
-  ],
-  declarations: [TabsPage]
+  imports: [CommonModule, FormsModule, IonicModule, TabsPageRoutingModule, SharedModule],
+  declarations: [TabsPage],
 })
 export class TabsPageModule {}

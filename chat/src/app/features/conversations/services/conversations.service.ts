@@ -1,38 +1,191 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { BehaviorSubject, tap } from "rxjs";
-import { Conversation } from "../../active-conversation/models/active-conversation.model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  BehaviorSubject,
+  catchError,
+  from,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Conversation } from '../models/conversation.model';
+import { Message } from '../../messages/model/message.model';
+import { WorkerService } from 'src/app/core/workers/worker.service';
+import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
+import { ConversationWorkerHandler } from './conversation.worker-handler';
+import { sortConversations } from '../utils/conversations.utils';
+import { ConversationResponse, FetchedConversationsResponse } from '../interfaces/conversations.dto';
+import { ConversationsHttpService } from './conversation-http.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+export type WorkerMessage = {
+  action: string;
+  email: string;
+  privateKey: string;
+  conversations: Conversation[];
+};
 
+@Injectable({ providedIn: 'root' })
 export class ConversationService {
-  private ENV = environment;
-  private conversationsSource = new BehaviorSubject< Conversation [] | null> (null);
+  private conversationsSource = new BehaviorSubject<Conversation[] | null>(null);
+  private workerHandler!: ConversationWorkerHandler;
 
-  constructor(private http: HttpClient) {}
-
-  setConversations (chats: any) {
-      this.conversationsSource.next(chats);
+  constructor(private conversationsHttpService: ConversationsHttpService) {
+    this.workerHandler = new ConversationWorkerHandler;
   }
 
-  fetchConversations () {
-    return this.http.get<any>(`${this.ENV.apiUrl}/chats`)
-    .pipe(tap ( (response) =>
-      {
-      if (response && response.data) {
-        console.log(response.data)
-        this.setConversations(response.data);
+  fetchConversations(): Observable<FetchedConversationsResponse> {
+    return from(GetAuthData.getAuthData()).pipe(
+      switchMap(authData => {
+        if (!authData) throw new Error('Missing auth data');
+        return this.conversationsHttpService.fetchConversations()
+          .pipe(
+            tap(response => {
+              this.handleFetchedConversations(
+                response.data.chats,
+                { email: authData._email, privateKey: authData._privateKey },
+              )
+            })
+          );
+      })
+    );
+  }
+
+  fetchConversationChatById(chatId: number): Observable<ConversationResponse>{
+    return from(GetAuthData.getAuthData()).pipe(
+      switchMap(authData => {
+        if (!authData) throw new Error('Missing auth data');
+        return this.conversationsHttpService.fetchSingleConversation(chatId)
+        .pipe(
+          tap(response => {
+            console.log('Hello from chat by id', response.data.chat);
+            this.handleFetchedSingleConversation(
+              [response.data.chat],
+              { email: authData._email, privateKey: authData._privateKey },
+            )
+          })
+        );
+      })
+    );
+  }
+
+  private handleFetchedConversations(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    if (conversations.length > 0) {
+      this.workerHandler.decryptConversations(conversations, authData)
+      .pipe(
+        take(1),
+        catchError((err) => {
+          console.error(err)
+          return of([]);
         }
+      ))
+      .subscribe(decrypted => {
+        this.setConversations([...decrypted])
+      });
+    } else {
+      this.setConversations(null)
+    }
+  }
+
+  private handleFetchedSingleConversation(
+    conversations: Conversation[],
+    authData: { email: string; privateKey: string },
+  ) {
+    if (!conversations.length) return
+
+    this.workerHandler.decryptConversations(conversations, authData)
+    .pipe(
+      take(1),
+      catchError((err) => {
+        console.error(err)
+        return of([]);
       }
-      )
-    )
+    ))
+    .subscribe(decryptedConversations => {
+      const updatedConversation = decryptedConversations[0]
+      const updatedConversations = this.updateConversationsList(updatedConversation);
+     this.setConversations([...updatedConversations]);
+    });
+
   }
 
-  get getConversations () {
-    return this.conversationsSource.asObservable()
+  restActiveConversationCounterWithJoinRoom(updatedConversation: Conversation): void{
+    const updatedConversations = this.updateConversationsList(updatedConversation);
+    this.setConversations([...updatedConversations]);
   }
 
+  updateConversationsList(
+     updatedConversation: Conversation
+    ): Conversation[] {
+      const conversations = this.conversationsSource.value;
+    if (!conversations) {
+      return updatedConversation.id ? [updatedConversation] : [];
+    }
+
+    return conversations.map(chat => {
+      if (chat.id === updatedConversation.id) {
+        return {
+          ...chat,
+          messages: updatedConversation.messages,
+          delivered_messages_count: updatedConversation.delivered_messages_count,
+        };
+      } else {
+        return chat;
+      }
+    });
+  }
+
+  setConversations(chats: Conversation[] | null): void {
+    if (!chats) {
+      this.conversationsSource.next([])
+    } else {
+      this.conversationsSource.next(sortConversations(chats));
+    }
+  }
+
+  get getConversations(): Observable<Conversation[] | null> {
+    return this.conversationsSource.asObservable();
+  }
+
+  addNewlyCreatedConversation(conversation: Conversation): void {
+    if (!conversation) return;
+    GetAuthData.getAuthData().then(authData => {
+      if (!authData) throw new Error('Missing auth data');
+      this.workerHandler
+        .decryptConversations(
+          [ conversation ],
+          { email: authData._email, privateKey: authData._privateKey})
+        .subscribe(decrypted => {
+          if (!decrypted.length) return;
+          const decryptedConversation: Conversation = decrypted[0];
+          const current = this.conversationsSource.value || [];
+          this.setConversations(sortConversations([...current, decryptedConversation]));
+
+        });
+    });
+  }
+
+  updateConversationWithNewMessage(message: Message): void {
+    if (!message) return;
+
+    const updatedConversations = this.conversationsSource?.value?.map(conversation => {
+      if (conversation.id === message.chat_id) { // check if it's the correct conversation
+        return {
+          ...conversation,
+          messages: [...(conversation.messages || []), message]
+        };
+      }
+      return conversation; // leave other conversations unchanged
+    });
+
+    if (updatedConversations) {
+      this.setConversations(sortConversations(updatedConversations));
+    }
+
+  }
 }

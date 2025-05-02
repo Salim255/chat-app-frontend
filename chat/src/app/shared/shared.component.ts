@@ -1,5 +1,3 @@
 export class SharedComponent {
-  constructor () {
-
-  }
+  constructor() {}
 }

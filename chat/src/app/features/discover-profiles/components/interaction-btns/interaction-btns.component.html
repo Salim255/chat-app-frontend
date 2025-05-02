@@ -1,23 +1,19 @@
-<ion-grid  >
-
+<ion-grid>
   <ion-row>
-    <ion-col class="btns" >
-      <div class="btns__undo" >
-        <app-action-btn [btnType]="'undo'" ></app-action-btn>
-      </div>
-     <div class="btns__dislike">
-        <app-action-btn [btnType]="'dislike'" (click)=" onSkip()"></app-action-btn>
-      </div>
-      <div class="bts__like">
-        <app-action-btn [btnType]="'stars'"></app-action-btn>
-      </div>
-      <div class="btns__stars">
-        <app-action-btn (click)="onAddFriend()" [btnType]="'like'"></app-action-btn>
-      </div>
-      <div class="btns__boost" >
-        <app-action-btn [btnType]="'boost'"></app-action-btn>
-      </div>
+    <ion-col class="interaction-container">
+      <ng-container *ngFor="let btn of buttons; let index = index">
+        <div
+          role="button"
+          (click)="btn.onClick()"
+          class="interaction-container interaction-container__btn"
+          [ngClass]="isHidden(btn.animationType)"
+        >
+          <ion-icon
+            [src]="isActiveIcon(btn.animationType) ? btn.isActiveIcon : btn.icon"
+          ></ion-icon>
+          <div class="background-anim" [ngClass]="'background-anim__' + index"></div>
+        </div>
+      </ng-container>
     </ion-col>
   </ion-row>
-
 </ion-grid>

@@ -1,19 +1,124 @@
-ion-grid {
-  padding: 0;
-  ion-row {
-    padding: 0;
-    ion-col {
-      padding: 0;
-    }
-    .btns {
-      display: flex;
-      justify-content: center;
-      gap: .8rem;
-       div {
-        align-self: center;
-       }
+.interaction-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  &__btn {
+    background: var(--ion-color-grey-0);
+    border-radius: 50%;
+    position: relative;
+    align-self: center;
+    transition: all 0.2s ease;
+    ion-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
     }
   }
 
+  &__btn:nth-child(even) {
+    height: 3.5rem;
+    width: 3.5rem;
+    ion-icon {
+      font-size: 2px;
+      transform: translate(-50%, -50%) scale(20);
+    }
+  }
+  &__btn:nth-child(odd) {
+    height: 2.5rem;
+    width: 2.5rem;
+    ion-icon {
+      font-size: 1px;
+      transform: translate(-50%, -50%) scale(20);
+    }
+  }
+
+  &__btn:first-child {
+    ion-icon {
+      transform: translate(-50%, -50%) scale(20) scaleX(-1);
+    }
+  }
+
+  .hidden {
+    opacity: 0;
+    transform: scale(0.7);
+    pointer-events: none;
+    animation: fadeOutScale 0.2s ease-out;
+  }
+
+  .visible {
+    opacity: 1;
+    transform: scale(1);
+    animation: fadeInScale 0.2s ease-in;
+    /* background-anim starts with 0 height and width */
+    .background-anim {
+      position: absolute;
+      height: 0;
+      width: 0;
+
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition:
+        height 0.3s ease,
+        width 0.3s ease; /* Transition effect for height and width */
+      &__0 {
+        background: red; /* Change this to your desired color */
+      }
+      &__1 {
+        background: linear-gradient(#ea0b25, #f85c6e);
+      }
+      &__2 {
+        background: rgb(225, 255, 0); /* Change this to your desired color */
+      }
+      &__3 {
+        background: linear-gradient(#098652, #c5f02a);
+      }
+      &__4 {
+        background: rgb(255, 0, 166); /* Change this to your desired color */
+      }
+    }
+  }
+
+  .highlight {
+    /* When highlight is active, the background animation expands */
+    .background-anim {
+      height: 100%; /* Start with a small height and width */
+      width: 100%;
+      transition:
+        height 0.3s ease,
+        width 0.3s ease; /* Ensure it transitions smoothly */
+    }
+  }
 }
 
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}

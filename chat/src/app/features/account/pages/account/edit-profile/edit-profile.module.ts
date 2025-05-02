@@ -23,12 +23,22 @@ import { ControlComponent } from 'src/app/features/account/components/edit-accou
 import { CardMediaComponent } from 'src/app/features/account/components/edit-account/media/card-media/card.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    EditProfilePageRoutingModule
+  imports: [CommonModule, FormsModule, IonicModule, EditProfilePageRoutingModule],
+  declarations: [
+    EditProfilePage,
+    AccountMediaComponent,
+    AboutMeComponent,
+    InterestsComponent,
+    RelationGoalsComponent,
+    SchoolComponent,
+    RelationTypeComponent,
+    LanguagesComponent,
+    LifeStyleComponent,
+    LivingComponent,
+    GenderComponent,
+    OrientationComponent,
+    ControlComponent,
+    CardMediaComponent,
   ],
-  declarations: [EditProfilePage, AccountMediaComponent,AboutMeComponent, InterestsComponent, RelationGoalsComponent, SchoolComponent,RelationTypeComponent, LanguagesComponent, LifeStyleComponent, LivingComponent, GenderComponent, OrientationComponent, ControlComponent, CardMediaComponent ]
 })
 export class EditProfilePageModule {}

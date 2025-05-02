@@ -6,30 +6,26 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'tabs/discover',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'landing-page',
-    loadChildren: () => import('./core/pages/landing/app-landing.module').then( m => m.AppLandingPageModule)
+    loadChildren: () =>
+      import('./core/pages/landing/app-landing.module').then((m) => m.AppLandingPageModule),
   },
   {
     path: 'auth',
-    loadChildren: () => import('./core/pages/auth/auth.module').then(m => m.AuthPageModule)
+    loadChildren: () => import('./core/pages/auth/auth.module').then((m) => m.AuthPageModule),
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () => import('./tabs/tabs.module').then((m) => m.TabsPageModule),
+    canLoad: [AuthGuard],
   },
-
-
-
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

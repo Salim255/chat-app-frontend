@@ -7,20 +7,19 @@ ion-grid {
     }
   }
   ion-row:nth-child(even) {
-      ion-col {
-        display: flex;
-        ion-text {
-          margin: auto;
-          text-align: left;
-          width: 90%;
-        }
+    ion-col {
+      display: flex;
+      ion-text {
+        margin: auto;
+        text-align: left;
+        width: 90%;
       }
+    }
   }
   ion-row:last-child {
-    padding-top: .5rem;
-      ion-col {
-        text-align: center;
-      }
+    padding-top: 0.5rem;
+    ion-col {
+      text-align: center;
+    }
   }
-
 }

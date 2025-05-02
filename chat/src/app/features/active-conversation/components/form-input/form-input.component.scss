@@ -1,40 +1,29 @@
-ion-item {
-  --padding-start:4px;
-  --padding-end: 4px;
-  --inner-padding-start: 0;
-  --inner-padding-end: 0;
+form {
+  border-radius: 0.5rem;
+  background: var(--ion-color-grey-3);
+  display: flex;
+  width: 100%;
+  padding: 0.3rem 0.5rem;
   --background: var(--ion-background-color-2);
-
-  form{
-    border-radius: 1rem;
-    background: var(--ion-color-grey-3);
-    display:  flex;
-    width: 100%;
-    padding: .5rem;
-    ion-textarea {
-      text-align: left;
-      align-self: center;
-      position: relative;
-      --padding-start: 0px !important;
-      --padding-end: 0px !important;
-      --padding-top: 0px !important;
-      --padding-bottom: 0px !important;
-    }
-
-
-    ::ng-deep ion-textarea textarea.native-textarea::placeholder {
-       position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translate(0%, -50%);
-    }
-
-    ion-button{
-      text-transform: uppercase;
-      height: 1rem;
-      align-self: center;
-
-    }
-
+  ion-textarea {
+    text-align: left;
+    align-self: center;
+    position: relative;
+    --padding-start: 0px !important;
+    --padding-end: 0px !important;
+    --padding-top: 0px !important;
+    --padding-bottom: 0px !important;
   }
- }
+
+  ion-button {
+    text-transform: uppercase;
+    height: 1rem;
+    align-self: center;
+
+    --padding-start: 0px;
+    --padding-end: 0px;
+    --padding-top: 0px;
+    --padding-bottom: 0px;
+    --margin: 0;
+  }
+}

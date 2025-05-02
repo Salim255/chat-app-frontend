@@ -1,28 +1,23 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { ActiveConversationPage } from "./active-conversation.page";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ActiveConversationPage } from './active-conversation.page';
 
 const routes: Routes = [
   {
     path: '',
     component: ActiveConversationPage,
-    children:
-    [
+    children: [
       {
         path: '',
         redirectTo: 'messages',
-        pathMatch: 'full'
-      }
-    ]
-  }
-]
-
+        pathMatch: 'full',
+      },
+    ],
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-
-export class ActiveConversationPageRoutingModule {
-
-}
+export class ActiveConversationPageRoutingModule {}

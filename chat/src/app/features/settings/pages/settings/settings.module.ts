@@ -17,8 +17,8 @@ import { AccountFeatureModule } from 'src/app/features/account/account-feature.m
     IonicModule,
     SettingsPageRoutingModule,
     SharedModule,
-    AccountFeatureModule
-],
-  declarations: [SettingsPage]
+    AccountFeatureModule,
+  ],
+  declarations: [SettingsPage],
 })
 export class SettingsPageModule {}

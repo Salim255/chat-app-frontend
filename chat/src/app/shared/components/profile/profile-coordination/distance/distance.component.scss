@@ -4,9 +4,10 @@ ion-item {
   --inner-padding-end: 0;
   ion-icon {
     font-size: 1.1rem;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
-  ion-text , ion-icon {
+  ion-text,
+  ion-icon {
     color: var(--ion-color-grey-0);
   }
 }

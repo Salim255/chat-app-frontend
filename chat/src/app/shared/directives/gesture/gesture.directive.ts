@@ -1,8 +1,8 @@
 import { Directive, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 export type gestureName = 'tap' | 'doubleTap' | 'press' | 'swipe';
-export type directionNames = 'up' | 'down' | 'left' | 'right' ;
-export type reportInterval = 'start' | 'live' | 'end' ;
+export type directionNames = 'up' | 'down' | 'left' | 'right';
+export type reportInterval = 'start' | 'live' | 'end';
 
 export interface Gesture {
   name: gestureName;
@@ -14,8 +14,8 @@ export interface Gesture {
 }
 
 @Directive({
-    selector: '[appGesture]',
-    standalone: false
+  selector: '[appGesture]',
+  standalone: false,
 })
 export class GestureDirective implements OnInit {
   @Input() gestureOpts!: Gesture[];
@@ -30,20 +30,20 @@ export class GestureDirective implements OnInit {
   tapGesture: Gesture = {
     name: 'tap',
     enabled: false,
-    interval: 250
+    interval: 250,
   };
 
   doubleTapGesture: Gesture = {
     name: 'doubleTap',
     enabled: false,
-    interval: 250
+    interval: 250,
   };
 
   pressGesture: Gesture = {
     name: 'press',
     enabled: false,
     interval: 251,
-  }
+  };
 
   swipeGesture: Gesture = {
     name: 'swipe',
@@ -51,11 +51,11 @@ export class GestureDirective implements OnInit {
     interval: 250,
     threshold: 15,
     reportInterval: undefined,
-    direction: []
-  }
-  constructor() { }
+    direction: [],
+  };
+  constructor() {}
 
   ngOnInit(): void {
-      console.log("HELLO");
+    console.log('HELLO');
   }
 }

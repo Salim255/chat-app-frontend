@@ -1,54 +1,48 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges} from "@angular/core";
-import { TabsService } from "src/app/tabs/services/tabs/tabs.service";
-import { ConnectionStatus, SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
-import { Partner } from "src/app/shared/interfaces/partner.interface";
-import { Subscription } from "rxjs";
-import { ActiveConversationService } from "../../services/active-conversation.service";
-import { ProfileViewerService } from "src/app/features/profile-viewer/services/profile-viewer.service";
-import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
-@Component({
-    selector: 'app-active-conversation-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    standalone: false
-})
-export class headerComponent implements OnChanges, OnDestroy {
-  @Input() partnerInfo: Partner | null = null;
-  private partnerInfoSubscription!: Subscription;
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { ActiveConversationService } from '../../services/active-conversation.service';
+import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
+import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
+import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 
-  partnerConnectionStatus: ConnectionStatus = "offline";
+@Component({
+  selector: 'app-active-conversation-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  standalone: false,
+})
+export class headerComponent implements OnChanges {
+  @Input() partnerInfo: Partner | null = null;
 
   constructor(
-    private tabsService: TabsService,
-    private socketIoService: SocketIoService,
-    private activeConversationService:  ActiveConversationService,
     private profileViewerService: ProfileViewerService,
-    private socketMessageHandler: SocketMessageHandler
-    ) { }
+    private socketRoomService: SocketRoomService,
+    private activeConversationUIService: ActiveConversationUIService,
+    private activeConversationPartnerService: ActiveConversationPartnerService,
+  ) {}
 
-  onBackArrow () {
-    this.socketIoService.userLeftChatRoomEmitter();
-    this.activeConversationService.closeModal();
+  onBackArrow():void {
+    this.socketRoomService.emitLeaveRoom();
+    this.activeConversationUIService.closeModal();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    this.socketMessageHandler.getPartnerConnectionStatus.subscribe(updatedUser => {
-       if (updatedUser && this.partnerInfo) {
-         this.partnerInfo.connection_status = updatedUser.connection_status;
-       }
-    })
+    this.activeConversationPartnerService
+    .getPartnerConnectionStatus
+    .subscribe((status) => {
+      if (!this.partnerInfo) return;
+
+      if (status === PartnerConnectionStatus.OFFLINE ) this.partnerInfo.connection_status = 'offline';
+      else this.partnerInfo.connection_status = 'online';
+    });
   }
 
-  // It's function that responsible of viewing details of the clicked profile
-  //
-  onDisplayProfile(profile: Partner | null) {
+  onDisplayProfile(profile: Partner | null): void {
     if (!profile || !profile.partner_id) return;
-    const { partner_id, ...rest} = profile;
-    this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest })
-    this.profileViewerService.openProfileViewerModal()
-  }
-
-  ngOnDestroy(): void {
-    this.partnerInfoSubscription?.unsubscribe();
+    const { partner_id, ...rest } = profile;
+    this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest });
+    this.profileViewerService.openProfileViewerModal();
   }
 }

@@ -1,24 +1,33 @@
-<ion-header [translucent]="true" collapse="fade" >
+<ion-header [translucent]="true" collapse="fade">
   <ion-toolbar>
-
     <ion-buttons slot="start">
-      <ion-icon size="large" role="button" name="chevron-back-outline"  (click)="onBackArrow()"></ion-icon>
+      <ion-icon
+        size="large"
+        role="button"
+        name="chevron-back-outline"
+        (click)="onBackArrow()"
+      ></ion-icon>
     </ion-buttons>
 
-   <ion-item lines="none" [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
+    <ion-item
+      lines="none"
+      [style.--status-color-dimension]="partnerInfo?.connection_status === 'online' ? '.7rem' : '0'"
+    >
       <div class="profile-info">
         <div class="profile-info__avatar-container">
-          <img role="button" (click)="onDisplayProfile(partnerInfo)" alt="Silhouette of a person's head" [src]="partnerInfo?.avatar" />
+          <img
+            role="button"
+            (click)="onDisplayProfile(partnerInfo)"
+            alt="Silhouette of a person's head"
+            [src]="partnerInfo?.avatar"
+          />
         </div>
-        <ion-text > {{partnerInfo?.first_name}} </ion-text>
+        <ion-text> {{ partnerInfo?.first_name }} </ion-text>
       </div>
-   </ion-item>
+    </ion-item>
 
-    <ion-buttons slot="end" >
+    <ion-buttons slot="end">
       <ion-icon aria-label="Favorite" size="large" name="ellipsis-horizontal-outline"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
-
 </ion-header>
-
-

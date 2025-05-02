@@ -1,37 +1,38 @@
 ion-grid {
   ion-row:first-child {
     ion-col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .account-avatar {
-          position: relative;
-          border-radius: 50%;
-          background: linear-gradient(to right,
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .account-avatar {
+        position: relative;
+        border-radius: 50%;
+        background: linear-gradient(
+          to right,
           var(--ion-color-primary) 0%,
           rgb(1, 71, 51) 50%,
           rgb(222, 218, 218) 50%
-          );
-          height: 7.5rem;
-          width: 7.5rem;
-          img {
-            height: 7rem;
-            width: 7rem;
-            object-fit: cover;
-            object-position: top;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            padding: .2rem;
-            background:  var(--ion-color-grey-0);
-            border-radius: 50%;
-          }
+        );
+        height: 7.5rem;
+        width: 7.5rem;
+        img {
+          height: 7rem;
+          width: 7rem;
+          object-fit: cover;
+          object-position: top;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          padding: 0.2rem;
+          background: var(--ion-color-grey-0);
+          border-radius: 50%;
         }
+      }
     }
   }
 
-  ion-row:nth-of-type(even){
+  ion-row:nth-of-type(even) {
     text-align: center;
     ion-col {
       ion-text {
@@ -40,84 +41,82 @@ ion-grid {
         text-transform: capitalize;
       }
 
-      .location-container{
+      .location-container {
         display: flex;
         justify-content: center;
-        margin-top: .2rem;
+        margin-top: 0.2rem;
         ion-icon {
-          font-size: .8rem;
+          font-size: 0.8rem;
           margin-right: 4px;
         }
         span {
-          font-size: .5rem;
+          font-size: 0.5rem;
           font-weight: bold;
-          align-self:flex-end;
+          align-self: flex-end;
         }
       }
     }
   }
 
   ion-row:last-child {
-    ion-text{
+    ion-text {
       font-weight: bold;
     }
     ion-col {
-        text-align: center;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      div {
+        margin: 0 1rem;
+        font-size: 0.5rem;
         display: flex;
-        justify-content: center;
-        div {
-          margin:  0 1rem;
-          font-size: .5rem;
-          display: flex;
-          flex-direction: column;
-          ion-button {
-            font-size: .5rem;
-            height: 1.5rem;
-            width: 1.5rem;
-            align-self: center;
+        flex-direction: column;
+        ion-button {
+          font-size: 0.5rem;
+          height: 1.5rem;
+          width: 1.5rem;
+          align-self: center;
+        }
+      }
 
+      // Edit profile btn
+      div:nth-of-type(even) {
+        height: 3.5rem;
+        ion-button {
+          margin-top: auto;
+        }
+      }
+
+      // Settings
+      div:first-child {
+        ion-text {
+          margin-bottom: auto;
+        }
+      }
+
+      // Change photo
+      div:last-child {
+        ion-button {
+          position: relative;
+          .add-icon {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-color: var(--ion-color-grey-0);
+            padding: 2px;
+            border-radius: 50%;
+          }
+          input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
           }
         }
-
-        // Edit profile btn
-        div:nth-of-type(even) {
-          height: 3.5rem;
-          ion-button {
-            margin-top: auto;
-          }
+        ion-text {
+          margin-bottom: auto;
         }
-
-        // Settings
-        div:first-child {
-          ion-text {
-            margin-bottom: auto;
-          }
-        }
-
-        // Change photo
-        div:last-child {
-          ion-button {
-            position: relative;
-            .add-icon {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              background-color: var( --ion-color-grey-0);
-              padding: 2px;
-              border-radius: 50%;
-            }
-            input {
-              opacity: 0;
-              position: absolute;
-              width: 100%;
-              height: 100%;
-             }
-          }
-          ion-text {
-            margin-bottom: auto;
-          }
-        }
-
+      }
     }
   }
 }

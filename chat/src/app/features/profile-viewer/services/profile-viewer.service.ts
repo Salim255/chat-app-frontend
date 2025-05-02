@@ -1,19 +1,18 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { ModalController } from "@ionic/angular";
-import { ProfileViewerPage } from "src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page";
-import { Member } from "src/app/shared/interfaces/member.interface";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { ModalController } from '@ionic/angular';
+import { ProfileViewerPage } from 'src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page';
+import { Member } from 'src/app/shared/interfaces/member.interface';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ProfileViewerService {
-  private  profileToDisplaySource = new BehaviorSubject < Member | null>(null) ;
+  private profileToDisplaySource = new BehaviorSubject<Member | null>(null);
 
-  constructor(private modalController: ModalController){}
+  constructor(private modalController: ModalController) {}
 
-  setProfileToDisplay (profile: Member) {
-    console.log(profile, "Hello from profile from profile service");
+  setProfileToDisplay(profile: Member) {
+    console.log(profile, 'Hello from profile from profile service');
     this.profileToDisplaySource.next(profile);
   }
 
@@ -23,8 +22,8 @@ export class ProfileViewerService {
 
   async openProfileViewerModal() {
     const modal = await this.modalController.create({
-      component: ProfileViewerPage
-    })
+      component: ProfileViewerPage,
+    });
 
     await modal.present();
   }

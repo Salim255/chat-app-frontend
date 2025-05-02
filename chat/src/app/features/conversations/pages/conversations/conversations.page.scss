@@ -1,8 +1,8 @@
-ion-list {
-  background:  var( --ion-color-grey-1);
-}
-
 ion-content {
+  ion-list {
+    background: var(--ion-color-grey-1);
+  }
+
   position: relative;
   height: 100vh;
   .place-holder {
@@ -13,6 +13,3 @@ ion-content {
     width: 90%;
   }
 }
-
-
-

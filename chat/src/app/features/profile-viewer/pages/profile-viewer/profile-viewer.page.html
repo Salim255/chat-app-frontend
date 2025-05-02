@@ -1,10 +1,13 @@
- <app-header [pageName]="'profile-viewer'"  ></app-header>
+<app-header [pageName]="'profile-viewer'"></app-header>
 
 <ion-content>
   <ion-grid [fixed]="true">
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="6" offsetXl="3"  >
-       <app-profile-slider [profile]="profileToDisplay" [pageName]="'profile-viewer'"></app-profile-slider>
+      <ion-col sizeLg="8" offsetLg="2" sizeXl="6" offsetXl="3">
+        <app-profile-slider
+          [profile]="profileToDisplay"
+          [pageName]="'profile-viewer'"
+        ></app-profile-slider>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -14,23 +17,23 @@
     </ion-row>
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-       <app-profile-looking-for></app-profile-looking-for>
+        <app-profile-looking-for></app-profile-looking-for>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-         <app-profile-essentials></app-profile-essentials>
+        <app-profile-essentials></app-profile-essentials>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-         <app-block-profile [profile]="profileToDisplay"></app-block-profile>
+        <app-block-profile [profile]="profileToDisplay"></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-          <app-report-profile  [profile]="profileToDisplay"></app-report-profile>
+        <app-report-profile [profile]="profileToDisplay"></app-report-profile>
       </ion-col>
     </ion-row>
     <ion-row>

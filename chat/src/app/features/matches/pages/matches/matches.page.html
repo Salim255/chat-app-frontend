@@ -1,28 +1,31 @@
 <app-header [pageName]="'matches'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid *ngIf="!isEmpty">
-    <ion-row>
-      <ion-col>
-          <ion-text >New matches</ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row >
-      <ion-col >
-        <ion-list  >
-            <ion-item lines="none" *ngFor="let match of matchesArray">
-              <app-match-item [partnerInfo]="match" ></app-match-item>
+  <ion-grid>
+    <ng-container *ngIf="matchesArray().length > 0; else default">
+      <ion-row>
+        <ion-col>
+          <ion-text>New matches</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item lines="none" *ngFor="let item of matchesArray();  trackBy: trackById">
+              <app-match-item [partnerInfo]="item"></app-match-item>
             </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ng-container>
 
-  <ion-grid *ngIf="isEmpty">
-    <ion-row>
-      <ion-col>
-         <app-place-holder ></app-place-holder>
-      </ion-col>
-    </ion-row>
+    <!-- Place holder section -->
+    <ng-template #default>
+      <ion-row class="place-holder">
+        <ion-col>
+          <app-place-holder></app-place-holder>
+        </ion-col>
+      </ion-row>
+    </ng-template>
   </ion-grid>
 </ion-content>

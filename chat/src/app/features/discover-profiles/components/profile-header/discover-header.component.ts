@@ -1,12 +1,9 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-discover-header',
   templateUrl: './discover-header.component.html',
   styleUrls: ['./discover-header.component.scss'],
-  standalone: false
+  standalone: false,
 })
-
-export class DiscoverHeaderComponent {
-
-}
+export class DiscoverHeaderComponent {}

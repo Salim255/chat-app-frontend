@@ -11,22 +11,18 @@ form {
   }
   ion-grid {
     ion-row:last-child {
-        padding-top: 1rem;
-        ion-col {
-          ion-button {
-            border-radius: 2rem;
-            font-weight: bold;
-            color: var(--ion-color-grey-1);
-            font-size: 1rem;
-            padding: .4rem 0;
-            width: 100%;
-            background: linear-gradient(
-                to right bottom,
-                rgba(#2ed4f1, 1),
-                rgba(#0c0c0c, 1)
-                );
-          }
+      padding-top: 1rem;
+      ion-col {
+        ion-button {
+          border-radius: 2rem;
+          font-weight: bold;
+          color: var(--ion-color-grey-1);
+          font-size: 1rem;
+          padding: 0.4rem 0;
+          width: 100%;
+          background: linear-gradient(to right bottom, rgba(#2ed4f1, 1), rgba(#0c0c0c, 1));
         }
+      }
     }
   }
 }

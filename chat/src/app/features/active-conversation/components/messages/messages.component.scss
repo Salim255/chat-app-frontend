@@ -1,57 +1,51 @@
-  ion-list{
+ion-list {
+  --ion-background-color: var(--ion-color-grey-1);
 
-    --ion-background-color:  var( --ion-color-grey-1);
+  ion-item {
+    margin: 0.3rem 0;
+    background: transparent;
 
-    ion-item {
-      margin: .3rem 0;
-      background: transparent;
+    --ion-background-color: var(--ion-color-grey-1);
+    .message {
+      max-width: 80%;
+      display: inline;
+      padding: 0 0.6rem;
+      padding-top: 0.4rem;
 
-      --ion-background-color:  var( --ion-color-grey-1);
-      .message {
-        max-width: 80%;
-        display: inline;
-        padding: 0 .6rem ;
-        padding-top: .4rem;
+      border-radius: 0.6rem;
+      position: relative;
 
-        border-radius: .6rem;
-        position: relative;
+      &__sender {
+        background: var(--ion-sender-bg-color);
+        color: var(--ion-color-grey-7);
+      }
+      &__receiver {
+        background: var(--ion-color-grey-3);
+        color: var(--ion-color-grey-7);
+      }
 
-        &__sender{
-          background: var(--ion-sender-bg-color);
-          color: var( --ion-color-grey-7);
+      .message-status {
+        display: flex;
+        width: 100%;
+        gap: 2px;
+        p {
+          margin-left: auto;
+          color: #757575;
+          font-size: 11px;
         }
-        &__receiver {
-          background: var(--ion-color-grey-3);
-          color: var( --ion-color-grey-7);
+        ion-icon {
+          align-self: center;
+          width: 1rem;
         }
-
-        .message-status {
-          display: flex;
-          width: 100%;
-          gap: 2px;
-          p {
-           margin-left: auto;
-           color: #757575;
-           font-size: 11px;
-          }
-          ion-icon {
-            align-self: center;
-            width: 1rem;
-          }
-          &__read {
-            color: #1f91e0;
-
-          }
-          &__delivered {
-
-          }
-          &__sent {
-            color: #9ca1a3;
-          }
+        &__read {
+          color: #1f91e0;
+        }
+        &__delivered {
+        }
+        &__sent {
+          color: #9ca1a3;
         }
       }
     }
-
   }
-
-
+}

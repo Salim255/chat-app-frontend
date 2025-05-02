@@ -1,71 +1,56 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AuthService } from "src/app/core/services/auth/auth.service";
-import { Message } from "../../interfaces/message.interface";
-import { ActiveConversationService } from "../../services/active-conversation.service";
-import { Subscription } from "rxjs";
-import { IonContent } from "@ionic/angular";
-import { StringUtils } from "src/app/shared/utils/string-utils";
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import { Message } from '../../../messages/model/message.model';
+import { IonContent } from '@ionic/angular';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
+import { TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
-    selector: 'app-chat-messages',
-    templateUrl: './messages.component.html',
-    styleUrls: ['./messages.component.scss'],
-    standalone: false
+  selector: 'app-chat-messages',
+  templateUrl: './messages.component.html',
+  styleUrls: ['./messages.component.scss'],
+  standalone: false,
 })
-
-export class MessagesComponent implements OnInit, OnDestroy{
-  @ViewChild(IonContent, { static: false }) ionContent!: IonContent;
-  messagesList: Message [] = [];
-  userId: number | null = null;
+export class MessagesComponent implements OnChanges {
+  @ViewChild(IonContent, { static: false }) messageContainer!: IonContent;
+  @Input() messagesList: Message[] = [];
+  @Input() userId: number | null = null;
   date: Date | null = null;
+  isTypingPayload: TypingStatus | null = null;
 
-  private userIdSubscription!: Subscription;
-  private messagesSourceSubscription!: Subscription;
+  constructor(private activeConversationUIService : ActiveConversationUIService) { }
 
-  constructor(
-    private authService: AuthService,
-    private activeConversationService: ActiveConversationService,
-    ) {}
-
-  ngOnInit() {
-    this.subscribeToMessages();
-    this.subscribeUserId();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ngOnChanges(_changes: SimpleChanges): void {
+    this.activeConversationUIService
+    .getTriggerMessagePageScroll.subscribe(() => {
+      this.scrollToBottom();
+    });
   }
 
-  private subscribeUserId() {
-      this.userIdSubscription = this.authService.userId.subscribe( data =>{
-        this.userId = data;
-      });
-  }
-
-  private subscribeToMessages () {
-      this.messagesSourceSubscription = this.activeConversationService.getActiveConversationMessages.subscribe(messages => {
-        if (messages ) {
-          this.messagesList = messages;
-          this.scrollToBottom();
-        }
-      });
-  }
-
-  trackById(index: number, message: Message) {
-    return message.id; // Use a unique ID to track messages
-  }
-
-  scrollToBottom() {
+  scrollToBottom():void {
     setTimeout(() => {
-      if (this.ionContent) {
-        this.ionContent.scrollToBottom(300); // Smooth scroll in 300ms
+      if (this.messageContainer) {
+        this.messageContainer.scrollToBottom(300); // Smooth scroll
       }
     }, 100);
   }
 
-  getMessageStatus(message: string) {
-    return StringUtils.getMessageIcon(message)
+  trackById(index: number, message: Message): number {
+    return message.id; // Use a unique ID to track messages
   }
 
+  getMessageStatus(message: string): string {
+    return StringUtils.getMessageIcon(message);
+  }
 
-  ngOnDestroy(): void {
-    if (this.messagesSourceSubscription) this.messagesSourceSubscription.unsubscribe();
-    if (this.userIdSubscription) this.userIdSubscription.unsubscribe();
+  getChatId(): number | null{
+    return this.messagesList[0]?.chat_id ?? null;
   }
 }

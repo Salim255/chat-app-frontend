@@ -1,45 +1,51 @@
 <ion-header [translucent]="true">
-  <ion-toolbar >
+  <ion-toolbar>
     <!-- Content for 'settings' page -->
-    <ng-container *ngIf="pageName === 'settings' || pageName === 'discover-viewer'; else defaultToolbar">
-
+    <ng-container
+      *ngIf="pageName === 'settings' || pageName === 'discover-viewer'; else defaultToolbar"
+    >
       <ng-container *ngIf="pageName === 'settings'">
-        <ion-title >Settings</ion-title>
+        <ion-title>Settings</ion-title>
         <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
       </ng-container>
 
-      <ng-container  *ngIf="pageName === 'discover-viewer'">
-          <ion-text class="discover-viewer__user-name"
-          slot="start" >
-            {{viewedProfile?.profile?.last_name}}
-          </ion-text>
-          <ion-icon
-            class="discover-viewer__close-icon"
-            slot="end"
-            (click)="closeProfileViewer(viewedProfile)"
-            name="arrow-down-outline">
-          </ion-icon>
-    </ng-container>
+      <ng-container *ngIf="pageName === 'discover-viewer'">
+        <ion-text class="discover-viewer__user-name" slot="start">
+          {{ viewedProfile?.profile?.last_name }}
+        </ion-text>
+        <ion-icon
+          class="discover-viewer__close-icon"
+          slot="end"
+          (click)="closeProfileViewer(viewedProfile)"
+          name="arrow-down-outline"
+        >
+        </ion-icon>
+      </ng-container>
     </ng-container>
 
     <!-- Default content for other pages -->
     <ng-template #defaultToolbar>
       <app-logo *ngIf="hidingTapStatus === 'show'"></app-logo>
       <ion-text *ngIf="hidingTapStatus === 'hide'" class="user-name">
-      <!--   {{ viewedProfile?.first_name }} -->, 31
+        <!--   {{ viewedProfile?.first_name }} -->, 31
       </ion-text>
 
       <ion-buttons slot="end">
-        <ion-icon *ngIf="pageName !== 'profile-viewer' && takingPictureStatus !== 'Pending'" [name]="displayLeftIcon(pageName)"></ion-icon>
+        <ion-icon
+          *ngIf="pageName !== 'profile-viewer' && takingPictureStatus !== 'Pending'"
+          [name]="displayLeftIcon(pageName)"
+        ></ion-icon>
         <ion-icon
           [name]="displayRightIcon(pageName)"
           [ngClass]="setRightIconCss(pageName)"
           (click)="onRightBtn(pageName)"
-          *ngIf="takingPictureStatus !== 'Pending'">
+          *ngIf="takingPictureStatus !== 'Pending'"
+        >
         </ion-icon>
-        <ion-text role="button" (click)="onSavePicture()" *ngIf="takingPictureStatus === 'Pending'">Done</ion-text>
+        <ion-text role="button" (click)="onSavePicture()" *ngIf="takingPictureStatus === 'Pending'"
+          >Done</ion-text
+        >
       </ion-buttons>
     </ng-template>
-
   </ion-toolbar>
 </ion-header>

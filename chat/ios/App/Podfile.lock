@@ -1,26 +1,26 @@
 PODS:
-  - Capacitor (6.2.0):
+  - Capacitor (6.2.1):
     - CapacitorCordova
   - CapacitorApp (6.0.0):
     - Capacitor
   - CapacitorCamera (6.1.2):
     - Capacitor
-  - CapacitorCordova (6.2.0)
+  - CapacitorCordova (6.2.1)
   - CapacitorGeolocation (6.1.0):
     - Capacitor
   - CapacitorHaptics (6.0.0):
     - Capacitor
-  - CapacitorKeyboard (6.0.0):
+  - CapacitorKeyboard (6.0.3):
     - Capacitor
-  - CapacitorNetwork (6.0.1):
+  - CapacitorNetwork (6.0.3):
     - Capacitor
-  - CapacitorPreferences (6.0.0):
+  - CapacitorPreferences (6.0.3):
     - Capacitor
-  - CapacitorPushNotifications (6.0.3):
+  - CapacitorPushNotifications (6.0.4):
     - Capacitor
-  - CapacitorSplashScreen (6.0.1):
+  - CapacitorSplashScreen (6.0.3):
     - Capacitor
-  - CapacitorStatusBar (6.0.0):
+  - CapacitorStatusBar (6.0.2):
     - Capacitor
 
 DEPENDENCIES:
@@ -64,18 +64,18 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
 
 SPEC CHECKSUMS:
-  Capacitor: 05d35014f4425b0740fc8776481f6a369ad071bf
+  Capacitor: c95400d761e376be9da6be5a05f226c0e865cebf
   CapacitorApp: 30145f2ea2311e4f3744472119ec87d2ddf4c0a7
   CapacitorCamera: 9bc7b005d0e6f1d5f525b8137045b60cffffce79
-  CapacitorCordova: b33e7f4aa4ed105dd43283acdd940964374a87d9
+  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
   CapacitorGeolocation: 3f6c960e6d9d11c83fcdd181c4912604857afb51
   CapacitorHaptics: 0cea833e6a8bf489dd6acaaebf6d953b90086c59
-  CapacitorKeyboard: dc97fe50dcfdcbe12af56c49bbed150077d08043
-  CapacitorNetwork: 7ff188197e880d8485f280492b54d3202e9f3a61
-  CapacitorPreferences: b2634203fb3c3a380a8eb01c0e25e4a10a91e522
-  CapacitorPushNotifications: 9b178e010634d2f7bfca97b81478503463f86b6c
-  CapacitorSplashScreen: d2d8fe9541d7bebdf735839b89edf6e762cea969
-  CapacitorStatusBar: 129c68650d3f950e080e8e7e03d69c3b361dbe52
+  CapacitorKeyboard: e89189ad398b815b6ff7e52271f0fb4f911a0a0a
+  CapacitorNetwork: ef75d8208f0974a2de3f98136bf9684524798f5c
+  CapacitorPreferences: f3eadae2369ac3ab8e21743a2959145b0d1286a3
+  CapacitorPushNotifications: b3f20973cb167cb8fee622e309ec521134798241
+  CapacitorSplashScreen: fd8bf1bf9081d9aa8817b7cd37d740d1bdaf2fb2
+  CapacitorStatusBar: b16799a26320ffa52f6c8b01737d5a95bbb8f3eb
 
 PODFILE CHECKSUM: e749b4eb77862c3bf6874e874ce2898834f33208
 

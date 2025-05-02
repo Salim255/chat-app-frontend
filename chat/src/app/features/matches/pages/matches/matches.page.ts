@@ -1,62 +1,58 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
+import { Match } from '../../models/match.model';
 
 @Component({
-    selector: 'app-matches',
-    templateUrl: './matches.page.html',
-    styleUrls: ['./matches.page.scss'],
-    standalone: false
+  selector: 'app-matches',
+  templateUrl: './matches.page.html',
+  styleUrls: ['./matches.page.scss'],
+  standalone: false,
 })
-
 export class MatchesPage implements OnInit, OnDestroy {
   private partnerSourceSubscription!: Subscription;
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
-  matchesArray: Partner [] = [];
-  isEmpty: boolean = false;
+  matchesArray = signal<Match[]>([]);
 
-  constructor(
-    private matchesService: MatchesService
-    ) {}
+  constructor(private matchesService: MatchesService) {}
 
-  ngOnInit () {
-    this.subscribeToMatches();
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    console.log('hello', this.matchesArray().length);
+  }
+  // Add a trackBy function for better performance
+  trackById(index: number, match: Match): string | number {
+    return match.match_id;
   }
 
-  ionViewWillEnter () {
-    if (!this.partnerSourceSubscription || this.partnerSourceSubscription.closed) {
-      this.subscribeToMatches();
-    }
+  ionViewWillEnter(): void {
+    this.subscribeToMatches();
     this.matchesService.fetchMatches().subscribe();
   }
 
-  ionViewWillLeave() {
+  ionViewWillLeave(): void {
     this.cleanUp();
   }
 
-  private cleanUp(){
-    if (this.partnerSourceSubscription) this.partnerSourceSubscription.unsubscribe();
-    this.matchesArray = []
+  private cleanUp() {
+    this.partnerSourceSubscription?.unsubscribe();
   }
 
   private subscribeToMatches() {
-    this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe({
-      next: (data) => {
-        console.log("Data received:", data);
-        if (data) {
-          this.matchesArray = data;
-          this.isEmpty = this.matchesArray.length === 0;
-        }
-
-      },
-      error: (err) => console.error("Subscription error:", err)
+    this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe((data) => {
+      console.log('Data received:', data);
+      if (data) {
+        this.matchesArray.set(data);
+        console.log('hello', this.matchesArray().length);
+      } else {
+        console.log('Hello here');
+        this.matchesArray.set([]);
+      }
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.cleanUp();
   }
-
 }

@@ -21,8 +21,7 @@ import { ConversationFeatureModule } from 'src/app/features/conversations/conver
     SharedModule,
     DragDropModule,
     ConversationFeatureModule,
-
   ],
-  declarations: [ ConversationsPage,]
+  declarations: [ConversationsPage],
 })
 export class ConversationsPageModule {}

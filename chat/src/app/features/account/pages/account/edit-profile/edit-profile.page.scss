@@ -5,7 +5,6 @@ ion-header {
   }
 }
 
-
 ion-grid {
   padding: 0;
   margin: 0;
@@ -22,8 +21,7 @@ ion-grid {
   ion-row {
     margin-top: 1.5rem;
   }
-  ion-row:nth-child(2){
+  ion-row:nth-child(2) {
     margin-top: 3rem;
   }
-
 }

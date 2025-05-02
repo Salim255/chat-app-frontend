@@ -1,17 +1,21 @@
-<ion-item role="button" (click)="onOpenChat()"
-  [style.--status-color-dimension]="partnerInfo?.connection_status === 'online'? '.7rem': '0'">
+<ion-item
+  (keydown.enter)="onOpenChat()"
+  (keydown.space)="onOpenChat()"
+  (click)="onOpenChat()"
+  [style.--status-color-dimension]="partnerInfo?.connection_status === 'online' ? '.7rem' : '0'"
+>
   <ion-avatar slot="start">
-      <img alt="User image" [src]="partnerInfo?.avatar" />
+    <img alt="Partner" [src]="partnerInfo?.avatar" />
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>
-    <ion-text> {{ conversation?.last_message?.content }} </ion-text>
+    <ion-text> {{ lastMessage()?.content }} </ion-text>
   </ion-label>
-
-  @if ( readMessagesCounter  && ((conversation?.last_message?.from_user_id ?? -1 )!== userId)) {
-    <ion-text class="messages_number">
-      <span> {{ readMessagesCounter }} </span>
+    <ion-text
+      class="messages_number"
+      *ngIf="conversation.delivered_messages_count > 0"
+    >
+      <span> {{ conversation.delivered_messages_count }} </span>
     </ion-text>
-  }
-</ion-item>
 
+</ion-item>

@@ -1,31 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, tap } from 'rxjs';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { ActiveConversationService } from '../../active-conversation/services/active-conversation.service';
-import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Match } from '../models/match.model';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MatchesService {
   private ENV = environment;
-  private matchesArraySource = new BehaviorSubject <Partner [] | null > (null)
-  constructor(
-     private http: HttpClient ) { }
+  private matchesArraySource = new BehaviorSubject<Match[] | null>(null);
+  constructor(private http: HttpClient) {}
 
-  fetchMatches(){
-    return this.http.get<any>(`${this.ENV.apiUrl}/friends/get-friends`)
-    .pipe(tap( response => {
-        this.setMatchArray(response.data)
-      }));
+  fetchMatches(): Observable<{
+    status: string,
+    data: { matches: Match[]},
+   }> {
+      return this.http.get<{ status: string, data: { matches: Match[] } }>(
+        `${this.ENV.apiUrl}/matches`).pipe(
+          tap((response) => {
+            console.log(response, 'Hello');
+            this.setMatchArray(response.data.matches);
+          })
+      );
   }
 
-  get getMatchesArray () {
-    return this.matchesArraySource.asObservable();
-  }
-
-  setMatchArray(matchesArray: Partner [] | null) {
+  setMatchArray(matchesArray: Match[] | null): void {
     this.matchesArraySource.next(matchesArray);
+  }
+
+  get getMatchesArray(): Observable<Match[] | null> {
+    return this.matchesArraySource.asObservable();
   }
 }

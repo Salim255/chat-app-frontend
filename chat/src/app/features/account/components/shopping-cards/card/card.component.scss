@@ -3,15 +3,12 @@ ion-card {
   padding: 0;
   height: 5.5rem;
 
-  background: linear-gradient(
-    to right bottom,
-    rgba(#0097b2, 0.2) 8%,
-    rgba(#ffffff, 0.5) 5%);
+  background: linear-gradient(to right bottom, rgba(#0097b2, 0.2) 8%, rgba(#ffffff, 0.5) 5%);
   border: 0.1px var(--ion-color-primary) solid;
-  ion-card-header{
+  ion-card-header {
     display: flex;
     padding-top: 1rem;
-    padding-bottom: .5rem;
+    padding-bottom: 0.5rem;
     .icon-style {
       margin: auto;
       height: 1.3rem;
@@ -26,9 +23,8 @@ ion-card {
 
       &__subs {
         fill: var(--ion-color-primary);
-        padding-top: .5rem;
+        padding-top: 0.5rem;
       }
-
     }
   }
 
@@ -43,23 +39,21 @@ ion-card {
     .content {
       ion-text {
         color: var(--ion-color-secondary);
-
       }
     }
     .btn {
-      cursor:pointer;
+      cursor: pointer;
 
       &__text {
-          text-transform: uppercase;
-          font-weight: 700;
-          &--likes {
-            color: rgb(49, 166, 205);
-          }
-          &--boots {
-            color: rgb(255, 30, 0);
-          }
+        text-transform: uppercase;
+        font-weight: 700;
+        &--likes {
+          color: rgb(49, 166, 205);
+        }
+        &--boots {
+          color: rgb(255, 30, 0);
+        }
       }
-
     }
   }
 }

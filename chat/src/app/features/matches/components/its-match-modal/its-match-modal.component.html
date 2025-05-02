@@ -1,22 +1,24 @@
-<ion-content scroll-y="false"    [style.--background]="'url(' + imgUrl + ') no-repeat center center / cover'" class="ion-padding">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12">
+<ion-content
+  scroll-y="false"
+  [style.--background]="'url(' + imgUrl + ') no-repeat center center / cover'"
+  class="ion-padding"
+>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
         <div class="its-match-text">
-              <ion-text>It's a match!</ion-text>
-              <ion-text>You matched with </ion-text>
-              <ion-text> {{ matchedProfile.first_name }} </ion-text>
+          <ion-text>It's a match!</ion-text>
+          <ion-text>You matched with </ion-text>
+          <ion-text> {{ matchedProfile.first_name }} </ion-text>
         </div>
-          <app-paired-photos [matchedProfile]="matchedProfile" ></app-paired-photos>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12" >
+        <app-paired-photos [matchedProfile]="matchedProfile"></app-paired-photos>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
         <app-button [btnText]="'Send a message'" (click)="onSendMessage()"></app-button>
         <app-button [btnText]="'Keep swiping'" (click)="onKeepSwiping()"></app-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
-
-

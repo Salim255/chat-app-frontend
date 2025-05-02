@@ -1,7 +1,7 @@
 .container {
   display: flex;
   width: 100%;
-  &__icon{
+  &__icon {
     align-self: center;
     display: flex;
     ion-icon {
@@ -14,7 +14,8 @@
       ion-icon::before {
         background-image: linear-gradient(rgb(232, 187, 245), rgb(182, 4, 161));
         mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.svg') center/contain no-repeat;
-        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain no-repeat;
+        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain
+          no-repeat;
       }
     }
 
@@ -22,7 +23,8 @@
       ion-icon::before {
         background-image: linear-gradient(gold, rgb(182, 155, 4));
         mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.svg') center/contain no-repeat;
-        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain no-repeat;
+        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain
+          no-repeat;
       }
     }
 
@@ -30,7 +32,8 @@
       ion-icon::before {
         background-image: linear-gradient(rgb(16, 16, 16), rgb(239, 239, 239));
         mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.svg') center/contain no-repeat;
-        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain no-repeat;
+        --webkit-mask: url('https://unpkg.com/ionicons@5.5.2/dist/svg/heart.//svg') center/contain
+          no-repeat;
       }
     }
     ion-icon::before {
@@ -43,13 +46,13 @@
   &__category {
     align-self: center;
 
-    padding-left: .5rem;
-    padding-right: .5rem;
-    margin-left: .5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.5rem;
     height: 1rem;
     transform: skew(-20deg);
     display: flex;
-    border-radius: .2rem;
+    border-radius: 0.2rem;
     ion-text {
       font-size: 8px;
       margin: auto;
@@ -57,7 +60,7 @@
     }
 
     &--gold {
-      background: linear-gradient(to right, #eac604,  gold);
+      background: linear-gradient(to right, #eac604, gold);
     }
 
     &--platinum {
@@ -80,16 +83,16 @@
     font-size: 1.5rem;
   }
   &__upgrade {
-     margin-left: auto;
-     align-self: center;
+    margin-left: auto;
+    align-self: center;
 
-     ::ng-deep app-badge {
+    ::ng-deep app-badge {
       ion-badge {
         color: black;
         text-transform: capitalize;
         font-weight: bolder;
         font-size: 1rem;
-        padding: .4rem .9rem;
+        padding: 0.4rem 0.9rem;
         border-radius: 2rem;
       }
     }
@@ -114,16 +117,10 @@
     &--plus {
       ::ng-deep app-badge {
         ion-badge {
-          background-image:linear-gradient(to right, rgb(113, 20, 101), rgb(249 85 231));
+          background-image: linear-gradient(to right, rgb(113, 20, 101), rgb(249 85 231));
           color: #fff;
         }
       }
     }
   }
 }
-
-
-
-
-
-

@@ -1,43 +1,26 @@
-import { Component, Input, OnDestroy, OnInit} from "@angular/core";
-import { Subscription } from "rxjs";
-import { SocketIoService } from "src/app/core/services/socket-io/socket-io.service";
-import { SocketMessageHandler } from "src/app/core/services/socket-io/socket-message-handler";
+import { Component, Input} from '@angular/core';
+import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
-    selector: 'app-typing',
-    templateUrl: './typing.component.html',
-    styleUrls: ['./typing.component.scss'],
-    standalone: false
+  selector: 'app-typing',
+  templateUrl: './typing.component.html',
+  styleUrls: ['./typing.component.scss'],
+  standalone: false,
 })
-
-export class TypingComponent implements OnInit, OnDestroy {
-  isTyping: boolean = false;
-  private typingSubscription!: Subscription;
-
-  constructor(
-     private socketIoService: SocketIoService,
-     private socketMessageHandler: SocketMessageHandler){}
-
-  ngOnInit(): void {
-    this.subscribeToTyping()
+export class TypingComponent {
+  @Input() chatId!: number | null;
+   isTyping: boolean = false;
+  constructor(private socketTypingService: SocketTypingService ) {
+    this.subscribeToTyping();
   }
 
-  ionViewWillEnter() {
-    if (!this.typingSubscription || this.typingSubscription.closed) {
-      this.subscribeToTyping();
+  private subscribeToTyping():void {
+    this.socketTypingService
+   .getUserTypingStatus$.subscribe(
+     (typingStatus) => {
+      if(!typingStatus || (this.chatId !== typingStatus?.chatId)) return;
+      this.isTyping = (typingStatus.typingStatus === TypingStatus.Typing);
     }
-  }
-
-  private subscribeToTyping() {
-    this.typingSubscription =
-        this.socketMessageHandler.getUserTypingStatus
-        .subscribe(typingStatus => {
-          console.log('typingStatus', typingStatus);
-        this.isTyping = typingStatus;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.typingSubscription?.unsubscribe();
-  }
+   );
+ }
 }

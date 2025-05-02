@@ -1,0 +1,7 @@
+# Ignore Angular build output
+www/
+dist/
+build/
+android/
+ios/
+node_modules/

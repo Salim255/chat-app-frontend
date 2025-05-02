@@ -10,21 +10,21 @@
  */
 
 /* Core CSS required for Ionic components to work properly */
-@use "./theme/typography/typography" as *;
-@import "@ionic/angular/css/core.css";
+@use './theme/typography/typography' as *;
+@import '@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
 /**
  * Ionic Dark Mode
@@ -35,8 +35,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
-
+@import '@ionic/angular/css/palettes/dark.system.css';
 
 /* Add this to your global styles (or component-specific styles) */
 ion-header {
@@ -44,7 +43,7 @@ ion-header {
 }
 
 ion-toolbar {
- --background:  var(--ion-background-color);
+  --background: var(--ion-background-color);
 }
 
 ion-content {
@@ -57,9 +56,9 @@ ion-text {
 }
 
 ion-modal {
- --height: 100%;
- --width: 100%;
- --border-radius: 0px;
+  --height: 100%;
+  --width: 100%;
+  --border-radius: 0px;
 }
 
 ion-grid {
@@ -69,9 +68,8 @@ ion-grid {
     ion-col {
       margin: 0;
       padding: 0;
-       }
+    }
   }
-
 }
 
 @media (hover: hover) {
