@@ -13,6 +13,7 @@ import { Conversation } from 'src/app/features/conversations/models/conversation
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
+import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -96,8 +97,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   private subscribeToPartner(): void {
     // Here we get the partner information
-    this.partnerInfoSubscription = this.activeConversationPartnerService.getPartnerInfo.subscribe(
+    this.partnerInfoSubscription =
+    this.activeConversationPartnerService.getPartnerInfo.subscribe(
       (partnerInfo) => {
+        console.log(partnerInfo, 'Hello Partner')
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId)) return;

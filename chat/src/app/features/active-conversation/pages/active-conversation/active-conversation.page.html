@@ -1,4 +1,7 @@
-<app-active-conversation-header [partnerInfo]="partnerInfo"> </app-active-conversation-header>
+<app-active-conversation-header
+  *ngIf="partnerInfo"
+  [partnerInfo]="partnerInfo">
+</app-active-conversation-header>
 
 <ion-content [scrollY]="true">
   <app-chat-messages
@@ -11,7 +14,9 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <app-form-input [toUserId]="partnerInfo.partner_id ?? null" (submitObs)="onSubmit($event)">
+        <app-form-input
+        *ngIf="partnerInfo"
+         [toUserId]="partnerInfo.partner_id ?? null" (submitObs)="onSubmit($event)">
         </app-form-input>
       </ion-col>
     </ion-row>

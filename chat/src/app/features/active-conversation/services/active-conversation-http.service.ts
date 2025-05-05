@@ -63,12 +63,12 @@ export class ActiveConversationHttpService {
   ): Observable<UpdateChatMessagesResponse>{
     return this.http
     .patch<UpdateChatMessagesResponse>(`${this.basePath}/${chatId}/update-ms-to-read`,{});
- }
+  }
 
- createMessage(
-  requestData: CreateMessageDto,
-  ): Observable<CreateMessageResponse>{
-    return this.http
-    .post<CreateMessageResponse>(`${this.ENV.apiUrl}/messages`, requestData)
- }
+  createMessage(
+    requestData: CreateMessageDto,
+    ): Observable<CreateMessageResponse>{
+      return this.http
+      .post<CreateMessageResponse>(`${this.ENV.apiUrl}/messages`, requestData)
+  }
 }

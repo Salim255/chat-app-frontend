@@ -53,15 +53,12 @@ export class SocketRoomService {
   }
 
   private partnerJoinRoom():void{
-    this.socket?.on(
-      'partner-joined-room',
-       (data: JoinRomData) => {
+    this.socket?.on( 'partner-joined-room', (data: JoinRomData) => {
+      if(!data.chatId) return;
       this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
-      if (!data.chatId) return;
-       // Get the active conversation
       this.activeConversationService.markMessagesAsRead(data.chatId).pipe(take(1)).subscribe();
-
-    });
+      },
+    );
   }
 
   private partnerLeftRoom():void{

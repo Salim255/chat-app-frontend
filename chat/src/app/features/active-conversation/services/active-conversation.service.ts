@@ -145,9 +145,13 @@ export class ActiveConversationService {
               return this.createConversationPost(encryptedData as EncryptedMessageData, authData);
             }),
             tap((response) => {
+              if (!response) return;
               const chat: Conversation = processConversationResponse(response, content);
               this.setActiveConversation(chat);
               this.conversationService.fetchConversations();
+              const thisPartner = this.activeConversationPartnerService.partnerInfo;
+              if(!thisPartner || !thisPartner.partner_id) return
+              this.activeConversationNotificationService.notifyPartnerOfNewConversation(chat.id, thisPartner?.partner_id);
             })
         );
       })
@@ -170,8 +174,8 @@ export class ActiveConversationService {
         const messageData: CreateMessageDto =
           {
             chat_id: this.activeConversationSource?.value?.id,
-            from_user_id:Number(authData.id),
-            to_user_id:this.activeConversationPartnerService.partnerInfo.partner_id,
+            from_user_id: Number(authData.id),
+            to_user_id: this.activeConversationPartnerService.partnerInfo.partner_id,
             content: message,
             partner_connection_status: roomStatus,
           }
@@ -317,7 +321,8 @@ export class ActiveConversationService {
 
   // Update Partner Connection Status
   private updatePartnerConnectionStatus(status: string): void {
-    const roomStatus =  status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE;
+    const roomStatus =
+      status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE;
     this.activeConversationPartnerService.setPartnerInRoomStatus(roomStatus)
   }
 
