@@ -4,6 +4,7 @@ import { ProfileViewerService } from 'src/app/features/profile-viewer/services/p
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -15,6 +16,7 @@ export class headerComponent implements OnChanges {
   @Input() partnerInfo!: Partner ;
 
   constructor(
+    private socketTypingService: SocketTypingService,
     private profileViewerService: ProfileViewerService,
     private socketRoomService: SocketRoomService,
     private activeConversationUIService: ActiveConversationUIService,
@@ -29,6 +31,8 @@ export class headerComponent implements OnChanges {
   onBackArrow():void {
     this.socketRoomService.emitLeaveRoom();
     this.activeConversationUIService.closeModal();
+    if (!this.partnerInfo.partner_id) return;
+    this.socketTypingService.userStopTyping(this.partnerInfo?.partner_id);
   }
 
   private subscribeToPartnerConnectionStatus() {

@@ -25,6 +25,7 @@ export class SocketTypingService {
   private socket: Socket | null = null;
   private userTypingStatusSubject = new BehaviorSubject< TypingPayload | null>(null);
   getUserTypingStatus$ = this.userTypingStatusSubject.asObservable();
+  isTyping: boolean = false;
 
   constructor(
     private socketRoomService: SocketRoomService,
@@ -44,13 +45,14 @@ export class SocketTypingService {
     this.buildTypingNotification(toUserId, TypingStatus.Typing);
     if (!typingPayload) return;
     this.socket?.emit('user-typing', typingPayload);
+    this.isTyping = true;
   }
 
   userStopTyping( toUserId: number): void {
    const typingPayload: TypingPayload | null =
      this.buildTypingNotification(toUserId, TypingStatus.StopTyping);
    if (!typingPayload) return;
-   this.socket?.emit('user-stop-typing', typingPayload)
+   this.socket?.emit('user-stop-typing', typingPayload);
   }
 
   notifyTyping(): void {

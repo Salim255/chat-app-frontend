@@ -55,7 +55,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   userId: number | null = null;
   partnerInfo!: Partner;
   messagesList = signal<Message[]>([]);
-  isTyping = signal<boolean>(false);
+  //isTyping = signal<boolean>(false);
 
   constructor(
     private authService: AuthService,

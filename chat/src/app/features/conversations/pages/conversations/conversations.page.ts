@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
 import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';
+
 @Component({
   selector: 'app-conversations',
   templateUrl: './conversations.page.html',
@@ -44,7 +45,6 @@ export class ConversationsPage implements OnDestroy {
 
     this.subscribeToPartnerConnectionStatus();
     this.socketChatService.initializeChatListener();
-    console.log('Hello from will enter');
   }
 
   // Subscribe to the user ID from aAuthservice

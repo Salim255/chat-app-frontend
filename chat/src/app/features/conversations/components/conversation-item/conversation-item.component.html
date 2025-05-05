@@ -9,13 +9,13 @@
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.first_name }} </ion-text>
-    <ion-text> {{ lastMessage()?.content }} </ion-text>
+    <ion-text> {{ isTyping ? 'typing...':  lastMessage()?.content }} </ion-text>
   </ion-label>
     <ion-text
       class="messages_number"
-      *ngIf="conversation.delivered_messages_count > 0"
+      *ngIf="conversation.delivered_messages_count > 0 && !isTyping"
     >
-      <span> {{ conversation.delivered_messages_count }} </span>
+      <span > {{ conversation.delivered_messages_count }} </span>
     </ion-text>
 
 </ion-item>
