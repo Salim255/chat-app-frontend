@@ -1,4 +1,10 @@
-import { Directive, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { InteractionBtnService } from 'src/app/features/discover-profiles/services/interaction-btn.service';
 import * as Hammer from 'hammerjs';
 import { SwipeDirection } from 'src/app/features/discover-profiles/pages/discover/discover.page';
@@ -19,8 +25,9 @@ export class HammerSwipeDirective {
   private isSwiping: boolean = false;
   private isScrolling: boolean = false;
   private isHorizontalSwipe: boolean = false;
-  private resetProfileTimer: any;
+  private resetProfileTimer: ReturnType<typeof setTimeout> | null = null;
   private hammerInstance: HammerManager | null = null;
+
   constructor(
     private el: ElementRef,
     private interactionBtnService: InteractionBtnService
@@ -30,7 +37,7 @@ export class HammerSwipeDirective {
   }
 
   @HostListener('panstart', ['$event'])
-  onPanStart(event: any): void {
+  onPanStart(event: HammerInput): void {
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
 
@@ -47,19 +54,19 @@ export class HammerSwipeDirective {
   }
 
   @HostListener('pan', ['$event'])
-  onPan(event: any): void {
+  onPan(event: HammerInput): void {
     const element = this.el.nativeElement;
     if (!element) return;
 
     if (this.isSwiping) {
       this.currentTransformX = this.swipeStartPosition + event.deltaX;
       if (event.deltaX !== 0) {
-        // For interaction btns animations
         if (event.deltaX > 0)
           this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
         else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft);
       }
-      element.style.transform = `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
+      element.style.transform =
+      `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
     } else if (this.isScrolling) {
       // Allow vertical scrolling
       element.style.transform = `translateY(${event.deltaY}px)`;
@@ -67,7 +74,8 @@ export class HammerSwipeDirective {
   }
 
   @HostListener('panend', ['$event'])
-  onPanEnd(event: any): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onPanEnd(event: HammerInput): void {
     this.isSwiping = false;
 
     const threshold = window.innerWidth / 4;
@@ -92,29 +100,6 @@ export class HammerSwipeDirective {
     this.isHorizontalSwipe = false;
     this.interactionBtnService.setActionDirection(null);
   }
-
-/*   @HostListener('click', ['$event'])
-  onClickProfile(event: MouseEvent): void {
-    const clickedElement = event.target as HTMLElement;
-    const swiperContainer = clickedElement?.querySelector('swiper-container');
-
-    if (!swiperContainer) return;
-
-    const cardWidth = swiperContainer?.clientWidth;
-    const cardHeight = swiperContainer?.clientHeight;
-    const clientY = event.clientY;
-
-    if (!cardWidth || !cardHeight) return;
-
-    const lastQuarterY = cardHeight * 0.75; // last quarter (3/4 of the height)
-
-    // Check if click is in the last quarter of the card
-    if (clientY > lastQuarterY) {
-      console.log('Hello2');
-      this.profilePreview.emit(); // Trigger profile preview
-      return; // Exit to avoid sliding action
-    }
-  } */
 
   private resetProfilePosition(): void {
     if (this.resetProfileTimer) {

@@ -11,6 +11,8 @@ import { ProfileViewerFeatureModule } from '../profile-viewer/profile-viewer-fea
 import { ProfileContentComponent } from './components/profile-content/profile-content.component';
 import { InteractionBtnsComponent } from './components/interaction-btns/interaction-btns.component';
 import { DiscoverHeaderComponent } from './components/profile-header/discover-header.component';
+import { HammerSwipeDirective } from './directives/hammer-swiper/hammer-swipe.directive';
+
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [IonicModule, CommonModule, FormsModule, SharedModule, ProfileViewerFeatureModule],
@@ -29,6 +31,7 @@ import { DiscoverHeaderComponent } from './components/profile-header/discover-he
     ProfileContentComponent,
     InteractionBtnsComponent,
     DiscoverHeaderComponent,
+    HammerSwipeDirective
   ],
 })
 export class DiscoverProfilesFeatureModule {}
