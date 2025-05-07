@@ -1,0 +1,68 @@
+.complete-profile {
+  ion-label {
+    color: var(--ion-color-grey-7);
+    font-weight: bold;
+  }
+  ion-row {
+    margin-top: 1rem;
+   ion-col {
+    ion-item {
+      --background: var(--ion-color-grey-0);
+    }
+   }
+  }
+  &__date-picker {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    ion-datetime {
+      margin: auto;
+      --wheel-highlight-background: transparent;
+      //--background: transparent;
+     // --background-rgb: transparent;
+      --wheel-fade-background-rgb: 255, 255, 255;
+      --wheel-highlight-border-radius: 0px;
+      --wheel-highlight-border-margin-left: 0;
+    }
+
+    ion-datetime::part(wheel-item) {
+      color: var(--ion-color-grey-7);
+
+    }
+
+    ion-datetime::part(wheel-item active) {
+      color: var(--ion-color-primary);
+      font-weight: bold;
+      border-bottom: 2px solid var(--ion-color-primary);
+      padding-bottom: 4px;
+     // background: var(--ion-color-primary);
+    }
+
+    ion-datetime::part(calendar-day),
+    ion-datetime::part(calendar-month),
+    ion-datetime::part(calendar-year),
+    ion-datetime::part(wheel-item) {
+      font-size: 1rem;
+    }
+  }
+
+  ion-row:last-child {
+    margin-top: 4rem;
+    ion-col {
+      display: flexbox;
+      justify-content: center;
+      ion-button {
+        display: block;
+        margin: auto;
+        border-radius: 2rem;
+        font-weight: bold;
+        color: var(--ion-color-grey-1);
+        font-size: 1rem;
+        padding: 0.4rem 0;
+        width: 94%;
+        background: linear-gradient(to right bottom, rgba(#2ed4f1, 1), rgba(#0c0c0c, 1));
+      }
+    }
+  }
+}

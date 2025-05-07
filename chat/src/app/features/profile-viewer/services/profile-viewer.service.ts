@@ -11,7 +11,7 @@ export class ProfileViewerService {
 
   constructor(private modalController: ModalController) {}
 
-  setProfileToDisplay(profile: Member) {
+  setProfileToDisplay(profile: Member): void {
     console.log(profile, 'Hello from profile from profile service');
     this.profileToDisplaySource.next(profile);
   }

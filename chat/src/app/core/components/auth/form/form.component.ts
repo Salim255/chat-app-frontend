@@ -74,6 +74,7 @@ export class FormComponent implements OnInit {
       next: () => {
         f.reset();
         this.router.navigateByUrl('/tabs/discover');
+        //this.router.navigateByUrl('/complete-profile')
         setTimeout(() => {
           this.loadingSpinnerService.hideSpinner();
         }, 150);

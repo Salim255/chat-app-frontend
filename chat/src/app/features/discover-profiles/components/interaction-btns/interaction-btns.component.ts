@@ -1,17 +1,21 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
 import { Member } from 'src/app/shared/interfaces/member.interface';
 import { SwipeDirection } from '../../pages/discover/discover.page';
-import { take } from 'rxjs';
-import { InteractionBtnService } from '../../services/interaction-btn.service';
 import { InteractionType } from 'src/app/features/discover-profiles/services/discover.service';
 
-interface ButtonContent {
+type ButtonConfig =   {
   name: string;
   icon: string;
-  animationType: SwipeDirection | null;
+  animationType: SwipeDirection;
   isActiveIcon: string;
-  onClick: () => void;
+  onClick: () => void,
 }
 
 @Component({
@@ -22,70 +26,27 @@ interface ButtonContent {
 })
 export class InteractionBtnsComponent implements OnInit {
   @Input() profile!: Member;
+  @Input() animationType: SwipeDirection | null = null;
   path = '/assets/icon/';
-  buttons: ButtonContent[] = [];
-  animationType = signal<SwipeDirection | null>(null);
+  buttons: ButtonConfig[] = [];
 
-  constructor(
-    private discoverService: DiscoverService,
-    private interactionBtnService: InteractionBtnService
-  ) {}
+
+  constructor(private discoverService: DiscoverService) {}
 
   ngOnInit(): void {
-    this.subscribeToInteractionBtn();
-    this.buttons = [
-      {
-        name: 'undo',
-        icon: `${this.path}undo.svg`,
-        animationType: null,
-        isActiveIcon: '',
-        onClick: () => {},
-      },
-      {
-        name: 'dislike',
-        icon: `${this.path}close.svg`,
-        isActiveIcon: `${this.path}clear-close.svg`,
-        animationType: SwipeDirection.SwipeLeft,
-        onClick: () => {
-          this.onSkip();
-        },
-      },
-      {
-        name: 'stars',
-        icon: `${this.path}star.svg`,
-        isActiveIcon: `${this.path}close.svg`,
-        animationType: null,
-        onClick: () => {},
-      },
-      {
-        name: 'like',
-        icon: `${this.path}heart.svg`,
-        isActiveIcon: `${this.path}clear-heart.svg`,
-        animationType: SwipeDirection.SwipeRight,
-        onClick: () => {
-          this.onAddFriend();
-        },
-      },
-      {
-        name: 'boost',
-        icon: `${this.path}flash.svg`,
-        isActiveIcon: `${this.path}close.svg`,
-        animationType: null,
-        onClick: () => {},
-      },
-    ];
+    this.buttons = this.initializeButtons();
   }
 
-  isActiveIcon(buttonName: SwipeDirection | null): boolean {
+  isActiveIcon(buttonName: SwipeDirection): boolean {
     // Check if the button is active (highlighted)
-    return this.animationType() === buttonName;
+    return this.animationType === buttonName;
   }
 
-  isHidden(buttonName: SwipeDirection | null): string {
-    if (!this.animationType()) {
+  isHidden(buttonName: SwipeDirection): string {
+    if (!this.animationType) {
       return 'visible'; // Default: all buttons visible
     }
-    return this.animationType() === buttonName ? 'visible highlight' : 'hidden';
+    return this.animationType === buttonName ? 'visible highlight' : 'hidden';
   }
 
   onSkip(): void {
@@ -96,8 +57,43 @@ export class InteractionBtnsComponent implements OnInit {
     this.discoverService.setProfileInteractionType(InteractionType.LIKE);
   }
 
-  private subscribeToInteractionBtn() {
-    this.interactionBtnService.getActionDirection.pipe(take(1))
-    .subscribe((action) => this.animationType.set(action) );
+  private initializeButtons(): ButtonConfig[] {
+    return [
+      {
+        name: 'undo',
+        icon: `${this.path}undo.svg`,
+        animationType: SwipeDirection.SwipeUp,
+        isActiveIcon: '',
+        onClick: () => {},
+      },
+      {
+        name: 'dislike',
+        icon: `${this.path}close.svg`,
+        isActiveIcon: `${this.path}clear-close.svg`,
+        animationType: SwipeDirection.SwipeLeft,
+        onClick: () => this.onSkip(),
+      },
+      {
+        name: 'stars',
+        icon: `${this.path}star.svg`,
+        isActiveIcon: `${this.path}close.svg`,
+        animationType: SwipeDirection.SwipeDown,
+        onClick: () => {},
+      },
+      {
+        name: 'like',
+        icon: `${this.path}heart.svg`,
+        isActiveIcon: `${this.path}clear-heart.svg`,
+        animationType: SwipeDirection.SwipeRight,
+        onClick: () => this.onAddFriend(),
+      },
+      {
+        name: 'boost',
+        icon: `${this.path}flash.svg`,
+        isActiveIcon: `${this.path}close.svg`,
+        animationType: SwipeDirection.SwipeDown,
+        onClick: () => {},
+      },
+    ];
   }
 }

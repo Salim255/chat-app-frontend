@@ -1,7 +1,19 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, isDevMode } from '@angular/core';
-import { BrowserModule, HammerModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import {
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  isDevMode,
+} from '@angular/core';
+import {
+  BrowserModule,
+  HammerModule,
+  HAMMER_GESTURE_CONFIG,
+} from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { CustomHammerConfig } from './core/hammer-config';

@@ -67,6 +67,11 @@ const routes: Routes = [
         (m) => m.ProfileViewerPageModule
       ),
   },
+  {
+    path: 'complete-profile',
+    loadChildren: () =>
+      import('../features//complete-profile/complete-profile.module').then((m) => m.CompleteProfileModule)
+  }
 ];
 
 @NgModule({

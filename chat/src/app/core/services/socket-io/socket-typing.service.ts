@@ -31,11 +31,9 @@ export class SocketTypingService {
     private socketRoomService: SocketRoomService,
     private socketCoreService: SocketCoreService,
     private activeConversationService: ActiveConversationService,
-   ) {
-    this.initializeTypingListener();
-  }
+   ) {}
 
-  private initializeTypingListener(){
+ initializeTypingListener(): void{
     this.socket = this.socketCoreService.getSocket();
     this.notifyTyping();
   }
@@ -57,7 +55,7 @@ export class SocketTypingService {
 
   notifyTyping(): void {
     this.socket?.on('notify-user-typing', (data: TypingPayload) => {
-      console.log('Hello user tyoing', data)
+      console.log('Notify partner that we are typing');
       if (data.typingStatus) {
         this.userTypingStatusSubject.next(data);
       }

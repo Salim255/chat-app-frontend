@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
 import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-conversations',
@@ -32,7 +33,8 @@ export class ConversationsPage implements OnDestroy {
     private accountService: AccountService,
     private authService: AuthService,
     private socketCoreService: SocketCoreService,
-    private socketPresenceService: SocketPresenceService
+    private socketPresenceService: SocketPresenceService,
+    private socketTypingService: SocketTypingService,
   ) {}
 
   ionViewWillEnter(): void {
@@ -45,6 +47,7 @@ export class ConversationsPage implements OnDestroy {
 
     this.subscribeToPartnerConnectionStatus();
     this.socketChatService.initializeChatListener();
+    this.socketTypingService.initializeTypingListener();
   }
 
   // Subscribe to the user ID from aAuthservice

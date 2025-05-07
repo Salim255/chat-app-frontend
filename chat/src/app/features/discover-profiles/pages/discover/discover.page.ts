@@ -17,6 +17,8 @@ import { AccountService } from 'src/app/features/account/services/account.servic
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
 import { Discover } from '../../model/discover.model';
+import { InteractionBtnService } from '../../services/interaction-btn.service';
+import { CompleteProfileService } from 'src/app/features/complete-profile/services/complete-profile.service';
 
 export enum SwipeDirection {
   SwipeLeft = 'swipe-left',
@@ -41,6 +43,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   discoverToggleStatus = signal<boolean | null>(null);
   animationClass = signal<string>('');
   isAnimating = signal<boolean>(false);
+  animationType: SwipeDirection | null = null;
 
   membersList = signal<Discover[]>([]);
   profileToView = signal<DisableProfileSwipe | null>(null);
@@ -50,12 +53,15 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private profileToRemoveSubscription!: Subscription;
   private discoverProfileToggleSubscription!: Subscription;
   private listenToProfileInteractionSource!: Subscription;
+  private btnInteractionSubscription!: Subscription;
 
   constructor(
+    private completeProfileService: CompleteProfileService,
     private discoverService: DiscoverService,
     private networkService: NetworkService,
     private accountService: AccountService,
-    private tabsService: TabsService
+    private tabsService: TabsService,
+    private interactionBtnService: InteractionBtnService,
   ) {
     this.networkService.getNetworkStatus();
   }
@@ -64,7 +70,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.showTabs.set(true);
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
-
+    //this.subscribeToInteractionBtn();
   }
 
   ionViewWillEnter(): void {
@@ -73,8 +79,18 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.accountService.fetchAccount().subscribe();
     this.subscribeToInteraction();
     this.subscribeToDiscoverProfileToggle();
+
+    this.subscribeToInteractionBtn();
+    this. completeProfileService.openModal();
   }
 
+  private subscribeToInteractionBtn() {
+    this.btnInteractionSubscription = this.interactionBtnService.getActionDirection
+    .subscribe((action) => {
+      console.log(action, "hello action")
+      this.animationType = action ;
+    });
+  }
   get topProfile(): Discover | null {
     return this.membersList().length > 0 ? this.membersList()[0] : null;
   }
@@ -203,5 +219,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
     this.listenToProfileInteractionSource?.unsubscribe();
+    this.btnInteractionSubscription?.unsubscribe();
   }
 }

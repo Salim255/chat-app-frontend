@@ -56,7 +56,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  closeProfileViewer(viewedProfile: DisableProfileSwipe | null) {
+  closeProfileViewer(viewedProfile: DisableProfileSwipe | null): void {
     if (viewedProfile) {
       this.discoverService.onDiscoverProfileToggle({
         profile: viewedProfile.profile,
@@ -87,7 +87,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
 
   // Determine if the logo should be shown
-  showAppLogo() {
+  showAppLogo(): boolean {
     return this.pageName !== 'active-conversation';
   }
 

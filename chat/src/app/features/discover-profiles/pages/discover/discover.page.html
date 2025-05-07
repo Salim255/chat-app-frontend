@@ -5,7 +5,8 @@
 </app-header>
 
 <ion-content #content fullscreen="true" scrollY="true" forceOverscroll="false">
-  <ng-container *ngIf="membersList().length > 0; else default">
+
+ <ng-container *ngIf="membersList().length > 0; else default">
     <div
       class="profile-viewer"
       *ngFor="let item of membersList();  let i = index; trackBy: trackById"
@@ -31,7 +32,7 @@
   <ion-grid>
     <ion-row class="interaction-btns">
       <ion-col>
-        <app-interaction-btns></app-interaction-btns>
+        <app-interaction-btns [animationType]="animationType"></app-interaction-btns>
       </ion-col>
     </ion-row>
     <ion-row>

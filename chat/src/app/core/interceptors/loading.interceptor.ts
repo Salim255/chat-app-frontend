@@ -6,7 +6,7 @@ import { LoadingSpinnerService } from 'src/app/shared/components/app-loading-spi
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
-  private excludedEndpoints = ['/friends', '/chats', '/messages' ];
+  private excludedEndpoints = ['/friends', '/chats', '/messages' , '/users/discover', '/matches' ];
 
   constructor(private loadingService: LoadingSpinnerService) {}
 
