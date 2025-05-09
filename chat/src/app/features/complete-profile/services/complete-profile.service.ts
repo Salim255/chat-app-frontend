@@ -1,10 +1,14 @@
 import { Injectable } from "@angular/core";
 import { ModalController } from "@ionic/angular";
-import { CompleteProfilePage } from "../complete-profile.page";
+import { CompleteProfilePage, ProfilePayload } from "../complete-profile.page";
+import { CompleteProfileHttpService, PostResponse } from "./complete-profile-http.service";
+import { Observable } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class CompleteProfileService {
-  constructor(private modalController:  ModalController){}
+  constructor(
+    private completeProfileHttpService: CompleteProfileHttpService,
+    private modalController:  ModalController){}
 
   async openModal(): Promise<void>{
     const modal = await this.modalController.create({
@@ -16,5 +20,9 @@ export class CompleteProfileService {
 
   async closeModal(): Promise<void>{
     await this.modalController.dismiss();
+  }
+
+  createProfile(profile: ProfilePayload): Observable<PostResponse>{
+    return this.completeProfileHttpService.postProfile(profile);
   }
 }

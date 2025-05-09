@@ -1,10 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Account } from 'src/app/features/account/models/account.model';
-import { AccountService } from 'src/app/features/account/services/account.service';
-import { GeolocationService } from 'src/app/core/services/geolocation/geolocation.service';
 import { PhotoService } from 'src/app/core/services/media/photo.service';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
+
+export type AccountInfoData = {
+  city: string;
+  avatar: string | null;
+  age: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-account-info',
@@ -12,41 +16,22 @@ import { PhotoService } from 'src/app/core/services/media/photo.service';
   styleUrls: ['./account-info.component.scss'],
   standalone: false,
 })
-export class AccountInfoComponent implements OnInit, OnDestroy {
-  private accountInfoSource!: Subscription;
-  private userLocationSource!: Subscription;
-  accountData!: Account;
-  userLocation: string = '';
+export class AccountInfoComponent {
+  @Input() accountInfoData: AccountInfoData | null = null ;
   selectedPhotoString: string | null = null;
   photoPreview: string | ArrayBuffer | null = null;
-  defaultImage = 'assets/images/default-profile.jpg';
 
-  constructor(
-    private router: Router,
-    private accountService: AccountService,
-    private geolocationService: GeolocationService,
-    private photoService: PhotoService
-  ) {}
+  constructor( private router: Router, private photoService: PhotoService) {}
 
-  ngOnInit() {
-    this.accountInfoSource = this.accountService.getAccount.subscribe((data) => {
-      if (data) this.accountData = data;
-    });
-    this.userLocationSource = this.geolocationService.getLocation.subscribe((userLocation) => {
-      this.userLocation = userLocation;
-    });
-  }
-
-  onEditProfile() {
+  onEditProfile(): void {
     this.router.navigate(['/tabs/edit-profile']);
   }
 
-  async onTakePhoto() {
+  async onTakePhoto(): Promise<void>{
     const base64String = await this.photoService.takePicture();
 
     if (base64String) {
       // Handle photo upload logic
-      console.log('Photo captured:', base64String);
       // This Ensure the base64String is in the correct format for displaying in an image tag
       this.photoPreview = `data:image/jpeg;base64,${base64String}`;
       this.selectedPhotoString = base64String;
@@ -64,7 +49,6 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       const reader = new FileReader();
       reader.onload = () => {
         this.photoPreview = reader.result as string; // Assign the Data URL
-        console.log('Photo preview generated successfully:', this.photoPreview);
       };
 
       reader.onerror = (error) => {
@@ -81,31 +65,13 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
     if (!this.selectedPhotoString) {
       return;
     }
-
-    // Handle photo upload logic
-    console.log('Photo uploaded:', this.selectedPhotoString);
-
     // Reset form
     this.selectedPhotoString = null;
     this.photoPreview = null;
   }
 
-  setAccountImage() {
-    if (this.accountData?.avatar?.length > 0) {
-      const accountAvatar = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${this.accountData.avatar}`;
-      return accountAvatar;
-    } else {
-      return this.defaultImage;
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.accountInfoSource) {
-      this.accountInfoSource.unsubscribe();
-    }
-
-    if (this.userLocationSource) {
-      this.userLocationSource.unsubscribe();
-    }
+  setAccountImage(): string {
+    const accountAvatar = StringUtils.getAvatarUrl(this.accountInfoData?.avatar ?? null);
+    return accountAvatar;
   }
 }

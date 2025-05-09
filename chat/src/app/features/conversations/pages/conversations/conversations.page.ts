@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { Conversation } from '../../models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
 import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
 import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';

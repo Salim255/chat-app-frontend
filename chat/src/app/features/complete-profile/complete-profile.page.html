@@ -1,4 +1,4 @@
-<app-header [pageName]="'complete your profile'" ></app-header>
+<app-header [pageName]="'complete your profile'" (closeCompleteProfile)="onClose()" ></app-header>
 
 <ion-content >
   <ion-grid class="complete-profile">
@@ -9,7 +9,7 @@
         <ion-col class="complete-profile__date-picker">
           <ion-item lines="none">
             <ion-label>Birthday</ion-label>
-            <ion-note slot="end">{{ profileForm.value.birthDate || 'Select Date' }}</ion-note>
+            <ion-note slot="end">{{ formatDate(profileForm.value.birthDate) || 'Select Date' }}</ion-note>
           </ion-item>
           <ion-datetime
           [value]="profileForm.value.birthDate"
@@ -20,7 +20,15 @@
         </ion-datetime>
         </ion-col>
       </ion-row>
-
+      <!-- display name -->
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>Name</ion-label>
+            <ion-input formControlName="name"placeholder="How should others see you?"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
       <!-- Gender -->
       <ion-row>
         <ion-col>
@@ -75,7 +83,7 @@
           <ion-button
           fill="clear"
           size="small"
-          (click)="onClose()"
+          (click)="onSubmit()"
           [disabled]="profileForm.invalid">
             Save
           </ion-button>

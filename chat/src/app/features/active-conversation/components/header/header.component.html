@@ -3,7 +3,6 @@
     <ion-buttons slot="start">
       <ion-icon
         size="large"
-        role="button"
         name="chevron-back-outline"
         (click)="onBackArrow()"
       ></ion-icon>
@@ -16,13 +15,12 @@
       <div class="profile-info">
         <div class="profile-info__avatar-container">
           <img
-            role="button"
             (click)="onDisplayProfile(partnerInfo)"
             alt="Partner avatar"
             [src]="partnerInfo.avatar"
           />
         </div>
-        <ion-text> {{ partnerInfo.first_name }} </ion-text>
+        <ion-text> {{ partnerInfo.name }} </ion-text>
       </div>
     </ion-item>
 

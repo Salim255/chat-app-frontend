@@ -6,7 +6,7 @@ import {
   Photo,
  } from '@capacitor/camera';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../../features/auth/services/auth.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 
 export type TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';

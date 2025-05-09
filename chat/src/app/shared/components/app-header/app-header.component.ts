@@ -4,11 +4,11 @@ import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { Router } from '@angular/router';
 import { PhotoService, TakingPictureStatus } from 'src/app/core/services/media/photo.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { Partner } from '../../interfaces/partner.interface';
 import {
   DisableProfileSwipe,
   DiscoverService,
-} from 'src/app/features/discover-profiles/services/discover.service';
+} from 'src/app/features/discover/services/discover.service';
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
@@ -17,6 +17,7 @@ import {
 })
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
+  @Output() closeCompleteProfile = new EventEmitter();
   @Output() settings = new EventEmitter();
   //@Output() closeProfileViewer = new EventEmitter()
   @Input() pageName: string | null = null;

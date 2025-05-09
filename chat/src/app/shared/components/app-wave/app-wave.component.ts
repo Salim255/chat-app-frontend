@@ -19,7 +19,7 @@ export class AppWaveComponent implements OnInit, OnDestroy {
     //Add 'implements OnInit' to the class.
     this.accountAvatarSubscription = this.accountService.getAccount.subscribe((account) => {
       if (account?.avatar) {
-        if (account.avatar.length > 0) {
+        if (account.avatar) {
           const result = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${account?.avatar}`;
           this.accountAvatar = result;
         }

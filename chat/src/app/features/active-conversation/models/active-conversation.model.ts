@@ -1,4 +1,4 @@
-import { Member } from 'src/app/shared/interfaces/member.interface';
+import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Message } from '../../messages/model/message.model';
 
 export class Conversation {
@@ -10,7 +10,7 @@ export class Conversation {
     public last_message_id: number | null,
     public no_read_messages: number | null,
     public messages: Message[] | null,
-    public users: Member[] | null,
+    public users: Partner[] | null,
     public encrypted_session_base64: string | null
   ) {}
 }

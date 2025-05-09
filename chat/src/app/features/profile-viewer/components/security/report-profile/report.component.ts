@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { DiscoverService } from 'src/app/features/discover-profiles/services/discover.service';
+import { DiscoverService } from 'src/app/features/discover/services/discover.service';
 
 @Component({
   selector: 'app-report-profile',

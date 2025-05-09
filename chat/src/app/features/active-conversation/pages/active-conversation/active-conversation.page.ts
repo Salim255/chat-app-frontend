@@ -6,7 +6,7 @@ import { Component,
 } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';

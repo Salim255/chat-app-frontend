@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { AuthService } from './core/services/auth/auth.service';
+import { AuthService } from './features/auth/services/auth.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';

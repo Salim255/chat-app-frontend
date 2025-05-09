@@ -10,13 +10,13 @@
       </ng-container>
 
       <ng-container *ngIf="pageName === 'complete your profile'">
-        <ion-title> complete your profile </ion-title>
-        <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
+        <ion-title> Complete your profile </ion-title>
+        <ion-button slot="end" fill="clear" size="small" (click)="closeCompleteProfile.emit()">Done</ion-button>
       </ng-container>
 
       <ng-container *ngIf="pageName === 'discover-viewer'">
         <ion-text class="discover-viewer__user-name" slot="start">
-          {{ viewedProfile?.profile?.last_name }}
+          {{ viewedProfile?.profile?.name }}
         </ion-text>
         <ion-icon
           class="discover-viewer__close-icon"

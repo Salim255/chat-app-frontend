@@ -32,7 +32,7 @@ import {
 import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { MessageNotifierPayload } from 'src/app/core/services/socket-io/socket-message.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { MessageEncryptionService } from './message-encryption.service';
 import {
   ActiveConversationHttpService,

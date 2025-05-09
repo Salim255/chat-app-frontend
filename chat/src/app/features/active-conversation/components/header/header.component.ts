@@ -48,8 +48,7 @@ export class headerComponent implements OnChanges {
 
   onDisplayProfile(profile: Partner | null): void {
     if (!profile || !profile.partner_id) return;
-    const { partner_id, ...rest } = profile;
-    this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest });
+    this.profileViewerService.setProfileToDisplay(profile);
     this.profileViewerService.openProfileViewerModal();
   }
 }

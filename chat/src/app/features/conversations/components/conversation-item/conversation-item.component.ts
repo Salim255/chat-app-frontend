@@ -45,17 +45,16 @@ implements OnDestroy, OnChanges {
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
     this.subscribeToTyping();
+    console.log(this.conversation);
   }
 
-    private subscribeToTyping():void {
-      this.socketTypingService
-     .getUserTypingStatus$.subscribe(
-       (typingStatus) => {
+  private subscribeToTyping():void {
+      this.socketTypingService.getUserTypingStatus$.subscribe((typingStatus) => {
         if(!typingStatus || (this.conversation.id !== typingStatus?.chatId)) return;
         this.isTyping = (typingStatus.typingStatus === TypingStatus.Typing);
       }
      );
-   }
+  }
 
   private subscribeToPartnerConnectionStatus() {
     if (
@@ -70,8 +69,7 @@ implements OnDestroy, OnChanges {
   private initializeConversation(): void {
     if (!this.conversation?.messages?.length || !this.conversation?.users) return;
 
-    this.lastMessage
-    .set(this.conversation.messages [this.conversation.messages.length - 1]);
+    this.lastMessage.set(this.conversation.messages[this.conversation.messages.length - 1]);
     this.setPartnerInfo();
   }
 

@@ -40,8 +40,7 @@ export class MatchItemComponent implements OnInit, OnChanges {
   setActiveConversationsData(match: Match): Partner {
     return {
       partner_id: match.partner_id,
-      first_name: match.first_name,
-      last_name: match.last_name,
+      name: match.name,
       avatar: match.avatar ?? '',
       connection_status: match.connection_status,
       public_key: match.public_key,
