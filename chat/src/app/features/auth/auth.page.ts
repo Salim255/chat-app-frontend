@@ -4,7 +4,6 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.page.html',
-  styleUrls: ['./auth.page.scss'],
   standalone: false,
 })
 export class AuthPage {

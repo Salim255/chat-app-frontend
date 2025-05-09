@@ -5,7 +5,6 @@ import { register } from 'swiper/element/bundle';
 import { Subscription } from 'rxjs';
 import { Account } from '../../models/account.model';
 import { AccountInfoData } from '../../components/account-info/account-info.component';
-import { CompleteProfileService } from 'src/app/features/complete-profile/services/complete-profile.service';
 
 register();
 @Component({
@@ -18,7 +17,6 @@ export class AccountPage implements OnInit, OnDestroy {
   private account: Account | null = null
   accountSubscription!: Subscription;
   constructor(
-    private completeProfileService: CompleteProfileService,
     private accountService: AccountService,
     private router: Router,
   ) {}
@@ -39,12 +37,8 @@ export class AccountPage implements OnInit, OnDestroy {
       {
         next: (account) => {
           this.account = account;
-          if (account) {
-            this.completeProfileService.openModal();
-          }
          },
         error: (error) => {
-          // TODO:
         }
 
     })

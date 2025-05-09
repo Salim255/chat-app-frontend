@@ -1,15 +1,13 @@
-<app-header [pageName]="'complete your profile'" (closeCompleteProfile)="onClose()" ></app-header>
+<app-header [pageName]="'create account'" (closeCompleteProfile)="onClose()" ></app-header>
 
 <ion-content >
-  <ion-grid class="complete-profile">
+  <ion-grid class="create-account">
     <form [formGroup]="profileForm" >
-
       <!-- Date of Birth -->
       <ion-row>
-        <ion-col class="complete-profile__date-picker">
+        <ion-col class="create-account__date-picker">
           <ion-item lines="none">
             <ion-label>Birthday</ion-label>
-            <ion-note slot="end">{{ formatDate(profileForm.value.birthDate) || 'Select Date' }}</ion-note>
           </ion-item>
           <ion-datetime
           [value]="profileForm.value.birthDate"
@@ -25,7 +23,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Name</ion-label>
-            <ion-input formControlName="name"placeholder="How should others see you?"></ion-input>
+            <ion-input formControlName="name"placeholder="how should others see you?"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -33,8 +31,13 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label>Gender</ion-label>
-            <ion-select formControlName="gender" placeholder="Select gender">
+          <!--   <ion-label>Gender</ion-label> -->
+            <ion-select
+              label="Gender"
+              justify="start"
+              interface="action-sheet"
+              formControlName="gender"
+              placeholder="Select gender">
               <ion-select-option value="male">Male</ion-select-option>
               <ion-select-option value="female">Female</ion-select-option>
               <ion-select-option value="other">Other</ion-select-option>
@@ -48,7 +51,7 @@
         <ion-col>
           <ion-item>
             <ion-label >Country</ion-label>
-            <ion-input formControlName="country" placeholder=" your country is..."></ion-input>
+            <ion-input formControlName="country" placeholder="your country is..."></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -58,7 +61,7 @@
         <ion-col>
           <ion-item>
             <ion-label >City</ion-label>
-            <ion-input formControlName="city" placeholder=" your city is..."></ion-input>
+            <ion-input formControlName="city" placeholder="your city is..."></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -67,8 +70,12 @@
       <ion-row>
         <ion-col>
           <ion-item>
-            <ion-label>Interested In</ion-label>
-            <ion-select formControlName="interestedIn" placeholder="Select one">
+            <ion-select
+              label="Interested In"
+              justify="start"
+              interface="action-sheet"
+              formControlName="interestedIn"
+              placeholder="Select one">
               <ion-select-option [value]="InterestedIn.Men">Men</ion-select-option>
               <ion-select-option [value]="InterestedIn.Women">Women</ion-select-option>
               <ion-select-option [value]="InterestedIn.Both">Both</ion-select-option>

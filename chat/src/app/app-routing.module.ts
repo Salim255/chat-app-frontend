@@ -8,11 +8,6 @@ const routes: Routes = [
     redirectTo: 'tabs/discover',
     pathMatch: 'full',
   },
- /*  {
-    path: 'landing-page',
-    loadChildren: () =>
-      import('./core/pages/welcome/app-landing.module').then((m) => m.AppLandingPageModule),
-  }, */
   {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then((m) => m.AuthPageModule),

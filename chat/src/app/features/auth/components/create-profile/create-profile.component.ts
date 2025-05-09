@@ -2,7 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonDatetime } from "@ionic/angular";
 import { formatDate } from "@angular/common";
-import { CompleteProfileService } from "src/app/features/complete-profile/services/complete-profile.service";
+import { CompleteProfileService } from "../../services/complete-profile.service";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 
@@ -69,7 +69,7 @@ export class CreateProfileComponent {
   }
 
   formatDate(rawDate: Date): string {
-    const formatted = formatDate(rawDate, 'dd/MM/y', 'en-US');
+    const formatted = formatDate(rawDate, 'dd/mm/y', 'en-US');
     return formatted;
   }
   onSubmit(): void{
@@ -86,7 +86,6 @@ export class CreateProfileComponent {
       }
     this.completeProfileService.createProfile(profile).subscribe({
       next:(res) => {
-        console.log(res, 'hello from creae profile');
         this.router.navigateByUrl('/tabs/discover');
       },
       error: (err) => {

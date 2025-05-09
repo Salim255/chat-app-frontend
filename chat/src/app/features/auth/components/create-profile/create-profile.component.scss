@@ -1,9 +1,35 @@
-.complete-profile {
+.create-account {
   ion-label {
     color: var(--ion-color-grey-7);
     font-weight: bold;
+    margin-right: .5rem;
   }
-  ion-row {
+  ion-input {
+    font-weight: 600;
+    color: var(--ion-color-grey-7);
+    opacity: 0.8;
+  }
+
+
+ion-select::part(text) {
+  font-weight: 600;
+  color: var(--ion-color-grey-7);
+  opacity: 0.8;
+}
+
+ion-select::part(icon) {
+  color: var(--ion-color-primary);
+  opacity: 0.8;
+}
+
+ion-select::part(label) {
+  color: var(--ion-color-grey-7);
+  font-weight: bold;
+}
+
+
+
+ion-row {
     margin-top: 1rem;
    ion-col {
     ion-item {
@@ -66,3 +92,4 @@
     }
   }
 }
+

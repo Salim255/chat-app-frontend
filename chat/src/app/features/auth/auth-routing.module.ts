@@ -6,25 +6,25 @@ import { CreateProfileComponent } from './components/create-profile/create-profi
 import { AuthPage } from './auth.page';
 
 const routes: Routes = [
-{
-  path: '',
-  component: AuthPage,
-  children: [
-    { path: '', redirectTo: 'entry', pathMatch: 'full' },
-    {
-      path: 'entry',
-      component: AuthEntryComponent,
-    },
-    {
-      path: 'authentication',
-      component: LoginSignupComponent,
-    },
-    {
-      path: 'create-profile',
-      component: CreateProfileComponent
-    }
-  ]
-}
+  {
+    path: '',
+    component: AuthPage,
+    children: [
+      { path: '', redirectTo: 'create-profile', pathMatch: 'full' },
+      {
+        path: 'entry',
+        component: AuthEntryComponent,
+      },
+      {
+        path: 'authentication',
+        component: LoginSignupComponent,
+      },
+      {
+        path: 'create-profile',
+        component: CreateProfileComponent
+      }
+    ]
+  }
 ];
 
 @NgModule({

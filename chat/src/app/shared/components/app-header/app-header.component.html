@@ -2,16 +2,15 @@
   <ion-toolbar>
     <!-- Content for 'settings' page -->
     <ng-container
-      *ngIf="pageName === 'settings' || pageName === 'discover-viewer' || pageName === 'complete your profile'; else defaultToolbar"
+      *ngIf="pageName === 'settings' || pageName === 'discover-viewer' || pageName === 'create account'; else defaultToolbar"
     >
       <ng-container *ngIf="pageName === 'settings'">
         <ion-title> {{ pageName }}</ion-title>
         <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
       </ng-container>
 
-      <ng-container *ngIf="pageName === 'complete your profile'">
-        <ion-title> Complete your profile </ion-title>
-        <ion-button slot="end" fill="clear" size="small" (click)="closeCompleteProfile.emit()">Done</ion-button>
+      <ng-container *ngIf="pageName === 'create account'">
+        <ion-title> Create Account </ion-title>
       </ng-container>
 
       <ng-container *ngIf="pageName === 'discover-viewer'">

@@ -66,11 +66,6 @@ const routes: Routes = [
       import('../features/profile-viewer/pages/profile-viewer/profile-viewer.module').then(
         (m) => m.ProfileViewerPageModule
       ),
-  },
-  {
-    path: 'complete-profile',
-    loadChildren: () =>
-      import('../features//complete-profile/complete-profile.module').then((m) => m.CompleteProfileModule)
   }
 ];
 

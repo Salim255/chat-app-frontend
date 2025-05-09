@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ProfilePayload } from "../complete-profile.page";
 import { Profile } from "../models/profile.model";
+import { ProfilePayload } from "../components/create-profile/create-profile.component";
 
 export enum RequestStatus {
   Success = 'success',

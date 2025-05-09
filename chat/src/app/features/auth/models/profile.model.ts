@@ -1,4 +1,4 @@
-import { Gender, InterestedIn } from "../complete-profile.page";
+import { Gender, InterestedIn } from "../components/create-profile/create-profile.component";
 
 export class Profile {
   constructor(
