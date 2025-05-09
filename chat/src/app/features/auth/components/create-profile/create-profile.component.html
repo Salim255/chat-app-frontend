@@ -31,7 +31,6 @@
       <ion-row>
         <ion-col>
           <ion-item>
-          <!--   <ion-label>Gender</ion-label> -->
             <ion-select
               label="Gender"
               justify="start"
@@ -83,6 +82,27 @@
           </ion-item>
         </ion-col>
       </ion-row>
+
+         <!-- Photos Picker -->
+         <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label >Photos</ion-label>
+            </ion-item>
+            <ion-row >
+              <ion-col class="cards" size="6" *ngFor="let i of [0, 1, 2, 3]; let idx = index; trackBy: trackByIndex">
+                <app-card-media
+                  [photo]="photos.at(idx).value"
+                 ></app-card-media>  
+                 <ion-icon
+                 (click)="onTakePhoto(idx)"
+                 [name]="photos.at(idx).value ? 'close-outline' : 'add-outline'"
+                 [ngClass]="photos.at(idx).value ? 'icon-close' : 'icon-add'"
+               ></ion-icon>      
+              </ion-col>
+            </ion-row>
+          </ion-col>
+        </ion-row>
 
       <!-- Submit -->
       <ion-row>

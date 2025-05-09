@@ -9,6 +9,8 @@ import { AuthFormComponent } from './components/auth-form/form.component';
 import { AuthEntryComponent } from './components/auth-entry/auth-entry.component';
 import { CreateProfileComponent } from './components/create-profile/create-profile.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
+import { CardMediaComponent } from './components/card-media/card.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -22,6 +24,7 @@ import { LoginSignupComponent } from './components/login-signup/login-signup.com
     AuthPage, AuthFormComponent,
     AuthEntryComponent, CreateProfileComponent,
     LoginSignupComponent,
+    CardMediaComponent
   ],
 })
 export class AuthPageModule {}

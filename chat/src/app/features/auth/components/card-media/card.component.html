@@ -1,0 +1,8 @@
+<div class="card-container">
+  <img
+    alt="user-avatar"
+    *ngIf="photo"
+    [src]="photo"
+  />
+  <div class="media-placeholder" *ngIf="!photo"></div> 
+</div>

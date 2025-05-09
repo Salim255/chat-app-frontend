@@ -93,3 +93,37 @@ ion-row {
   }
 }
 
+
+
+
+::ng-deep app-card-media .card-container {
+  margin: 1rem;
+}
+
+
+.cards {
+  ion-icon {
+    position: absolute;
+    
+    padding: 0.1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    z-index: 1;
+    border-radius: 50%;
+  }
+  .icon-close {
+    right: 0%;
+    bottom: 6%;
+    color: rgb(202, 200, 200);
+    background: rgb(103, 102, 102);
+    border: 2px solid rgb(202, 200, 200);
+  }
+  .icon-add {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(202, 200, 200);
+    background: rgb(138, 25, 25);
+    border: 2px solid rgb(202, 200, 200);
+  }
+}

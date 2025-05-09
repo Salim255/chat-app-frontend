@@ -38,29 +38,6 @@ export class AccountInfoComponent {
     }
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    // Check if a file is selected
-    if (input.files && input.files[0]) {
-      //this.selectedPhotoString = input.files[0];
-
-      // Generate a preview using FileReader
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.photoPreview = reader.result as string; // Assign the Data URL
-      };
-
-      reader.onerror = (error) => {
-        console.error('Error reading file:', error);
-      };
-
-      //reader.readAsDataURL(this.selectedPhoto); // Convert the file to Data URL
-    } else {
-      console.warn('No file selected.');
-    }
-  }
-
   onSubmit(): void {
     if (!this.selectedPhotoString) {
       return;
