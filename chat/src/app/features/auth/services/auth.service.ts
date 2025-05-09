@@ -9,7 +9,7 @@ import {
   UpdatedUserDto,
   UpdateMePayload,
 } from '../../../core/interfaces/auth.interface';
-import { User } from 'src/app/core/models/user.model';
+import { User } from 'src/app/features/auth/models/user.model';
 import {
   BehaviorSubject,
   firstValueFrom,

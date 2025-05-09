@@ -28,7 +28,7 @@ interface UserInput {
   styleUrls: ['./form.component.scss'],
   standalone: false,
 })
-export class FormComponent implements OnInit {
+export class AuthFormComponent implements OnInit {
   authMode: AuthMode | null = null;
   userInputs: UserInput = {};
   formFields: FormField[] = [];
@@ -69,8 +69,13 @@ export class FormComponent implements OnInit {
   this.authService.authenticate(this.authMode, userInputsWithoutConfirm).subscribe({
       next: () => {
         f.reset();
-        this.router.navigateByUrl('/tabs/discover');
-        //this.router.navigateByUrl('/complete-profile')
+        if(this.authMode === AuthMode.signup) {
+          this.router.navigateByUrl('auth/create-profile')
+        } else {
+          this.router.navigateByUrl('/tabs/discover');
+        }
+
+        //
         setTimeout(() => {
           this.loadingSpinnerService.hideSpinner();
         }, 150);

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../features/auth/services/auth.service';
 import { Router } from '@angular/router';
-import { AuthMode } from '../../../features/auth/services/auth.service';
+import { AuthMode, AuthService } from '../../services/auth.service';
+
 
 @Component({
-  selector: 'app-landing-page',
-  templateUrl: './app-landing.page.html',
-  styleUrls: ['./app-landing.page.scss'],
+  selector: 'app-auth-entry',
+  templateUrl: './auth-entry.component.html',
+  styleUrls: ['./auth-entry.component.scss'],
   standalone: false,
 })
-export class AppLandingPage {
+export class AuthEntryComponent {
   constructor(
     private authService: AuthService,
     private router: Router
@@ -28,6 +28,6 @@ export class AppLandingPage {
   }
 
   navigateToAuthPage(): void {
-    this.router.navigate(['/auth']);
+    this.router.navigateByUrl('auth/authentication');
   }
 }

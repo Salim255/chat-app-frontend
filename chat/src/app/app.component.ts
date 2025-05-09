@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscribeToAuth() {
     this.authSub = this.authService.userIsAuthenticated.subscribe((isAuth) => {
       if (!isAuth && this.previousAuthState != isAuth) {
-        this.router.navigateByUrl('/landing-page');
+        this.router.navigateByUrl('/auth');
       }
       this.previousAuthState = isAuth;
     });

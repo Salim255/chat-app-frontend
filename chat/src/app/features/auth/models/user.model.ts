@@ -8,14 +8,14 @@ export class User {
     private _email: string
   ) {}
 
-  get token() {
+  get token(): string | null {
     if (!this.tokenExpirationDate || this.tokenExpirationDate <= new Date()) {
       return null;
     }
     return this._token;
   }
 
-  get tokenDuration() {
+  get tokenDuration(): number {
     if (!this.token) {
       return 0;
     }

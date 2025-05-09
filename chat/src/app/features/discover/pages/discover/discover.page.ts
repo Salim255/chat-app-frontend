@@ -18,7 +18,6 @@ import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
 import { Profile } from '../../model/profile.model';
 import { InteractionBtnService } from '../../services/interaction-btn.service';
-import { CompleteProfileService } from 'src/app/features/complete-profile/services/complete-profile.service';
 
 export enum SwipeDirection {
   SwipeLeft = 'swipe-left',
@@ -56,7 +55,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private btnInteractionSubscription!: Subscription;
 
   constructor(
-    private completeProfileService: CompleteProfileService,
     private discoverService: DiscoverService,
     private networkService: NetworkService,
     private accountService: AccountService,
