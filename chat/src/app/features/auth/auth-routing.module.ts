@@ -10,7 +10,7 @@ const routes: Routes = [
     path: '',
     component: AuthPage,
     children: [
-      { path: '', redirectTo: 'create-profile', pathMatch: 'full' },
+      { path: '', redirectTo: 'entry', pathMatch: 'full' },
       {
         path: 'entry',
         component: AuthEntryComponent,

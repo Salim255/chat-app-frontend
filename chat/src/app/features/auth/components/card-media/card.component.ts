@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-card-media',
@@ -6,13 +6,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   styleUrls: ['./card.component.scss'],
   standalone: false,
 })
-export class CardMediaComponent implements OnChanges {
+export class CardMediaComponent {
   @Input() photo: string | null = null;
-
   constructor() {}
-  ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    console.log(this.photo, "hello photo")
-  }
 }

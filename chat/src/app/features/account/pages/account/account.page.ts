@@ -49,7 +49,7 @@ export class AccountPage implements OnInit, OnDestroy {
     const data : AccountInfoData =
       {
         age: this.calculateAge(this.account.birth_date),
-        avatar: this.account.avatar,
+        photos: this.account.photos,
         city: this.account.city,
         name: this.account.name,
       }

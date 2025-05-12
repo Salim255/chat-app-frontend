@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { StatusBar, StatusBarStyle } from '@capacitor/status-bar';
 import { LoadingSpinnerService } from './shared/components/app-loading-spinner/loading-spinner.service';
-
+//
 register();
 @Component({
   selector: 'app-root',

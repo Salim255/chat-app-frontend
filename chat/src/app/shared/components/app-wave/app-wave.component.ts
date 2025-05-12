@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AccountService } from 'src/app/features/account/services/account.service';
+import { Component, Input } from '@angular/core';
+import { StringUtils } from '../../utils/string-utils';
 
 @Component({
   selector: 'app-wave',
@@ -8,30 +7,11 @@ import { AccountService } from 'src/app/features/account/services/account.servic
   styleUrls: ['./app-wave.component.scss'],
   standalone: false,
 })
-export class AppWaveComponent implements OnInit, OnDestroy {
-  accountAvatar: string = 'assets/images/default-profile.jpg';
-  private accountAvatarSubscription!: Subscription;
+export class AppWaveComponent {
+  @Input() accountAvatar!: string
+  constructor() {}
 
-  constructor(private accountService: AccountService) {}
-
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.accountAvatarSubscription = this.accountService.getAccount.subscribe((account) => {
-      if (account?.avatar) {
-        if (account.avatar) {
-          const result = `https://intimacy-s3.s3.eu-west-3.amazonaws.com/users/${account?.avatar}`;
-          this.accountAvatar = result;
-        }
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    if (this.accountAvatarSubscription) {
-      this.accountAvatarSubscription.unsubscribe();
-    }
+  getAvatarUrl(): string{
+    return StringUtils.getAvatarUrl(this.accountAvatar);
   }
 }

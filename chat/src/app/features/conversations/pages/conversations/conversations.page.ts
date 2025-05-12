@@ -21,7 +21,9 @@ export class ConversationsPage implements OnDestroy {
   private updatedChatCounterSubscription!: Subscription;
   private userIdSubscription!: Subscription;
   private updateConversationWithNewMessageSubscription!: Subscription;
+  private hostProfileSubscription!: Subscription;
 
+  hostAvatar!: string;
   userId: number | null = null;
   conversations: Conversation[] = [];
   isEmpty: boolean = true;
@@ -48,6 +50,14 @@ export class ConversationsPage implements OnDestroy {
     this.subscribeToPartnerConnectionStatus();
     this.socketChatService.initializeChatListener();
     this.socketTypingService.initializeTypingListener();
+  }
+
+
+  private subscribeToHostProfile(){
+    this.hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
+      if (!avatar) return;
+        this.hostAvatar = avatar;
+    })
   }
 
   // Subscribe to the user ID from aAuthservice
@@ -99,6 +109,7 @@ export class ConversationsPage implements OnDestroy {
     this.updatedChatCounterSubscription?.unsubscribe();
     this.userIdSubscription?.unsubscribe();
     this.updateConversationWithNewMessageSubscription?.unsubscribe();
+    this.hostProfileSubscription?.unsubscribe();
   }
 
   ionViewWillLeave(): void {

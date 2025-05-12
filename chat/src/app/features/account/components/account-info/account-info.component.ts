@@ -5,7 +5,7 @@ import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 export type AccountInfoData = {
   city: string;
-  avatar: string | null;
+  photos: string [];
   age: number;
   name: string;
 }
@@ -28,13 +28,13 @@ export class AccountInfoComponent {
   }
 
   async onTakePhoto(): Promise<void>{
-    const base64String = await this.photoService.takePicture();
+    const { preview, formData } = await this.photoService.takePicture();
 
-    if (base64String) {
+    if (preview) {
       // Handle photo upload logic
       // This Ensure the base64String is in the correct format for displaying in an image tag
-      this.photoPreview = `data:image/jpeg;base64,${base64String}`;
-      this.selectedPhotoString = base64String;
+      this.photoPreview =  preview;
+      //this.selectedPhotoString = base64String;
     }
   }
 
@@ -48,7 +48,7 @@ export class AccountInfoComponent {
   }
 
   setAccountImage(): string {
-    const accountAvatar = StringUtils.getAvatarUrl(this.accountInfoData?.avatar ?? null);
+    const accountAvatar = StringUtils.getAvatarUrl(this.accountInfoData?.photos[0] ?? null);
     return accountAvatar;
   }
 }

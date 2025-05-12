@@ -7,6 +7,15 @@ import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { PhotoService } from "src/app/core/services/media/photo.service";
 
+interface FieldConfig {
+  key: string;              // formControlName
+  label: string;            // ion-label text
+  type: 'input' | 'select' | 'date' | 'photos';
+  placeholder?: string;
+  options?: { value: string, label: string }[]; // for selects
+}
+
+
 export enum InterestedIn {
   Men = 'men',
   Women = 'women',
@@ -18,13 +27,15 @@ export enum Gender {
   Woman = 'woman',
   Other = 'other',
 }
+type photo = { photo: string }
 export  type ProfilePayload = {
   name: string;
   birthDate: Date;
   gender:  Gender;
   country: string;
   city: string;
-  interestedIn: InterestedIn
+  interestedIn: InterestedIn;
+  photos: photo []
 }
 
 @Component({
@@ -37,10 +48,11 @@ export  type ProfilePayload = {
 export class CreateProfileComponent {
   @ViewChild('birthDatePicker', { static: false }) birthDatePicker!: IonDatetime;
   profileForm!: FormGroup;
-
   maxDate: string = new Date().toISOString(); // prevent future date
   InterestedIn = InterestedIn;
-
+  // Parallel array of FormData objects (or null) for submission
+  private photoUploads: (FormData | null)[] = [null, null, null, null];
+  
   constructor(
     private fb: FormBuilder,
     private completeProfileService: CompleteProfileService,
@@ -63,7 +75,7 @@ export class CreateProfileComponent {
         this.fb.control<string|null>(null),
         this.fb.control<string|null>(null),
         this.fb.control<string|null>(null),
-      ], Validators.maxLength(3)),
+      ], Validators.maxLength(4)),
     });
   }
 
@@ -85,19 +97,19 @@ export class CreateProfileComponent {
 
   async onTakePhoto(slotIndex: number): Promise<void>{
     if (this.photos.at(slotIndex).value) {
-      this.removePhoto(slotIndex);
-      return
+      this.photos.at(slotIndex).reset();
+      this.photoUploads[slotIndex] = null;
+      return;
     }
 
-    const base64String = await this.photoService.takePicture();
-    if (!base64String) return;
-  
-    // Handle photo upload logic
-    // This Ensure the base64String is in the correct format for displaying in an image tag
-    const dataUri = `data:image/jpeg;base64,${base64String}`;
-    // Push it into the FormArray
-    //this.photos.push(this.fb.control(dataUri));
-    this.photos.at(slotIndex).setValue(dataUri);
+    const { preview, formData }= await this.photoService.takePicture();
+    if (!preview || !formData) return;
+
+    // 1) Set preview for UI
+    this.photos.at(slotIndex).setValue(preview);
+
+    // 2) Store the FormData for submission later
+    this.photoUploads[slotIndex] = formData;
   }
 
 
@@ -110,9 +122,10 @@ export class CreateProfileComponent {
   }
   
   formatDate(rawDate: Date): string {
-    const formatted = formatDate(rawDate, 'dd/mm/y', 'en-US');
+    const formatted = formatDate(rawDate, 'dd/MM/y', 'en-US');
     return formatted;
   }
+
   onSubmit(): void{
     if(this.profileForm.invalid) return;
 
@@ -124,8 +137,28 @@ export class CreateProfileComponent {
         city: this.profileForm.value.city,
         interestedIn: this.profileForm.value.interestedIn,
         name: this.profileForm.value.name,
+        photos: this.profileForm.value.photos,
       }
-    this.completeProfileService.createProfile(profile).subscribe({
+    
+    // Copy each slot’s pre-built FormData into one payload:
+    const multiPart = new FormData();
+    for (let i = 0; i < this.photoUploads.length; i++) {
+      const fd = this.photoUploads[i];
+      if (fd) {
+        Array.from((fd as FormData)
+        .getAll('photo'))
+        .forEach((file) => {
+          multiPart.append('photos', file as File,  (file as File).name);
+        });
+      }
+    }
+
+    // Append other fields…
+    Object.entries(this.profileForm.value)
+    .filter(([k]) => k !== 'photos')
+    .forEach(([key, val]) => multiPart.append(key, val as string));
+
+    this.completeProfileService.createProfile(multiPart).subscribe({
       next:() => {
         this.router.navigateByUrl('/tabs/discover');
       },

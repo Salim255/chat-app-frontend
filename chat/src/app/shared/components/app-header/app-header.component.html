@@ -46,8 +46,11 @@
           *ngIf="takingPictureStatus !== 'Pending'"
         >
         </ion-icon>
-        <ion-text role="button" (click)="onSavePicture()" *ngIf="takingPictureStatus === 'Pending'"
-          >Done</ion-text
+        <ion-text 
+          (click)="onSavePicture()" 
+          *ngIf="takingPictureStatus === 'Pending'">
+            Done
+          </ion-text
         >
       </ion-buttons>
     </ng-template>

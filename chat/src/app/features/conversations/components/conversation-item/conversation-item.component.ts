@@ -32,7 +32,7 @@ implements OnDestroy, OnChanges {
   @Input()isTyping: boolean = false;
 
   lastMessage = signal<Message | null>(null);
-  partnerInfo: Partner | null = null;
+  partnerInfo!: Partner;
   private messageDeliverySubscription!: Subscription;
 
   constructor(
@@ -81,7 +81,10 @@ implements OnDestroy, OnChanges {
 
     if (!partner) return;
     this.partnerInfo = ProfileUtils.setProfileData(partner);
-    this.partnerInfo.avatar = StringUtils.getAvatarUrl(partner.avatar);
+  }
+
+  setAvatarUrl(): string {
+   return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
   }
 
   // Here we are setting the active conversation and navigating to the active conversation

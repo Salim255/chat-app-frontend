@@ -8,6 +8,7 @@ ion-header {
     padding-right: 0.7rem;
     ion-title {
       color: var(--ion-color-grey-8);
+      font-weight: bold;
     }
 
     ion-button {
@@ -50,7 +51,6 @@ ion-header {
     font-size: 1.4rem;
     //transform: scale(1.2);
     color: var(--ion-color-grey-0);
-
     background: linear-gradient(#ea0b25, #f85c6e);
   }
 }

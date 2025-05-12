@@ -11,5 +11,6 @@ export class Account {
     public interested_in: string,
     public created_at: Date,
     public updated_at: Date,
+    public photos: string[],
   ) {}
 }

@@ -1,52 +1,41 @@
 .create-account {
-  ion-label {
+  // Selectors section
+  ion-row { 
+    margin-top: 1rem;
+  }
+
+  ion-label, ion-input { 
     color: var(--ion-color-grey-7);
+  }
+
+  ion-label {
     font-weight: bold;
     margin-right: .5rem;
   }
+
   ion-input {
     font-weight: 600;
-    color: var(--ion-color-grey-7);
     opacity: 0.8;
   }
 
-
-ion-select::part(text) {
-  font-weight: 600;
-  color: var(--ion-color-grey-7);
-  opacity: 0.8;
-}
-
-ion-select::part(icon) {
-  color: var(--ion-color-primary);
-  opacity: 0.8;
-}
-
-ion-select::part(label) {
-  color: var(--ion-color-grey-7);
-  font-weight: bold;
-}
-
-
-
-ion-row {
-    margin-top: 1rem;
-   ion-col {
-    ion-item {
-      --background: var(--ion-color-grey-0);
-    }
-   }
-  }
+  ion-item { --background: var(--ion-color-grey-0);}
+  
   &__date-picker {
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 100%;
+    ion-item { 
+      --background: transparent;
+      span {
+        color: var(--ion-color-grey-7);
+        font-weight: 600;
+        opacity: 0.8;
+      }
+     }
     ion-datetime {
       margin: auto;
       --wheel-highlight-background: transparent;
-      //--background: transparent;
-     // --background-rgb: transparent;
       --wheel-fade-background-rgb: 255, 255, 255;
       --wheel-highlight-border-radius: 0px;
       --wheel-highlight-border-margin-left: 0;
@@ -62,7 +51,6 @@ ion-row {
       font-weight: bold;
       border-bottom: 2px solid var(--ion-color-primary);
       padding-bottom: 4px;
-     // background: var(--ion-color-primary);
     }
 
     ion-datetime::part(calendar-day),
@@ -72,58 +60,79 @@ ion-row {
       font-size: 1rem;
     }
   }
+  &__name {
 
-  ion-row:last-child {
-    margin-top: 4rem;
-    ion-col {
-      display: flexbox;
-      justify-content: center;
-      ion-button {
-        display: block;
-        margin: auto;
-        border-radius: 2rem;
+  }
+  &__gender {
+
+  }
+
+  &__intrest {
+
+  }
+  &__submit-btn {
+    display: flexbox;
+    justify-content: center;  
+    margin-top: 2rem;
+    margin-bottom: 4rem; 
+    ion-button {
+      display: block;
+      margin: auto;
+      border-radius: 2rem;
+      font-weight: bold;
+      color: var(--ion-color-grey-1);
+      font-size: 1rem;
+      padding: 0.4rem 0;
+      width: 94%;
+      background: linear-gradient(to right bottom, rgba(#2ed4f1, 1), rgba(#0c0c0c, 1));
+    }
+  }
+  &__photo-upload {
+    &--cards {
+      ion-icon {
+        position: absolute;
+        padding: 0.1rem;
+        font-size: 1.5rem;
         font-weight: bold;
-        color: var(--ion-color-grey-1);
-        font-size: 1rem;
-        padding: 0.4rem 0;
-        width: 94%;
-        background: linear-gradient(to right bottom, rgba(#2ed4f1, 1), rgba(#0c0c0c, 1));
+        z-index: 1;
+        border-radius: 50%;
+      }
+      .icon-close {
+        right: 0%;
+        bottom: 6%;
+        color: rgb(202, 200, 200);
+        background: rgb(103, 102, 102);
+        border: 2px solid rgb(202, 200, 200);
+      }
+      .icon-add {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(202, 200, 200);
+        background: rgb(138, 25, 25);
+        border: 2px solid rgb(202, 200, 200);
+      }
+
+      ::ng-deep app-card-media .card-container {
+        margin: .5rem;
       }
     }
   }
-}
 
+  ion-select::part(text) {
+    font-weight: 600;
+    color: var(--ion-color-grey-7);
+    opacity: 0.8;
+  }
 
+  ion-select::part(icon) {
+    color: var(--ion-color-primary);
+    opacity: 0.8;
+  }
 
-
-::ng-deep app-card-media .card-container {
-  margin: 1rem;
-}
-
-
-.cards {
-  ion-icon {
-    position: absolute;
-    
-    padding: 0.1rem;
-    font-size: 1.5rem;
+  ion-select::part(label) {
+    color: var(--ion-color-grey-7);
     font-weight: bold;
-    z-index: 1;
-    border-radius: 50%;
-  }
-  .icon-close {
-    right: 0%;
-    bottom: 6%;
-    color: rgb(202, 200, 200);
-    background: rgb(103, 102, 102);
-    border: 2px solid rgb(202, 200, 200);
-  }
-  .icon-add {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgb(202, 200, 200);
-    background: rgb(138, 25, 25);
-    border: 2px solid rgb(202, 200, 200);
   }
 }
+

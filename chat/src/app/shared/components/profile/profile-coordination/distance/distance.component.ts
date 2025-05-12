@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-distance',
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class DistanceComponent {
+  @Input() city!: string;
   constructor() {}
+
 }

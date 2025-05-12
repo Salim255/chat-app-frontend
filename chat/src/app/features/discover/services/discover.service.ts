@@ -72,21 +72,6 @@ export class DiscoverService {
   );
   }
 
-  private buildPartner(match: Match): Partner {
-      const builtPartner: Partner  =
-      {
-        partner_id: match.partner_id,
-        created_at: match.match_created_at,
-        updated_at: match.match_updated_at,
-        name: match.name,
-        avatar: match.avatar ?? StringUtils.getAvatarUrl(match.avatar),
-        connection_status: match.connection_status,
-        public_key: match.public_key,
-        images: []
-      }
-      return builtPartner;
-  }
-
   onDiscoverProfileToggle(actionPayload: DisableProfileSwipe): void {
     this.discoverProfileToggleSource.next(actionPayload);
   }

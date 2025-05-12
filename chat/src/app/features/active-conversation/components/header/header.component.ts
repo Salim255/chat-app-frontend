@@ -5,6 +5,7 @@ import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/service
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -46,6 +47,10 @@ export class headerComponent implements OnChanges {
     });
   }
 
+  setAvatarUrl(): string {
+    return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
+  }
+  
   onDisplayProfile(profile: Partner | null): void {
     if (!profile || !profile.partner_id) return;
     this.profileViewerService.setProfileToDisplay(profile);

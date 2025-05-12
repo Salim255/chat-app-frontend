@@ -3,7 +3,6 @@ import { environment } from "src/environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Profile } from "../models/profile.model";
-import { ProfilePayload } from "../components/create-profile/create-profile.component";
 
 export enum RequestStatus {
   Success = 'success',
@@ -21,7 +20,7 @@ export class CompleteProfileHttpService {
   private ENV = environment;
   constructor(private http: HttpClient){}
 
-  postProfile(profile: ProfilePayload): Observable<PostResponse>{
+  postProfile(profile: FormData): Observable<PostResponse>{
     console.log(profile);
     return this.http.post<PostResponse>(`${this.ENV.apiUrl}/profiles`, profile);
   }

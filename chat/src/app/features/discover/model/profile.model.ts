@@ -8,6 +8,7 @@ export class Profile {
     public city: string,
     public country: string,
     public avatar: string,
+    public photos: string [],
     public connection_status: string,
     public match_status: number,
   ){}

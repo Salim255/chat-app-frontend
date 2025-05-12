@@ -14,7 +14,7 @@
               ? 'swiper-pagination__bullet'
               : 'swiper-pagination__bullet swiper-pagination__bullet--active'
           "
-          *ngFor="let item of setUserImages(profile); let index = index; trackBy: trackByIndex"
+          *ngFor="let item of profile.photos; let index = index; trackBy: trackByIndex"
         ></div>
       </div>
       <img

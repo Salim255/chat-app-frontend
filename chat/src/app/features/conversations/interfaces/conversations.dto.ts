@@ -3,7 +3,7 @@ import { Conversation } from "../models/conversation.model";
 
 export type UserInChatDto = {
   user_id: number;
-  avatar: string | null;
+  photos: string[];
   name: string;
   connection_status: string;
   is_admin: boolean;

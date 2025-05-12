@@ -17,7 +17,7 @@
           <img
             (click)="onDisplayProfile(partnerInfo)"
             alt="Partner avatar"
-            [src]="partnerInfo.avatar"
+            [src]="setAvatarUrl()"
           />
         </div>
         <ion-text> {{ partnerInfo.name }} </ion-text>

@@ -47,6 +47,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
   membersList = signal<Profile[]>([]);
   profileToView = signal<DisableProfileSwipe | null>(null);
 
+  hostAvatar!: string;
+
+  private hostProfileSubscription!: Subscription;
   private membersSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
@@ -74,11 +77,10 @@ export class DiscoverPage implements OnInit, OnDestroy {
   ionViewWillEnter(): void {
     this.showTabs.set(true);
     this.discoverService.fetchPotentialMatches().subscribe();
-    this.accountService.fetchAccount().subscribe();
     this.subscribeToInteraction();
     this.subscribeToDiscoverProfileToggle();
-
     this.subscribeToInteractionBtn();
+    this.subscribeToHostProfile();
   }
 
   private subscribeToInteractionBtn() {
@@ -97,6 +99,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   selectTab(): void {
     this.tabsService.selectedTab('account');
+  }
+
+  private subscribeToHostProfile(){
+    this.hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
+      if (!avatar) return;
+        this.hostAvatar = avatar;
+    })
   }
 
   private subscribeToInteraction(): void {
@@ -207,6 +216,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
     this.listenToProfileInteractionSource?.unsubscribe();
+    this.hostProfileSubscription?.unsubscribe();
   }
 
   ngOnDestroy(): void {

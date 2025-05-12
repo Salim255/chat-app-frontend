@@ -38,6 +38,7 @@
     "@capacitor/splash-screen": "^6.0.1",
     "@capacitor/status-bar": "^6.0.0",
     "@ionic/angular": "^8.0.0",
+    "@ionic/pwa-elements": "^3.3.0",
     "crypto-js": "^4.2.0",
     "hammerjs": "^2.0.8",
     "ionicons": "^7.0.0",

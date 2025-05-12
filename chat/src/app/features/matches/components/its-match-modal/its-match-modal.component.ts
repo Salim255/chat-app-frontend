@@ -20,8 +20,8 @@ export class ItsMatchModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.matchedProfile.avatar) {
-      this.imgUrl = this.matchedProfile.avatar;
+    if (this.matchedProfile.photos) {
+      this.imgUrl = this.matchedProfile.photos[0];
     }
   }
 

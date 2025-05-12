@@ -18,6 +18,7 @@ export class AccountService {
 
   fetchAccount(): Observable<FetchAccountDto> {
     return this. accountHttpService.getAccount().pipe(tap((response) => {
+      console.log(response.data.profile);
         this.setAccountInfo(response.data.profile);
       })
     );
@@ -33,7 +34,7 @@ export class AccountService {
 
   get getHostUserPhoto():Observable<string | null> {
     return this.account.asObservable().pipe(
-      map((account) => account?.avatar ?? null)
+      map((account) => account?.photos[0] ?? null)
     );
   }
 

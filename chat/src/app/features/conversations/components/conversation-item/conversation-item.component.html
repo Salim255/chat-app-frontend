@@ -5,7 +5,7 @@
   [style.--status-color-dimension]="partnerInfo?.connection_status === 'online' ? '.7rem' : '0'"
 >
   <ion-avatar slot="start">
-    <img alt="Partner" [src]="partnerInfo?.avatar" />
+    <img alt="Partner" [src]="setAvatarUrl()" />
   </ion-avatar>
   <ion-label>
     <ion-text> {{ partnerInfo?.name }} </ion-text>
