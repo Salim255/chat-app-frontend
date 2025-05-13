@@ -18,7 +18,7 @@ export class AccountPage implements OnInit, OnDestroy {
 
   constructor(
     private accountService: AccountService,
-    private settingService: SettingService 
+    private settingService: SettingService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +36,7 @@ export class AccountPage implements OnInit, OnDestroy {
     this. accountSubscription = this.accountService.getAccount.subscribe(
       {
         next: (account) => {
+          console.log(account)
           this.account = account;
          },
         error: (error) => {
