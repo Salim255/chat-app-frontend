@@ -50,6 +50,7 @@ export class ConversationsPage implements OnDestroy {
     this.subscribeToPartnerConnectionStatus();
     this.socketChatService.initializeChatListener();
     this.socketTypingService.initializeTypingListener();
+    this.subscribeToHostProfile();
   }
 
 

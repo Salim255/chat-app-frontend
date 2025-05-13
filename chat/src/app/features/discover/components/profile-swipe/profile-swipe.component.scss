@@ -1,5 +1,6 @@
 .hammer-swiper-container {
   // touch-action: pan-y; // Ensures vertical scrolling is smooth
+  //background: red;
   &__disable-hammer-swipe {
     pointer-events: none;
     position: relative;

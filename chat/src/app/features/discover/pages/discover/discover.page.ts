@@ -158,7 +158,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private removeTopProfile(): void {
-
     if (this.membersList().length > 0) {
       this.membersList.update((members) => {
         if (members.length > 0) {
