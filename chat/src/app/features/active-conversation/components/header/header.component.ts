@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { ProfileViewerService, ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { UserInChatDto } from 'src/app/features/conversations/interfaces/conversations.dto';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -14,7 +14,7 @@ import { StringUtils } from 'src/app/shared/utils/string-utils';
   standalone: false,
 })
 export class headerComponent implements OnChanges {
-  @Input() partnerInfo!: Partner ;
+  @Input() partnerInfo!: UserInChatDto ;
 
   constructor(
     private socketTypingService: SocketTypingService,
@@ -32,8 +32,8 @@ export class headerComponent implements OnChanges {
   onBackArrow():void {
     this.socketRoomService.emitLeaveRoom();
     this.activeConversationUIService.closeModal();
-    if (!this.partnerInfo.partner_id) return;
-    this.socketTypingService.userStopTyping(this.partnerInfo?.partner_id);
+    if (!this.partnerInfo.user_id) return;
+    this.socketTypingService.userStopTyping(this.partnerInfo?.user_id);
   }
 
   private subscribeToPartnerConnectionStatus() {
@@ -48,12 +48,22 @@ export class headerComponent implements OnChanges {
   }
 
   setAvatarUrl(): string {
-    return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
+    return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]);
   }
-  
-  onDisplayProfile(profile: Partner | null): void {
-    if (!profile || !profile.partner_id) return;
-    this.profileViewerService.setProfileToDisplay(profile);
-    this.profileViewerService.openProfileViewerModal();
+
+  onDisplayProfile(): void {
+    if (!this.partnerInfo || !this.partnerInfo.user_id) return;
+
+  const data: ViewProfileData =
+          {
+            birth_date: this.partnerInfo.birth_date,
+            city: this.partnerInfo.city,
+            connection_status: this.partnerInfo.connection_status,
+            country: this.partnerInfo.country,
+            name: this.partnerInfo.name,
+            partner_id: this.partnerInfo.user_id,
+            photos: this.partnerInfo.photos,
+          }
+    this.profileViewerService.openProfileViewerModal(data);
   }
 }

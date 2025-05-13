@@ -1,35 +1,41 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { ProfileViewerPage } from 'src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+
+export type ViewProfileData = {
+  birth_date: Date;
+  city: string;
+  connection_status: string;
+  country: string;
+  name: string;
+  partner_id: number;
+  photos: string[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileViewerService {
-  private profileToDisplaySource = new BehaviorSubject<Partner | null>(null);
+  private profileToDisplaySource = new BehaviorSubject<ViewProfileData | null>(null);
 
   constructor(private modalController: ModalController) {}
 
-  setProfileToDisplay(profile: Partner): void {
-    console.log(profile, 'Hello from profile from profile service');
-    this.profileToDisplaySource.next(profile);
-  }
 
-  get getProfileToDisplay() {
+  get getProfileToDisplay(): Observable<ViewProfileData | null> {
     return this.profileToDisplaySource.asObservable();
   }
 
-  async openProfileViewerModal() {
+  async openProfileViewerModal(profile: ViewProfileData): Promise<void> {
     const modal = await this.modalController.create({
       component: ProfileViewerPage,
+      componentProps: profile
     });
 
     await modal.present();
   }
 
-  async closeModal() {
+  async closeModal(): Promise<void> {
     await this.modalController.dismiss();
   }
 }
