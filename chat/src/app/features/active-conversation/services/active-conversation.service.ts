@@ -11,7 +11,6 @@ import {
   tap,
 } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import {
   CreateMessageDto,
 } from '../pages/active-conversation/active-conversation.page';
@@ -44,6 +43,8 @@ import {
 import { ActiveConversationUIService } from './active-conversation-ui.service';
 import { ActiveConversationNotificationService } from './active-conversation-notification.service';
 import { ActiveConversationPartnerService } from './active-conversation-partner.service';
+import { MatchesService } from '../../matches/services/matches.service';
+import { UserInChatDto } from '../../conversations/interfaces/conversations.dto';
 
 export type AuthData = {
   _privateKey: string;
@@ -78,15 +79,16 @@ export class ActiveConversationService {
     private activeConversationHttpService: ActiveConversationHttpService,
     private activeConversationNotificationService: ActiveConversationNotificationService,
     private activeConversationPartnerService: ActiveConversationPartnerService,
+    private matchesService: MatchesService,
   ) {
     this.workerHandler = new ConversationWorkerHandler();
     this.authService.userId.subscribe(userId => this.userId = userId);
   }
 
   // Open Conversation (Handle Room status and Messages)
-  openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
+  openConversation(partnerInfo:  UserInChatDto, conversation: Conversation | null): void {
     console.log(partnerInfo);
-    if (!partnerInfo?.partner_id) return;
+    if (!partnerInfo?.user_id) return;
 
     this.updatePartnerConnectionStatus(partnerInfo.connection_status);
     if(conversation && conversation.delivered_messages_count > 0) {
@@ -151,8 +153,11 @@ export class ActiveConversationService {
               this.setActiveConversation(chat);
               this.conversationService.fetchConversations();
               const thisPartner = this.activeConversationPartnerService.partnerInfo;
-              if(!thisPartner || !thisPartner.partner_id) return
-              this.activeConversationNotificationService.notifyPartnerOfNewConversation(chat.id, thisPartner?.partner_id);
+              if(!thisPartner || !thisPartner.user_id) return
+              this.activeConversationNotificationService.notifyPartnerOfNewConversation(chat.id, thisPartner?.user_id);
+
+              // Remove match from matches list
+              this.matchesService.fetchMatches().subscribe();
             })
         );
       })
@@ -168,7 +173,7 @@ export class ActiveConversationService {
         const roomStatus =this.activeConversationPartnerService.partnerInRoomStatus;
         if (
           !this.activeConversationSource.value
-          || !this.activeConversationPartnerService.partnerInfo?.partner_id
+          || !this.activeConversationPartnerService.partnerInfo?.user_id
           || !roomStatus
         ) throw new Error('Missing chat information');
 
@@ -176,7 +181,7 @@ export class ActiveConversationService {
           {
             chat_id: this.activeConversationSource?.value?.id,
             from_user_id: Number(authData.id),
-            to_user_id: this.activeConversationPartnerService.partnerInfo.partner_id,
+            to_user_id: this.activeConversationPartnerService.partnerInfo.user_id,
             content: message,
             partner_connection_status: roomStatus,
           }
@@ -241,7 +246,7 @@ export class ActiveConversationService {
   }
 
   handlePartnerNotification(partnerInRoomStatus: 'in-room'| 'online'): void {
-    const toUserId = this.activeConversationPartnerService.partnerInfo?.partner_id;
+    const toUserId = this.activeConversationPartnerService.partnerInfo?.user_id;
     const chatId = this.activeConversationSource.value?.id;
     const fromUserId = this.userId;
     if (!(this.userId && toUserId && chatId && fromUserId)) return;
@@ -335,7 +340,7 @@ export class ActiveConversationService {
   }
 
   // Here we set conversation's partner information
-  setPartnerInfo(data: Partner | null): void {
+  setPartnerInfo(data: UserInChatDto | null): void {
     this.activeConversationPartnerService.setPartnerInfo(data);
   }
 

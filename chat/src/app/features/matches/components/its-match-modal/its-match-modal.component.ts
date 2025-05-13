@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ItsMatchModalService } from '../../services/its-match-modal.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { AccountService } from 'src/app/features/account/services/account.service';
+import { Match } from '../../models/match.model';
+import { UserInChatDto } from 'src/app/features/conversations/interfaces/conversations.dto';
 
 @Component({
   selector: 'app-its-modal-match',

@@ -1,4 +1,3 @@
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import {
   AuthData,
   ConversationDto,
@@ -9,11 +8,12 @@ import { Conversation } from '../../conversations/models/conversation.model';
 import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
 import { Message } from '../../messages/model/message.model';
 import { CreateConversationPost } from './active-conversation-http.service';
+import { UserInChatDto } from '../../conversations/interfaces/conversations.dto';
 
 export function buildMessageEncryptionData(
   content: string,
   authData: AuthData,
-  partner:  Partner | null,
+  partner:  UserInChatDto | null,
   activeConversation: Conversation | null,
 ): MessageEncryptionData {
   return {
@@ -29,7 +29,7 @@ export function buildMessageEncryptionData(
 export function builtEncryptedMessageData(
     encryptedData: EncryptedMessageData,
     authData: AuthData,
-    partner:  Partner | null,
+    partner: UserInChatDto | null,
   ):CreateConversationPost | null{
     const {
       encryptedMessageBase64,
@@ -46,7 +46,7 @@ export function builtEncryptedMessageData(
     const payload =  {
       content: encryptedMessageBase64,
       from_user_id: Number(authData.id),
-      to_user_id: Number(partner.partner_id),
+      to_user_id: Number(partner.user_id),
       partner_connection_status: partner.connection_status,
       session_key_sender: encryptedSessionKeyForSenderBase64,
       session_key_receiver: encryptedSessionKeyForReceiverBase64

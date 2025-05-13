@@ -51,7 +51,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   activeChat: Conversation | null = null;
   userId: number | null = null;
-  partnerInfo!: Partner;
+  partnerInfo!: any;
   messagesList = signal<Message[]>([]);
   //isTyping = signal<boolean>(false);
 
@@ -98,7 +98,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.partnerInfoSubscription =
     this.activeConversationPartnerService.getPartnerInfo.subscribe(
       (partnerInfo) => {
-        console.log(partnerInfo, 'Hello Partner')
+        console.log(partnerInfo);
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId)) return;
@@ -135,7 +135,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   }
 
   ionViewWillLeave(): void {
-    console.log('Leaving active conversation', this.partnerInfo);
     this.cleanUp();
   }
 

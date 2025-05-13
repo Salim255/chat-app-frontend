@@ -10,6 +10,7 @@ export type UserInChatDto = {
   birth_date: Date,
   city: string,
   country: string,
+   public_key: string | null,
 }
 
 

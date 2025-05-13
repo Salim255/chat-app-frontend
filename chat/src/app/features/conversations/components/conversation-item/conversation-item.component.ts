@@ -9,14 +9,14 @@ import {
 import {
   ActiveConversationService,
 } from 'src/app/features/active-conversation/services/active-conversation.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from '../../../conversations/models/conversation.model';
 import { Subscription } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
-import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { RandomUserConnectionStatus } from 'src/app/core/services/socket-io/socket-presence.service';
 import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
+import { UserInChatDto } from '../../interfaces/conversations.dto';
+
 
 @Component({
   selector: 'app-conversation-item',
@@ -32,7 +32,7 @@ implements OnDestroy, OnChanges {
   @Input()isTyping: boolean = false;
 
   lastMessage = signal<Message | null>(null);
-  partnerInfo!: Partner;
+  partnerInfo!: any;
   private messageDeliverySubscription!: Subscription;
 
   constructor(
@@ -75,21 +75,21 @@ implements OnDestroy, OnChanges {
 
   // Here we are filtering the users to get the partner info
   setPartnerInfo(): void {
-    const partner = this.conversation?.users?.find(
+    const partner: UserInChatDto | undefined = this.conversation?.users?.find(
       (user) => user.user_id !== this.userId
     );
 
     if (!partner) return;
-    this.partnerInfo = ProfileUtils.setProfileData(partner);
+    this.partnerInfo = partner;
   }
 
   setAvatarUrl(): string {
-   return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
+   return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]);
   }
 
   // Here we are setting the active conversation and navigating to the active conversation
   onOpenChat(): void {
-    if (!this.conversation || !this.partnerInfo?.partner_id) return;
+    if (!this.conversation || !this.partnerInfo?.user_id) return;
     this.activeConversationService.openConversation(this.partnerInfo, this.conversation);
   }
 

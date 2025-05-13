@@ -20,9 +20,9 @@
       <img
         alt="Profile avatar"
         loading="lazy"
-        *ngIf="setUserImages(profile).length > 0"
+        *ngIf="setUserImages().length > 0"
         [ngClass]="setProfileImagesHeight(profileToView)"
-        [src]="setUserImages(profile)[currentIndex]"
+        [src]="setUserImages()[currentIndex]"
       />
 
       <div [ngClass]="setProfileDetailsStyle(profileToView)">
