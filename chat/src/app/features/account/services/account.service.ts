@@ -7,6 +7,7 @@ import {
 } from 'rxjs';
 import { Account } from 'src/app/features/account/models/account.model';
 import { AccountHttpService, FetchAccountDto } from './account-http.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 
 @Injectable({
@@ -14,12 +15,18 @@ import { AccountHttpService, FetchAccountDto } from './account-http.service';
 })
 export class AccountService {
   private account = new BehaviorSubject<Account | null>(null);
-  constructor(private accountHttpService: AccountHttpService) {}
+  constructor(
+    private authService: AuthService,
+    private accountHttpService: AccountHttpService) {}
 
   fetchAccount(): Observable<FetchAccountDto> {
     return this. accountHttpService.getAccount().pipe(tap((response) => {
-      console.log(response.data.profile);
-        this.setAccountInfo(response.data.profile);
+      console.log(response.data.profile, !response.data.profile)
+      if(!response.data.profile) {
+        this.authService.logout();
+        return;
+      };
+      this.setAccountInfo(response.data.profile);
       })
     );
   }

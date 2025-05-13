@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { Subscription } from 'rxjs';
 import { Account } from '../../models/account.model';
 import { AccountInfoData } from '../../components/account-info/account-info.component';
-
+import { SettingService } from 'src/app/features/settings/services/setting.service';
 register();
 @Component({
   selector: 'app-account',
@@ -16,9 +15,10 @@ register();
 export class AccountPage implements OnInit, OnDestroy {
   private account: Account | null = null
   accountSubscription!: Subscription;
+
   constructor(
     private accountService: AccountService,
-    private router: Router,
+    private settingService: SettingService 
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class AccountPage implements OnInit, OnDestroy {
   }
 
   onSettings(): void {
-    this.router.navigate(['./tabs/settings']);
+    this.settingService.openSettings();
   }
 
   private subscribeToAccount(){
@@ -39,6 +39,7 @@ export class AccountPage implements OnInit, OnDestroy {
           this.account = account;
          },
         error: (error) => {
+          console.log(error)
         }
 
     })

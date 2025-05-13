@@ -9,11 +9,6 @@
   <ion-row>
     <ion-col>
       <ion-text *ngIf="accountInfoData"> {{ accountInfoData.name }}, {{ accountInfoData.age }}</ion-text>
-      <div class="location-container">
-        <ion-icon name="location"></ion-icon>
-        <span class="city-name">{{ accountInfoData?.city | uppercase }}</span>
-        <!-- City name -->
-      </div>
     </ion-col>
   </ion-row>
   <ion-row>
