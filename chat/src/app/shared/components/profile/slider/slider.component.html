@@ -1,6 +1,6 @@
 <div
   appCustomSwiper
-  (profilePreview)="onProfilePreview()"
+  (profilePreview)="onProfileView()"
   (slideLeft)="slideLeft()"
   (slideRight)="slideRight()"
   [ngClass]="setSwiperContainerHeight(profileToView)"
@@ -14,11 +14,11 @@
               ? 'swiper-pagination__bullet'
               : 'swiper-pagination__bullet swiper-pagination__bullet--active'
           "
-          *ngFor="let item of setUserImages(profile); let index = index; trackBy: trackByIndex"
+          *ngFor="let item of profile.photos; let index = index; trackBy: trackByIndex"
         ></div>
       </div>
       <img
-        alt="Profile Image"
+        alt="Profile avatar"
         loading="lazy"
         *ngIf="setUserImages(profile).length > 0"
         [ngClass]="setProfileImagesHeight(profileToView)"

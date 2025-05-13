@@ -2,16 +2,20 @@
   <ion-toolbar>
     <!-- Content for 'settings' page -->
     <ng-container
-      *ngIf="pageName === 'settings' || pageName === 'discover-viewer'; else defaultToolbar"
+      *ngIf="pageName === 'settings' || pageName === 'discover-viewer' || pageName === 'create account'; else defaultToolbar"
     >
       <ng-container *ngIf="pageName === 'settings'">
-        <ion-title>Settings</ion-title>
+        <ion-title> {{ pageName }}</ion-title>
         <ion-button slot="end" fill="clear" size="small" (click)="settings.emit()">Done</ion-button>
+      </ng-container>
+
+      <ng-container *ngIf="pageName === 'create account'">
+        <ion-title> Create Account </ion-title>
       </ng-container>
 
       <ng-container *ngIf="pageName === 'discover-viewer'">
         <ion-text class="discover-viewer__user-name" slot="start">
-          {{ viewedProfile?.profile?.last_name }}
+          {{ viewedProfile?.profile?.name }}
         </ion-text>
         <ion-icon
           class="discover-viewer__close-icon"
@@ -42,8 +46,11 @@
           *ngIf="takingPictureStatus !== 'Pending'"
         >
         </ion-icon>
-        <ion-text role="button" (click)="onSavePicture()" *ngIf="takingPictureStatus === 'Pending'"
-          >Done</ion-text
+        <ion-text 
+          (click)="onSavePicture()" 
+          *ngIf="takingPictureStatus === 'Pending'">
+            Done
+          </ion-text
         >
       </ion-buttons>
     </ng-template>

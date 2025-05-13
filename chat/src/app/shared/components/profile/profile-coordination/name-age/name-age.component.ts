@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { DateUtils } from 'src/app/shared/utils/date-utils';
+
 @Component({
   selector: 'app-name-age',
   templateUrl: './name-age.component.html',
@@ -15,12 +17,14 @@ export class NameAgeComponent {
     private profileViewerService: ProfileViewerService
   ) {}
 
-  onViewProfile() {
-    console.log('====================================');
-    console.log('We are on view profile');
-    console.log('====================================');
+  onViewProfile(): void {
     this.tabsService.setTapHidingStatus('hide');
     this.profileViewerService.setProfileToDisplay(this.profile);
     this.profileViewerService.openProfileViewerModal();
+  }
+
+  calculateAge(): number{
+    const birthDate = this.profile.birth_date;
+    return DateUtils.calculateAge( birthDate );
   }
 }

@@ -16,6 +16,7 @@ import { Message } from '../../../messages/model/message.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileUtils } from 'src/app/shared/utils/profiles-utils';
 import { RandomUserConnectionStatus } from 'src/app/core/services/socket-io/socket-presence.service';
+import { SocketTypingService, TypingStatus } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-conversation-item',
@@ -28,17 +29,31 @@ implements OnDestroy, OnChanges {
   @Input() conversation!: Conversation;
   @Input() userId: number | null = null;
   @Input() partnerConnection: RandomUserConnectionStatus | null  = null;
+  @Input()isTyping: boolean = false;
 
   lastMessage = signal<Message | null>(null);
-  partnerInfo: Partner | null = null;
+  partnerInfo!: Partner;
   private messageDeliverySubscription!: Subscription;
 
-  constructor(private activeConversationService: ActiveConversationService) {}
+  constructor(
+    private socketTypingService: SocketTypingService,
+    private activeConversationService: ActiveConversationService,
+  ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
+    this.subscribeToTyping();
+    console.log(this.conversation);
+  }
+
+  private subscribeToTyping():void {
+      this.socketTypingService.getUserTypingStatus$.subscribe((typingStatus) => {
+        if(!typingStatus || (this.conversation.id !== typingStatus?.chatId)) return;
+        this.isTyping = (typingStatus.typingStatus === TypingStatus.Typing);
+      }
+     );
   }
 
   private subscribeToPartnerConnectionStatus() {
@@ -54,8 +69,7 @@ implements OnDestroy, OnChanges {
   private initializeConversation(): void {
     if (!this.conversation?.messages?.length || !this.conversation?.users) return;
 
-    this.lastMessage
-    .set(this.conversation.messages [this.conversation.messages.length - 1]);
+    this.lastMessage.set(this.conversation.messages[this.conversation.messages.length - 1]);
     this.setPartnerInfo();
   }
 
@@ -67,7 +81,10 @@ implements OnDestroy, OnChanges {
 
     if (!partner) return;
     this.partnerInfo = ProfileUtils.setProfileData(partner);
-    this.partnerInfo.avatar = StringUtils.getAvatarUrl(partner.avatar);
+  }
+
+  setAvatarUrl(): string {
+   return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
   }
 
   // Here we are setting the active conversation and navigating to the active conversation

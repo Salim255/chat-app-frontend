@@ -1,5 +1,9 @@
-import { Member } from './member.interface';
-
-export type Partner = Omit<Member, 'user_id'> & {
-  partner_id: number | null;
+export type Partner = {
+  partner_id: number;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  connection_status: string;
+  photos: string[];
+  public_key: string;
 };

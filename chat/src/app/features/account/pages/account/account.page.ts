@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
-import { GeolocationService } from 'src/app/core/services/geolocation/geolocation.service';
 import { Subscription } from 'rxjs';
+import { Account } from '../../models/account.model';
+import { AccountInfoData } from '../../components/account-info/account-info.component';
 
 register();
-
 @Component({
   selector: 'app-account',
   templateUrl: './account.page.html',
@@ -14,32 +14,52 @@ register();
   standalone: false,
 })
 export class AccountPage implements OnInit, OnDestroy {
-  private userLocationSubscription!: Subscription;
+  private account: Account | null = null
+  accountSubscription!: Subscription;
   constructor(
     private accountService: AccountService,
     private router: Router,
-    private geolocationService: GeolocationService
   ) {}
 
   ngOnInit(): void {
+    this.subscribeToAccount()
+  }
+  ionViewWillEnter(): void {
     this.accountService.fetchAccount().subscribe();
   }
 
-  ionViewWillEnter() {
-    this.geolocationService.getLocation.subscribe();
-    this.accountService.fetchAccount().subscribe();
-    this.currentUserLocation();
-  }
-
-  async currentUserLocation() {
-    await this.geolocationService.getUserCurrentLocation();
-  }
-
-  onSettings() {
+  onSettings(): void {
     this.router.navigate(['./tabs/settings']);
   }
 
+  private subscribeToAccount(){
+    this. accountSubscription = this.accountService.getAccount.subscribe(
+      {
+        next: (account) => {
+          this.account = account;
+         },
+        error: (error) => {
+        }
+
+    })
+  }
+
+  accountInfo(): AccountInfoData| null{
+    if(!this.account) return null;
+    const data : AccountInfoData =
+      {
+        age: this.calculateAge(this.account.birth_date),
+        photos: this.account.photos,
+        city: this.account.city,
+        name: this.account.name,
+      }
+    return data
+  }
+
+  calculateAge(birthDate: Date): number{
+   return this.accountService.calculateAge(birthDate);
+  }
   ngOnDestroy(): void {
-    if (this.userLocationSubscription) this.userLocationSubscription.unsubscribe();
+   this.accountSubscription?.unsubscribe();
   }
 }

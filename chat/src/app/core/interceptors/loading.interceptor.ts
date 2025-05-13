@@ -6,14 +6,18 @@ import { LoadingSpinnerService } from 'src/app/shared/components/app-loading-spi
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
-  private excludedEndpoint = '/friends';
+  private excludedEndpoints = ['/friends', '/chats', '/messages' , '/users/discover', '/matches' ];
 
   constructor(private loadingService: LoadingSpinnerService) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Check if the request is a POST and ends with '/friends'
-    if (req.method === 'POST' && req.url.endsWith(this.excludedEndpoint)) {
-      return next.handle(req); // Skip the loading spinner
+  intercept<T>(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>> {
+    // Skip spinner if request is POST and URL ends with one of the excluded endpoints
+    const shouldExclude = this.excludedEndpoints.some(endpoint =>
+      req.url.includes(endpoint)
+    );
+
+    if (shouldExclude) {
+      return next.handle(req);
     }
 
     this.loadingService.showSpinner();

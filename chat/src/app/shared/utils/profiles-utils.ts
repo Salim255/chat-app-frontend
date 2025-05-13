@@ -1,4 +1,5 @@
-import { Partner } from '../interfaces/partner.interface';
+import { Partner } from "../interfaces/partner.interface";
+
 
 export class ProfileUtils {
   public static setProfileData(partner: any): Partner {

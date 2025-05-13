@@ -4,7 +4,7 @@ import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
 import { SocketPresenceService } from '../core/services/socket-io/socket-presence.service';
 import { SocketCoreService } from '../core/services/socket-io/socket-core.service';
-import { AuthService } from '../core/services/auth/auth.service';
+import { AuthService } from '../features/auth/services/auth.service';
 import { SocketRoomService } from '../core/services/socket-io/socket-room.service';
 import { SocketMessageService } from '../core/services/socket-io/socket-message.service';
 
@@ -68,7 +68,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.socketCoreService.initialize(this.userId);
         this.socketPresenceService.initializePresenceListener();
         this.socketRoomService.initializeRoomListeners();
-        this.socketMessageService.initializeMessageListener()
+        this.socketMessageService.initializeMessageListener();
       }
     });
   }

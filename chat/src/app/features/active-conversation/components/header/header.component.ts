@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { ActiveConversationService } from '../../services/active-conversation.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
+import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -13,22 +14,29 @@ import { ActiveConversationPartnerService } from '../../services/active-conversa
   standalone: false,
 })
 export class headerComponent implements OnChanges {
-  @Input() partnerInfo: Partner | null = null;
+  @Input() partnerInfo!: Partner ;
 
   constructor(
+    private socketTypingService: SocketTypingService,
     private profileViewerService: ProfileViewerService,
     private socketRoomService: SocketRoomService,
     private activeConversationUIService: ActiveConversationUIService,
     private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ngOnChanges(changes: SimpleChanges): void {
+    this.subscribeToPartnerConnectionStatus();
+  }
+
   onBackArrow():void {
     this.socketRoomService.emitLeaveRoom();
     this.activeConversationUIService.closeModal();
+    if (!this.partnerInfo.partner_id) return;
+    this.socketTypingService.userStopTyping(this.partnerInfo?.partner_id);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ngOnChanges(changes: SimpleChanges): void {
+  private subscribeToPartnerConnectionStatus() {
     this.activeConversationPartnerService
     .getPartnerConnectionStatus
     .subscribe((status) => {
@@ -39,10 +47,13 @@ export class headerComponent implements OnChanges {
     });
   }
 
+  setAvatarUrl(): string {
+    return StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]); 
+  }
+  
   onDisplayProfile(profile: Partner | null): void {
     if (!profile || !profile.partner_id) return;
-    const { partner_id, ...rest } = profile;
-    this.profileViewerService.setProfileToDisplay({ user_id: partner_id, ...rest });
+    this.profileViewerService.setProfileToDisplay(profile);
     this.profileViewerService.openProfileViewerModal();
   }
 }

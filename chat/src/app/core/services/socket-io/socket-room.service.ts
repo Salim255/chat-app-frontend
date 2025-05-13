@@ -3,7 +3,7 @@ import { BehaviorSubject, take } from 'rxjs';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { SocketCoreService } from './socket-core.service';
 import { Socket } from 'socket.io-client';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../../features/auth/services/auth.service';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { ActiveConversationPartnerService } from 'src/app/features/active-conversation/services/active-conversation-partner.service';
 
@@ -53,15 +53,12 @@ export class SocketRoomService {
   }
 
   private partnerJoinRoom():void{
-    this.socket?.on(
-      'partner-joined-room',
-       (data: JoinRomData) => {
+    this.socket?.on( 'partner-joined-room', (data: JoinRomData) => {
+      if(!data.chatId) return;
       this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.InRoom);
-      if (!data.chatId) return;
-       // Get the active conversation
       this.activeConversationService.markMessagesAsRead(data.chatId).pipe(take(1)).subscribe();
-
-    });
+      },
+    );
   }
 
   private partnerLeftRoom():void{

@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AccountService } from 'src/app/features/account/services/account.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,9 +9,11 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class AppPlaceHolderComponent {
+  @Input() accountAvatar!: string;
   @Input() pageName!: string;
   placeHolderText!: string;
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router) {}
 
   setPlaceHolderText(): string {
     if (this.pageName === 'discover') {

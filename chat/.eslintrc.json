@@ -59,7 +59,6 @@
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {
-        "@angular-eslint/template/no-call-expression": "error", // Disallows call expressions in templates
         "@angular-eslint/template/no-negated-async": "error" // Disallows negation of async pipes
       }
     }

@@ -6,14 +6,14 @@ import { Component,
 } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 import { Message } from '../../../messages/model/message.model';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
-import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
+import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';
 
 export type CreateMessageDto = {
   chat_id: number;
@@ -53,9 +53,9 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   activeChat: Conversation | null = null;
   userId: number | null = null;
-  partnerInfo: Partner | null = null;
+  partnerInfo!: Partner;
   messagesList = signal<Message[]>([]);
-  isTyping = signal<boolean>(false);
+  //isTyping = signal<boolean>(false);
 
   constructor(
     private authService: AuthService,
@@ -97,8 +97,10 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   private subscribeToPartner(): void {
     // Here we get the partner information
-    this.partnerInfoSubscription = this.activeConversationPartnerService.getPartnerInfo.subscribe(
+    this.partnerInfoSubscription =
+    this.activeConversationPartnerService.getPartnerInfo.subscribe(
       (partnerInfo) => {
+        console.log(partnerInfo, 'Hello Partner')
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId)) return;

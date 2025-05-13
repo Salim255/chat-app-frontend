@@ -34,16 +34,14 @@ export class SocketMessageService {
   }
 
   listenToComingMessage(): void{
-    this.socket?.on('coming-message', (comingNotification: MessageNotifierPayload, ack)=> {
+    this.socket?.on('coming-message', (comingNotification: MessageNotifierPayload)=> {
       if (!comingNotification.chatId) {
-        ack();
         return
       }
       if (comingNotification.partnerStatus === 'online') {
         this.conversationService.fetchConversationChatById(comingNotification.chatId)
         .pipe(take(1))
         .subscribe(()=>{
-          ack();
           return
         });
 
@@ -56,11 +54,9 @@ export class SocketMessageService {
           // update the conversation with updated conversation
           const updatedConversations =  this.conversationService.updateConversationsList(response.data.chat);
           this.conversationService.setConversations([...updatedConversations]);
-          ack();
           return;
         });
       }
-      ack();
     });
   }
 

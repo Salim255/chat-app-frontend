@@ -5,31 +5,21 @@ import {
   Observable,
   tap,
 } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { Account } from 'src/app/features/account/models/account.model';
+import { AccountHttpService, FetchAccountDto } from './account-http.service';
 
-type AccountDto =  {
-  id: number;
-  first_name: string;
-  last_name: string;
-  avatar: string;
- };
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private ENV = environment;
   private account = new BehaviorSubject<Account | null>(null);
+  constructor(private accountHttpService: AccountHttpService) {}
 
-  constructor(private http: HttpClient) {}
-
-  fetchAccount(): Observable<{ status: string; data: { user: AccountDto }}> {
-    return this.http.get<{status: string, data: { user: AccountDto } }>(`${this.ENV.apiUrl}/users/`).pipe(
-      tap((response) => {
-        const user = this.mapUserToAccount(response.data.user);
-        this.setAccountInfo(user);
+  fetchAccount(): Observable<FetchAccountDto> {
+    return this. accountHttpService.getAccount().pipe(tap((response) => {
+      console.log(response.data.profile);
+        this.setAccountInfo(response.data.profile);
       })
     );
   }
@@ -44,16 +34,14 @@ export class AccountService {
 
   get getHostUserPhoto():Observable<string | null> {
     return this.account.asObservable().pipe(
-      map((account) => account?.avatar ?? null)
+      map((account) => account?.photos[0] ?? null)
     );
   }
 
-  private mapUserToAccount(userDto: AccountDto): Account {
-    return new Account(
-      userDto.id,
-      userDto.first_name,
-      userDto.last_name,
-      userDto.avatar
-    );
-  };
+  calculateAge(birthDate: Date | string): number {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    const age = today.getFullYear() - birth.getFullYear();
+    return age;
+  }
 }

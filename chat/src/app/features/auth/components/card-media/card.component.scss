@@ -1,0 +1,22 @@
+.card-container {
+  position: relative;
+  img {
+    height: 10rem;
+    width: 100%;
+    border-radius: 0.8rem;
+    object-fit: cover;
+    object-position: top;
+    flex: 1;
+  }
+
+  .media-placeholder {
+    box-sizing: border-box;
+    background: var(--ion-color-grey-3);
+    height: 10rem;
+    width: 100%;
+    border-radius: 0.8rem;
+    border-style: dashed;
+    border-color: var(--ion-color-grey-5);
+    border-width: 0.3rem;
+  }
+}

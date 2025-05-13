@@ -11,11 +11,8 @@ export class CustomSwiperDirective {
   constructor() {}
 
   @HostListener('click', ['$event'])
-  onClickProfile(event: MouseEvent) {
+  onClickProfile(event: MouseEvent): void {
     const swiperContainer = event.target as HTMLElement;
-
-    console.log(swiperContainer);
-
     if (!swiperContainer) return;
 
     const cardWidth = swiperContainer?.clientWidth;
@@ -30,7 +27,6 @@ export class CustomSwiperDirective {
 
     // Check if click is in the last quarter of the card
     if (clientY > lastQuarterY) {
-      console.log('Hello2');
       this.profilePreview.emit(); // Trigger profile preview
       return; // Exit to avoid sliding action
     }

@@ -15,22 +15,19 @@ import { Partner } from 'src/app/shared/interfaces/partner.interface';
   styleUrls: ['./match-item.component.scss'],
   standalone: false,
 })
-export class MatchItemComponent implements OnInit, OnChanges {
+export class MatchItemComponent implements OnInit {
   @Input() partnerInfo!: Match;
 
   constructor(private activeConversationService: ActiveConversationService) {}
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    console.log('Hello');
-  }
-  ngOnChanges(): void {
-    console.log(this.partnerInfo, 'hello');
-    if (this.partnerInfo) {
-      this.partnerInfo.avatar = StringUtils.getAvatarUrl(this.partnerInfo.avatar);
-    }
+    console.log('Hello', this.partnerInfo);
   }
 
+  getAvatarUrl(): string{
+    return  StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]);
+  }
   onOpenConversation(): void {
     if (!this.partnerInfo || !this.partnerInfo.partner_id) return;
     const partner = this.setActiveConversationsData(this.partnerInfo);
@@ -40,14 +37,12 @@ export class MatchItemComponent implements OnInit, OnChanges {
   setActiveConversationsData(match: Match): Partner {
     return {
       partner_id: match.partner_id,
-      first_name: match.first_name,
-      last_name: match.last_name,
-      avatar: match.avatar ?? '',
+      name: match.name,
       connection_status: match.connection_status,
       public_key: match.public_key,
       updated_at: match.match_updated_at,
       created_at: match.match_created_at,
-      images: [],
+      photos: match.photos,
     }
   }
 }

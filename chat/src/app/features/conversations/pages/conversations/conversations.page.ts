@@ -3,9 +3,11 @@ import { Subscription } from 'rxjs';
 import { Conversation } from '../../models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { SocketCoreService } from 'src/app/core/services/socket-io/socket-core.service';
 import { RandomUserConnectionStatus, SocketPresenceService } from 'src/app/core/services/socket-io/socket-presence.service';
+import { SocketChatService } from 'src/app/core/services/socket-io/socket-chat.service';
+import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 
 @Component({
   selector: 'app-conversations',
@@ -19,18 +21,22 @@ export class ConversationsPage implements OnDestroy {
   private updatedChatCounterSubscription!: Subscription;
   private userIdSubscription!: Subscription;
   private updateConversationWithNewMessageSubscription!: Subscription;
+  private hostProfileSubscription!: Subscription;
 
+  hostAvatar!: string;
   userId: number | null = null;
   conversations: Conversation[] = [];
   isEmpty: boolean = true;
   partnerConnection = signal<RandomUserConnectionStatus | null>(null)
 
   constructor(
+    private socketChatService: SocketChatService,
     private conversationService: ConversationService,
     private accountService: AccountService,
     private authService: AuthService,
     private socketCoreService: SocketCoreService,
-    private socketPresenceService: SocketPresenceService
+    private socketPresenceService: SocketPresenceService,
+    private socketTypingService: SocketTypingService,
   ) {}
 
   ionViewWillEnter(): void {
@@ -42,7 +48,16 @@ export class ConversationsPage implements OnDestroy {
     this.subscribeToConversations();
 
     this.subscribeToPartnerConnectionStatus();
-    console.log('Hello from will enter');
+    this.socketChatService.initializeChatListener();
+    this.socketTypingService.initializeTypingListener();
+  }
+
+
+  private subscribeToHostProfile(){
+    this.hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
+      if (!avatar) return;
+        this.hostAvatar = avatar;
+    })
   }
 
   // Subscribe to the user ID from aAuthservice
@@ -94,6 +109,7 @@ export class ConversationsPage implements OnDestroy {
     this.updatedChatCounterSubscription?.unsubscribe();
     this.userIdSubscription?.unsubscribe();
     this.updateConversationWithNewMessageSubscription?.unsubscribe();
+    this.hostProfileSubscription?.unsubscribe();
   }
 
   ionViewWillLeave(): void {

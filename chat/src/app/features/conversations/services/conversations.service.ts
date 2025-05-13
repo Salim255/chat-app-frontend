@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import {
   BehaviorSubject,
   catchError,
@@ -10,10 +9,8 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Conversation } from '../models/conversation.model';
 import { Message } from '../../messages/model/message.model';
-import { WorkerService } from 'src/app/core/workers/worker.service';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 import { ConversationWorkerHandler } from './conversation.worker-handler';
 import { sortConversations } from '../utils/conversations.utils';
@@ -29,7 +26,7 @@ export type WorkerMessage = {
 
 @Injectable({ providedIn: 'root' })
 export class ConversationService {
-  private conversationsSource = new BehaviorSubject<Conversation[] | null>(null);
+  private conversationsSource = new BehaviorSubject<Conversation[] | []>([]);
   private workerHandler!: ConversationWorkerHandler;
 
   constructor(private conversationsHttpService: ConversationsHttpService) {
@@ -107,9 +104,13 @@ export class ConversationService {
       }
     ))
     .subscribe(decryptedConversations => {
-      const updatedConversation = decryptedConversations[0]
-      const updatedConversations = this.updateConversationsList(updatedConversation);
-     this.setConversations([...updatedConversations]);
+      const updatedConversation = decryptedConversations[0];
+      if (!this.isChatPresent(updatedConversation.id)){
+        this.setConversations([...this.conversationsSource.value, updatedConversation]);
+      } else {
+        const updatedConversations = this.updateConversationsList(updatedConversation);
+        this.setConversations([...updatedConversations]);
+      }
     });
 
   }
@@ -126,7 +127,6 @@ export class ConversationService {
     if (!conversations) {
       return updatedConversation.id ? [updatedConversation] : [];
     }
-
     return conversations.map(chat => {
       if (chat.id === updatedConversation.id) {
         return {
@@ -148,26 +148,12 @@ export class ConversationService {
     }
   }
 
+  isChatPresent(chatId: number): boolean{
+    if (!this.conversationsSource?.value) return false
+    return this.conversationsSource.value.some(chat => chat.id === chatId);
+  }
   get getConversations(): Observable<Conversation[] | null> {
     return this.conversationsSource.asObservable();
-  }
-
-  addNewlyCreatedConversation(conversation: Conversation): void {
-    if (!conversation) return;
-    GetAuthData.getAuthData().then(authData => {
-      if (!authData) throw new Error('Missing auth data');
-      this.workerHandler
-        .decryptConversations(
-          [ conversation ],
-          { email: authData._email, privateKey: authData._privateKey})
-        .subscribe(decrypted => {
-          if (!decrypted.length) return;
-          const decryptedConversation: Conversation = decrypted[0];
-          const current = this.conversationsSource.value || [];
-          this.setConversations(sortConversations([...current, decryptedConversation]));
-
-        });
-    });
   }
 
   updateConversationWithNewMessage(message: Message): void {

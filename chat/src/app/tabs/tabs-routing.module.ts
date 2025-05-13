@@ -18,7 +18,7 @@ const routes: Routes = [
       {
         path: 'discover',
         loadChildren: () =>
-          import('../features/discover-profiles/pages/discover/discover.module').then(
+          import('../features/discover/pages/discover/discover.module').then(
             (m) => m.DiscoverPageModule
           ),
       },
@@ -66,7 +66,7 @@ const routes: Routes = [
       import('../features/profile-viewer/pages/profile-viewer/profile-viewer.module').then(
         (m) => m.ProfileViewerPageModule
       ),
-  },
+  }
 ];
 
 @NgModule({

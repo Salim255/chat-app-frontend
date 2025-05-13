@@ -3,12 +3,15 @@ import { Conversation } from "../models/conversation.model";
 
 export type UserInChatDto = {
   user_id: number;
-  avatar: string | null;
-  last_name: string;
-  first_name: string;
+  photos: string[];
+  name: string;
   connection_status: string;
   is_admin: boolean;
+  birth_date: Date,
+  city: string,
+  country: string,
 }
+
 
 export type  LastMessageDto = MessageDto;
 

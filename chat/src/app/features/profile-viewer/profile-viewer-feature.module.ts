@@ -8,6 +8,7 @@ import { LookingForComponent } from './components/looking-for/looking-for.compon
 import { EssentialsComponent } from './components/essentials/essentials.component';
 import { blockComponent } from './components/security/block-profile/block.component';
 import { ReportComponent } from './components/security/report-profile/report.component';
+
 @NgModule({
   imports: [IonicModule, CommonModule, FormsModule, SharedModule],
   declarations: [

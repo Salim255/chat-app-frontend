@@ -3,12 +3,12 @@ import { Subscription } from 'rxjs';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { Router } from '@angular/router';
-import { PhotoService, TakingPictureStatus } from 'src/app/core/services/media/photo.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { TakingPictureStatus } from 'src/app/core/services/media/photo.service';
+import { Partner } from '../../interfaces/partner.interface';
 import {
   DisableProfileSwipe,
   DiscoverService,
-} from 'src/app/features/discover-profiles/services/discover.service';
+} from 'src/app/features/discover/services/discover.service';
 @Component({
   selector: 'app-header',
   templateUrl: './app-header.component.html',
@@ -17,6 +17,7 @@ import {
 })
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
+  @Output() closeCompleteProfile = new EventEmitter();
   @Output() settings = new EventEmitter();
   //@Output() closeProfileViewer = new EventEmitter()
   @Input() pageName: string | null = null;
@@ -37,7 +38,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   constructor(
     private tabsService: TabsService,
     private profileViewerService: ProfileViewerService,
-    private photoService: PhotoService,
     private router: Router,
     private discoverService: DiscoverService
   ) {}
@@ -56,7 +56,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  closeProfileViewer(viewedProfile: DisableProfileSwipe | null) {
+  closeProfileViewer(viewedProfile: DisableProfileSwipe | null): void {
     if (viewedProfile) {
       this.discoverService.onDiscoverProfileToggle({
         profile: viewedProfile.profile,
@@ -70,11 +70,11 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       this.hidingTapStatus = status;
     });
 
-    this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(
+  /*   this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(
       (status) => {
         this.takingPictureStatus = status;
       }
-    );
+    ); */
   }
 
   // Unsubscribe from all services
@@ -87,7 +87,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
 
   // Determine if the logo should be shown
-  showAppLogo() {
+  showAppLogo(): boolean {
     return this.pageName !== 'active-conversation';
   }
 
@@ -157,7 +157,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
   // Handle the save picture action
   onSavePicture(): void {
-    this.photoService.setTakingPictureStatus('Success');
+    //this.photoService.setTakingPictureStatus('Success');
   }
 
   ngOnDestroy(): void {

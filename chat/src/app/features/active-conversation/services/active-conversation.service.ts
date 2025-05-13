@@ -6,7 +6,6 @@ import {
   map,
   Observable,
   of,
-  pipe,
   switchMap,
   take,
   tap,
@@ -33,7 +32,7 @@ import {
 import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { MessageNotifierPayload } from 'src/app/core/services/socket-io/socket-message.service';
-import { AuthService } from 'src/app/core/services/auth/auth.service';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { MessageEncryptionService } from './message-encryption.service';
 import {
   ActiveConversationHttpService,
@@ -78,7 +77,7 @@ export class ActiveConversationService {
     private messageEncryptionService: MessageEncryptionService,
     private activeConversationHttpService: ActiveConversationHttpService,
     private activeConversationNotificationService: ActiveConversationNotificationService,
-    private activeConversationPartnerService: ActiveConversationPartnerService
+    private activeConversationPartnerService: ActiveConversationPartnerService,
   ) {
     this.workerHandler = new ConversationWorkerHandler();
     this.authService.userId.subscribe(userId => this.userId = userId);
@@ -86,10 +85,11 @@ export class ActiveConversationService {
 
   // Open Conversation (Handle Room status and Messages)
   openConversation(partnerInfo: Partner, conversation: Conversation | null): void {
+    console.log(partnerInfo);
     if (!partnerInfo?.partner_id) return;
 
     this.updatePartnerConnectionStatus(partnerInfo.connection_status);
-    if(conversation && conversation.delivered_messages_count !== 0) {
+    if(conversation && conversation.delivered_messages_count > 0) {
       // Avoid call updated with sender join room
       this.markMessagesAsRead(conversation.id).pipe(take(1)).subscribe();
     }
@@ -146,9 +146,13 @@ export class ActiveConversationService {
               return this.createConversationPost(encryptedData as EncryptedMessageData, authData);
             }),
             tap((response) => {
+              if (!response) return;
               const chat: Conversation = processConversationResponse(response, content);
               this.setActiveConversation(chat);
               this.conversationService.fetchConversations();
+              const thisPartner = this.activeConversationPartnerService.partnerInfo;
+              if(!thisPartner || !thisPartner.partner_id) return
+              this.activeConversationNotificationService.notifyPartnerOfNewConversation(chat.id, thisPartner?.partner_id);
             })
         );
       })
@@ -171,8 +175,8 @@ export class ActiveConversationService {
         const messageData: CreateMessageDto =
           {
             chat_id: this.activeConversationSource?.value?.id,
-            from_user_id:Number(authData.id),
-            to_user_id:this.activeConversationPartnerService.partnerInfo.partner_id,
+            from_user_id: Number(authData.id),
+            to_user_id: this.activeConversationPartnerService.partnerInfo.partner_id,
             content: message,
             partner_connection_status: roomStatus,
           }
@@ -318,7 +322,8 @@ export class ActiveConversationService {
 
   // Update Partner Connection Status
   private updatePartnerConnectionStatus(status: string): void {
-    const roomStatus =  status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE;
+    const roomStatus =
+      status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE;
     this.activeConversationPartnerService.setPartnerInRoomStatus(roomStatus)
   }
 

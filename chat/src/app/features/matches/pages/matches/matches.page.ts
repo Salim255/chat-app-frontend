@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
 import { Match } from '../../models/match.model';
+import { AccountService } from 'src/app/features/account/services/account.service';
 
 @Component({
   selector: 'app-matches',
@@ -11,10 +12,15 @@ import { Match } from '../../models/match.model';
 })
 export class MatchesPage implements OnInit, OnDestroy {
   private partnerSourceSubscription!: Subscription;
+  private hostProfileSubscription!: Subscription;
+  hostAvatar!: string;
   placeHolderText = `You haven't any matches yet. Start exploring and find your perfect match!`;
   matchesArray = signal<Match[]>([]);
 
-  constructor(private matchesService: MatchesService) {}
+  constructor(
+    private accountService: AccountService,
+    private matchesService: MatchesService,
+  ) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -29,6 +35,7 @@ export class MatchesPage implements OnInit, OnDestroy {
   ionViewWillEnter(): void {
     this.subscribeToMatches();
     this.matchesService.fetchMatches().subscribe();
+    this.subscribeToHostProfile();
   }
 
   ionViewWillLeave(): void {
@@ -37,8 +44,16 @@ export class MatchesPage implements OnInit, OnDestroy {
 
   private cleanUp() {
     this.partnerSourceSubscription?.unsubscribe();
+    this.hostProfileSubscription?.unsubscribe();
   }
 
+  private subscribeToHostProfile(){
+    this.hostProfileSubscription = this.accountService.getHostUserPhoto.subscribe(avatar => {
+      if (!avatar) return;
+        this.hostAvatar = avatar;
+    })
+  }
+  
   private subscribeToMatches() {
     this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe((data) => {
       console.log('Data received:', data);
