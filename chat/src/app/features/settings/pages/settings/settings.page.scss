@@ -1,3 +1,13 @@
+ion-header {
+  ion-title {
+    color: var(--ion-color-grey-8);
+    font-weight: bold;
+  }
+  ion-button{
+    font-weight: 500;
+  }
+}
+
 ion-content {
   ion-row {
     margin-bottom: 1rem;
@@ -69,5 +79,9 @@ ion-content {
   ion-icon {
     color: var(--ion-color-grey-7);
     font-size: 1rem;
+  }
+
+  .item-title {
+    margin-left: .5rem;
   }
 }

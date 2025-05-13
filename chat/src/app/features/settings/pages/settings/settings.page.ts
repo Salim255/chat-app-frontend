@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { SettingService } from '../../services/setting.service';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -22,17 +23,20 @@ export class SettingsPage implements OnInit {
   ];
 
   constructor(
-    private navController: NavController,
+    private settingService: SettingService,
     private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log('Hello Salim');
   }
-  onBackArrow() {
-    this.navController.back();
+  
+  onClose(): void {
+    this.settingService.dismissSetting();
   }
-  onLogout() {
+
+  onLogout(): void {
     this.authService.logout();
+    this.settingService.dismissSetting();
   }
 }

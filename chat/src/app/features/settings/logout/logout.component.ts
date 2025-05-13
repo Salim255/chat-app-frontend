@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { SettingService } from '../services/setting.service';
 
 @Component({
   selector: 'app-logout',
@@ -8,9 +9,12 @@ import { AuthService } from 'src/app/features/auth/services/auth.service';
   standalone: false,
 })
 export class LogoutComponent {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private settingService: SettingService,
+    private authService: AuthService) {}
 
-  onLogout() {
-    this.authService.logout();
+  onLogout():void {
+    this.settingService.dismissSetting();
+    //this.authService.logout();
   }
 }

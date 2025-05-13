@@ -64,12 +64,12 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     return index;
   }
 
-  setUserImages(profile: Profile): string[] {
+  setUserImages(): string[] {
     const imagesList = [
-      StringUtils.getAvatarUrl(profile?.photos[0]),
-      StringUtils.getAvatarUrl(profile?.photos[1]),
-      StringUtils.getAvatarUrl(profile?.photos[2]),
-      StringUtils.getAvatarUrl(profile?.photos[3])
+      StringUtils.getAvatarUrl(this.profile?.photos[0]),
+      StringUtils.getAvatarUrl(this.profile?.photos[1]),
+      StringUtils.getAvatarUrl(this.profile?.photos[2]),
+      StringUtils.getAvatarUrl(this.profile?.photos[3])
     ];
     return imagesList;
   }
@@ -131,7 +131,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   }
 
   private slideNext() {
-    if (this.currentIndex < this.setUserImages(this.profile).length - 1) {
+    if (this.currentIndex < this.setUserImages().length - 1) {
       this.currentIndex = this.currentIndex + 1;
       console.log(this.currentIndex);
     } else {
