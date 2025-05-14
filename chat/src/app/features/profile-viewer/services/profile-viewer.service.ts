@@ -27,9 +27,11 @@ export class ProfileViewerService {
   }
 
   async openProfileViewerModal(profile: ViewProfileData): Promise<void> {
+    const topModal = await this.modalController.getTop();
+    if (!profile || topModal ) return;
     const modal = await this.modalController.create({
       component: ProfileViewerPage,
-      componentProps: profile
+      componentProps: {profile}
     });
 
     await modal.present();

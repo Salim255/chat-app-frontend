@@ -1,12 +1,19 @@
-<app-header [pageName]="'profile-viewer'"></app-header>
+<ion-header *ngIf="profile">
+  <ion-toolbar>
+    <ion-title>
+      {{ profile.name }}
+    </ion-title>
+    <ion-button slot="end" fill="clear" size="small" (click)="onClose()">Done</ion-button>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content>
+<ion-content *ngIf="profile">
   <ion-grid [fixed]="true">
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="6" offsetXl="3">
         <app-profile-slider
-          [profile]="profileToDisplay"
-          [pageName]="'profile-viewer'"
+          [profile]="profile"
+          [pageName]="pageName"
         ></app-profile-slider>
       </ion-col>
     </ion-row>
@@ -28,12 +35,12 @@
     </ion-row>
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-        <app-block-profile [profile]="profileToDisplay"></app-block-profile>
+        <app-block-profile [profile]="profile"></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
-        <app-report-profile [profile]="profileToDisplay"></app-report-profile>
+        <app-report-profile [profile]="profile"></app-report-profile>
       </ion-col>
     </ion-row>
     <ion-row>

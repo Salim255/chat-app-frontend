@@ -64,6 +64,7 @@ export class headerComponent implements OnChanges {
             partner_id: this.partnerInfo.user_id,
             photos: this.partnerInfo.photos,
           }
-    this.profileViewerService.openProfileViewerModal(data);
+    console.log('Profile data:', this.partnerInfo);
+    //this.profileViewerService.openProfileViewerModal();
   }
 }

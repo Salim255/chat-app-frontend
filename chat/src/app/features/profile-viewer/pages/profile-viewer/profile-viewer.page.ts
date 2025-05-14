@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ProfileViewerService, ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { PageName } from 'src/app/shared/components/profile/slider/slider.component';
 
 @Component({
   selector: 'app-view-profile',
@@ -8,20 +8,12 @@ import { ProfileViewerService } from 'src/app/features/profile-viewer/services/p
   styleUrls: ['./profile-viewer.page.scss'],
   standalone: false,
 })
-export class ProfileViewerPage implements OnInit, OnDestroy {
-  profileToDisplay: any;
-  private profileToDisplaySubscription!: Subscription;
+export class ProfileViewerPage {
+  @Input() profile!: ViewProfileData;
+  pageName: PageName = PageName.ProfileViewer;
   constructor(private profileViewerService: ProfileViewerService) {}
 
-  ngOnInit(): void {
-    this.profileToDisplaySubscription = this.profileViewerService.getProfileToDisplay.subscribe(
-      (profile) => {
-        this.profileToDisplay = profile;
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.profileToDisplaySubscription?.unsubscribe();
+  onClose(): void{
+    this.profileViewerService.closeModal();
   }
 }
