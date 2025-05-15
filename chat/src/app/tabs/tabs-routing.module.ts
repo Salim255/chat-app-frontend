@@ -47,13 +47,6 @@ const routes: Routes = [
     runGuardsAndResolvers: 'always', // Forces full navigation
   },
   {
-    path: 'edit-profile',
-    loadChildren: () =>
-      import('../features/account/pages/account/edit-profile/edit-profile.module').then(
-        (m) => m.EditProfilePageModule
-      ),
-  },
-  {
     path: 'settings',
     loadChildren: () =>
       import('../features/settings/pages/settings/settings.module').then(

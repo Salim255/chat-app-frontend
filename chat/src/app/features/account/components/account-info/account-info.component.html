@@ -13,24 +13,18 @@
   </ion-row>
   <ion-row>
     <ion-col>
-      <div>
+      <div (click)="onProfile()" >
         <ion-button shape="round" fill="outline">
           <ion-icon slot="icon-only" name="cog"></ion-icon>
         </ion-button>
-        <ion-text> Settings </ion-text>
+        <ion-text> Profile </ion-text>
       </div>
       <div>
-        <ion-button shape="round" fill="outline" (click)="onEditProfile()">
-          <ion-icon slot="icon-only" name="create"></ion-icon>
-        </ion-button>
-        <ion-text> Profile</ion-text>
-      </div>
-      <div>
-        <ion-button fill="outline" shape="round" (click)="onTakePhoto()">
+        <ion-button fill="outline" shape="round" (click)="onPreferences()">
           <ion-icon slot="icon-only" name="camera"></ion-icon>
           <ion-icon name="add" class="add-icon"></ion-icon>
         </ion-button>
-        <ion-text> Photo</ion-text>
+        <ion-text> Preferences</ion-text>
       </div>
     </ion-col>
   </ion-row>

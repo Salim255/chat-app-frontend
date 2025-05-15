@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" (click)="onBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Dating Profile</ion-title>
+  </ion-toolbar>
+  <ion-segment >
+  <ion-segment-button value="first" content-id="first">
+    <ion-label>Edit profile</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="second" content-id="second">
+    <ion-label> Preview profile</ion-label>
+  </ion-segment-button>
+</ion-segment>
+</ion-header>
+<ion-content>
+
+
+<ion-segment-view>
+  <ion-segment-content id="second">
+      <app-preview></app-preview>
+  </ion-segment-content>
+  <ion-segment-content id="first">
+   <app-edit-profile></app-edit-profile>
+  </ion-segment-content>
+</ion-segment-view>
+
+ <ion-router-outlet></ion-router-outlet>
+</ion-content>

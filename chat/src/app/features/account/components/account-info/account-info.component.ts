@@ -23,19 +23,13 @@ export class AccountInfoComponent {
 
   constructor( private router: Router, private photoService: PhotoService) {}
 
-  onEditProfile(): void {
-    this.router.navigate(['/tabs/edit-profile']);
+  onProfile(): void {
+    //this.router.navigate(['/tabs/edit-profile']);
+    this.router.navigate(['/tabs/account/dating-profile']);
   }
 
-  async onTakePhoto(): Promise<void>{
-    const { preview, formData } = await this.photoService.takePicture();
-
-    if (preview) {
-      // Handle photo upload logic
-      // This Ensure the base64String is in the correct format for displaying in an image tag
-      this.photoPreview =  preview;
-      //this.selectedPhotoString = base64String;
-    }
+  onPreferences(): void{
+    this.router.navigate(['/tabs/account/preferences']);
   }
 
   onSubmit(): void {

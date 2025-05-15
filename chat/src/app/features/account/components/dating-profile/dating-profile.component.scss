@@ -1,0 +1,16 @@
+ion-segment {
+  position: relative;
+  z-index: 10;
+  --background: transparent;
+  ion-segment-button {
+    --border-radius: 0px;
+    --indicator-box-shadow: none;
+    --indicator-color: transparent;
+  }
+ ion-segment-button.segment-button-checked::part(native) {
+    border-bottom: 2px solid var(--ion-color-primary);
+    color: var(--ion-color-primary);
+    background: transparent !important;
+    --background: transparent !important;
+  }
+}
