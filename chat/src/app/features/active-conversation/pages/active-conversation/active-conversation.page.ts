@@ -98,7 +98,6 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
     this.partnerInfoSubscription =
     this.activeConversationPartnerService.getPartnerInfo.subscribe(
       (partnerInfo) => {
-        console.log(partnerInfo);
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
           if (!(this.partnerInfo.partner_id && this.userId)) return;

@@ -24,18 +24,4 @@ export class ProfileContentComponent {
     return 'profile-details profile-details__collapse';
   }
 
-  buildProfileViewerData(): ViewProfileData {
-   const data: ViewProfileData =
-    {
-      birth_date: this.profile.birth_date,
-      city: this.profile.city,
-      connection_status: this.profile.connection_status,
-      country: this.profile.country,
-      name: this.profile.name,
-      partner_id: this.profile.user_id,
-      photos: this.profile.photos,
-    }
-    return data
-  }
-
 }

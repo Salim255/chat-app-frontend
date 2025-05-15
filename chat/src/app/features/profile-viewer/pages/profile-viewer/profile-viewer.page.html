@@ -1,16 +1,16 @@
 <ion-header *ngIf="profile">
   <ion-toolbar>
-    <ion-title>
-      {{ profile.name }}
-    </ion-title>
-    <ion-button slot="end" fill="clear" size="small" (click)="onClose()">Done</ion-button>
+    <ion-text slot="start">
+     <span> {{ profile.name }}</span>, {{  profileAge(profile.birth_date) }}
+    </ion-text>
+    <ion-icon slot="end" name="close-outline" (click)="onClose()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content *ngIf="profile">
   <ion-grid [fixed]="true">
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="6" offsetXl="3">
+      <ion-col size="12">
         <app-profile-slider
           [profile]="profile"
           [pageName]="pageName"
@@ -18,35 +18,38 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-profile-about-me></app-profile-about-me>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-profile-looking-for></app-profile-looking-for>
       </ion-col>
     </ion-row>
 
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-profile-essentials></app-profile-essentials>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-block-profile [profile]="profile"></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-report-profile [profile]="profile"></app-report-profile>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col sizeLg="8" offsetLg="2" sizeXl="5" offsetXl="3.5">
+      <ion-col size="12">
         <app-interaction-btns></app-interaction-btns>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <div class="interaction-btns">
+    <app-interaction-btns [pageName]="'viewer'"></app-interaction-btns>
+  </div>
 </ion-content>

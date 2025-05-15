@@ -1,11 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ProfileViewerService, ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { PartnerConnectionStatus, SocketRoomService } from 'src/app/core/services/socket-io/socket-room.service';
 import { ActiveConversationUIService } from '../../services/active-conversation-ui.service';
 import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
 import { SocketTypingService } from 'src/app/core/services/socket-io/socket-typing.service';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { UserInChatDto } from 'src/app/features/conversations/interfaces/conversations.dto';
+import { Profile } from 'src/app/features/discover/model/profile.model';
 
 @Component({
   selector: 'app-active-conversation-header',
@@ -54,17 +55,20 @@ export class headerComponent implements OnChanges {
   onDisplayProfile(): void {
     if (!this.partnerInfo || !this.partnerInfo.user_id) return;
 
-  const data: ViewProfileData =
+  const data: Profile =
           {
+            user_id: this.partnerInfo.user_id,
+            profile_id: 0,
             birth_date: this.partnerInfo.birth_date,
             city: this.partnerInfo.city,
             connection_status: this.partnerInfo.connection_status,
             country: this.partnerInfo.country,
             name: this.partnerInfo.name,
-            partner_id: this.partnerInfo.user_id,
+            match_id: 0,
+            match_status: 0,
+            avatar: '',
             photos: this.partnerInfo.photos,
           }
-    console.log('Profile data:', this.partnerInfo);
-    //this.profileViewerService.openProfileViewerModal();
+    this.profileViewerService.openProfileViewerModal(data);
   }
 }

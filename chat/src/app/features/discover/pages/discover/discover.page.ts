@@ -202,9 +202,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   private loadForeignersList(): void {
     this.membersSource = this.discoverService.getPotentialMatchesArray.subscribe((profiles) => {
-      console.log(profiles)
       this.membersList.set([...profiles]);
-      console.log( this.membersList())
     });
   }
 

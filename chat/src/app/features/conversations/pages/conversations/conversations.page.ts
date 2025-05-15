@@ -80,7 +80,6 @@ export class ConversationsPage implements OnDestroy {
   private subscribeToConversations(): void {
     this.conversationsSource = this.conversationService
       .getConversations.subscribe((conversation) => {
-        console.log(conversation);
         if (conversation && conversation?.length > 0) {
           this.conversations = [...conversation];
           this.isEmpty = conversation.length === 0; //////
@@ -93,7 +92,7 @@ export class ConversationsPage implements OnDestroy {
   }
 
   private subscribeUpdatedUserDisconnection(): void {
-    this.socketCoreService.connectionStatus$.subscribe(user => console.log(user));
+    this.socketCoreService.connectionStatus$.subscribe();
   }
 
   private subscribeToPartnerConnectionStatus() {

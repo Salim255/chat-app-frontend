@@ -45,7 +45,6 @@ implements OnDestroy, OnChanges {
     this.initializeConversation();
     this.subscribeToPartnerConnectionStatus();
     this.subscribeToTyping();
-    console.log(this.conversation);
   }
 
   private subscribeToTyping():void {

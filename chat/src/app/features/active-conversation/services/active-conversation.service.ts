@@ -87,7 +87,6 @@ export class ActiveConversationService {
 
   // Open Conversation (Handle Room status and Messages)
   openConversation(partnerInfo:  UserInChatDto, conversation: Conversation | null): void {
-    console.log(partnerInfo);
     if (!partnerInfo?.user_id) return;
 
     this.updatePartnerConnectionStatus(partnerInfo.connection_status);

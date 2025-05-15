@@ -1,5 +1,22 @@
+ion-header {
+ ion-text {
+    font-size: 1.5rem;
+     color: var(--ion-color-grey-7);
+    span {
+      font-weight: 600;
+    }
+  }
+
+  ion-icon {
+    font-size: 2rem;
+    font-weight: bolder;
+    transform: scale(1.2);
+    color: var(--ion-color-grey-7);
+  }
+}
 ion-content {
   height: 100%;
+
   ion-grid {
     margin: 0;
     padding: 0;
@@ -17,5 +34,9 @@ ion-content {
       width: 100%;
       z-index: 2;
     }
+  }
+
+  .interaction-btns {
+    position: fixed;
   }
 }

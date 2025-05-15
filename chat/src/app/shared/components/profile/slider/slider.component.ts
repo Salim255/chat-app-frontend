@@ -12,6 +12,7 @@ import { IonicSlides } from '@ionic/angular';
 import { Swiper } from 'swiper/types';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ProfileViewerService, ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { Profile } from 'src/app/features/discover/model/profile.model';
 
 export enum PageName {
   Discover = 'discover',
@@ -25,7 +26,7 @@ export enum PageName {
   standalone: false,
 })
 export class SliderComponent implements OnChanges, AfterViewInit {
-  @Input() profile!: ViewProfileData;
+  @Input() profile!: Profile;
   @Input() swipeDirection: any;
   @Input() pageName:PageName = PageName.Discover;
   @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
@@ -50,34 +51,34 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   constructor(private profileViewerService: ProfileViewerService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
- ngOnChanges(changes: SimpleChanges): void {
-  if (changes['profile']) {
-    const prev = changes['profile'].previousValue;
-    const curr = changes['profile'].currentValue;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['profile']) {
+      const prev = changes['profile'].previousValue;
+      const curr = changes['profile'].currentValue;
 
-    // Only react if the profile actually changed
-    if (JSON.stringify(prev) !== JSON.stringify(curr)) {
-      this.profile = curr;
-      this.currentIndex = 0;
+      // Only react if the profile actually changed
+      if (JSON.stringify(prev) !== JSON.stringify(curr)) {
+        this.profile = curr;
+        this.currentIndex = 0;
 
-      if (this.profile?.photos) {
-        this.profilePhotos = this.setUserImages();
+        if (this.profile?.photos) {
+          this.profilePhotos = this.setUserImages();
+        }
+      }
+    }
+
+    if(changes['pageName']) {
+      const prev = changes['pageName'].previousValue;
+      const curr = changes['pageName'].currentValue;
+      // Only react if the swipeDirection actually changed
+      if (prev !== curr) {
+        this.setProfileDetailsStyle();
+        this.setSwiperContainerHeight();
+        this.setProfileImagesHeight();
       }
     }
   }
 
-  if(changes['pageName']) {
-    const prev = changes['pageName'].previousValue;
-    const curr = changes['pageName'].currentValue;
-    // Only react if the swipeDirection actually changed
-    if (prev !== curr) {
-      this.setProfileDetailsStyle();
-      this.setSwiperContainerHeight();
-      this.setProfileImagesHeight();
-    }
-  }
-  console.log('Profile to view:', this.pageName);
-}
 
   ngAfterViewInit(): void {
     this.swiper = this.swiperContainer?.nativeElement.swiper;
@@ -107,10 +108,8 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   }
 
 setProfileDetailsStyle(): void {
-  console.log('Profile to view:', this.pageName);
     if (this.pageName === PageName.Discover) {
       this.detailsHeightStyle = 'profile-summary profile-summary__show';
-
     } else {
       this.detailsHeightStyle =  'profile-summary profile-summary__hide';
     }

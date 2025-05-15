@@ -4,7 +4,7 @@
       <app-profile-slider
         *ngIf="profile"
         [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
-        [profile]="buildProfileViewerData()"
+        [profile]="profile"
         [pageName]="pageName"
       >
       </app-profile-slider>

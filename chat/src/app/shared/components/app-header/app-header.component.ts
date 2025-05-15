@@ -109,24 +109,20 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         return 'shield';
       case 'auth':
         return;
-      case 'profile-viewer':
-        return 'close-outline';
-      case 'active-conversation':
-        return 'ellipsis-horizontal-outline';
       default:
         return;
     }
   }
 
   // Determine left icon based on the current page  name
-  displayLeftIcon(pageName: string | null): string {
-    if (pageName === 'discover' && this.hidingTapStatus === 'hide') return '';
-    return 'notifications';
+  displayLeftIcon(pageName: string | null): string | null {
+    if (pageName === 'account') return 'shield';
+    return null
   }
 
   // Set css class for right icon
   setRightIconCss(pageName: string | null): string {
-    if (pageName === 'discover' && this.hidingTapStatus === 'hide') return 'btn btn__eye';
+    if (pageName === 'discover') return 'btn btn__eye';
     return '';
   }
 
@@ -140,13 +136,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         if (this.hidingTapStatus === 'hide') {
           this.tabsService.setTapHidingStatus('show');
         }
-        break;
-      case 'profile-viewer':
-        if (this.hidingTapStatus === 'hide') {
-          this.tabsService.setTapHidingStatus('show');
-        }
-        this.profileViewerService.closeModal();
-        this.router.navigateByUrl('/tabs/discover');
         break;
       default:
         return;
