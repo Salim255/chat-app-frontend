@@ -8,10 +8,10 @@ import { DatingProfileComponent } from '../../components/dating-profile/dating-p
 import { AccountDashBoardComponent } from '../../components/dashboard/dashboard-component';
 import { PreferencesComponent } from '../../components/preferences/preferences.component';
 
-import { PreviewComponent } from '../../components/preview/preview.component';
-import { EditProfileFormComponent } from '../../components/edit-profile/edit-profile-form/edit-profile-form.component';
+import { PreviewComponent } from '../../components/dating-profile/preview/preview.component';
+import { EditProfileFormComponent } from '../../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EditProfileModule } from '../../components/edit-profile/edit-profile.module';
+import { EditProfileModule } from '../../components/dating-profile/edit-profile/edit-profile.module';
 
 
 @NgModule({

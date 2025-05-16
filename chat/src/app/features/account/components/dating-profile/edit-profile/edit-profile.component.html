@@ -1,0 +1,32 @@
+<ion-grid>
+  <ion-row>
+    <ion-col>
+      <ion-row >
+        <ion-col class="cards" size="6" *ngFor="let item of [1, 2, 3,4]">
+          <app-edit-media></app-edit-media>
+            <ion-icon
+              [ngClass]="item ? 'icon-close' : 'icon-add'"
+            ></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-text>Bio</ion-text>
+      <app-edit-bio></app-edit-bio>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-text>Edit gender</ion-text>
+    <ion-col>
+      <app-edit-gender></app-edit-gender>
+    </ion-col>
+  </ion-row>
+   <ion-row>
+    <ion-text>Edit Home town</ion-text>
+    <ion-col>
+      <app-edit-home-town></app-edit-home-town>
+    </ion-col>
+  </ion-row>
+</ion-grid>
