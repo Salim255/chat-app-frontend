@@ -1,0 +1,26 @@
+<form [formGroup]="editProfileFormFields">
+
+  <ion-grid class="edit-profile">
+      <ion-row>
+        <ion-col size-md="6" offset-md="3">
+
+         <!-- Photos Picker -->
+        <ion-row>
+            <ion-col class="edit-profile__photos">
+              <ion-item>
+                <ion-label >Profile Photos</ion-label>
+              </ion-item>
+              <ion-row >
+                <ion-col class="edit-profile__photos--cards" size="6" *ngFor="let i of profile.photos; let idx = index; trackBy: trackByIndex">
+                <app-card-media [photo]="this.profile.photos"></app-card-media>
+
+                </ion-col>
+              </ion-row>
+            </ion-col>
+        </ion-row>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</form>

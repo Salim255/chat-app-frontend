@@ -16,6 +16,8 @@ import { DistanceComponent } from './components/profile/profile-coordination/dis
 import { NameAgeComponent } from './components/profile/profile-coordination/name-age/name-age.component';
 import { CustomSwiperDirective } from './directives/custom-swiper/custom-swiper.directive';
 import { LoadingSpinnerComponent } from './components/app-loading-spinner/loading-spinner.component';
+import { CardMediaComponent } from './components/card-media/card.component';
+
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -34,6 +36,7 @@ import { LoadingSpinnerComponent } from './components/app-loading-spinner/loadin
     NameAgeComponent,
     CustomSwiperDirective,
     LoadingSpinnerComponent,
+    CardMediaComponent
   ],
   exports: [
     SearchBarComponent,
@@ -50,6 +53,7 @@ import { LoadingSpinnerComponent } from './components/app-loading-spinner/loadin
     NameAgeComponent,
     CustomSwiperDirective,
     LoadingSpinnerComponent,
+    CardMediaComponent,
   ],
   imports: [IonicModule, CommonModule],
 })
