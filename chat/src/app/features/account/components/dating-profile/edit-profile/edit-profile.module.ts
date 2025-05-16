@@ -16,7 +16,11 @@ import { EditHomeTownComponent } from "./edit-home-town/edit-home-town.component
     EditGenderComponent,
     EditHomeTownComponent
    ],
-  imports: [CommonModule, IonicModule, SharedModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    SharedModule,
+  ],
   exports: [
     MediaComponent,
     EditProfileComponent,
@@ -25,4 +29,7 @@ import { EditHomeTownComponent } from "./edit-home-town/edit-home-town.component
     EditHomeTownComponent ],
 })
 
-export class EditProfileModule {}
+export class EditProfileModule {
+
+
+}

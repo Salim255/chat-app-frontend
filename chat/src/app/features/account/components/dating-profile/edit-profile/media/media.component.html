@@ -1,1 +1,11 @@
-<app-card-media></app-card-media>
+
+<ion-row>
+  <ion-col class="cards" size="6" *ngFor="let photo of [0, 1, 2, 3]; let idx = index; trackBy: trackByIndex">
+    <app-card-media [photo]="photos[idx]"></app-card-media>
+    <ion-icon
+      [ngClass]="photos[idx] ? 'icon-close' : 'icon-add'"
+    ></ion-icon>
+    </ion-col>
+</ion-row>
+
+

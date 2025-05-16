@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { EditingProfileService } from '../../services/editing-profile.service';
 @Component({
   selector: 'app-dating-profile',
   templateUrl: './dating-profile.component.html',
@@ -8,11 +9,14 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class DatingProfileComponent {
+  segmentValue: string = 'default';
   constructor(
+    private editingProfileService:  EditingProfileService,
     private router: Router,
     private location: Location) { }
   onBack():void{
-    this.location.back()
+   // this.location.back();
+   this.editingProfileService.onDismissModal();
 
   }
 

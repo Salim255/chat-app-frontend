@@ -1,14 +1,7 @@
 <ion-grid>
   <ion-row>
-    <ion-col>
-      <ion-row >
-        <ion-col class="cards" size="6" *ngFor="let item of [1, 2, 3,4]">
-          <app-edit-media></app-edit-media>
-            <ion-icon
-              [ngClass]="item ? 'icon-close' : 'icon-add'"
-            ></ion-icon>
-        </ion-col>
-      </ion-row>
+    <ion-col size="12">
+       <app-edit-media [photos]="account?.photos"></app-edit-media>
     </ion-col>
   </ion-row>
   <ion-row>
