@@ -1,7 +1,7 @@
 <ion-grid>
   <ion-row>
     <ion-col class="badge">
-      <app-badge [text]="profile.connection_status"></app-badge>
+      <app-badge [text]="profile.connection_status ?? 'online' "></app-badge>
       <ion-icon name="eye"></ion-icon>
     </ion-col>
   </ion-row>

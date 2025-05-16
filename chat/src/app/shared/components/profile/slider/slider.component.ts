@@ -11,12 +11,13 @@ import {
 import { IonicSlides } from '@ionic/angular';
 import { Swiper } from 'swiper/types';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
-import { ProfileViewerService, ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
 import { Profile } from 'src/app/features/discover/model/profile.model';
 
 export enum PageName {
   Discover = 'discover',
   ProfileViewer =  'profile-viewer',
+  DatingProfile = 'dating-profile',
 };
 
 @Component({
@@ -52,6 +53,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes:', this.profile);
     if (changes['profile']) {
       const prev = changes['profile'].previousValue;
       const curr = changes['profile'].currentValue;
@@ -108,15 +110,15 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   }
 
 setProfileDetailsStyle(): void {
-    if (this.pageName === PageName.Discover) {
+    if (this.pageName === PageName.Discover || this.pageName === PageName.DatingProfile) {
       this.detailsHeightStyle = 'profile-summary profile-summary__show';
-    } else {
+    } else if (this.pageName === PageName.ProfileViewer) {
       this.detailsHeightStyle =  'profile-summary profile-summary__hide';
     }
   }
 
   setSwiperContainerHeight(): void {
-    if (this.pageName === PageName.Discover){
+    if (this.pageName === PageName.Discover || this.pageName === PageName.DatingProfile) {
       this.sliderHeightStyle =  'swiper-container swiper-container__preview-disabled-height';
     } else {
       this.sliderHeightStyle =  'swiper-container swiper-container__preview-enabled-height';
@@ -132,7 +134,7 @@ setProfileDetailsStyle(): void {
   }
 
   onProfileView(): void {
-    if (!this.profile) return;
+    if (!this.profile || this.pageName === PageName.DatingProfile) return;
     this.profileViewerService.openProfileViewerModal(this.profile);
   }
 

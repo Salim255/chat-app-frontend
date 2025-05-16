@@ -14,6 +14,7 @@ import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditProfileModule } from '../../components/dating-profile/edit-profile/edit-profile.module';
 
 
+
 @NgModule({
   imports: [
     IonicModule,
@@ -23,7 +24,7 @@ import { EditProfileModule } from '../../components/dating-profile/edit-profile/
     FormsModule,
     ReactiveFormsModule,
     EditProfileModule,
-  ],
+],
   declarations: [
     AccountPage, DatingProfileComponent,
     AccountDashBoardComponent, EditProfileFormComponent,

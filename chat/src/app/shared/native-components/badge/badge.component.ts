@@ -10,7 +10,7 @@ export class BadgeComponent {
   @Input() text!: string;
   constructor() {}
 
-  badgeColor() {
-    return this.text === 'offline' ? 'badge__offline' : 'badge__online';
+  badgeColor():string{
+   return this.text === 'offline' ? 'badge__offline' : 'badge__online';
   }
 }
