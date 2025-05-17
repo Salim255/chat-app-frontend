@@ -1,25 +1,22 @@
-<ion-grid>
-  <ion-row>
-    <ion-col size="12">
+<ion-grid class="edit-profile">
+  <ion-row class="edit-profile__media">
+    <ion-col>
        <app-edit-media [photos]="account?.photos"></app-edit-media>
     </ion-col>
   </ion-row>
-  <ion-row>
+  <ion-row class="edit-profile__bio">
     <ion-col>
-      <ion-text>Bio</ion-text>
       <app-edit-bio></app-edit-bio>
     </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-text>Edit gender</ion-text>
+  <ion-row class="edit-profile__gender">
     <ion-col>
-      <app-edit-gender></app-edit-gender>
+      <app-edit-gender [gender]="account.gender"></app-edit-gender>
     </ion-col>
   </ion-row>
-   <ion-row>
-    <ion-text>Edit Home town</ion-text>
+   <ion-row class="edit-profile__home">
     <ion-col>
-      <app-edit-home-town></app-edit-home-town>
+      <app-edit-home-town [homeTown]="account.city"></app-edit-home-town>
     </ion-col>
   </ion-row>
 </ion-grid>

@@ -1,0 +1,19 @@
+ion-item-group {
+  ion-item-divider {
+    padding-left: .3rem;
+    padding-right: .3rem;
+  }
+  ion-item, ion-item-divider {
+    ion-label {
+      color: var(--ion-color-grey-7);
+    }
+  }
+  ion-item {
+    --background: transparent;
+    --border-radius: 1rem;
+    border: 2px solid var(--ion-color-grey-3);
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    border-radius: .5rem;
+  }
+}

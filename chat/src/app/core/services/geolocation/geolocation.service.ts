@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 type Coordinates = {
@@ -45,8 +45,7 @@ export class GeolocationService {
       this.userCoordinates.longitude = position.coords.longitude;
 
       // Get user's city using coordinates
-      let coordinateObserve: Observable<any>;
-      coordinateObserve = this.getCityByCoordinates(this.userCoordinates);
+      const coordinateObserve: Observable<any> = this.getCityByCoordinates(this.userCoordinates);
       coordinateObserve.subscribe((response) => {
         if (response && response.results.length > 0) {
           this.userCity = response.results[0].components.city;
@@ -69,4 +68,25 @@ export class GeolocationService {
   get getLocation() {
     return this.currentLocation.asObservable();
   }
+
+  searchLocationsByText(query: string): Observable<string[]> {
+  if (!query.trim()) return of([]);
+
+  const url = `${this.ENV.mapBaseUrl}?q=${encodeURIComponent(query)}&key=${this.ENV.mapApiKey}&language=en&limit=5`;
+  return this.http.get<any>(url).pipe(
+    map(response => {
+
+      return  response.results.map((result: any) =>{
+        const { continent, country, city, _normalized_city, county } = result.components;
+      const cty = city || _normalized_city || county;
+      if (!cty) return ;
+      const formatted = [cty, country, continent].filter(Boolean).join(', ');
+
+      return formatted;
+      }).filter(Boolean);
+    }
+
+    )
+  );
+}
 }

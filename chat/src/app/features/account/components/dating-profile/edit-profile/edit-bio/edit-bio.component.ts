@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { EditingProfileService, FieldName } from "src/app/features/account/services/editing-profile.service";
 
 @Component({
   selector: "app-edit-bio",
@@ -7,4 +8,8 @@ import { Component } from "@angular/core";
   standalone: false,
 })
 export class EditBioComponent {
-  constructor() {}  }
+  constructor(private editingProfileService: EditingProfileService) {}
+  onEditFormModal(): void {
+    this.editingProfileService.onEditFormModal(FieldName.Bio, 'Hello Bio');
+  }
+}

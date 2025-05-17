@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { EditingProfileService, FieldName } from "src/app/features/account/services/editing-profile.service";
 
 @Component({
   selector: "app-edit-home-town",
@@ -8,8 +9,10 @@ import { Component } from "@angular/core";
 })
 
 export class EditHomeTownComponent {
-  constructor() {}
-  onBack(): void {
+  @Input() homeTown: string = '';
+  constructor(private editingProfileService: EditingProfileService) {}
+  onEditHome(): void {
     //this.location.back()
+    this.editingProfileService.onEditFormModal(FieldName.City, 'France');
   }
 }

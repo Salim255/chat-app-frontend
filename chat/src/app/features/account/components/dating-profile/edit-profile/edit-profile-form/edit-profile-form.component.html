@@ -1,26 +1,96 @@
-<form [formGroup]="editProfileFormFields">
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon name="close" (click)="onCancelEditing()"></ion-icon>
+    </ion-buttons>
+    <ion-title> {{ fieldName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onSave()">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-grid class="edit-profile">
-      <ion-row>
-        <ion-col size-md="6" offset-md="3">
-
-         <!-- Photos Picker -->
-        <ion-row>
-            <ion-col class="edit-profile__photos">
+<ion-content  >
+  <form  [formGroup]="editProfileFormFields">
+    <ion-grid class="edit-profile">
+        <ion-row *ngIf="fieldName === FieldName.Bio" >
+          <ion-col>
               <ion-item>
-                <ion-label >Profile Photos</ion-label>
+                <ion-label position="floating">Bio</ion-label>
+                <ion-textarea
+                  [formControlName]="FieldName.Bio"
+                  placeholder="Tell us about yourself"
+                 autoGrow="true">
+                </ion-textarea>
               </ion-item>
-              <ion-row >
-                <ion-col class="edit-profile__photos--cards" size="6" *ngFor="let i of profile.photos; let idx = index; trackBy: trackByIndex">
-                <app-card-media [photo]="this.profile.photos"></app-card-media>
-
-                </ion-col>
-              </ion-row>
-            </ion-col>
+          </ion-col>
         </ion-row>
+        <ion-row *ngIf="fieldName === FieldName.Gender" >
+          <ion-col size="12">
+            <ion-item>
+              <ion-label class="ion-text-wrap">Select Gender</ion-label>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" >
+            <ion-item>
+              <ion-checkbox label-placement="start"
+                label-placement="start"
+                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'man'"
+                (ionChange)="onSingleCheckboxSelect('man')">Man</ion-checkbox>
+            </ion-item>
+
+            <ion-item>
+              <ion-checkbox
+                label-placement="start"
+               [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'woman'"
+                (ionChange)="onSingleCheckboxSelect('woman')">Woman</ion-checkbox>
+            </ion-item>
+
+            <ion-item>
+              <ion-checkbox
+                  label-placement="start"
+                  [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'other'"
+                  (ionChange)="onSingleCheckboxSelect('other')">Other</ion-checkbox>
+            </ion-item>
+          </ion-col>
+       </ion-row>
+
+      <ion-row *ngIf="fieldName === FieldName.City"  class="edit-profile__home-town">
+        <ion-col >
+          <ion-item>
+            <ion-label class="main-label" position="stacked">Where are you from?</ion-label>
+            <ion-searchbar
+              [value]="selectedLocation"
+              (ionInput)="onCityInput($event)"
+              placeholder="Search cities" ></ion-searchbar>
+          </ion-item>
+
+          <!-- Suggestions list -->
+          <ion-list  *ngIf="locationSuggestions.length > 0">
+            @for (result of locationSuggestions; track result) {
+            <ion-item  button (click)="onLocationSuggestionSelect(result)">
+              <ion-icon name="location-outline" slot="start"></ion-icon>
+              <ion-label>{{ result }}</ion-label>
+            </ion-item>
+            }
+          </ion-list>
+
         </ion-col>
-    </ion-row>
-  </ion-grid>
+      </ion-row>
 
-
-</form>
+     <ion-row *ngIf="fieldName === FieldName.Country" >
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating"> country </ion-label>
+            <ion-input
+              [formControlName]="FieldName.Country"
+              type="text"
+              placeholder="Enter your country"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

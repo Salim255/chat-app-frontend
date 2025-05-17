@@ -7,17 +7,17 @@ import { AccountFeatureModule } from 'src/app/features/account/account-feature.m
 import { DatingProfileComponent } from '../../components/dating-profile/dating-profile.component';
 import { AccountDashBoardComponent } from '../../components/dashboard/dashboard-component';
 import { PreferencesComponent } from '../../components/preferences/preferences.component';
-
 import { PreviewComponent } from '../../components/dating-profile/preview/preview.component';
-import { EditProfileFormComponent } from '../../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditProfileModule } from '../../components/dating-profile/edit-profile/edit-profile.module';
+import { CommonModule } from '@angular/common';
 
 
 
 @NgModule({
   imports: [
     IonicModule,
+    CommonModule,
     AccountPageRoutingModule,
     SharedModule,
     AccountFeatureModule,
@@ -27,7 +27,7 @@ import { EditProfileModule } from '../../components/dating-profile/edit-profile/
 ],
   declarations: [
     AccountPage, DatingProfileComponent,
-    AccountDashBoardComponent, EditProfileFormComponent,
+    AccountDashBoardComponent,
     PreferencesComponent
    ,PreviewComponent,
   ],
