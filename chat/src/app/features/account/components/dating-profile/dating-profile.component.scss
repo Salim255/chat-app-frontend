@@ -1,20 +1,35 @@
-ion-segment-view, ion-segment {
+ion-header {
+  ion-toolbar {
+    ion-back-button {
+    color: var(--ion-color-grey-7);
+    }
+    padding-bottom: .5rem;
+  }
+
+  ion-segment-view, ion-segment {
   position: relative;
   z-index: 10;
-}
-ion-segment {
-  position: relative;
-  z-index: 10;
-  --background: transparent;
-  ion-segment-button {
-    --border-radius: 0px;
-    --indicator-box-shadow: none;
-    --indicator-color: transparent;
   }
- ion-segment-button.segment-button-checked::part(native) {
-    border-bottom: 2px solid var(--ion-color-primary);
-    color: var(--ion-color-primary);
-    background: transparent !important;
-    --background: transparent !important;
+
+  ion-segment {
+    position: relative;
+    z-index: 10;
+    --background: transparent;
+    padding-bottom: .5rem;
+    ion-segment-button {
+      --border-radius: 0px;
+      --indicator-box-shadow: none;
+      --indicator-color: transparent;
+      font-weight: 700;
+      color: var(--ion-color-grey-7);
+    }
+    ion-segment-button.segment-button-checked::part(native) {
+      border-bottom: 2px solid var(--ion-color-primary);
+      color: var(--ion-color-primary);
+      background: transparent !important;
+      --background: transparent !important;
+    }
   }
 }
+
+

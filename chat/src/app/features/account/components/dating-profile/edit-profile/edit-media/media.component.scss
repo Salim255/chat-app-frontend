@@ -8,11 +8,11 @@
         border-radius: 50%;
       }
    .icon-close {
-        right: 0%;
-        bottom: 6%;
-        color: rgb(202, 200, 200);
-        background: rgb(103, 102, 102);
-        border: 2px solid rgb(202, 200, 200);
+        right: 7%;
+        bottom: 10%;
+        color: var(--ion-color-grey-7);
+        background: var( --ion-color-cyan-1);
+        opacity: .5;
       }
       .icon-add {
         top: 50%;
