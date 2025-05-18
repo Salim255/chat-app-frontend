@@ -18,11 +18,25 @@ ion-header {
 }
 
 .edit-preference {
+  margin-top: 1rem;
   &__age {
-
+    ion-item-divider {
+      padding: 0 .5rem;
+      --inner-padding-end: 0;
+      margin-bottom: 1rem;
+    }
+    ion-item {
+    --background: transparent;
+   }
   }
   &__distance {
-
+     ion-item-divider {
+      padding: 0 .5rem;
+      --inner-padding-end: 0;
+    }
+    ion-item {
+      --background: transparent;
+    }
   }
   &__interested {
     ion-col {
@@ -46,5 +60,4 @@ ion-header {
   ion-picker-column-option.option-active{
     color: var(--ion-color-primary);
   }
-
 }

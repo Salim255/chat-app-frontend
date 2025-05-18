@@ -18,10 +18,8 @@ ion-header {
   }
 }
 .edit-profile {
-  margin-left: .3rem;
-  margin-right: .3rem;
+  margin: .5rem;
   &__bio{
-    margin-top: .5rem;
     ion-item {
       --background: transparent;
       --padding-start: 0;
@@ -51,9 +49,6 @@ ion-header {
       color: var(--ion-color-grey-7);
       font-weight: bold;
       font-size: 1rem;
-    }
-    ion-item {
-      --background: transparent;
     }
   }
   &__home-town{

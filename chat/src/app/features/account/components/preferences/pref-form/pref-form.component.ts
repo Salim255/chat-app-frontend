@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PrefFieldName } from "../../../services/preferences.service";
 import { PreferencesService } from "../../../services/preferences.service";
+import { RangeCustomEvent } from "@ionic/angular";
 
 
 export  type EditProfilePayload = {
@@ -26,6 +27,8 @@ export class PrefFormComponent implements OnInit{
   editPrefFormFields!: FormGroup;
   ageOptions: number [] = [] // Age 18 to 100
   distanceOptions: number [] = []; // Distance 1 to 150 miles
+  ageRange = { lower: 18, upper: 100 };
+  activeKnob: 'lower' | 'upper' = 'lower';
   constructor(
     private preferencesService: PreferencesService,
     private fieldBuilder: FormBuilder){}
@@ -84,10 +87,23 @@ export class PrefFormComponent implements OnInit{
     const maxAge = event?.detail?.value?.maxAge;
     console.log('Selected age range:', minAge, maxAge);
   }
+  pinFormatter(value: number): string {
 
-  onPickerDistanceChange(event: any): void{
-
+      return `${value}%`;
   }
+/* <ion-label>How old are they ?</ion-label>
+                   <ion-label slot="end">18-28</ion-label> */
+
+  onIonKnobMoveStart(event: RangeCustomEvent) {
+    console.log('ionKnobMoveStart:', event.detail);
+    //this.activeKnob = event.detail.knob;
+  }
+
+  onIonKnobMoveEnd(event: RangeCustomEvent) {
+    console.log('ionKnobMoveEnd:', event.detail.value);
+  }
+
+
 
   onSingleCheckboxSelect(gender: string){
 
