@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-icon name="close" (click)="onCancelEditing()"></ion-icon>
+      <ion-back-button defaultHref="" (click)="onCancelEditing()" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title> {{ fieldName }}</ion-title>
+    <ion-title> {{fieldName}} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onSave()">Save</ion-button>
     </ion-buttons>
@@ -13,19 +13,20 @@
 <ion-content  >
   <form  [formGroup]="editProfileFormFields">
     <ion-grid class="edit-profile">
-        <ion-row *ngIf="fieldName === FieldName.Bio" >
+        <ion-row *ngIf="fieldName === FieldName.Bio" class="edit-profile__bio" >
           <ion-col>
-              <ion-item>
-                <ion-label position="floating">Bio</ion-label>
+              <ion-item lines="none">
                 <ion-textarea
                   [formControlName]="FieldName.Bio"
+                  [counter]="true"
+                  maxlength="20"
                   placeholder="Tell us about yourself"
                  autoGrow="true">
                 </ion-textarea>
               </ion-item>
           </ion-col>
         </ion-row>
-        <ion-row *ngIf="fieldName === FieldName.Gender" >
+        <ion-row *ngIf="fieldName === FieldName.Gender" class="edit-profile__gender" >
           <ion-col size="12">
             <ion-item>
               <ion-label class="ion-text-wrap">Select Gender</ion-label>
@@ -33,21 +34,21 @@
           </ion-col>
 
           <ion-col size="12" >
-            <ion-item>
+            <ion-item lines="none">
               <ion-checkbox label-placement="start"
                 label-placement="start"
                 [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'man'"
                 (ionChange)="onSingleCheckboxSelect('man')">Man</ion-checkbox>
             </ion-item>
 
-            <ion-item>
+            <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'woman'"
                 (ionChange)="onSingleCheckboxSelect('woman')">Woman</ion-checkbox>
             </ion-item>
 
-            <ion-item>
+            <ion-item lines="none">
               <ion-checkbox
                   label-placement="start"
                   [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'other'"

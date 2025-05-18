@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Location } from "@angular/common";
+import { PreferencesService } from "../../services/preferences.service";
 @Component({
   selector: 'app-preferences',
   templateUrl: './preferences.component.html',
@@ -8,8 +8,8 @@ import { Location } from "@angular/common";
 })
 
 export class PreferencesComponent {
-  constructor(private location: Location) {}
+  constructor(private preferencesService : PreferencesService ) {}
   onBack():void{
-    this.location.back()
+    this.preferencesService.dismissPreferences();
   }
 }

@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onCancelEditing()" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{ formTitle() }} </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onSave()">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form  [formGroup]="editPrefFormFields">
+    <ion-grid class="edit-preference">
+        <ion-row class="edit-preference__age" *ngIf="fieldName === FieldName.Age" >
+          <ion-col >
+            <ion-picker (ionPickerDidChange)="onPickerChange($event)" >
+              <ion-picker-column value="minAge">
+                <ion-picker-column-option *ngFor="let age of ageOptions" [value]="age"> {{ age }}</ion-picker-column-option>
+              </ion-picker-column>
+              <ion-picker-column value="maxAge" >
+                <ion-picker-column-option  *ngFor="let age of ageOptions" [value]="age"> {{ age }}</ion-picker-column-option>
+              </ion-picker-column>
+            </ion-picker>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="fieldName === FieldName.Distance" class="edit-preference__distance">
+          <ion-col >
+            <ion-picker (ionPickerDidChange)="onPickerDistanceChange($event)" >
+              <ion-picker-column value="currentDistance">
+                <ion-picker-column-option *ngFor="let distance of distanceOptions" [value]="distance"> {{ distance }} miles</ion-picker-column-option>
+              </ion-picker-column>
+            </ion-picker>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="fieldName === FieldName.LookingFor" class="edit-preference__interested" >
+          <ion-col size="12" >
+            <ion-item lines="none">
+              <ion-checkbox label-placement="start"
+                label-placement="start"
+                (ionChange)="onSingleCheckboxSelect('man')">Man</ion-checkbox>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-checkbox
+                label-placement="start"
+                (ionChange)="onSingleCheckboxSelect('woman')">Woman</ion-checkbox>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-checkbox
+                  label-placement="start"
+                  (ionChange)="onSingleCheckboxSelect('other')">Other</ion-checkbox>
+            </ion-item>
+          </ion-col>
+       </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

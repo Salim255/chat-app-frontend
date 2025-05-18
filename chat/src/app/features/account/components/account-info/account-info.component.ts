@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PhotoService } from 'src/app/core/services/media/photo.service';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { EditingProfileService } from '../../services/editing-profile.service';
+import { PreferencesService } from '../../services/preferences.service';
 
 export type AccountInfoData = {
   city: string;
@@ -24,16 +25,15 @@ export class AccountInfoComponent {
 
   constructor(
     private editingProfileService: EditingProfileService,
-    private router: Router, private photoService: PhotoService) {}
+    private preferencesService: PreferencesService,
+   ) {}
 
   onProfile(): void {
-    //this.router.navigate(['/tabs/edit-profile']);
-    //this.router.navigate(['/tabs/account/dating-profile']);
    this.editingProfileService.onPresentModal();
   }
 
   onPreferences(): void{
-    this.router.navigate(['/tabs/account/preferences']);
+    this.preferencesService.presentPreferences();
   }
 
   onSubmit(): void {

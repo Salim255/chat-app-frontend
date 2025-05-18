@@ -3,16 +3,16 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="" (click)="onBack()" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title>Dating Profile</ion-title>
+    <ion-title>Profile</ion-title>
   </ion-toolbar>
   <ion-segment [(ngModel)]="segmentValue" >
-  <ion-segment-button value="default" content-id="default">
-    <ion-label>Edit profile</ion-label>
-  </ion-segment-button>
-  <ion-segment-button value="second" content-id="second">
-    <ion-label> Preview profile</ion-label>
-  </ion-segment-button>
-</ion-segment>
+    <ion-segment-button value="default" content-id="default">
+      <ion-label>Edit profile</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="second" content-id="second">
+      <ion-label> Preview profile</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
 <ion-content>
@@ -24,6 +24,5 @@
         <app-preview></app-preview>
     </ion-segment-content>
   </ion-segment-view>
-
 </ion-content>
 

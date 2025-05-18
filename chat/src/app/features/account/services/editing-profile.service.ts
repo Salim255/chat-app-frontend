@@ -9,6 +9,7 @@ export enum FieldName {
   Gender = 'gender',
   Bio = 'bio',
 }
+
 @Injectable({providedIn: 'root'})
 export class EditingProfileService {
   constructor(private modalController: ModalController) {}

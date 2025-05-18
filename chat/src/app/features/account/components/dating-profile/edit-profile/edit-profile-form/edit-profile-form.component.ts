@@ -43,19 +43,16 @@ export class EditProfileFormComponent implements OnInit {
 
   ngOnInit(): void
      {
-      console.log('Received fieldName:', this.fieldName);
-      console.log('Received fieldValue:', this.fieldValue);
+
       if(this.fieldName) {
         this.buildForm();
       }
   }
 
- /*   ionViewWillEnter(): void {
-    // Initialize form here to ensure inputs are set
-    this.editProfileFormFields = this.fb.group({
-      [this.fieldName]: [this.fieldValue, Validators.required],
-    });
-  } */
+  customCounterFormatter(inputLength: number, maxLength: number): string {
+    return `${maxLength - inputLength} characters remaining`;
+  }
+
   onSubmit(): void{
 
   }
@@ -65,8 +62,6 @@ export class EditProfileFormComponent implements OnInit {
       this.editProfileFormFields = this.fb.group({
         [this.fieldName]: [this.fieldValue || '', Validators.required],
       });
-      // Signal form is ready
-      //this.formReady$.next(true);
     }
   }
 

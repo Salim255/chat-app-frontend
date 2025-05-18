@@ -6,13 +6,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { AccountFeatureModule } from 'src/app/features/account/account-feature.module';
 import { DatingProfileComponent } from '../../components/dating-profile/dating-profile.component';
 import { AccountDashBoardComponent } from '../../components/dashboard/dashboard-component';
-import { PreferencesComponent } from '../../components/preferences/preferences.component';
 import { PreviewComponent } from '../../components/dating-profile/preview/preview.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditProfileModule } from '../../components/dating-profile/edit-profile/edit-profile.module';
 import { CommonModule } from '@angular/common';
-
-
+import { PreferencesModule } from '../../components/preferences/preferences.module';
 
 @NgModule({
   imports: [
@@ -24,11 +22,11 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     EditProfileModule,
+    PreferencesModule
 ],
   declarations: [
     AccountPage, DatingProfileComponent,
-    AccountDashBoardComponent,
-    PreferencesComponent
+    AccountDashBoardComponent
    ,PreviewComponent,
   ],
 })
