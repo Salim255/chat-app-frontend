@@ -24,13 +24,13 @@ export class GeolocationService {
     };
   }
 
-  async requestPermissions() {
+  async requestPermissions(): Promise<any> {
     const permissions = await Geolocation.requestPermissions();
     console.log('Permissions:', permissions);
     return permissions;
   }
 
-  async getUserCurrentLocation() {
+  async getUserCurrentLocation(): Promise<any> {
     // Check location permission
     const permission = await this.requestPermissions();
 
@@ -53,40 +53,38 @@ export class GeolocationService {
         }
       });
     } catch (error) {
-      console.error('Error getting location', error);
       this.currentLocation.next('Unable to retrieve location');
     }
   }
 
   getCityByCoordinates(coordinates: Coordinates): Observable<any> {
     // OpenCage API BaseUrl
-    //console.log(this.env.mapKey);
     const url = `${this.ENV.mapBaseUrl}?q=${coordinates.latitude},++${coordinates.longitude}&key=${this.ENV.mapApiKey}&language=en&pretty=1`;
     return this.http.get(url);
   }
 
-  get getLocation() {
+  get getLocation(): Observable<string> {
     return this.currentLocation.asObservable();
   }
 
   searchLocationsByText(query: string): Observable<string[]> {
-  if (!query.trim()) return of([]);
+    if (!query.trim()) return of([]);
 
-  const url = `${this.ENV.mapBaseUrl}?q=${encodeURIComponent(query)}&key=${this.ENV.mapApiKey}&language=en&limit=5`;
-  return this.http.get<any>(url).pipe(
-    map(response => {
+    const url = `${this.ENV.mapBaseUrl}?q=${encodeURIComponent(query)}&key=${this.ENV.mapApiKey}&language=en&limit=5`;
+    return this.http.get<any>(url).pipe(
+      map(response => {
 
-      return  response.results.map((result: any) =>{
-        const { continent, country, city, _normalized_city, county } = result.components;
-      const cty = city || _normalized_city || county;
-      if (!cty) return ;
-      const formatted = [cty, country, continent].filter(Boolean).join(', ');
+        return  response.results.map((result: any) =>{
+          const { continent, country, city, _normalized_city, county } = result.components;
+        const cty = city || _normalized_city || county;
+        if (!cty) return ;
+        const formatted = [cty, country, continent].filter(Boolean).join(', ');
 
-      return formatted;
-      }).filter(Boolean);
-    }
+        return formatted;
+        }).filter(Boolean);
+      }
 
-    )
-  );
-}
+      )
+    );
+  }
 }

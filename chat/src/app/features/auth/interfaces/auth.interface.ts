@@ -18,10 +18,10 @@ export interface AuthResponseDto {
 }
 
 export type UpdatedUserDto = {
-  id: 1,
-  first_name: 'Salim',
-  last_name: 'Hassan',
-  avatar: 'avatar',
+  id: number,
+  first_name: string,
+  last_name: string,
+  avatar: string,
   connection_status: 'online',
 }
 

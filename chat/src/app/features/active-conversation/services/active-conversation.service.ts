@@ -18,7 +18,7 @@ import { ConversationService } from '../../conversations/services/conversations.
 import {
   MessageEncryptDecrypt,
   MessageEncryptionData,
-} from 'src/app/core/services/encryption/message-encrypt-decrypt-';
+} from 'src/app/core/services/encryption/message-encrypt-decrypt';
 import { GetAuthData } from 'src/app/shared/utils/get-auth-data';
 import { Message } from '../../messages/model/message.model';
 import {

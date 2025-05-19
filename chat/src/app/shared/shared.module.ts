@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { SearchBarComponent } from './native-components/search-bar/search-bar.component';
 import { LogoComponent } from './components/app-logo/logo.component';
-import { CardComponent } from './native-components/card/card.component';
-import { BadgeComponent } from './native-components/badge/badge.component';
+import { CardComponent } from './components/native-components/card/card.component';
+import { BadgeComponent } from './components/native-components/badge/badge.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SliderComponent } from './components/profile/slider/slider.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
@@ -22,7 +21,6 @@ import { CardMediaComponent } from './components/card-media/card.component';
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
-    SearchBarComponent,
     LogoComponent,
     CardComponent,
     SliderComponent,
@@ -39,7 +37,6 @@ import { CardMediaComponent } from './components/card-media/card.component';
     CardMediaComponent
   ],
   exports: [
-    SearchBarComponent,
     LogoComponent,
     CardComponent,
     SliderComponent,

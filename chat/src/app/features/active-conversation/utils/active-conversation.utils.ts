@@ -3,7 +3,7 @@ import {
   ConversationDto,
   EncryptedMessageData,
  } from '../services/active-conversation.service';
-import { MessageEncryptionData } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
+import { MessageEncryptionData } from 'src/app/core/services/encryption/message-encrypt-decrypt';
 import { Conversation } from '../../conversations/models/conversation.model';
 import { CreateMessageDto } from '../active-conversation.page';
 import { Message } from '../../messages/model/message.model';

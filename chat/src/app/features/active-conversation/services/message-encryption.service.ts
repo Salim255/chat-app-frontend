@@ -3,7 +3,7 @@ import { catchError, from, map, Observable, of } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { AuthData } from './active-conversation.service';
-import { MessageEncryptDecrypt } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
+import { MessageEncryptDecrypt } from 'src/app/core/services/encryption/message-encrypt-decrypt';
 import { buildMessageEncryptionData } from '../utils/active-conversation.utils';
 import { UserInChatDto } from '../../conversations/interfaces/conversations.dto';
 
