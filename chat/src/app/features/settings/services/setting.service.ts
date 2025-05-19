@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ModalController } from "@ionic/angular";
-import { SettingsPage } from "../pages/settings/settings.page";
+import { SettingsPage } from "../settings.page";
 
 @Injectable({providedIn: 'root'})
 export class SettingService {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
-import { SettingService } from '../../services/setting.service';
+import { SettingService } from './services/setting.service';
 
 @Component({
   selector: 'app-settings',
@@ -30,7 +30,7 @@ export class SettingsPage implements OnInit {
   ngOnInit(): void {
     console.log('Hello Salim');
   }
-  
+
   onClose(): void {
     this.settingService.dismissSetting();
   }

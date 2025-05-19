@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ProfileViewerPage } from 'src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page';
+import { ProfileViewerPage } from 'src/app/features/profile-viewer/profile-viewer.page';
 import { Profile } from '../../discover/model/profile.model';
 import { ActiveConversationPage } from '../../active-conversation/pages/active-conversation/active-conversation.page';
 

@@ -49,14 +49,14 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () =>
-      import('../features/settings/pages/settings/settings.module').then(
+      import('../features/settings/settings.module').then(
         (m) => m.SettingsPageModule
       ),
   },
   {
     path: 'view-profile',
     loadChildren: () =>
-      import('../features/profile-viewer/pages/profile-viewer/profile-viewer.module').then(
+      import('../features/profile-viewer/profile-viewer.module').then(
         (m) => m.ProfileViewerPageModule
       ),
   }

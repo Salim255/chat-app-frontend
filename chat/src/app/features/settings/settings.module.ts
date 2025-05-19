@@ -16,6 +16,6 @@ import { AccountFeatureModule } from 'src/app/features/account/account-feature.m
     SharedModule,
     AccountFeatureModule,
   ],
-  declarations: [SettingsPage],
+  declarations: [ SettingsPage ],
 })
 export class SettingsPageModule {}
