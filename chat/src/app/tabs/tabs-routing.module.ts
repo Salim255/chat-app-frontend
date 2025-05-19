@@ -11,7 +11,7 @@ const routes: Routes = [
       {
         path: 'conversations',
         loadChildren: () =>
-          import('../features/conversations/pages/conversations/conversations.module').then(
+          import('../features/conversations/conversations.module').then(
             (m) => m.ConversationsPageModule
           ),
       },
@@ -32,7 +32,7 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () =>
-          import('../features/account/pages/account/account.module').then(
+          import('../features/account/account.module').then(
             (m) => m.AccountPageModule
           ),
       },

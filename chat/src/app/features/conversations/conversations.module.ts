@@ -6,8 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { ConversationsPageRoutingModule } from './conversations-routing.module';
 import { ConversationsPage } from './conversations.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ConversationFeatureModule } from 'src/app/features/conversations/conversations-feature.module';
-
+import { ConversationItemComponent } from './components/conversation-item/conversation-item.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,8 +15,7 @@ import { ConversationFeatureModule } from 'src/app/features/conversations/conver
     ConversationsPageRoutingModule,
     SharedModule,
     DragDropModule,
-    ConversationFeatureModule,
   ],
-  declarations: [ConversationsPage],
+  declarations: [ConversationsPage, ConversationItemComponent],
 })
 export class ConversationsPageModule {}

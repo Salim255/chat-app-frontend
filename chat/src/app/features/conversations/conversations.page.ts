@@ -1,6 +1,6 @@
 import { Component, OnDestroy, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Conversation } from '../../models/conversation.model';
+import { Conversation } from './models/conversation.model';
 import { ConversationService } from 'src/app/features/conversations/services/conversations.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { AuthService } from 'src/app/features/auth/services/auth.service';

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { register } from 'swiper/element/bundle';
 import { Subscription } from 'rxjs';
-import { Account } from '../../models/account.model';
-import { AccountInfoData } from '../../components/account-info/account-info.component';
+import { Account } from './models/account.model';
+import { AccountInfoData } from './components/account-info/account-info.component';
 import { SettingService } from 'src/app/features/settings/services/setting.service';
 register();
 @Component({
