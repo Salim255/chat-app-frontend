@@ -2,12 +2,12 @@ import {
   AuthData,
   ConversationDto,
   EncryptedMessageData,
- } from './active-conversation.service';
+ } from '../services/active-conversation.service';
 import { MessageEncryptionData } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
 import { Conversation } from '../../conversations/models/conversation.model';
-import { CreateMessageDto } from '../pages/active-conversation/active-conversation.page';
+import { CreateMessageDto } from '../active-conversation.page';
 import { Message } from '../../messages/model/message.model';
-import { CreateConversationPost } from './active-conversation-http.service';
+import { CreateConversationPost } from '../services/active-conversation-http.service';
 import { UserInChatDto } from '../../conversations/interfaces/conversations.dto';
 
 export function buildMessageEncryptionData(

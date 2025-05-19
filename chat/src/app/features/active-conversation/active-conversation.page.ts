@@ -5,13 +5,13 @@ import { Component,
   ViewChild,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Message } from '../../../messages/model/message.model';
+import { Message } from '../messages/model/message.model';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
 import { Conversation } from 'src/app/features/conversations/models/conversation.model';
 import { IonContent } from '@ionic/angular';
 import { SocketRoomService, JoinRomData} from 'src/app/core/services/socket-io/socket-room.service';
-import { ActiveConversationPartnerService } from '../../services/active-conversation-partner.service';
+import { ActiveConversationPartnerService } from './services/active-conversation-partner.service';
 
 export type CreateMessageDto = {
   chat_id: number;

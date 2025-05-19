@@ -13,7 +13,7 @@ import {
 import { Conversation } from '../../conversations/models/conversation.model';
 import {
   CreateMessageDto,
-} from '../pages/active-conversation/active-conversation.page';
+} from '../active-conversation.page';
 import { ConversationService } from '../../conversations/services/conversations.service';
 import {
   MessageEncryptDecrypt,
@@ -27,7 +27,7 @@ import {
   prepareEncryptedMessagePayload,
   processConversationResponse,
   restoreOriginalMessageContent,
-} from './active-conversation.utils';
+} from '../utils/active-conversation.utils';
 import { PartnerConnectionStatus } from 'src/app/core/services/socket-io/socket-room.service';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { MessageNotifierPayload } from 'src/app/core/services/socket-io/socket-message.service';

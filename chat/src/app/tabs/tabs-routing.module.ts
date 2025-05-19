@@ -42,7 +42,7 @@ const routes: Routes = [
     path: 'active-conversation/:userId',
     loadChildren: () =>
       import(
-        '../features/active-conversation/pages/active-conversation/active-conversation.module'
+        '../features/active-conversation/active-conversation.module'
       ).then((m) => m.ActiveConversationPageModule),
     runGuardsAndResolvers: 'always', // Forces full navigation
   },

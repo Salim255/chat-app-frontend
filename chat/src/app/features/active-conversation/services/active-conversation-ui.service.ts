@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ModalController } from "@ionic/angular";
-import { ActiveConversationPage } from "../pages/active-conversation/active-conversation.page";
+import { ActiveConversationPage } from "../active-conversation.page";
 import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({providedIn: 'root'})
