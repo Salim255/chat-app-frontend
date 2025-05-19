@@ -25,7 +25,7 @@ const routes: Routes = [
       {
         path: 'matches',
         loadChildren: () =>
-          import('../features/matches/pages/matches/matches.module').then(
+          import('../features/matches/matches.module').then(
             (m) => m.MatchesPageModule
           ),
       },

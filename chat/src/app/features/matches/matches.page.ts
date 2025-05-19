@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
-import { Match } from '../../models/match.model';
+import { Match } from './models/match.model';
 import { AccountService } from 'src/app/features/account/services/account.service';
 
 @Component({
@@ -53,7 +53,7 @@ export class MatchesPage implements OnInit, OnDestroy {
         this.hostAvatar = avatar;
     })
   }
-  
+
   private subscribeToMatches() {
     this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe((data) => {
       console.log('Data received:', data);
