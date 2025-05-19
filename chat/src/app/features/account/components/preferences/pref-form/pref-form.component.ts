@@ -5,14 +5,6 @@ import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
 
 
-export  type EditProfilePayload = {
-  name: string;
-  birthDate: Date;
-  country: string;
-  city: string;
-  photos: string,
-  bio: string,
-}
 @Component({
   selector: 'app-pref-form',
   templateUrl: './pref-form.component.html',
@@ -27,8 +19,9 @@ export class PrefFormComponent implements OnInit{
   editPrefFormFields!: FormGroup;
   ageOptions: number [] = [] // Age 18 to 100
   distanceOptions: number [] = []; // Distance 1 to 150 miles
-  ageRange = { lower: 18, upper: 100 };
-  activeKnob: 'lower' | 'upper' = 'lower';
+  ageRange: { minAge: number, maxAge: number } = { minAge: 18, maxAge: 86 };
+  distanceRange: number = 1;
+
   constructor(
     private preferencesService: PreferencesService,
     private fieldBuilder: FormBuilder){}
@@ -82,30 +75,26 @@ export class PrefFormComponent implements OnInit{
     }
   }
 
-  onPickerChange(event: any): void {
-    const minAge = event?.detail?.value?.minAge;
-    const maxAge = event?.detail?.value?.maxAge;
-    console.log('Selected age range:', minAge, maxAge);
-  }
-  pinFormatter(value: number): string {
-
-      return `${value}%`;
-  }
-/* <ion-label>How old are they ?</ion-label>
-                   <ion-label slot="end">18-28</ion-label> */
-
-  onIonKnobMoveStart(event: RangeCustomEvent) {
-    console.log('ionKnobMoveStart:', event.detail);
-    //this.activeKnob = event.detail.knob;
+  onPickerChangeMin(event: CustomEvent): void {
+    const minAge = event?.detail?.value;
+    this.ageRange.minAge = minAge ;
+    this.editPrefFormFields.get(this.fieldName)
+    ?.setValue(`${this.ageRange.minAge}-${this.ageRange.maxAge}`);
   }
 
-  onIonKnobMoveEnd(event: RangeCustomEvent) {
-    console.log('ionKnobMoveEnd:', event.detail.value);
+  onPickerChangeMax(event: CustomEvent): void {
+    const maxAge = event?.detail?.value;
+    this.ageRange.maxAge = maxAge ;
+    this.editPrefFormFields.get(this.fieldName)
+      ?.setValue(`${this.ageRange.minAge}-${this.ageRange.maxAge}`);
   }
 
+  onIonKnobMoveEnd(event: RangeCustomEvent): void {
+    if (event.detail.value) this.distanceRange = (event.detail.value as number);
+    this.editPrefFormFields.get(this.fieldName)?.setValue(this.distanceRange);
+  }
 
-
-  onSingleCheckboxSelect(gender: string){
-
+  onSingleCheckboxSelect(gender: string):void{
+    console.log(gender);
   }
 }

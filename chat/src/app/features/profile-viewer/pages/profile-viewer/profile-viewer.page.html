@@ -8,9 +8,9 @@
 </ion-header>
 
 <ion-content *ngIf="profile">
-  <ion-grid [fixed]="true">
+  <ion-grid>
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-profile-slider
           [profile]="profile"
           [pageName]="pageName"
@@ -18,33 +18,33 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-profile-about-me></app-profile-about-me>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-profile-looking-for></app-profile-looking-for>
       </ion-col>
     </ion-row>
 
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-profile-essentials></app-profile-essentials>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-block-profile [profile]="profile"></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
+      <ion-col >
         <app-report-profile [profile]="profile"></app-report-profile>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="12">
+      <ion-col>
         <app-interaction-btns></app-interaction-btns>
       </ion-col>
     </ion-row>

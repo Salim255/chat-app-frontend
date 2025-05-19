@@ -5,7 +5,8 @@
     </ion-buttons>
     <ion-title> {{ formTitle() }} </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSave()">Save</ion-button>
+      <ion-button (click)="onSave()"
+            [disabled]="editPrefFormFields.invalid">Save</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -18,18 +19,18 @@
           <ion-item-group >
             <ion-item-divider>
               <ion-label>How old are they ?</ion-label>
-              <ion-label slot="end">18-28</ion-label>
+              <ion-label slot="end"> {{ ageRange.minAge }} - {{ ageRange.maxAge }}</ion-label>
             </ion-item-divider>
            <ion-item lines="none">
-             <ion-picker (ionPickerDidChange)="onPickerChange($event)" >
-              <ion-picker-column value="minAge">
+             <ion-picker  >
+              <ion-picker-column value="minAge" (ionChange)="onPickerChangeMin($event)">
                 <ion-picker-column-option
                   *ngFor="let age of ageOptions"
                   [value]="age">
                   {{ age }}
                 </ion-picker-column-option>
               </ion-picker-column>
-              <ion-picker-column value="maxAge" >
+              <ion-picker-column value="maxAge" (ionChange)="onPickerChangeMax($event)" >
                 <ion-picker-column-option
                   *ngFor="let age of ageOptions"
                   [value]="age">
@@ -47,14 +48,13 @@
           <ion-item-group >
             <ion-item-divider>
               <ion-label>Maximum Distance</ion-label>
-              <ion-label slot="end"> 31 miles</ion-label>
+              <ion-label slot="end"> {{ distanceRange }} miles</ion-label>
             </ion-item-divider>
           </ion-item-group>
            <ion-item lines="none">
             <ion-range
               [min]="1"
               [max]="150"
-              [snaps]="true"
               (ionKnobMoveEnd)="onIonKnobMoveEnd($event)"
               [pin]="true">
             </ion-range>
