@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { DiscoverPage } from './discover.page';
-import { DiscoverProfilesFeatureModule } from 'src/app/features/discover/discover-feature.module';
+import { ProfileViewerFeatureModule } from '../profile-viewer/profile-viewer-feature.module';
+
 const routes: Routes = [
   {
     path: '',
@@ -11,7 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), DiscoverProfilesFeatureModule],
+  imports: [ RouterModule.forChild(routes), ProfileViewerFeatureModule ],
   exports: [RouterModule],
 })
 export class DiscoverPageRoutingModule {}

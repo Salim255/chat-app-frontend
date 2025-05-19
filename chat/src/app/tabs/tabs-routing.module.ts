@@ -18,7 +18,7 @@ const routes: Routes = [
       {
         path: 'discover',
         loadChildren: () =>
-          import('../features/discover/pages/discover/discover.module').then(
+          import('../features/discover/discover.module').then(
             (m) => m.DiscoverPageModule
           ),
       },

@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { DiscoverService } from 'src/app/features/discover/services/discover.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { SwipeDirection } from '../../pages/discover/discover.page';
+import { SwipeDirection } from '../../discover.page';
 import { InteractionType } from 'src/app/features/discover/services/discover.service';
 
 type PageName = 'discover' | 'viewer';

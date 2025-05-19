@@ -16,8 +16,8 @@ import { NetworkService } from 'src/app/core/services/network/network.service';
 import { AccountService } from 'src/app/features/account/services/account.service';
 import { TabsService } from 'src/app/tabs/services/tabs/tabs.service';
 import { IonContent } from '@ionic/angular';
-import { Profile } from '../../model/profile.model';
-import { InteractionBtnService } from '../../services/interaction-btn.service';
+import { Profile } from './model/profile.model';
+import { InteractionBtnService } from './services/interaction-btn.service';
 
 export enum SwipeDirection {
   SwipeLeft = 'swipe-left',

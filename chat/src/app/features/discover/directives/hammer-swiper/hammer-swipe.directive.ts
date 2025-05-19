@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { InteractionBtnService } from 'src/app/features/discover/services/interaction-btn.service';
 import * as Hammer from 'hammerjs';
-import { SwipeDirection } from 'src/app/features/discover/pages/discover/discover.page';
+import { SwipeDirection } from '../../discover.page';
 
 @Directive({
   selector: '[appHammerSwipe]',

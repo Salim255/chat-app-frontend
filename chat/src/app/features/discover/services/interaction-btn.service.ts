@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SwipeDirection } from '../pages/discover/discover.page';
+import { SwipeDirection } from '../discover.page';
 
 @Injectable({
   providedIn: 'root',
