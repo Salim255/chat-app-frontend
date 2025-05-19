@@ -7,6 +7,8 @@
     [(ngModel)]="message"
     (ngModelChange)="onTextChange($event)"
     autoGrow="true"
+    maxlength="200"
+    rows="1"
   >
   </ion-textarea>
   <ion-button type="submit" fill="clear" size="small" [disabled]="!f.valid">send</ion-button>

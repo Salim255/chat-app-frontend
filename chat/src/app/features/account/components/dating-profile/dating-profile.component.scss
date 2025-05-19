@@ -1,15 +1,9 @@
 ion-header {
-  background-color:var(--ion-color-grey-1);
   ion-toolbar {
-    //background:var(--ion-color-grey-1);
-     --background: var(--ion-color-grey-1);
     ion-back-button {
     color: var(--ion-color-grey-7);
     }
     padding-bottom: .5rem;
-    ion-title{
-      //background-color:var(--ion-color-grey-1);
-    }
   }
 
   ion-segment-view, ion-segment {

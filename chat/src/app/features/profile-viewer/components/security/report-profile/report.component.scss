@@ -1,13 +1,11 @@
-ion-item {
-  --background: none;
-  border-radius: 0.7rem;
-  color: #fff;
-  ion-button {
-    padding: 1rem 0.2rem;
-    text-align: center;
-    width: 100%;
-    font-size: 1.3rem;
+ion-card-content {
+  text-align: center;
+  ion-text {
     font-weight: bold;
-    color: var(--ion-color-secondary);
+    color:  var(--ion-color-primary);
+    span {
+      font-size: .8rem;
+      color: var(--ion-color-grey-7);
+    }
   }
 }

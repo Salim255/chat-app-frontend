@@ -14,7 +14,6 @@ ion-content {
     }
   }
   ion-list {
-    background: var(--ion-color-grey-1);
     display: flex;
 
     padding: 0 0.7rem;
@@ -23,7 +22,6 @@ ion-content {
 
     ion-item {
       width: calc(33.333% - 0.7rem);
-      --background: var(--ion-color-grey-1);
       margin-bottom: 0.2rem;
       box-sizing: border-box; /* Prevents overflow */
       display: flex;

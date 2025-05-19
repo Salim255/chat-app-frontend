@@ -1,9 +1,9 @@
 <ion-header *ngIf="profile">
   <ion-toolbar>
     <ion-text slot="start">
-     <span> {{ profile.name }}</span>, {{  profileAge(profile.birth_date) }}
+     <span> {{ profile.name }}</span> {{ profileAge(profile.birth_date) }}
     </ion-text>
-    <ion-icon slot="end" name="close-outline" (click)="onClose()"></ion-icon>
+    <ion-text class="close-icon" slot="end" (click)="onClose()"></ion-text>
   </ion-toolbar>
 </ion-header>
 
@@ -33,14 +33,14 @@
         <app-profile-essentials></app-profile-essentials>
       </ion-col>
     </ion-row>
-    <ion-row>
+      <ion-row>
       <ion-col >
-        <app-block-profile [profile]="profile"></app-block-profile>
+        <app-report-profile [profile]="profile"></app-report-profile>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col >
-        <app-report-profile [profile]="profile"></app-report-profile>
+        <app-block-profile [profile]="profile"></app-block-profile>
       </ion-col>
     </ion-row>
     <ion-row>
