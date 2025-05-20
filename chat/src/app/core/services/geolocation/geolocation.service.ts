@@ -3,6 +3,8 @@ import { Geolocation } from '@capacitor/geolocation';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Capacitor } from '@capacitor/core';
+
 
 type Coordinates = {
   latitude: number;
@@ -14,8 +16,8 @@ type Coordinates = {
 })
 export class GeolocationService {
   private ENV = environment;
-  currentLocation = new BehaviorSubject<string>('');
-  userCoordinates: Coordinates;
+  private currentLocation = new BehaviorSubject<string>('');
+  private userCoordinates: Coordinates;
   userCity: string = '';
   constructor(private http: HttpClient) {
     this.userCoordinates = {
@@ -24,21 +26,37 @@ export class GeolocationService {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async requestPermissions(): Promise<any> {
     const permissions = await Geolocation.requestPermissions();
     console.log('Permissions:', permissions);
     return permissions;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getUserCurrentLocation(): Promise<any> {
-    // Check location permission
-    const permission = await this.requestPermissions();
-
-    if (!permission) {
-      return;
-    }
-
     try {
+
+      if (Capacitor.getPlatform() ===  'web') {
+        navigator.geolocation.getCurrentPosition((position) =>{
+          this.userCoordinates.latitude = position.coords.latitude;
+          this.userCoordinates.longitude = position.coords.longitude;
+          //this.getUserCurrentLocation()
+          //this.getCityByCoordinates(this.userCoordinates).subscribe(result => {console.log(result)})
+          return
+        },
+         error => {
+          console.error(error)
+          throw new Error('Browser location error:');
+        });
+      }
+
+      // Check location permission
+      const permission = await this.requestPermissions();
+
+      if (!permission) {
+        return;
+      }
       // Get user's coordinates
       const position = await Geolocation.getCurrentPosition();
       this.userCoordinates.latitude = position.coords.latitude;
@@ -53,7 +71,7 @@ export class GeolocationService {
         }
       });
     } catch (error) {
-      this.currentLocation.next('Unable to retrieve location');
+      //this.currentLocation.next('Unable to retrieve location');
     }
   }
 

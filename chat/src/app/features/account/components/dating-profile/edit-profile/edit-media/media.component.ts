@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { StringUtils } from "src/app/shared/utils/string-utils";
 import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
-import { ToastService } from "src/app/shared/services/toast/toast.service";
 
 @Component({
   selector: 'app-edit-media',
@@ -16,7 +15,7 @@ export class MediaComponent implements OnChanges {
   private photoUploads: (FormData | null)[] = [null, null, null, null];
   private currentPhotoIndex: number | null = null;
 
-  constructor(private toastService: ToastService ,private photoService: PhotoService) {}
+  constructor(private photoService: PhotoService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
