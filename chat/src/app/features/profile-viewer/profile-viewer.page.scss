@@ -35,8 +35,6 @@ ion-header {
 
 }
 ion-content {
-  height: 100%;
-
   ion-grid {
     margin: 0 .5rem;
     padding: 0;
@@ -44,9 +42,6 @@ ion-content {
     position: relative;
     ion-row {
       margin-bottom: .5rem;
-      ion-col {
-
-      }
     }
     ion-row:last-child {
       position: fixed;

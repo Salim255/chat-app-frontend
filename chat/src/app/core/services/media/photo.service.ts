@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CameraService } from './camera.service';
+import { CameraResult, CameraService } from './camera.service';
 import { ImageConversionService } from './image-conversion-service';
 
 export interface PhotoCaptureResult {
@@ -12,21 +12,22 @@ export type TakingPictureStatus = 'Off' | 'Pending' | 'Success' | 'Error';
   providedIn: 'root',
 })
 export class PhotoService {
-  
-  constructor( 
-    private camera:  CameraService,
-    private converter: ImageConversionService) {}
+
+  constructor (private camera:  CameraService, private converter: ImageConversionService) {}
 
   async takePicture(): Promise<PhotoCaptureResult> {
-    const photo = await this.camera.getPhoto();
-    if (!photo?.base64String) {
-      throw new Error('No photo captured');
+    const result: CameraResult = await this.camera.getPhoto();
+    if (!result?.success) {
+     throw new Error(`${result.reason}`)
     }
     // 2) Build the data-URL for preview
-    const preview = `data:image/jpeg;base64,${photo.base64String}`;
+    if (!result.photo.base64String) {
+      throw new Error(`Unknown Error `)
+    }
+    const preview = `data:image/jpeg;base64,${result.photo.base64String}`;
 
     // Convert base64 to Blob
-    const imageBlob = this.converter.base64ToBlob(photo.base64String);
+    const imageBlob = this.converter.base64ToBlob(result.photo.base64String);
     const formData = this.converter.toFormData(imageBlob);
     return { formData, preview }
   }

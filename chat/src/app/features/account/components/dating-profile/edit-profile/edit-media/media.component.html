@@ -4,10 +4,20 @@
     *ngFor="let photo of [0, 1, 2, 3]; let idx = index; trackBy: trackByIndex">
     <app-card-media [photo]="photos[idx]"></app-card-media>
     <ion-icon
+      (click)="onTakePhoto(idx)"
       [name]="photos[idx] ? 'close-outline' : 'add-outline'"
       [ngClass]="photos[idx] ? 'icon-close' : 'icon-add'"
     ></ion-icon>
+    <input
+      type="file"
+      accept="image/*"
+      capture="environment"
+      style="display: none"
+      #fileInput
+      (change)="onFileSelected($event, idx)"
+    />
     </ion-col>
 </ion-row>
+
 
 
