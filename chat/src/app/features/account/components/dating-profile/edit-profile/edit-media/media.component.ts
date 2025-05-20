@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { StringUtils } from "src/app/shared/utils/string-utils";
-import { PhotoService } from "src/app/core/services/media/photo.service";
+import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
 import { ToastService } from "src/app/shared/services/toast/toast.service";
 
 @Component({
@@ -12,6 +12,7 @@ import { ToastService } from "src/app/shared/services/toast/toast.service";
 export class MediaComponent implements OnChanges {
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @Input() photos: string [] = [];
+
   private photoUploads: (FormData | null)[] = [null, null, null, null];
   private currentPhotoIndex: number | null = null;
 
@@ -24,9 +25,7 @@ export class MediaComponent implements OnChanges {
       this.photos = this.setUserImages();
     }
   }
-  onBack(): void {
-    //this.location.back()
-  }
+
    trackByIndex(index: number): number {
     return index;
   }
@@ -44,7 +43,7 @@ export class MediaComponent implements OnChanges {
   async onTakePhoto(slotIndex: number): Promise<void>{
 
     try {
-      const { preview, formData }= await this.photoService.takePicture();
+      const { preview, formData }: PhotoCaptureResult = await this.photoService.takePicture( );
     if (!preview || !formData) return;
 
     // 1) Set preview for UI
@@ -62,29 +61,16 @@ export class MediaComponent implements OnChanges {
   }
 
 
-  onFileSelected(event: Event, slotIndex: number):void {
+  onFileSelected(event: Event):void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length || this.currentPhotoIndex === null) return;
 
     const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toastService.showError('Only image files are allowed.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.photos[this.currentPhotoIndex!] = reader.result as string;
-      this.currentPhotoIndex = null;
-    };
-    reader.readAsDataURL(file);
-
-    // Build FormData from the File object
-    const formData = new FormData();
-     const fileName = `${Date.now()}-image.jpg`;
-    formData.append('photo',file, fileName);
-    // Pass formData to upload logic
-    this.photoUploads[slotIndex] = formData;
+     const result =  this.photoService.webPlatformFileUpload(file);
+     if (result && result as PhotoCaptureResult) {
+      this.photoUploads[this.currentPhotoIndex] = result.formData;
+      this.photos[this.currentPhotoIndex] = result.preview ;
+     }
   }
 
 
