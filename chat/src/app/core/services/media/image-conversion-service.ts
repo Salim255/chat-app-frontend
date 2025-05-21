@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class ImageConversionService {
-  
+
   base64ToBlob(base64Data: string): Blob {
     const byteCharacters = atob(base64Data); // Decode the base64 string
     // atob(): its function that decode a base64-encoded string into a plain text string
@@ -26,9 +26,8 @@ export class ImageConversionService {
     const formData = new FormData();
 
     // Append the image blob to the form data, setting the field name as file
-    const fileName = `${Date.now()}-image.jpg`;
-    formData.append('photo', imageBlob, fileName);
-
+    formData.append('photo', imageBlob);
+//
     // At this point, the image is ready to be sent to the backend
     // Call the method to upload this FormData (this part will be handled later)
     // await this.uploadToBackend(formData);

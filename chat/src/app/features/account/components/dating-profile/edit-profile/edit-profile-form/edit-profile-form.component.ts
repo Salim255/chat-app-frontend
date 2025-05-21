@@ -41,12 +41,8 @@ export class EditProfileFormComponent implements OnInit {
     private editingProfileService: EditingProfileService,
     private fb: FormBuilder) {}
 
-  ngOnInit(): void
-     {
-
-      if(this.fieldName) {
-        this.buildForm();
-      }
+  ngOnInit(): void {
+    if(this.fieldName) this.buildForm();
   }
 
   customCounterFormatter(inputLength: number, maxLength: number): string {
@@ -54,7 +50,11 @@ export class EditProfileFormComponent implements OnInit {
   }
 
   onSubmit(): void{
-
+    if(this.fieldName === FieldName.Bio) {
+      this.editingProfileService
+      .updateBio(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
+    }
+    this.editingProfileService.onDismissEditFormModal();
   }
 
    buildForm():void {

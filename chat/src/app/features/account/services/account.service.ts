@@ -50,6 +50,14 @@ export class AccountService {
     return {latitude: this.account.value?.latitude, longitude:  this.account.value?.longitude}
   }
 
+  get getAccountId(): number| null {
+      if (!this.account.value?.id) return null;
+      return this.account.value?.id;
+  }
+
+  setAccountWithUpdate(profile: Account): void{
+    this.account.next(profile);
+  }
   calculateAge(birthDate: Date | string): number {
     const birth = new Date(birthDate);
     const today = new Date();

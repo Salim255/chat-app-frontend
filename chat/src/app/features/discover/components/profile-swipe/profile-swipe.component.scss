@@ -1,6 +1,4 @@
 .hammer-swiper-container {
-  // touch-action: pan-y; // Ensures vertical scrolling is smooth
-  //background: red;
   &__disable-hammer-swipe {
     pointer-events: none;
     position: relative;
@@ -12,4 +10,14 @@
       //touch-action: pan-y; // Allow vertical scrolling // Allow vertical scrolling
     }
   }
+}
+
+ion-card {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }

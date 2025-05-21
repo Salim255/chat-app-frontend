@@ -27,7 +27,7 @@
     padding: 0;
     box-shadow: none;
     --ion-box-shadow: none;
-
+    background: transparent;
     ion-card-content {
       height: 100%;
       margin: 0;
@@ -36,6 +36,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      background: transparent;
       .swiper-pagination {
         position: absolute;
         top: 2%;

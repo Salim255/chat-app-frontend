@@ -51,13 +51,14 @@ export class DiscoverService {
       if (response?.data.match.match_status === 2) {
         this.itsMatchModalService.openItsMatchModal(response?.data.match);
       }
-     } 
+     }
     ));
   }
 //
   fetchPotentialMatches(): Observable<PotentialMatchesResponse> {
     return this.discoverHttpService.getPotentialMatches().pipe(
       tap((response) => {
+        console.log(response.data.profiles);
         this.potentialMatches.next(response.data.profiles);
       })
     );

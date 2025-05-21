@@ -15,6 +15,11 @@ export type UpdateCoordinatesResponse = {
   data: { coordinates: Coordinates }
 }
 
+export type UpdateBioPayLoad = {
+  bio: string;
+  profileId: number;
+}
+
 export type UpdateCoordinatesPayload = {
   profileId: number,
   longitude: number,
@@ -34,5 +39,9 @@ export class AccountHttpService {
 
   patchAccountCoordinates(updatePayload: UpdateCoordinatesPayload ): Observable<UpdateCoordinatesResponse>{
     return this.http.patch<UpdateCoordinatesResponse>(`${this.baseUrl}/update-location`, updatePayload)
+  }
+
+  updateBio(updatePayload: UpdateBioPayLoad): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-bio`, updatePayload)
   }
 }
