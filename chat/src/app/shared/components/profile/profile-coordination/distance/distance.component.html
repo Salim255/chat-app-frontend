@@ -1,4 +1,4 @@
-<ion-item lines="none">
+<ion-item lines="none" *ngIf="distance">
   <ion-icon name="location"></ion-icon>
-  <ion-text> {{ city }}</ion-text>
+  <ion-text> {{ distance }} miles</ion-text>
 </ion-item>

@@ -22,6 +22,6 @@ export function getDistanceInKm(
 
   const distanceInRadians = 2 * Math.atan2(Math.sqrt(hFormulaResult), Math.sqrt(1 - hFormulaResult)); // angular distance in radians
 
-  const distance = earthRadius * distanceInRadians; // distance in kilometers
+  const distance = Math.round( earthRadius * distanceInRadians); // distance in kilometers
   return distance;
 }

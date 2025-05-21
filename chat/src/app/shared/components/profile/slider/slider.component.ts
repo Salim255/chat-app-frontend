@@ -53,7 +53,6 @@ export class SliderComponent implements OnChanges, AfterViewInit {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Changes:', this.profile);
     if (changes['profile']) {
       const prev = changes['profile'].previousValue;
       const curr = changes['profile'].currentValue;

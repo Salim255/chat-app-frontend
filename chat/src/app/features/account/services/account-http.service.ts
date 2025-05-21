@@ -1,13 +1,26 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { Account } from "../models/account.model";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
 
 export type FetchAccountDto = {
-    status: string,
-    data: { profile: Account  }
+  status: string,
+  data: { profile: Account  }
 }
+
+export type UpdateCoordinatesResponse = {
+  status: string,
+  data: { coordinates: Coordinates }
+}
+
+export type UpdateCoordinatesPayload = {
+  profileId: number,
+  longitude: number,
+  latitude: number,
+}
+
 @Injectable({providedIn: 'root'})
 
 export class AccountHttpService {
@@ -17,5 +30,9 @@ export class AccountHttpService {
   constructor(private http:  HttpClient){}
   getAccount(): Observable<FetchAccountDto>{
     return this.http.get<FetchAccountDto>(`${this.baseUrl}`)
+  }
+
+  patchAccountCoordinates(updatePayload: UpdateCoordinatesPayload ): Observable<UpdateCoordinatesResponse>{
+    return this.http.patch<UpdateCoordinatesResponse>(`${this.baseUrl}/update-location`, updatePayload)
   }
 }

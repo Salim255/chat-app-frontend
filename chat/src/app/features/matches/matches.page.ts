@@ -10,7 +10,7 @@ import { AccountService } from 'src/app/features/account/services/account.servic
   styleUrls: ['./matches.page.scss'],
   standalone: false,
 })
-export class MatchesPage implements OnInit, OnDestroy {
+export class MatchesPage implements OnDestroy {
   private partnerSourceSubscription!: Subscription;
   private hostProfileSubscription!: Subscription;
   hostAvatar!: string;
@@ -22,11 +22,7 @@ export class MatchesPage implements OnInit, OnDestroy {
     private matchesService: MatchesService,
   ) {}
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log('hello', this.matchesArray().length);
-  }
+
   // Add a trackBy function for better performance
   trackById(index: number, match: Match): string | number {
     return match.match_id;
@@ -56,10 +52,8 @@ export class MatchesPage implements OnInit, OnDestroy {
 
   private subscribeToMatches() {
     this.partnerSourceSubscription = this.matchesService.getMatchesArray.subscribe((data) => {
-      console.log('Data received:', data);
       if (data) {
         this.matchesArray.set(data);
-        console.log('hello', this.matchesArray().length);
       } else {
         console.log('Hello here');
         this.matchesArray.set([]);

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Account } from './models/account.model';
 import { AccountInfoData } from './components/account-info/account-info.component';
 import { SettingService } from 'src/app/features/settings/services/setting.service';
-import { GeolocationService } from 'src/app/core/services/geolocation/geolocation.service';
+import { AccountLocationService } from './services/account-location.service';
 
 register();
 @Component({
@@ -19,27 +19,17 @@ export class AccountPage implements OnInit, OnDestroy {
   accountSubscription!: Subscription;
 
   constructor(
-    private  geolocationService: GeolocationService,
     private accountService: AccountService,
-    private settingService: SettingService
+    private settingService: SettingService,
+    private accountLocationService: AccountLocationService,
   ) {}
 
   ngOnInit(): void {
     this.subscribeToAccount();
-
   }
 
-
-  async testGeo(){
-    try {
-      await this.geolocationService.getUserCurrentLocation();
-    } catch (error) {
-        console.log(error)
-    }
-  }
   ionViewWillEnter(): void {
     this.accountService.fetchAccount().subscribe();
-    this.testGeo();
   }
 
   onSettings(): void {
@@ -50,8 +40,9 @@ export class AccountPage implements OnInit, OnDestroy {
     this. accountSubscription = this.accountService.getAccount.subscribe(
       {
         next: (account) => {
-          console.log(account)
           this.account = account;
+          if (!account?.id) return
+          this.accountLocationService.updateAccountCoordinates(account.id).subscribe();
          },
         error: (error) => {
           console.log(error)
@@ -75,6 +66,8 @@ export class AccountPage implements OnInit, OnDestroy {
   calculateAge(birthDate: Date): number{
    return this.accountService.calculateAge(birthDate);
   }
+
+
   ngOnDestroy(): void {
    this.accountSubscription?.unsubscribe();
   }
