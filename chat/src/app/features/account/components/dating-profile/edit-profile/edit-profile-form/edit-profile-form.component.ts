@@ -30,10 +30,10 @@ export class EditProfileFormComponent implements OnInit {
   selectedLocation: string = '';
   FieldName = FieldName;
   gender = {
-      male: false,
-      female: false,
-      other: false,
-    };
+    male: false,
+    female: false,
+    other: false,
+  };
 
   editProfileFormFields!: FormGroup;
   constructor(
@@ -59,10 +59,23 @@ export class EditProfileFormComponent implements OnInit {
       this.editingProfileService
       .updateGender(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
     }
+
+    if (this.fieldName === FieldName.City) {
+      const city = this.editProfileFormFields.get(this.FieldName.City)?.value;
+      const country = this.editProfileFormFields.get(this.FieldName.Country)?.value;
+      this.editingProfileService.updateHome({city, country}).subscribe();
+    }
     this.editingProfileService.onDismissEditFormModal();
   }
 
    buildForm():void {
+    if (this.fieldName === FieldName.City) {
+        this.editProfileFormFields = this.fb.group({
+        [this.fieldName]: [this.fieldValue || '', Validators.required],
+        country: ['', Validators.required],
+      });
+      return;
+    }
     if (this.fieldName) {
       this.editProfileFormFields = this.fb.group({
         [this.fieldName]: [this.fieldValue || '', Validators.required],
@@ -93,9 +106,9 @@ export class EditProfileFormComponent implements OnInit {
 
   // Update form controls
   this.editProfileFormFields.get(FieldName.City)?.setValue(city);
-  this.editProfileFormFields.get(FieldName.Country)?.setValue(country);
+  this.editProfileFormFields.get('country')?.setValue(country);
 
-  // Update search bar input as well (you can bind it with [(ngModel)] or patch form)
+  // Update search bar input as well
   this.editProfileFormFields.get(FieldName.City)?.markAsTouched();
   this.locationSuggestions = []; // Clear suggestions
 }

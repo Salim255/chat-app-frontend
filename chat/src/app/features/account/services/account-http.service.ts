@@ -20,8 +20,15 @@ export type UpdateBioPayLoad = {
   bio: string;
   profileId: number;
 }
+
 export type UpdateGenderPayLoad = {
   gender: Gender;
+  profileId: number;
+}
+
+export type UpdateHomePayLoad = {
+  city: string;
+  country: string;
   profileId: number;
 }
 
@@ -52,5 +59,10 @@ export class AccountHttpService {
 
   updateGender(updatePayload: UpdateGenderPayLoad): Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-gender`, updatePayload)
+  }
+
+  updateHome(updatePayload: UpdateHomePayLoad): Observable<FetchAccountDto>{
+    console.log(updatePayload)
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-home`, updatePayload)
   }
 }
