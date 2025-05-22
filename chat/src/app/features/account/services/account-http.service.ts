@@ -4,6 +4,7 @@ import { Account } from "../models/account.model";
 import { Observable, of } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
+import { Gender } from "../../auth/components/create-profile/create-profile.component";
 
 export type FetchAccountDto = {
   status: string,
@@ -17,6 +18,10 @@ export type UpdateCoordinatesResponse = {
 
 export type UpdateBioPayLoad = {
   bio: string;
+  profileId: number;
+}
+export type UpdateGenderPayLoad = {
+  gender: Gender;
   profileId: number;
 }
 
@@ -43,5 +48,9 @@ export class AccountHttpService {
 
   updateBio(updatePayload: UpdateBioPayLoad): Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-bio`, updatePayload)
+  }
+
+  updateGender(updatePayload: UpdateGenderPayLoad): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-gender`, updatePayload)
   }
 }

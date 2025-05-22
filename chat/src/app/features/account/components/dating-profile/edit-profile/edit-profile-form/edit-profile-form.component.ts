@@ -30,8 +30,8 @@ export class EditProfileFormComponent implements OnInit {
   selectedLocation: string = '';
   FieldName = FieldName;
   gender = {
-      man: false,
-      woman: false,
+      male: false,
+      female: false,
       other: false,
     };
 
@@ -53,6 +53,11 @@ export class EditProfileFormComponent implements OnInit {
     if(this.fieldName === FieldName.Bio) {
       this.editingProfileService
       .updateBio(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
+    }
+
+    if(this.fieldName === FieldName.Gender) {
+      this.editingProfileService
+      .updateGender(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
     }
     this.editingProfileService.onDismissEditFormModal();
   }

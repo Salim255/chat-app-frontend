@@ -37,22 +37,22 @@
             <ion-item lines="none">
               <ion-checkbox label-placement="start"
                 label-placement="start"
-                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'man'"
-                (ionChange)="onSingleCheckboxSelect('man')">Man</ion-checkbox>
+                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'female'"
+                (ionChange)="onSingleCheckboxSelect('female')">female</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-               [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'woman'"
-                (ionChange)="onSingleCheckboxSelect('woman')">Woman</ion-checkbox>
+               [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'male'"
+                (ionChange)="onSingleCheckboxSelect('male')">male</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                   label-placement="start"
                   [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'other'"
-                  (ionChange)="onSingleCheckboxSelect('other')">Other</ion-checkbox>
+                  (ionChange)="onSingleCheckboxSelect('other')">other</ion-checkbox>
             </ion-item>
           </ion-col>
        </ion-row>

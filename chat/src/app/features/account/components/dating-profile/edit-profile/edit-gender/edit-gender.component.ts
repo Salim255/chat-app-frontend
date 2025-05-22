@@ -16,7 +16,7 @@ export class EditGenderComponent {
   }
 
   onEditFormModal(): void {
-    this.editingProfileService.onEditFormModal(FieldName.Gender, 'man');
+    this.editingProfileService.onEditFormModal(FieldName.Gender, this.gender);
   }
 
 }
