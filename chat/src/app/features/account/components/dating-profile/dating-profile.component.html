@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="onBack()" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+  <ion-segment [(ngModel)]="segmentValue" >
+    <ion-segment-button value="default" content-id="default">
+      <ion-label>Edit profile</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="second" content-id="second">
+      <ion-label> Preview profile</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-segment-view>
+    <ion-segment-content id="default" >
+       <app-edit-profile></app-edit-profile>
+    </ion-segment-content>
+    <ion-segment-content id="second" >
+        <app-preview></app-preview>
+    </ion-segment-content>
+  </ion-segment-view>
+</ion-content>
+

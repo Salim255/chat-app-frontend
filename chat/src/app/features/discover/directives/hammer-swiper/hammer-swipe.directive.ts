@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { InteractionBtnService } from 'src/app/features/discover/services/interaction-btn.service';
 import * as Hammer from 'hammerjs';
-import { SwipeDirection } from 'src/app/features/discover/pages/discover/discover.page';
+import { SwipeDirection } from '../../discover.page';
 
 @Directive({
   selector: '[appHammerSwipe]',
@@ -40,7 +40,7 @@ export class HammerSwipeDirective {
   onPanStart(event: HammerInput): void {
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
-
+    console.log(event)
     // Determine if it's more horizontal or vertical movement
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
       this.isHorizontalSwipe = true;

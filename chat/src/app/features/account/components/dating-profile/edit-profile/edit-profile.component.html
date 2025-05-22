@@ -1,0 +1,22 @@
+<ion-grid class="edit-profile">
+  <ion-row class="edit-profile__media">
+    <ion-col>
+       <app-edit-media [photos]="account?.photos"></app-edit-media>
+    </ion-col>
+  </ion-row>
+  <ion-row class="edit-profile__bio">
+    <ion-col>
+      <app-edit-bio [bio]="account?.bio"></app-edit-bio>
+    </ion-col>
+  </ion-row>
+  <ion-row class="edit-profile__gender">
+    <ion-col>
+      <app-edit-gender [gender]="account.gender"></app-edit-gender>
+    </ion-col>
+  </ion-row>
+   <ion-row class="edit-profile__home">
+    <ion-col>
+      <app-edit-home-town [homeTown]="account.city"></app-edit-home-town>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { PhotoService } from 'src/app/core/services/media/photo.service';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { EditingProfileService } from '../../services/editing-profile.service';
+import { PreferencesService } from '../../services/preferences.service';
 
 export type AccountInfoData = {
   city: string;
@@ -21,21 +23,17 @@ export class AccountInfoComponent {
   selectedPhotoString: string | null = null;
   photoPreview: string | ArrayBuffer | null = null;
 
-  constructor( private router: Router, private photoService: PhotoService) {}
+  constructor(
+    private editingProfileService: EditingProfileService,
+    private preferencesService: PreferencesService,
+   ) {}
 
-  onEditProfile(): void {
-    this.router.navigate(['/tabs/edit-profile']);
+  onProfile(): void {
+   this.editingProfileService.onPresentModal();
   }
 
-  async onTakePhoto(): Promise<void>{
-    const { preview, formData } = await this.photoService.takePicture();
-
-    if (preview) {
-      // Handle photo upload logic
-      // This Ensure the base64String is in the correct format for displaying in an image tag
-      this.photoPreview =  preview;
-      //this.selectedPhotoString = base64String;
-    }
+  onPreferences(): void{
+    this.preferencesService.presentPreferences();
   }
 
   onSubmit(): void {

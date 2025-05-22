@@ -4,7 +4,7 @@ import { Conversation } from "../../conversations/models/conversation.model";
 import { HttpClient } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import { Message } from "../../messages/model/message.model";
-import { CreateMessageDto } from "../pages/active-conversation/active-conversation.page";
+import { CreateMessageDto } from "../active-conversation.page";
 
 export enum RequestStatus {
   Success = 'success',

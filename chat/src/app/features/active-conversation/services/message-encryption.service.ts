@@ -3,9 +3,9 @@ import { catchError, from, map, Observable, of } from 'rxjs';
 import { Conversation } from '../../conversations/models/conversation.model';
 import { ConversationWorkerHandler } from '../../conversations/services/conversation.worker-handler';
 import { AuthData } from './active-conversation.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { MessageEncryptDecrypt } from 'src/app/core/services/encryption/message-encrypt-decrypt-';
-import { buildMessageEncryptionData } from './active-conversation.utils';
+import { MessageEncryptDecrypt } from 'src/app/core/services/encryption/message-encrypt-decrypt';
+import { buildMessageEncryptionData } from '../utils/active-conversation.utils';
+import { UserInChatDto } from '../../conversations/interfaces/conversations.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class MessageEncryptionService {
   encryptMessage(
     content: string,
     authData: AuthData,
-    partnerInfo: Partner | null,
+    partnerInfo: UserInChatDto | null,
     activeConversation: Conversation | null,
   ): Observable<{ encryptedMessageBase64: string }>{
     const messageData = buildMessageEncryptionData(

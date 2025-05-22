@@ -1,0 +1,29 @@
+.cards {
+   ion-icon {
+        position: absolute;
+        padding: 0.1rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 1;
+        border-radius: 50%;
+      }
+   .icon-close {
+        right: 7%;
+        bottom: 10%;
+        color: var(--ion-color-grey-7);
+        background: var( --ion-color-cyan-1);
+        opacity: .5;
+      }
+      .icon-add {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(202, 200, 200);
+        background: rgb(138, 25, 25);
+        border: 2px solid rgb(202, 200, 200);
+      }
+
+      ::ng-deep app-card-media .card-container {
+        margin: .5rem;
+      }
+}

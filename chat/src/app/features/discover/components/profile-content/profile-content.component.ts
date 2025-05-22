@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { DisableProfileSwipe } from '../../services/discover.service';
 import { Profile } from '../../model/profile.model';
+import { ViewProfileData } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { PageName } from 'src/app/shared/components/profile/slider/slider.component';
 
 @Component({
   selector: 'app-profile-content',
@@ -11,6 +13,8 @@ import { Profile } from '../../model/profile.model';
 export class ProfileContentComponent {
   @Input() profile!: Profile;
   @Input() profileToView: DisableProfileSwipe | null = null;
+  pageName: PageName = PageName.Discover;
+
   constructor() {}
 
   onCollapseProfileDetails(profileToView: DisableProfileSwipe | null): string {
@@ -19,4 +23,5 @@ export class ProfileContentComponent {
     }
     return 'profile-details profile-details__collapse';
   }
+
 }

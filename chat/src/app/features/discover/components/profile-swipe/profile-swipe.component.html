@@ -1,4 +1,4 @@
-<div
+ <ion-card
   #cardElement
   appHammerSwipe
   (swipeLeft)="onSwipeLeft($event)"
@@ -10,4 +10,6 @@
     [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
   >
   </app-profile-content>
-</div>
+</ion-card>
+
+

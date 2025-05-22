@@ -2,7 +2,7 @@ ion-header {
   ion-toolbar {
     padding-top: 3rem;
     padding-bottom: 1rem;
-    --background: var(--ion-color-cyan-0);
+    --background:  var(--ion-color-cyan-0);
     --border-width: 0;
     padding-left: 0.7rem;
     padding-right: 0.7rem;
@@ -35,22 +35,5 @@ ion-header {
       font-weight: 700;
       text-transform: capitalize;
     }
-  }
-}
-
-// Discover-viewer Section
-.discover-viewer {
-  &__user-name {
-    font-weight: bold;
-    font-size: 1.6rem;
-    text-transform: capitalize;
-  }
-  &__close-icon {
-    padding: 0.3rem;
-    border-radius: 50%;
-    font-size: 1.4rem;
-    //transform: scale(1.2);
-    color: var(--ion-color-grey-0);
-    background: linear-gradient(#ea0b25, #f85c6e);
   }
 }

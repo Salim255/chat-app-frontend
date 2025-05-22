@@ -8,7 +8,7 @@ import {
   AuthResponseDto,
   UpdatedUserDto,
   UpdateMePayload,
-} from '../../../core/interfaces/auth.interface';
+} from '../interfaces/auth.interface';
 import { User } from 'src/app/features/auth/models/user.model';
 import {
   BehaviorSubject,

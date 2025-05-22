@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { ModalController } from '@ionic/angular';
-import { ProfileViewerPage } from 'src/app/features/profile-viewer/pages/profile-viewer/profile-viewer.page';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { ProfileViewerPage } from 'src/app/features/profile-viewer/profile-viewer.page';
+import { Profile } from '../../discover/model/profile.model';
+import { ActiveConversationPage } from '../../active-conversation/active-conversation.page';
+
+export type ViewProfileData = {
+  birth_date: Date;
+  city: string;
+  connection_status: string;
+  country: string;
+  name: string;
+  partner_id: number;
+  photos: string[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileViewerService {
-  private profileToDisplaySource = new BehaviorSubject<Partner | null>(null);
 
   constructor(private modalController: ModalController) {}
 
-  setProfileToDisplay(profile: Partner): void {
-    console.log(profile, 'Hello from profile from profile service');
-    this.profileToDisplaySource.next(profile);
-  }
+  async openProfileViewerModal(profile: Profile): Promise<void> {
+    if (!profile) return;
 
-  get getProfileToDisplay() {
-    return this.profileToDisplaySource.asObservable();
-  }
-
-  async openProfileViewerModal() {
+    const topModal = await this.modalController.getTop();
+    // Check if the top modal is NOT the active conversation modal
+    const isActiveConversationModal =
+      topModal?.component === ActiveConversationPage;
+    if (topModal && !isActiveConversationModal) {
+      // There is already a conversation modal open; do not open profile viewer
+      return;
+    }
     const modal = await this.modalController.create({
       component: ProfileViewerPage,
+      componentProps: { profile }
     });
 
     await modal.present();
   }
 
-  async closeModal() {
+  async closeModal(): Promise<void> {
     await this.modalController.dismiss();
   }
 }

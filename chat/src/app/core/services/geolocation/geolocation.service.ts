@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Capacitor } from '@capacitor/core';
 
-type Coordinates = {
+export type Coordinates = {
   latitude: number;
   longitude: number;
 };
@@ -14,59 +15,73 @@ type Coordinates = {
 })
 export class GeolocationService {
   private ENV = environment;
-  currentLocation = new BehaviorSubject<string>('');
-  userCoordinates: Coordinates;
-  userCity: string = '';
-  constructor(private http: HttpClient) {
-    this.userCoordinates = {
-      latitude: 0,
-      longitude: 0,
-    };
-  }
+  private userCoordinates: Coordinates;
 
-  async requestPermissions() {
+  constructor(private http: HttpClient) { this.userCoordinates = { latitude: 0, longitude: 0 } }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async requestPermissions(): Promise<any> {
     const permissions = await Geolocation.requestPermissions();
-    console.log('Permissions:', permissions);
     return permissions;
   }
 
-  async getUserCurrentLocation() {
-    // Check location permission
-    const permission = await this.requestPermissions();
-
-    if (!permission) {
-      return;
-    }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getCurrentCoordinates(): Promise<Coordinates> {
     try {
-      // Get user's coordinates
+
+      if (Capacitor.getPlatform() ===  'web') {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) =>{
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+         });
+
+        this.userCoordinates.latitude = position.coords.latitude;
+        this.userCoordinates.longitude = position.coords.longitude;
+        return this.userCoordinates;
+      }
+
+      const permission = await this.requestPermissions();
+      if (!permission) {
+        throw new Error('Location permission error');
+      }
+
       const position = await Geolocation.getCurrentPosition();
       this.userCoordinates.latitude = position.coords.latitude;
       this.userCoordinates.longitude = position.coords.longitude;
-
-      // Get user's city using coordinates
-      let coordinateObserve: Observable<any>;
-      coordinateObserve = this.getCityByCoordinates(this.userCoordinates);
-      coordinateObserve.subscribe((response) => {
-        if (response && response.results.length > 0) {
-          this.userCity = response.results[0].components.city;
-          this.currentLocation.next(this.userCity);
-        }
-      });
-    } catch (error) {
-      console.error('Error getting location', error);
-      this.currentLocation.next('Unable to retrieve location');
+      return this.userCoordinates;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+       throw new Error(error.message);
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getCityByCoordinates(coordinates: Coordinates): Observable<any> {
     // OpenCage API BaseUrl
-    //console.log(this.env.mapKey);
     const url = `${this.ENV.mapBaseUrl}?q=${coordinates.latitude},++${coordinates.longitude}&key=${this.ENV.mapApiKey}&language=en&pretty=1`;
     return this.http.get(url);
   }
 
-  get getLocation() {
-    return this.currentLocation.asObservable();
+
+  searchLocationsByText(query: string): Observable<string[]> {
+    if (!query.trim()) return of([]);
+
+    const url = `${this.ENV.mapBaseUrl}?q=${encodeURIComponent(query)}&key=${this.ENV.mapApiKey}&language=en&limit=5`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.http.get<any>(url).pipe(
+      map(response => {
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return  response.results.map((result: any) =>{
+          const { continent, country, city, _normalized_city, county } = result.components;
+        const cty = city || _normalized_city || county;
+        if (!cty) return ;
+        const formatted = [cty, country, continent].filter(Boolean).join(', ');
+
+        return formatted;
+        }).filter(Boolean);
+      }
+
+      )
+    );
   }
 }

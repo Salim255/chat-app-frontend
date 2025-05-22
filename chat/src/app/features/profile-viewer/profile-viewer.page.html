@@ -1,0 +1,55 @@
+<ion-header *ngIf="profile">
+  <ion-toolbar>
+    <ion-text slot="start">
+     <span> {{ profile.name }}</span> {{ profileAge(profile.birth_date) }}
+    </ion-text>
+    <ion-text class="close-icon" slot="end" (click)="onClose()"></ion-text>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="profile">
+  <ion-grid>
+    <ion-row>
+      <ion-col >
+        <app-profile-slider
+          [profile]="profile"
+          [pageName]="pageName"
+        ></app-profile-slider>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col >
+        <app-profile-about-me></app-profile-about-me>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col >
+        <app-profile-looking-for></app-profile-looking-for>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col >
+        <app-profile-essentials></app-profile-essentials>
+      </ion-col>
+    </ion-row>
+      <ion-row>
+      <ion-col >
+        <app-report-profile [profile]="profile"></app-report-profile>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col >
+        <app-block-profile [profile]="profile"></app-block-profile>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <app-interaction-btns></app-interaction-btns>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="interaction-btns">
+    <app-interaction-btns [pageName]="'viewer'"></app-interaction-btns>
+  </div>
+</ion-content>

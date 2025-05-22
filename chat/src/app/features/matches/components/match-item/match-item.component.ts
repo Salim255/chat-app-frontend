@@ -1,13 +1,12 @@
 import {
   Component,
   Input,
-  OnChanges,
   OnInit,
 } from '@angular/core';
 import { Match } from '../../models/match.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
+import { UserInChatDto } from 'src/app/features/conversations/interfaces/conversations.dto';
 
 @Component({
   selector: 'app-match-item',
@@ -34,14 +33,16 @@ export class MatchItemComponent implements OnInit {
     this.activeConversationService.openConversation(partner, null);
   }
 
-  setActiveConversationsData(match: Match): Partner {
+  setActiveConversationsData(match: Match): UserInChatDto {
     return {
-      partner_id: match.partner_id,
+      user_id: match.partner_id,
       name: match.name,
+      birth_date: match.birth_date,
+      city: match.city,
+      country: match.country,
+      is_admin: false,
       connection_status: match.connection_status,
       public_key: match.public_key,
-      updated_at: match.match_updated_at,
-      created_at: match.match_created_at,
       photos: match.photos,
     }
   }

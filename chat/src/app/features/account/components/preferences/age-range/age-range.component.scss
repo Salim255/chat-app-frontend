@@ -1,0 +1,12 @@
+ion-item-group {
+  ion-item-divider {
+    ion-label {
+      color: var(--ion-color-grey-7);
+    }
+  }
+  ion-item {
+    --border-radius: 1rem;
+    border: 2px solid var(--ion-color-grey-3);
+    border-radius: .5rem;
+  }
+}

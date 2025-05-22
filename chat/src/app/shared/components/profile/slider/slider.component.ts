@@ -10,14 +10,15 @@ import {
 } from '@angular/core';
 import { IonicSlides } from '@ionic/angular';
 import { Swiper } from 'swiper/types';
-import {
-  DisableProfileSwipe,
-  DiscoverService,
-} from 'src/app/features/discover/services/discover.service';
-import { Profile } from 'src/app/features/discover/model/profile.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
+import { ProfileViewerService } from 'src/app/features/profile-viewer/services/profile-viewer.service';
+import { Profile } from 'src/app/features/discover/model/profile.model';
 
-type PageName = 'discover' | 'profile-viewer';
+export enum PageName {
+  Discover = 'discover',
+  ProfileViewer =  'profile-viewer',
+  DatingProfile = 'dating-profile',
+};
 
 @Component({
   selector: 'app-profile-slider',
@@ -27,10 +28,8 @@ type PageName = 'discover' | 'profile-viewer';
 })
 export class SliderComponent implements OnChanges, AfterViewInit {
   @Input() profile!: Profile;
-  @Input() profileToView: DisableProfileSwipe | null = null;
   @Input() swipeDirection: any;
-  @Input() pageName: PageName | null = null;
-
+  @Input() pageName:PageName = PageName.Discover;
   @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
   @ViewChild('swiperContainer', { static: false }) swiperContainer!: ElementRef;
 
@@ -41,19 +40,46 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     allowTouchMove: false, // Disable Swiper's internal swipe handling
   };
 
-  profileViewerIsActive: boolean = false;
-  sliderHeight: string = '';
+
+  sliderHeightStyle: string = '';
+  imagesHeightStyle: string = '';
+  detailsHeightStyle: string = '';
 
   currentIndex: number = 0;
   currentImage: string | null = null;
 
-  constructor(private discoverService: DiscoverService) {}
+  profilePhotos: string [] = [];
+  constructor(private profileViewerService: ProfileViewerService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    this.currentIndex = 0;
-    this.profileViewerIsActive = this.profileToView?.disableSwipe ?? false;
+    if (changes['profile']) {
+      const prev = changes['profile'].previousValue;
+      const curr = changes['profile'].currentValue;
+
+      // Only react if the profile actually changed
+      if (JSON.stringify(prev) !== JSON.stringify(curr)) {
+        this.profile = curr;
+        this.currentIndex = 0;
+
+        if (this.profile?.photos) {
+          this.profilePhotos = this.setUserImages();
+        }
+      }
+    }
+
+    if(changes['pageName']) {
+      const prev = changes['pageName'].previousValue;
+      const curr = changes['pageName'].currentValue;
+      // Only react if the swipeDirection actually changed
+      if (prev !== curr) {
+        this.setProfileDetailsStyle();
+        this.setSwiperContainerHeight();
+        this.setProfileImagesHeight();
+      }
+    }
   }
+
 
   ngAfterViewInit(): void {
     this.swiper = this.swiperContainer?.nativeElement.swiper;
@@ -64,12 +90,12 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     return index;
   }
 
-  setUserImages(profile: Profile): string[] {
+  setUserImages(): string[] {
     const imagesList = [
-      StringUtils.getAvatarUrl(profile?.photos[0]),
-      StringUtils.getAvatarUrl(profile?.photos[1]),
-      StringUtils.getAvatarUrl(profile?.photos[2]),
-      StringUtils.getAvatarUrl(profile?.photos[3])
+      StringUtils.getAvatarUrl(this.profile?.photos[0]),
+      StringUtils.getAvatarUrl(this.profile?.photos[1]),
+      StringUtils.getAvatarUrl(this.profile?.photos[2]),
+      StringUtils.getAvatarUrl(this.profile?.photos[3])
     ];
     return imagesList;
   }
@@ -82,39 +108,33 @@ export class SliderComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  setProfileDetailsStyle(profileToView: DisableProfileSwipe | null): string {
-    if (this.profile?.user_id !== profileToView?.profile.user_id)
-      return 'profile-summary profile-summary__show';
-    if (!profileToView?.disableSwipe) {
-      return 'profile-summary profile-summary__show';
-    } else {
-      return 'profile-summary profile-summary__hide';
+setProfileDetailsStyle(): void {
+    if (this.pageName === PageName.Discover || this.pageName === PageName.DatingProfile) {
+      this.detailsHeightStyle = 'profile-summary profile-summary__show';
+    } else if (this.pageName === PageName.ProfileViewer) {
+      this.detailsHeightStyle =  'profile-summary profile-summary__hide';
     }
   }
 
-  setSwiperContainerHeight(profileToView: DisableProfileSwipe | null): string {
-    if (this.profile?.user_id !== profileToView?.profile.user_id)
-      return 'swiper-container swiper-container__preview-disabled-height';
-    if (!profileToView?.disableSwipe) {
-      return 'swiper-container swiper-container__preview-disabled-height';
+  setSwiperContainerHeight(): void {
+    if (this.pageName === PageName.Discover || this.pageName === PageName.DatingProfile) {
+      this.sliderHeightStyle =  'swiper-container swiper-container__preview-disabled-height';
     } else {
-      return 'swiper-container swiper-container__preview-enabled-height';
+      this.sliderHeightStyle =  'swiper-container swiper-container__preview-enabled-height';
     }
   }
 
-  setProfileImagesHeight(profileToView: DisableProfileSwipe | null): string {
-    if (this.profile?.user_id !== profileToView?.profile.user_id)
-      return 'profile-img  profile-img__preview-disabled';
-    if (!profileToView?.disableSwipe) {
-      return 'profile-img  profile-img__preview-disabled';
+  setProfileImagesHeight(): void {
+    if (this.pageName === PageName.Discover){
+      this.imagesHeightStyle =  'profile-img  profile-img__preview-disabled';
     } else {
-      return 'profile-img  profile-img__preview-enabled';
+      this.imagesHeightStyle =  'profile-img  profile-img__preview-enabled';
     }
   }
 
   onProfileView(): void {
-    if (this.profileToView?.disableSwipe) return;
-    this.discoverService.onDiscoverProfileToggle({ profile: this.profile, disableSwipe: true });
+    if (!this.profile || this.pageName === PageName.DatingProfile) return;
+    this.profileViewerService.openProfileViewerModal(this.profile);
   }
 
   slideLeft(): void {
@@ -131,7 +151,7 @@ export class SliderComponent implements OnChanges, AfterViewInit {
   }
 
   private slideNext() {
-    if (this.currentIndex < this.setUserImages(this.profile).length - 1) {
+    if (this.currentIndex < this.profilePhotos.length - 1) {
       this.currentIndex = this.currentIndex + 1;
       console.log(this.currentIndex);
     } else {

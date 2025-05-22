@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
-import { ItsMatchModalComponent } from '../components/its-match-modal/its-match-modal.component';
+import { ItsMatchModalComponent } from '../modals/its-match-modal/its-match-modal.component';
 import { Match } from '../models/match.model';
 
 @Injectable({

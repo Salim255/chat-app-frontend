@@ -5,14 +5,17 @@ import {
 } from '@angular/core';
 import { DiscoverService } from 'src/app/features/discover/services/discover.service';
 import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { SwipeDirection } from '../../pages/discover/discover.page';
+import { SwipeDirection } from '../../discover.page';
 import { InteractionType } from 'src/app/features/discover/services/discover.service';
+
+type PageName = 'discover' | 'viewer';
 
 type ButtonConfig =   {
   name: string;
   icon: string;
   animationType: SwipeDirection;
   isActiveIcon: string;
+  pageName: PageName;
   onClick: () => void,
 }
 
@@ -23,6 +26,7 @@ type ButtonConfig =   {
   standalone: false,
 })
 export class InteractionBtnsComponent implements OnInit {
+  @Input() pageName!: PageName ;
   @Input() profile!: Partner;
   @Input() animationType: SwipeDirection | null = null;
   path = '/assets/icon/';
@@ -59,6 +63,7 @@ export class InteractionBtnsComponent implements OnInit {
     return [
       {
         name: 'undo',
+        pageName: this.pageName,
         icon: `${this.path}undo.svg`,
         animationType: SwipeDirection.SwipeUp,
         isActiveIcon: '',
@@ -66,6 +71,7 @@ export class InteractionBtnsComponent implements OnInit {
       },
       {
         name: 'dislike',
+        pageName: this.pageName,
         icon: `${this.path}close.svg`,
         isActiveIcon: `${this.path}clear-close.svg`,
         animationType: SwipeDirection.SwipeLeft,
@@ -73,6 +79,7 @@ export class InteractionBtnsComponent implements OnInit {
       },
       {
         name: 'stars',
+        pageName: this.pageName,
         icon: `${this.path}star.svg`,
         isActiveIcon: `${this.path}close.svg`,
         animationType: SwipeDirection.SwipeDown,
@@ -80,6 +87,7 @@ export class InteractionBtnsComponent implements OnInit {
       },
       {
         name: 'like',
+        pageName: this.pageName,
         icon: `${this.path}heart.svg`,
         isActiveIcon: `${this.path}clear-heart.svg`,
         animationType: SwipeDirection.SwipeRight,
@@ -87,11 +95,27 @@ export class InteractionBtnsComponent implements OnInit {
       },
       {
         name: 'boost',
+        pageName: this.pageName,
         icon: `${this.path}flash.svg`,
         isActiveIcon: `${this.path}close.svg`,
         animationType: SwipeDirection.SwipeDown,
         onClick: () => {},
       },
     ];
+  }
+
+  btnByPageName(btn: ButtonConfig, index: number): boolean {
+    if (!btn?.pageName || !btn?.name) return false;
+
+    if (btn.pageName === 'viewer') {
+      console.log('btn', btn);
+      console.log('btn.name', btn.pageName);
+      return true;
+    }
+
+    if (btn.pageName === 'discover') {
+      return true;
+    }
+    return true;
   }
 }

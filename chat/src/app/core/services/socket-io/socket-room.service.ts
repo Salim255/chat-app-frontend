@@ -64,7 +64,7 @@ export class SocketRoomService {
   private partnerLeftRoom():void{
     this.socket?.on('partner-left-room', (data: JoinRomData) => {
 
-      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.user_id;
       if(!currentPartnerId) {
         this.activeConversationPartnerService.setPartnerInRoomStatus(null);
         return
@@ -77,7 +77,7 @@ export class SocketRoomService {
 
   private partnerGoesOffline():void {
     this.socket?.on('user-offline', (data: { userId: number, status: string }) => {
-      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.user_id;
       if (currentPartnerId === data.userId) {
         this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.OFFLINE);
       }
@@ -86,7 +86,7 @@ export class SocketRoomService {
 
   private partnerGoesOnline():void {
     this.socket?.on('user-online', (data: {userId: number, status: string}) => {
-      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.partner_id;
+      const currentPartnerId = this.activeConversationPartnerService.partnerInfo?.user_id;
       if (currentPartnerId === data.userId) {
         this.activeConversationService.fetchActiveConversation().pipe(take(1)).subscribe();
         this.activeConversationPartnerService.setPartnerInRoomStatus(PartnerConnectionStatus.ONLINE);
@@ -101,7 +101,7 @@ export class SocketRoomService {
 
  emitLeaveRoom():void {
     this.socket = this.socketCoreService.getSocket();
-    const fromUserId = this.activeConversationPartnerService.partnerInfo?.partner_id;
+    const fromUserId = this.activeConversationPartnerService.partnerInfo?.user_id;
     let chatId!: number;
     this.activeConversationService.getActiveConversation
     .pipe(take(1)).subscribe((chat: Conversation | null) => {

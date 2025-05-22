@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { InitiatedMatchDto } from "./discover.service";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { Observable } from "rxjs";
@@ -11,19 +10,14 @@ export enum RequestStatus {
   Error = 'fail',
 }
 
-export type InitiateMatchResponse = {
+export type MatchResponse = {
   status: RequestStatus;
-  data: { match: InitiatedMatchDto };
+  data: { match: Match };
 }
 
 export type PotentialMatchesResponse = {
    status: RequestStatus;
    data: { profiles:  Profile[] };
-}
-
-export type AcceptedMatchResponse = {
-  status: RequestStatus;
-  data: { match: Match }
 }
 
 @Injectable({providedIn: 'root'})
@@ -33,18 +27,18 @@ export class DiscoverHttpService {
 
   constructor(private http: HttpClient){}
 
-  postMatch(likedUsedId: number): Observable<InitiateMatchResponse>{
+  postMatch(likedUsedId: number): Observable<MatchResponse>{
     return this.http
-      .post<InitiateMatchResponse>(`${this.basePath}/initiate-match`, {  to_user_id: likedUsedId })
+      .post<MatchResponse>(`${this.basePath}/initiate-match`, {  to_user_id: likedUsedId })
   }
 
   getPotentialMatches(): Observable<PotentialMatchesResponse>{
     return this.http.get<PotentialMatchesResponse>(`${this.basePath}/discover`)
   }
 
-  patchMatch(matchId: number): Observable<AcceptedMatchResponse> {
+  patchMatch(matchId: number): Observable<MatchResponse> {
    return this.http
-    .patch<AcceptedMatchResponse>(
+    .patch<MatchResponse>(
       `${this.ENV.apiUrl}/matches/${matchId}/accept`, {}
     )
   }

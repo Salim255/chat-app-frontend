@@ -1,5 +1,5 @@
 import { Conversation } from 'src/app/features/active-conversation/models/active-conversation.model';
-import { MessageEncryptDecrypt } from '../services/encryption/message-encrypt-decrypt-';
+import { MessageEncryptDecrypt } from '../services/encryption/message-encrypt-decrypt';
 import { Message } from '../../features/messages/model/message.model';
 
 /// <reference lib="webworker" />

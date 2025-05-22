@@ -3,14 +3,10 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ItsMatchModalService } from '../../matches/services/its-match-modal.service';
 import { Profile } from '../model/profile.model';
 import {
-  AcceptedMatchResponse,
+  MatchResponse,
   DiscoverHttpService,
-  InitiateMatchResponse,
   PotentialMatchesResponse,
 } from './discover-http.service';
-import { Match } from '../../matches/models/match.model';
-import { Partner } from 'src/app/shared/interfaces/partner.interface';
-import { StringUtils } from 'src/app/shared/utils/string-utils';
 
 export type DisableProfileSwipe = {
   disableSwipe: boolean;
@@ -48,25 +44,32 @@ export class DiscoverService {
     private  discoverHttpService:  DiscoverHttpService,
   ) {}
 
-  initiateMatchRequest(likedProfile: Profile): Observable<InitiateMatchResponse>{
+  initiateMatchRequest(likedProfile: Profile): Observable<MatchResponse>{
     return this.discoverHttpService.postMatch( likedProfile.user_id)
-     .pipe(tap(() => this.profileToRemoveSource.next(likedProfile.user_id)));
+     .pipe(tap((response) => {
+      this.profileToRemoveSource.next(likedProfile.user_id);
+      if (response?.data.match.match_status === 2) {
+        this.itsMatchModalService.openItsMatchModal(response?.data.match);
+      }
+     }
+    ));
   }
-
+//
   fetchPotentialMatches(): Observable<PotentialMatchesResponse> {
     return this.discoverHttpService.getPotentialMatches().pipe(
       tap((response) => {
+        console.log(response.data.profiles);
         this.potentialMatches.next(response.data.profiles);
       })
     );
   }
 
-  acceptMatchRequest(likedProfile: Profile): Observable<AcceptedMatchResponse>{
+  acceptMatchRequest(likedProfile: Profile): Observable<MatchResponse>{
     return this.discoverHttpService.patchMatch(likedProfile.match_id).pipe(
       tap((response) => {
         this.profileToRemoveSource.next(likedProfile.user_id);
         if (response?.data.match) {
-            this.itsMatchModalService.openItsMatchModal(response?.data.match);
+          this.itsMatchModalService.openItsMatchModal(response?.data.match);
         }
       })
   );

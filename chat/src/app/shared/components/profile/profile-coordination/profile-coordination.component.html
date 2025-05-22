@@ -1,7 +1,7 @@
 <ion-grid>
   <ion-row>
     <ion-col class="badge">
-      <app-badge [text]="profile.connection_status"></app-badge>
+      <app-badge [text]="profile.connection_status ?? 'online' "></app-badge>
       <ion-icon name="eye"></ion-icon>
     </ion-col>
   </ion-row>
@@ -12,7 +12,7 @@
   </ion-row>
   <ion-row>
     <ion-col class="profile-distance">
-      <app-distance [city]="profile.city"></app-distance>
+      <app-distance [visiterCoordinates]="buildVisiterCoordinates()"></app-distance>
     </ion-col>
   </ion-row>
 </ion-grid>

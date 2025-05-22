@@ -1,0 +1,87 @@
+ion-header {
+  ion-toolbar {
+    padding-bottom: .5rem;
+  }
+  ion-back-button {
+    color: var(--ion-color-grey-7);
+    }
+  ion-icon {
+    font-size: 1rem;
+    color: var(--ion-color-grey-7);
+  }
+  ion-title {
+    text-transform: capitalize;
+     color: var(--ion-color-grey-7);
+  }
+}
+
+.edit-preference {
+  margin-top: 1rem;
+  &__age {
+    ion-item-divider {
+      padding: 0 .5rem;
+      --inner-padding-end: 0;
+      margin-bottom: 1rem;
+    }
+
+    ion-picker {
+      --highlight-background: transparent;
+      --fade-background-rgb: 233, 236, 239;
+      --wheel-fade-background-rgb: 255, 255, 255;
+        ion-picker-column-option {
+        font-size: 1.2rem;
+        color: var(--ion-color-grey-7);
+        }
+      ion-picker-column-option.option-active{
+        color: var(--ion-color-primary);
+      }
+    }
+
+    ion-label {
+      color: var(--ion-color-grey-7);
+    }
+
+    ion-label:last-child {
+      opacity: 0.8;
+    }
+  }
+
+  &__distance {
+     ion-item-divider {
+      padding: 0 .5rem;
+      --inner-padding-end: 0;
+    }
+
+    ion-label {
+      color: var(--ion-color-grey-7);
+    }
+
+
+    ion-range {
+      --bar-background: var(--ion-color-grey-3);
+      --bar-background-active: var(--ion-color-primary);
+      --bar-height: .8rem;
+      --bar-border-radius: .4rem;
+      --knob-background: var(--ion-color-cyan-6);
+    }
+    ion-range::part(pin) {
+      margin: 0;
+      color: var(--ion-color-grey-7);
+      font-weight: bold;
+      opacity: .8;
+    }
+  }
+  &__interested {
+    ion-col {
+      ion-item {
+        ion-checkbox {
+          --border-radius: 6px;
+          color: var(--ion-color-grey-7);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+

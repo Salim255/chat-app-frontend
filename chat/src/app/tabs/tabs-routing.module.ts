@@ -11,28 +11,28 @@ const routes: Routes = [
       {
         path: 'conversations',
         loadChildren: () =>
-          import('../features/conversations/pages/conversations/conversations.module').then(
+          import('../features/conversations/conversations.module').then(
             (m) => m.ConversationsPageModule
           ),
       },
       {
         path: 'discover',
         loadChildren: () =>
-          import('../features/discover/pages/discover/discover.module').then(
+          import('../features/discover/discover.module').then(
             (m) => m.DiscoverPageModule
           ),
       },
       {
         path: 'matches',
         loadChildren: () =>
-          import('../features/matches/pages/matches/matches.module').then(
+          import('../features/matches/matches.module').then(
             (m) => m.MatchesPageModule
           ),
       },
       {
         path: 'account',
         loadChildren: () =>
-          import('../features/account/pages/account/account.module').then(
+          import('../features/account/account.module').then(
             (m) => m.AccountPageModule
           ),
       },
@@ -42,28 +42,21 @@ const routes: Routes = [
     path: 'active-conversation/:userId',
     loadChildren: () =>
       import(
-        '../features/active-conversation/pages/active-conversation/active-conversation.module'
+        '../features/active-conversation/active-conversation.module'
       ).then((m) => m.ActiveConversationPageModule),
     runGuardsAndResolvers: 'always', // Forces full navigation
   },
   {
-    path: 'edit-profile',
-    loadChildren: () =>
-      import('../features/account/pages/account/edit-profile/edit-profile.module').then(
-        (m) => m.EditProfilePageModule
-      ),
-  },
-  {
     path: 'settings',
     loadChildren: () =>
-      import('../features/settings/pages/settings/settings.module').then(
+      import('../features/settings/settings.module').then(
         (m) => m.SettingsPageModule
       ),
   },
   {
     path: 'view-profile',
     loadChildren: () =>
-      import('../features/profile-viewer/pages/profile-viewer/profile-viewer.module').then(
+      import('../features/profile-viewer/profile-viewer.module').then(
         (m) => m.ProfileViewerPageModule
       ),
   }

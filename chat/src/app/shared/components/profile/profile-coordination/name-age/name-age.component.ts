@@ -19,8 +19,8 @@ export class NameAgeComponent {
 
   onViewProfile(): void {
     this.tabsService.setTapHidingStatus('hide');
-    this.profileViewerService.setProfileToDisplay(this.profile);
-    this.profileViewerService.openProfileViewerModal();
+    // TODO:
+    this.profileViewerService.openProfileViewerModal(this.profile);
   }
 
   calculateAge(): number{

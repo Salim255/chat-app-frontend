@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { SearchBarComponent } from './native-components/search-bar/search-bar.component';
 import { LogoComponent } from './components/app-logo/logo.component';
-import { CardComponent } from './native-components/card/card.component';
-import { BadgeComponent } from './native-components/badge/badge.component';
+import { CardComponent } from './components/native-components/card/card.component';
+import { BadgeComponent } from './components/native-components/badge/badge.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SliderComponent } from './components/profile/slider/slider.component';
 import { AppHeaderComponent } from './components/app-header/app-header.component';
@@ -16,11 +15,12 @@ import { DistanceComponent } from './components/profile/profile-coordination/dis
 import { NameAgeComponent } from './components/profile/profile-coordination/name-age/name-age.component';
 import { CustomSwiperDirective } from './directives/custom-swiper/custom-swiper.directive';
 import { LoadingSpinnerComponent } from './components/app-loading-spinner/loading-spinner.component';
+import { CardMediaComponent } from './components/card-media/card.component';
+
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
-    SearchBarComponent,
     LogoComponent,
     CardComponent,
     SliderComponent,
@@ -34,9 +34,9 @@ import { LoadingSpinnerComponent } from './components/app-loading-spinner/loadin
     NameAgeComponent,
     CustomSwiperDirective,
     LoadingSpinnerComponent,
+    CardMediaComponent
   ],
   exports: [
-    SearchBarComponent,
     LogoComponent,
     CardComponent,
     SliderComponent,
@@ -50,6 +50,7 @@ import { LoadingSpinnerComponent } from './components/app-loading-spinner/loadin
     NameAgeComponent,
     CustomSwiperDirective,
     LoadingSpinnerComponent,
+    CardMediaComponent,
   ],
   imports: [IonicModule, CommonModule],
 })

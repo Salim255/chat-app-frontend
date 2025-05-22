@@ -1,11 +1,7 @@
 ion-list {
-  --ion-background-color: var(--ion-color-grey-1);
-
   ion-item {
     margin: 0.3rem 0;
     background: transparent;
-
-    --ion-background-color: var(--ion-color-grey-1);
     .message {
       max-width: 80%;
       display: inline;

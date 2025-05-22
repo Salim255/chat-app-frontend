@@ -3,13 +3,13 @@
   justify-content: space-around;
   align-items: center;
   &__btn {
-    background: var(--ion-color-grey-0);
+    background: var(--ion-color-grey-3);
     border-radius: 50%;
     position: relative;
     align-self: center;
     transition: all 0.2s ease;
     ion-icon {
-      position: absolute;
+       position: absolute;
       top: 50%;
       left: 50%;
       z-index: 1;
@@ -21,7 +21,7 @@
     width: 3.5rem;
     ion-icon {
       font-size: 2px;
-      transform: translate(-50%, -50%) scale(20);
+      transform: translate(-50%, -50%) scale(15);
     }
   }
   &__btn:nth-child(odd) {
@@ -61,8 +61,8 @@
       left: 50%;
       transform: translate(-50%, -50%);
       transition:
-        height 0.3s ease,
-        width 0.3s ease; /* Transition effect for height and width */
+      height 0.3s ease,
+      width 0.3s ease; /* Transition effect for height and width */
       &__0 {
         background: red; /* Change this to your desired color */
       }

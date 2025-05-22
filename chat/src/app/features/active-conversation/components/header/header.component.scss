@@ -7,6 +7,13 @@ ion-header {
     padding-left: 0;
     padding-right: 0;
     --background: var(--ion-color-cyan-0);
+    ion-chip {
+      --background: transparent;
+      ion-avatar {
+        height: 3rem;
+        width: 3rem;
+      }
+    }
     ion-buttons {
       ion-icon {
         color: var(--ion-text-color-1);
@@ -18,7 +25,6 @@ ion-header {
       --ion-background-color: transparent;
       display: flex;
       justify-content: center;
-
       .profile-info {
         display: flex;
         flex-direction: row;
@@ -66,3 +72,4 @@ ion-header {
     }
   }
 }
+

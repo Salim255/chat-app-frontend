@@ -71,6 +71,4 @@ export class FormInputComponent {
       this.socketTypingService.userStopTyping(this.toUserId);
     }
   }
-
-
 }

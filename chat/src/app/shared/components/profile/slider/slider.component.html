@@ -1,9 +1,9 @@
-<div
+ <div
   appCustomSwiper
   (profilePreview)="onProfileView()"
   (slideLeft)="slideLeft()"
   (slideRight)="slideRight()"
-  [ngClass]="setSwiperContainerHeight(profileToView)"
+  [ngClass]="sliderHeightStyle"
 >
   <ion-card>
     <ion-card-content>
@@ -19,15 +19,14 @@
       </div>
       <img
         alt="Profile avatar"
-        loading="lazy"
-        *ngIf="setUserImages(profile).length > 0"
-        [ngClass]="setProfileImagesHeight(profileToView)"
-        [src]="setUserImages(profile)[currentIndex]"
+        [ngClass]="imagesHeightStyle"
+        [src]="profilePhotos.length? profilePhotos[currentIndex]: ''"
       />
 
-      <div [ngClass]="setProfileDetailsStyle(profileToView)">
+      <div [ngClass]="detailsHeightStyle">
         <app-profile-coordination [profile]="profile"> </app-profile-coordination>
       </div>
     </ion-card-content>
   </ion-card>
 </div>
+

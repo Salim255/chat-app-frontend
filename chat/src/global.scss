@@ -37,13 +37,15 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
-/* Add this to your global styles (or component-specific styles) */
-ion-header {
-  //padding-top: env(safe-area-inset-top);
-}
 
 ion-toolbar {
   --background: var(--ion-background-color);
+}
+
+ion-item-divider {
+  --background: transparent;
+  margin: 0;
+  padding: 0;
 }
 
 ion-content {
@@ -56,11 +58,14 @@ ion-text {
 }
 
 ion-modal {
-  --height: 100%;
+  --height: 100vh;
   --width: 100%;
   --border-radius: 0px;
 }
 
+ion-item {
+  --background: transparent;
+}
 ion-grid {
   margin: 0;
   padding: 0;

@@ -3,7 +3,8 @@ ion-grid {
     &__expand {
       transition: all 0.5s ease-in-out;
       transform: translateX(0);
-      background: var(--ion-background-color-2);
+      //background: var(--ion-background-color-2);
+      background: var(--ion-background-color) ;
     }
     &__collapse {
       max-height: 0;

@@ -1,8 +1,22 @@
+
 ion-card {
   ion-card-subtitle {
     text-align: left;
+    display: flex;
+    ion-icon {
+      font-size: 1.2rem;
+    }
     ion-text {
-      color: var(--ion-color-primary);
+      box-decoration-break: clone;
+      margin-left: 0.5rem;
+      font-size: .8rem;
+      align-self: center;
+      text-transform: capitalize;
+    }
+  }
+  ion-card-content {
+    ion-item {
+      font-size: .8rem;
     }
   }
 }

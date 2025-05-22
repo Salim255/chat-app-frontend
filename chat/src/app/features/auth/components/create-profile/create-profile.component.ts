@@ -23,8 +23,8 @@ export enum InterestedIn {
 }
 
 export enum Gender {
-  Man = 'man',
-  Woman = 'woman',
+  Male = 'male',
+  Female = 'female',
   Other = 'other',
 }
 type photo = { photo: string }
@@ -52,7 +52,7 @@ export class CreateProfileComponent {
   InterestedIn = InterestedIn;
   // Parallel array of FormData objects (or null) for submission
   private photoUploads: (FormData | null)[] = [null, null, null, null];
-  
+
   constructor(
     private fb: FormBuilder,
     private completeProfileService: CompleteProfileService,
@@ -120,7 +120,7 @@ export class CreateProfileComponent {
   get photos(): FormArray {
     return this.profileForm.get('photos') as FormArray;
   }
-  
+
   formatDate(rawDate: Date): string {
     const formatted = formatDate(rawDate, 'dd/MM/y', 'en-US');
     return formatted;
@@ -139,7 +139,7 @@ export class CreateProfileComponent {
         name: this.profileForm.value.name,
         photos: this.profileForm.value.photos,
       }
-    
+
     // Copy each slot’s pre-built FormData into one payload:
     const multiPart = new FormData();
     for (let i = 0; i < this.photoUploads.length; i++) {
