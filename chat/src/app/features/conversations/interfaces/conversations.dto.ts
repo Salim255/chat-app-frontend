@@ -1,16 +1,20 @@
 import { RequestStatus } from "../../active-conversation/services/active-conversation-http.service";
+import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
 import { Conversation } from "../models/conversation.model";
 
 export type UserInChatDto = {
   user_id: number;
   photos: string[];
   name: string;
+  bio: string;
+  looking_for: LookingFor;
   connection_status: string;
   is_admin: boolean;
-  birth_date: Date,
-  city: string,
-  country: string,
-   public_key: string | null,
+  birth_date: Date;
+  city: string;
+  country: string;
+  public_key: string | null;
+
 }
 
 

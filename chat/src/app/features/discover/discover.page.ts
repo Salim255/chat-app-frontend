@@ -91,10 +91,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private subscribeToProfileAction() {
-    console.log('📡 Setting up subscription to interaction...');
     this.profileActionSubscription = this.discoverService.getProfileInteractionType
       .subscribe((interActionType) => {
-        console.log(interActionType, "hello from action")
         if(interActionType){
           this.handleProfileInteraction(interActionType);
         }

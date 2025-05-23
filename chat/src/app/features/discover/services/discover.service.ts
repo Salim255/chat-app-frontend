@@ -83,12 +83,10 @@ export class DiscoverService {
   }
 
   get getProfileInteractionType(): Observable<InteractionType | null> {
-    console.log("helo just before call it")
     return this.profileInteractionTypeSource.asObservable();
   }
 
   setProfileInteractionType(interActionType: InteractionType | null): void {
-     console.log('✅ Sent interaction:', interActionType);
     this.profileInteractionTypeSource.next(interActionType);
   }
 

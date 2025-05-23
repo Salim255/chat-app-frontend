@@ -25,7 +25,7 @@ export class ProfileSwipeComponent {
   resetProfileTimer: any;
 
   constructor(private discoverService: DiscoverService) {}
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-unused-vars
   onSwipeLeft(event: any): void {
     this.discoverService.setProfileInteractionType(InteractionType.DISLIKE);
   }

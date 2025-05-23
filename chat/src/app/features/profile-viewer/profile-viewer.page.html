@@ -17,20 +17,20 @@
         ></app-profile-slider>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="profile.bio">
       <ion-col >
-        <app-profile-about-me></app-profile-about-me>
+        <app-profile-about-me [bio]="profile.bio"></app-profile-about-me>
       </ion-col>
     </ion-row>
-    <ion-row>
-      <ion-col >
-        <app-profile-looking-for></app-profile-looking-for>
+    <ion-row *ngIf="profile.looking_for">
+      <ion-col>
+        <app-profile-looking-for [lookingFor]="profile.looking_for"></app-profile-looking-for>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col >
-        <app-profile-essentials></app-profile-essentials>
+        <app-profile-essentials [profile]="profile"></app-profile-essentials>
       </ion-col>
     </ion-row>
       <ion-row>

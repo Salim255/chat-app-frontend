@@ -14,15 +14,10 @@ import { UserInChatDto } from 'src/app/features/conversations/interfaces/convers
   styleUrls: ['./match-item.component.scss'],
   standalone: false,
 })
-export class MatchItemComponent implements OnInit {
+export class MatchItemComponent {
   @Input() partnerInfo!: Match;
 
   constructor(private activeConversationService: ActiveConversationService) {}
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    console.log('Hello', this.partnerInfo);
-  }
 
   getAvatarUrl(): string{
     return  StringUtils.getAvatarUrl(this.partnerInfo?.photos[0]);
@@ -44,6 +39,8 @@ export class MatchItemComponent implements OnInit {
       connection_status: match.connection_status,
       public_key: match.public_key,
       photos: match.photos,
+      bio: match.bio,
+      looking_for: match.looking_for,
     }
   }
 }

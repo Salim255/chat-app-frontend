@@ -1,3 +1,5 @@
+import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
+
 export class Match {
   constructor(
     public partner_id: number,
@@ -10,6 +12,8 @@ export class Match {
     public match_id: number,
     public profile_id: number,
     public photos: string [],
+    public bio: string,
+    public looking_for: LookingFor,
     public match_status: number,
     public match_created_at: Date,
     public match_updated_at: Date,

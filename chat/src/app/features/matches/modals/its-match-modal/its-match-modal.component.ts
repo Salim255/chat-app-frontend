@@ -39,6 +39,8 @@ export class ItsMatchModalComponent implements OnInit {
       connection_status: this.matchedProfile.connection_status,
       public_key: this.matchedProfile.public_key,
       photos: this.matchedProfile.photos,
+      bio: this.matchedProfile.bio,
+      looking_for: this.matchedProfile.looking_for,
       is_admin: false,
     }
     this.activeConversationService.openConversation(profileInChat, null);
