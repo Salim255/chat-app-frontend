@@ -58,7 +58,6 @@ export class DiscoverService {
   fetchPotentialMatches(): Observable<PotentialMatchesResponse> {
     return this.discoverHttpService.getPotentialMatches().pipe(
       tap((response) => {
-        console.log(response.data.profiles);
         this.potentialMatches.next(response.data.profiles);
       })
     );
@@ -84,10 +83,12 @@ export class DiscoverService {
   }
 
   get getProfileInteractionType(): Observable<InteractionType | null> {
+    console.log("helo just before call it")
     return this.profileInteractionTypeSource.asObservable();
   }
 
   setProfileInteractionType(interActionType: InteractionType | null): void {
+     console.log('✅ Sent interaction:', interActionType);
     this.profileInteractionTypeSource.next(interActionType);
   }
 

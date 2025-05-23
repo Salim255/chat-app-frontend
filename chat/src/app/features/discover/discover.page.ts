@@ -53,7 +53,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
   private discoverProfileToggleSubscription!: Subscription;
-  private listenToProfileInteractionSource!: Subscription;
+  private profileActionSubscription!: Subscription;
   private btnInteractionSubscription!: Subscription;
 
   constructor(
@@ -71,12 +71,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.subscribeProfileToRemove();
     this.subscribeToInteractionBtn();
     this.subscribeToPotentialMatches();
+    this.subscribeToHostProfile();
+    this.subscribeToProfileAction();
   }
 
   ionViewWillEnter(): void {
-    console.log("Hello from disocverts")
     this.discoverService.fetchPotentialMatches().subscribe();
-    this.subscribeToInteraction();
+    this.subscribeToProfileAction();
     this.subscribeToDiscoverProfileToggle();
     this.subscribeToInteractionBtn();
     this.subscribeToHostProfile();
@@ -88,6 +89,18 @@ export class DiscoverPage implements OnInit, OnDestroy {
       this.animationType = action ;
     });
   }
+
+  private subscribeToProfileAction() {
+    console.log('📡 Setting up subscription to interaction...');
+    this.profileActionSubscription = this.discoverService.getProfileInteractionType
+      .subscribe((interActionType) => {
+        console.log(interActionType, "hello from action")
+        if(interActionType){
+          this.handleProfileInteraction(interActionType);
+        }
+    });
+  }
+
   get topProfile(): Profile | null {
     return this.potentialMatches().length ? this.potentialMatches()[0] : null;
   }
@@ -107,14 +120,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
     })
   }
 
-  private subscribeToInteraction(): void {
-    this.listenToProfileInteractionSource =
-      this.discoverService.getProfileInteractionType.subscribe((interActionType) => {
-        if (interActionType) {
-          this.handleProfileInteraction(interActionType);
-        }
-      });
-  }
 
   private handleProfileInteraction(actionType: InteractionType): void {
     if (actionType === InteractionType.DISLIKE) this.handleDislikeProfile();
@@ -211,8 +216,9 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.potentialMatchesSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
-    this.listenToProfileInteractionSource?.unsubscribe();
+     this.profileActionSubscription?.unsubscribe();
     this.hostProfileSubscription?.unsubscribe();
+    this.profileActionSubscription?.unsubscribe();
   }
 
   ngOnDestroy(): void {
@@ -220,7 +226,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.potentialMatchesSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
-    this.listenToProfileInteractionSource?.unsubscribe();
+    this.profileActionSubscription?.unsubscribe();
     this.btnInteractionSubscription?.unsubscribe();
   }
 }

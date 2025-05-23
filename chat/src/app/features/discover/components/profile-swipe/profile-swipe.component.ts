@@ -19,7 +19,7 @@ export class ProfileSwipeComponent {
 
   // Typically referenced to your ion-router-outlet
   presentingElement!: HTMLElement | null;
-isModalOpen = true;
+  isModalOpen = true;
   currentTransformX: number = 0; // Keeps track of the current of the card
   isAnimating = signal<boolean>(false);
   resetProfileTimer: any;
