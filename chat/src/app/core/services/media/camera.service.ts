@@ -22,7 +22,7 @@ export class CameraService {
   async getPhoto(): Promise<CameraResult> {
     try {
       if (Capacitor.getPlatform() === 'web') {
-        return  { success: false, reason: ReasonString.WebPlatform };
+        return { success: false, reason: ReasonString.WebPlatform };
       }
       const perm = await this.perms.requestCameraAndGallery();
       if (perm.camera !== 'granted' && perm.photos !== 'granted') {
