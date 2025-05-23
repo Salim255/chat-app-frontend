@@ -43,13 +43,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
   isAnimating = signal<boolean>(false);
   animationType: SwipeDirection | null = null;
 
-  membersList = signal<Profile[]>([]);
+  potentialMatches = signal<Profile[]>([]);
   profileToView = signal<DisableProfileSwipe | null>(null);
 
   hostAvatar!: string;
 
   private hostProfileSubscription!: Subscription;
-  private membersSource!: Subscription;
+  private potentialMatchesSource!: Subscription;
   private netWorkSubscription!: Subscription;
   private profileToRemoveSubscription!: Subscription;
   private discoverProfileToggleSubscription!: Subscription;
@@ -70,6 +70,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
     this.subscribeToInteractionBtn();
+    this.subscribeToPotentialMatches();
   }
 
   ionViewWillEnter(): void {
@@ -88,7 +89,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     });
   }
   get topProfile(): Profile | null {
-    return this.membersList().length > 0 ? this.membersList()[0] : null;
+    return this.potentialMatches().length ? this.potentialMatches()[0] : null;
   }
 
   trackById(i: number, item: Profile): number {
@@ -156,23 +157,25 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private removeTopProfile(): void {
-    if (this.membersList().length > 0) {
-      this.membersList.update((members) => {
-        if (members.length > 0) {
-          members.shift();
+    if (this.potentialMatches().length ) {
+      this.potentialMatches.update((potentialMatches) => {
+        if (potentialMatches.length) {
+          potentialMatches.shift();
         }
-        return members;
+        return potentialMatches;
       });
     }
-    if (this.membersList().length === 0) {
+    if (this.potentialMatches().length === 0) {
       this.discoverService.fetchPotentialMatches().subscribe();
     }
   }
 
   private subscribeToDiscoverProfileToggle(): void {
     this.discoverProfileToggleSubscription =
-      this.discoverService.getDiscoverProfileToggleStatus.subscribe((data) => {
-        this.discoverToggleStatus.set(data?.disableSwipe ? data.disableSwipe : null);
+      this.discoverService
+      .getDiscoverProfileToggleStatus
+      .subscribe((data) => {
+        this.discoverToggleStatus.set(data?.disableSwipe || null);
         this.profileToView.set(data);
 
         if (!this.discoverToggleStatus() && this.content) {
@@ -182,32 +185,30 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   private subscribeProfileToRemove(): void {
-    this.profileToRemoveSubscription = this.discoverService.getProfileToRemoveId.subscribe(
-      () => {
-        this.removeTopProfile();
-      }
-    );
+    this.profileToRemoveSubscription =
+      this.discoverService.getProfileToRemoveId
+      .subscribe(() => this.removeTopProfile());
   }
 
   private subscribeNetwork(): void {
-    this.netWorkSubscription = this.networkService.getNetworkStatus().subscribe((isConnected) => {
-      this.isConnected.set(isConnected);
-      if (isConnected) {
-        this.loadForeignersList();
-      }
+    this.netWorkSubscription =
+      this.networkService.getNetworkStatus()
+      .subscribe((isConnected) => {
+        this.isConnected.set(isConnected);
     });
   }
 
-  private loadForeignersList(): void {
-    this.membersSource = this.discoverService.getPotentialMatchesArray.subscribe((profiles) => {
-      console.log(profiles)
-      this.membersList.set([...profiles]);
-    });
+  private subscribeToPotentialMatches(): void {
+    this.potentialMatchesSource =
+      this.discoverService.getPotentialMatchesArray
+      .subscribe((profiles) => {
+        this.potentialMatches.set([...profiles]);
+      });
   }
 
   ionViewWillLeave(): void {
     this.netWorkSubscription?.unsubscribe();
-    this.membersSource?.unsubscribe();
+    this.potentialMatchesSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
     this.listenToProfileInteractionSource?.unsubscribe();
@@ -216,7 +217,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.netWorkSubscription?.unsubscribe();
-    this.membersSource?.unsubscribe();
+    this.potentialMatchesSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
     this.listenToProfileInteractionSource?.unsubscribe();

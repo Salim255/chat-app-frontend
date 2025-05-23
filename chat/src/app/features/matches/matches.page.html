@@ -1,9 +1,9 @@
 <app-header [pageName]="'matches'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
+  <ion-grid class="matches">
     <ng-container *ngIf="matchesArray().length > 0; else default">
-      <ion-row>
+      <ion-row class="matches__list">
         <ion-col>
           <ion-text>New matches</ion-text>
         </ion-col>
@@ -20,7 +20,7 @@
     </ng-container>
 
     <ng-template #default>
-      <ion-row class="place-holder">
+      <ion-row class="matches__place-holder">
         <ion-col>
           <app-place-holder [accountAvatar]="hostAvatar"></app-place-holder>
         </ion-col>

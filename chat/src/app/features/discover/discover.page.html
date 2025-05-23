@@ -2,10 +2,10 @@
 
 
 <ion-content>
-   <ng-container *ngIf="membersList().length > 0">
+   <ng-container *ngIf="potentialMatches().length > 0; else default">
     <div
       class="profile-card"
-      *ngFor="let item of membersList();  let i = index; trackBy: trackById"
+      *ngFor="let item of potentialMatches();  let i = index; trackBy: trackById"
       [ngClass]="i === 0 && isAnimating() ? animationClass() : ''"
       [style.z-index]="100 - i"
     >
@@ -16,13 +16,14 @@
       </app-profile-swipe>
     </div>
   </ng-container>
-</ion-content>
-<!--   <ng-template #default>
+
+   <ng-template #default>
     <div class="place-holder">
       <app-place-holder [pageName]="'discover'" [accountAvatar]="hostAvatar"></app-place-holder>
     </div>
   </ng-template>
- -->
+</ion-content>
+
 <ion-footer >
   <ion-grid>
     <ion-row class="interaction-btns">
