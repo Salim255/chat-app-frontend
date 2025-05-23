@@ -38,7 +38,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
   @ViewChild('cardElement', { static: false }) cardElement!: ElementRef;
 
   isConnected = signal<boolean>(false);
-  showTabs = signal<boolean>(false);
   discoverToggleStatus = signal<boolean | null>(null);
   animationClass = signal<string>('');
   isAnimating = signal<boolean>(false);
@@ -68,14 +67,13 @@ export class DiscoverPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.showTabs.set(true);
     this.subscribeNetwork();
     this.subscribeProfileToRemove();
-    //this.subscribeToInteractionBtn();
+    this.subscribeToInteractionBtn();
   }
 
   ionViewWillEnter(): void {
-    this.showTabs.set(true);
+    console.log("Hello from disocverts")
     this.discoverService.fetchPotentialMatches().subscribe();
     this.subscribeToInteraction();
     this.subscribeToDiscoverProfileToggle();
@@ -202,12 +200,12 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
   private loadForeignersList(): void {
     this.membersSource = this.discoverService.getPotentialMatchesArray.subscribe((profiles) => {
+      console.log(profiles)
       this.membersList.set([...profiles]);
     });
   }
 
   ionViewWillLeave(): void {
-    this.showTabs.set(false);
     this.netWorkSubscription?.unsubscribe();
     this.membersSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();

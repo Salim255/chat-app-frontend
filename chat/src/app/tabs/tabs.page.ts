@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
 import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { SocketCoreService } from '../core/services/socket-io/socket-core.servic
 import { AuthService } from '../features/auth/services/auth.service';
 import { SocketRoomService } from '../core/services/socket-io/socket-room.service';
 import { SocketMessageService } from '../core/services/socket-io/socket-message.service';
+import { InteractionBtnService } from '../features/discover/services/interaction-btn.service';
 
 export type displayTap = 'show' | 'hide';
 @Component({
@@ -19,16 +20,15 @@ export class TabsPage implements OnInit, OnDestroy {
   @ViewChild('tabs') tabs!: IonTabs;
   @ViewChild('tabsElement') tabsElement!: ElementRef;
   selectedTab: any;
-  showActionBtn = false;
+  isSwipeActive = signal(false);
   hidingTapStatus: displayTap = 'hide';
   private userId: number | null = null;
-
-  private tapHidingStatusSource!: Subscription;
   private userIdSubscription!: Subscription;
-  private tabChangeSubscription!: Subscription;
+  private swipeEventSubscription!: Subscription;
   isDiscoverActive = true;
+
   constructor(
-    private tabsService: TabsService,
+    private interactionBtnService:InteractionBtnService,
     private socketCoreService: SocketCoreService,
     private authService: AuthService,
     private socketPresenceService: SocketPresenceService,
@@ -39,26 +39,19 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // console.log('tabs, Hello tabs💥💥💥')
-    this.tapHidingStatusSource = this.tabsService.getHidingTapStatus.subscribe((status) => {
-      this.hidingTapStatus = status;
-    });
-    ////////
     this.subscribeToUserId();
-    this.subscribeToTabChange();
-  }
-
-  private subscribeToTabChange() {
-    this.tabChangeSubscription = this.tabsService.getNextPage.subscribe((selectedTab) => {
-      console.log(selectedTab, 'hello');
-      this.tabs?.select('account');
-      this.isDiscoverActive = selectedTab === 'discover';
-    });
+    this.subscribeToSwipeEvent();
   }
 
   setCurrentTab(event: any):void {
     this.selectedTab = this.tabs.getSelected();
     this.isDiscoverActive = this.selectedTab === 'discover';
+  }
+
+  private subscribeToSwipeEvent(){
+    this.swipeEventSubscription = this.interactionBtnService.getActionDirection.subscribe(event => {
+      this.isSwipeActive.set(!!event);
+    })
   }
 
   private subscribeToUserId() {
@@ -74,11 +67,7 @@ export class TabsPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.tapHidingStatusSource) {
-      this.tapHidingStatusSource.unsubscribe();
-    }
-
     this.userIdSubscription?.unsubscribe();
-    this.tabChangeSubscription?.unsubscribe();
+    this.swipeEventSubscription?.unsubscribe();
   }
 }

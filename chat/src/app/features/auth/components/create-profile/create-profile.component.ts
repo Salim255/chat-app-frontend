@@ -7,14 +7,6 @@ import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { PhotoService } from "src/app/core/services/media/photo.service";
 
-interface FieldConfig {
-  key: string;              // formControlName
-  label: string;            // ion-label text
-  type: 'input' | 'select' | 'date' | 'photos';
-  placeholder?: string;
-  options?: { value: string, label: string }[]; // for selects
-}
-
 
 export enum InterestedIn {
   Men = 'men',

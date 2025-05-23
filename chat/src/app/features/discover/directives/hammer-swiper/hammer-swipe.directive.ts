@@ -70,6 +70,7 @@ export class HammerSwipeDirective {
     } else if (this.isScrolling) {
       // Allow vertical scrolling
       element.style.transform = `translateY(${event.deltaY}px)`;
+       this.interactionBtnService.setActionDirection(SwipeDirection.SwipeUp);
     }
   }
 

@@ -1,8 +1,17 @@
-ion-tabs {
-  position: relative;
+.discover-swipe-overlay {
+  position: absolute;
+  inset: 0; // full screen
 
+  //pointer-events: none; /* Enable only when needed */
+  &__active {
+  pointer-events: auto; /* Enable only when needed */
+  z-index: 99;
+}
+}
+
+ion-tabs {
   ion-tab-bar {
-    padding-top: 0.5rem;
+    padding-top: 0.2rem;
     --background: var(--ion-background-color-2);
     border: none;
   }
@@ -11,3 +20,4 @@ ion-tabs {
 .hidden {
   display: none !important;
 }
+

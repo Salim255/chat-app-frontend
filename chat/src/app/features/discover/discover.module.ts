@@ -13,6 +13,7 @@ import { DiscoverPageRoutingModule } from './discover-routing.module';
 import { HammerSwipeDirective } from './directives/hammer-swiper/hammer-swipe.directive';
 import { ProfileViewerFeatureModule } from '../profile-viewer/profile-viewer-feature.module';
 import { FormsModule } from '@angular/forms';
+import { DiscoverContainerComponent } from './components/discover-cards/discover-container.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -32,7 +33,9 @@ import { FormsModule } from '@angular/forms';
     ProfileContentComponent,
     InteractionBtnsComponent,
     DiscoverHeaderComponent,
-    HammerSwipeDirective
+    HammerSwipeDirective,
+    DiscoverContainerComponent
   ],
+  exports: [DiscoverPage]
 })
 export class DiscoverPageModule {}
