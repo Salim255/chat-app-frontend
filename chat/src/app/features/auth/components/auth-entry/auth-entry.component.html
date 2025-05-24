@@ -2,25 +2,36 @@
   <ion-grid class="custom-grid">
     <ion-row class="row-logo">
       <ion-col>
-        <app-logo></app-logo>
+       <app-logo></app-logo>
+     <!--   <ion-icon (click)="onLanguage()" name="language-outline"></ion-icon> -->
+        <div class="languages">
+           <app-languages-switcher></app-languages-switcher>
+        </div>
       </ion-col>
     </ion-row>
     <ion-row class="row-intro">
       <ion-col>
-        <ion-text> <strong>it Start</strong> with a <strong> Swipe! </strong> </ion-text>
+        <ion-text> <strong> {{ 'INTRO.START' | translate }} </strong> {{ 'INTRO.WITH' | translate }} <strong> {{'INTRO.SWIPE' | translate}} </strong> </ion-text>
+        <!--<ion-text> <strong>it Start</strong> with a <strong> Swipe! </strong> </ion-text> -->
       </ion-col>
     </ion-row>
     <ion-row class="row-terms">
       <ion-col>
-        <ion-text
-          >By tapping 'Create account' or 'Sign in' you agree to our <u>Terms</u>. Learn how we
-          process your data in our <u>Privacy Policy</u> and <u> Cookies Policy</u>
+        <ion-text><!-- By tapping 'Create account' or 'Sign in' you agree to our <u>Terms</u>. Learn how we
+          process your data in our <u>Privacy Policy</u> and <u> Cookies Policy</u> -->
+          {{ 'TERMS.TEXT' | translate }}  &quot;{{ "TERMS.SIGNUP" | translate }}&quot;
+          {{ "TERMS.OR" | translate }} &quot;{{ "TERMS.LOGIN" | translate }}&quot;
+          {{ "TERMS.AGREE" | translate }} <u>{{ 'TERMS.TERM' | translate }}</u>.
+          {{ 'TERMS.LEARN' | translate }} <u>{{ 'TERMS.POLICY' | translate }}</u>
+          {{ 'TERMS.AND' | translate }}
+          <u>{{ "TERMS.COOKIES" | translate }}</u>
         </ion-text>
       </ion-col>
     </ion-row>
     <ion-row class="row-button">
       <ion-col>
-        <app-button [btnText]="'Create account'" (click)="onCreate()"></app-button>
+        <app-button [btnText]="'CREATE_ACCOUNT' | translate" (click)="onCreate()"></app-button>
+      <!--   <app-button [btnText]="'Create account'" (click)="onCreate()"></app-button> -->
         <app-button [btnText]="'Sign in'" (click)="onSignIn()"></app-button>
       </ion-col>
     </ion-row>

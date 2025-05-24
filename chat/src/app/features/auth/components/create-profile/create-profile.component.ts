@@ -57,20 +57,22 @@ export class CreateProfileComponent {
     const today = new Date();
     today.setFullYear(today.getFullYear() - 18);
     this.maxDate = today.toISOString().split('T')[0]; // format: YYYY-MM-DD
-    this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      birthDate: [null, Validators.required],
-      gender: [null, Validators.required],
-      country: ['', Validators.required],
-      city: ['', Validators.required],
-      interestedIn: [null, Validators.required],
-      photos: this.fb.array([
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-      ], Validators.maxLength(4)),
-    });
+
+    this.profileForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        birthDate: [null, Validators.required],
+        gender: [null, Validators.required],
+        country: ['', Validators.required],
+        city: ['', Validators.required],
+        interestedIn: [null, Validators.required],
+        photos: this.fb.array([
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+        ], Validators.maxLength(4)),
+      });
   }
 
   // in your component class

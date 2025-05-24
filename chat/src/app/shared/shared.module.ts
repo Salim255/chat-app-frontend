@@ -16,7 +16,8 @@ import { NameAgeComponent } from './components/profile/profile-coordination/name
 import { CustomSwiperDirective } from './directives/custom-swiper/custom-swiper.directive';
 import { LoadingSpinnerComponent } from './components/app-loading-spinner/loading-spinner.component';
 import { CardMediaComponent } from './components/card-media/card.component';
-
+import { LanguagesSwitcherComponent } from './components/languages-switcher/languages-switcher';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -34,7 +35,8 @@ import { CardMediaComponent } from './components/card-media/card.component';
     NameAgeComponent,
     CustomSwiperDirective,
     LoadingSpinnerComponent,
-    CardMediaComponent
+    CardMediaComponent,
+    LanguagesSwitcherComponent
   ],
   exports: [
     LogoComponent,
@@ -51,7 +53,8 @@ import { CardMediaComponent } from './components/card-media/card.component';
     CustomSwiperDirective,
     LoadingSpinnerComponent,
     CardMediaComponent,
+    LanguagesSwitcherComponent
   ],
-  imports: [IonicModule, CommonModule],
+  imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })
 export class SharedModule {}

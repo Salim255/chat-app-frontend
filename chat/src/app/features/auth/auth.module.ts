@@ -9,6 +9,7 @@ import { AuthFormComponent } from './components/auth-form/form.component';
 import { AuthEntryComponent } from './components/auth-entry/auth-entry.component';
 import { CreateProfileComponent } from './components/create-profile/create-profile.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { LoginSignupComponent } from './components/login-signup/login-signup.com
     IonicModule,
     AuthPageRoutingModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   declarations: [
     AuthPage, AuthFormComponent,
