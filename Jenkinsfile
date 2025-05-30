@@ -23,32 +23,28 @@ pipeline {
 
         stage("Install Dependencies") {
             steps {
-                dir("${APP_DIR}") {
-                    sh 'npm install'
-                }
+               sh 'npm ci'
             }
         }
 
         stage("Build App") {
             steps {
-                dir("${APP_DIR}") {
-                    sh 'npm run build'
+                script {
+                    sh 'npx ng cache clean'
+                    sh 'ng build --configuration production --verbose'
                 }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: "${ANGULAR_OUTPUT_DIR}/**", fingerprint: true
+                    archiveArtifacts artifacts: "www/**", fingerprint: true
                 }
             }
         }
 
-
         stage("Lint (Checkstyle)") {
             steps {
-                dir("${APP_DIR}") {
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                        sh 'npm run lint -- --format json -o eslint-report.json'
-                    }
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh 'npm run lint -- --format json -o eslint-report.json'
                 }
             }
             post {
@@ -63,19 +59,18 @@ pipeline {
                 SONARQUBE_SCANNER_HOME = tool 'sonar7.1'
             }
             steps {
-                dir("${APP_DIR}") {
-                    withSonarQubeEnv('sonarserver') {
-                        sh '''
-                            ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=intimacy-frontend \
-                            -Dsonar.projectName="Intimacy Frontend" \
-                            -Dsonar.projectVersion=1.0 \
-                            -Dsonar.sources=src \
-                            -Dsonar.sourceEncoding=UTF-8 \
-                            -Dsonar.eslint.reportPaths=eslint-report.json \
-                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-                        '''
-                    }
+
+                withSonarQubeEnv('sonarserver') {
+                    sh '''
+                        ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=intimacy-frontend \
+                        -Dsonar.projectName="Intimacy Frontend" \
+                        -Dsonar.projectVersion=1.0 \
+                        -Dsonar.sources=src \
+                        -Dsonar.sourceEncoding=UTF-8 \
+                        -Dsonar.eslint.reportPaths=eslint-report.json \
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                    '''
                 }
             }
         }
@@ -90,10 +85,8 @@ pipeline {
 
         stage("Archive Artifact") {
             steps {
-                dir("${APP_DIR}") {
-                    sh "tar -czf ../${ANGULAR_OUTPUT_DIR}.tar.gz ${ANGULAR_OUTPUT_DIR}"
-                }
-                archiveArtifacts artifacts: "${ANGULAR_OUTPUT_DIR}.tar.gz", fingerprint: true
+                sh "tar -czf ../${ANGULAR_OUTPUT_DIR}.tar.gz ${ANGULAR_OUTPUT_DIR}"
+                archiveArtifacts artifacts: "www.tar.gz", fingerprint: true
             }
         }
 
