@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatchesService } from 'src/app/features/matches/services/matches.service';
 import { Match } from './models/match.model';

@@ -1,19 +1,11 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ElementRef, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonDatetime } from "@ionic/angular";
 import { formatDate } from "@angular/common";
 import { CompleteProfileService } from "../../services/complete-profile.service";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
-import { PhotoService } from "src/app/core/services/media/photo.service";
-
-interface FieldConfig {
-  key: string;              // formControlName
-  label: string;            // ion-label text
-  type: 'input' | 'select' | 'date' | 'photos';
-  placeholder?: string;
-  options?: { value: string, label: string }[]; // for selects
-}
+import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
 
 
 export enum InterestedIn {
@@ -46,10 +38,12 @@ export  type ProfilePayload = {
 })
 
 export class CreateProfileComponent {
+    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('birthDatePicker', { static: false }) birthDatePicker!: IonDatetime;
   profileForm!: FormGroup;
   maxDate: string = new Date().toISOString(); // prevent future date
   InterestedIn = InterestedIn;
+  private clickedPhotoIndex: number | null = null;
   // Parallel array of FormData objects (or null) for submission
   private photoUploads: (FormData | null)[] = [null, null, null, null];
 
@@ -63,26 +57,42 @@ export class CreateProfileComponent {
     const today = new Date();
     today.setFullYear(today.getFullYear() - 18);
     this.maxDate = today.toISOString().split('T')[0]; // format: YYYY-MM-DD
-    this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      birthDate: [null, Validators.required],
-      gender: [null, Validators.required],
-      country: ['', Validators.required],
-      city: ['', Validators.required],
-      interestedIn: [null, Validators.required],
-      photos: this.fb.array([
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-        this.fb.control<string|null>(null),
-      ], Validators.maxLength(4)),
-    });
+
+    this.profileForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        birthDate: [null, Validators.required],
+        gender: [null, Validators.required],
+        country: ['', Validators.required],
+        city: ['', Validators.required],
+        interestedIn: [null, Validators.required],
+        photos: this.fb.array([
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+          this.fb.control<string|null>(null),
+        ], Validators.maxLength(4)),
+      });
   }
 
   // in your component class
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackByIndex(index: number): number {
     return index;
+  }
+
+
+  onFileSelected(event: Event):void {
+
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length || this.clickedPhotoIndex === null) return;
+
+    const file = input.files[0];
+    const result =  this.photoService.webPlatformFileUpload(file);
+    if (result && result as PhotoCaptureResult) {
+      this.photoUploads[this.clickedPhotoIndex] = result.formData;
+        this.photos.at(this.clickedPhotoIndex).setValue(result.preview );
+    }
   }
 
   onClose(): void{
@@ -96,22 +106,35 @@ export class CreateProfileComponent {
 
 
   async onTakePhoto(slotIndex: number): Promise<void>{
-    if (this.photos.at(slotIndex).value) {
-      this.photos.at(slotIndex).reset();
-      this.photoUploads[slotIndex] = null;
-      return;
-    }
+   try {
+      if (this.photos.at(slotIndex).value) {
+        this.photos.at(slotIndex).reset();
+        this.photoUploads[slotIndex] = null;
+        return;
+      }
 
-    const { preview, formData }= await this.photoService.takePicture();
-    if (!preview || !formData) return;
+      const { preview, formData }: PhotoCaptureResult = await this.photoService.takePicture( );
+      if (!preview || !formData) return;
 
-    // 1) Set preview for UI
-    this.photos.at(slotIndex).setValue(preview);
+      // 1) Set preview for UI
+      this.photos.at(slotIndex).setValue(preview);
 
-    // 2) Store the FormData for submission later
-    this.photoUploads[slotIndex] = formData;
+      // 2) Store the FormData for submission later
+      this.photoUploads[slotIndex] = formData;
+   } catch (error) {
+       if (error instanceof Error &&  error.message === 'web-platform') {
+        this.onIconClick(slotIndex)
+      }
+   }
   }
 
+  onIconClick(idx: number): void {
+    // Store the index and trigger the global file input
+    this.clickedPhotoIndex  = idx;
+    const input = this.fileInputRef.nativeElement;
+    input.value = ''; // reset input so it always triggers change
+    input.click();
+  }
 
   removePhoto(slotIndex: number): void {
     this.photos.at(slotIndex).reset();
@@ -128,17 +151,6 @@ export class CreateProfileComponent {
 
   onSubmit(): void{
     if(this.profileForm.invalid) return;
-
-    const profile: ProfilePayload =
-      {
-        birthDate: this.profileForm.value.birthDate,
-        gender: this.profileForm.value.gender,
-        country: this.profileForm.value.country,
-        city: this.profileForm.value.city,
-        interestedIn: this.profileForm.value.interestedIn,
-        name: this.profileForm.value.name,
-        photos: this.profileForm.value.photos,
-      }
 
     // Copy each slot’s pre-built FormData into one payload:
     const multiPart = new FormData();
@@ -166,6 +178,5 @@ export class CreateProfileComponent {
         console.log(err);
       }
     })
-    console.log(profile);
   }
 }

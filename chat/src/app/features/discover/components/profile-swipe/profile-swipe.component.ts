@@ -19,13 +19,13 @@ export class ProfileSwipeComponent {
 
   // Typically referenced to your ion-router-outlet
   presentingElement!: HTMLElement | null;
-isModalOpen = true;
+  isModalOpen = true;
   currentTransformX: number = 0; // Keeps track of the current of the card
   isAnimating = signal<boolean>(false);
   resetProfileTimer: any;
 
   constructor(private discoverService: DiscoverService) {}
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-unused-vars
   onSwipeLeft(event: any): void {
     this.discoverService.setProfileInteractionType(InteractionType.DISLIKE);
   }

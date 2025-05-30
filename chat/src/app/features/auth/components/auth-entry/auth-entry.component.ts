@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthMode, AuthService } from '../../services/auth.service';
-
+import { AppTranslateService } from 'src/app/core/services/translate/translate.service';
 
 @Component({
   selector: 'app-auth-entry',
@@ -11,6 +11,7 @@ import { AuthMode, AuthService } from '../../services/auth.service';
 })
 export class AuthEntryComponent {
   constructor(
+    private appTranslateService: AppTranslateService,
     private authService: AuthService,
     private router: Router
   ) {
@@ -29,5 +30,9 @@ export class AuthEntryComponent {
 
   navigateToAuthPage(): void {
     this.router.navigateByUrl('auth/authentication');
+  }
+
+  onLanguage(): void{
+
   }
 }

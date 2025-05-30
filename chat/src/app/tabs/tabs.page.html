@@ -1,5 +1,18 @@
-<ion-tabs #tabsElement #tabs (ionTabsDidChange)="setCurrentTab($event)">
-  <ion-tab-bar slot="bottom" [class.hidden]="isDiscoverActive">
+<ion-tabs
+  #tabsElement
+  #tabs
+  (ionTabsDidChange)="setCurrentTab($event)">
+
+  <div
+    [ngClass]="{
+    'discover-swipe-overlay': true,
+      'discover-swipe-overlay__active': isSwipeActive()
+    }"
+   *ngIf="isDiscoverActive">
+    <app-discover></app-discover>
+  </div>
+
+  <ion-tab-bar slot="bottom">
     <ion-tab-button tab="discover">
       <ion-icon name="heart"></ion-icon>
     </ion-tab-button>

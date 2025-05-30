@@ -1,0 +1,11 @@
+<ion-icon (click)="onLanguage()" name="language-outline"></ion-icon>
+
+<ion-list style="display: none">
+  <form [formGroup]="languageForm">
+    <ion-item>
+      <ion-select #langSelect interface="popover" formControlName="lang" >
+        <ion-select-option *ngFor="let lang of  langOptions"  [value]="lang"> {{ lang }} </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </form>
+</ion-list>

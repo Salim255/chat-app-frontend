@@ -1,0 +1,23 @@
+{
+  "INTRO": {
+    "START": "Tout commence",
+    "WITH": "par",
+    "SWIPE": "un swipe"
+  },
+  "TERMS": {
+    "TEXT": "By tapping",
+    "TERM": "Terms",
+    "LEARN": "Learn how we process your data in our",
+    "POLICY": "Privacy Policy",
+    "AND": "and",
+    "COOKIES": "Cookies Policy",
+    "OR": "or",
+    "SIGNUP": "Create account",
+    "LOGIN": "Sign in",
+    "AGREE": "you agree to our"
+
+  },
+
+  "CREATE_ACCOUNT": "Create account",
+  "SIGN_IN": "Sign in"
+}

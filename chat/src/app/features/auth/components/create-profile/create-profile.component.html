@@ -8,14 +8,14 @@
           <ion-col class="create-account__date-picker">
            <ion-item lines="none">
               <ion-label> Birthday</ion-label>
-              <span> 
-                {{  
-                  profileForm.value.birthDate 
-                    ? formatDate(profileForm.value.birthDate) 
+              <span>
+                {{
+                  profileForm.value.birthDate
+                    ? formatDate(profileForm.value.birthDate)
                     : 'Select date'
                 }}
-              </span> 
-            </ion-item> 
+              </span>
+            </ion-item>
             <ion-datetime
             display-format="DD/MM/YYYY"
             [value]="profileForm.value.birthDate"
@@ -23,7 +23,7 @@
             presentation="date"
             prefer-wheel="true"
             (ionChange)="onDateSelected($event)">
-           
+
           </ion-datetime>
           </ion-col>
         </ion-row>
@@ -102,12 +102,21 @@
                 <ion-col class="create-account__photo-upload--cards" size="6" *ngFor="let i of [0, 1, 2, 3]; let idx = index; trackBy: trackByIndex">
                   <app-card-media
                     [photo]="photos.at(idx).value"
-                  ></app-card-media>  
+                  ></app-card-media>
                   <ion-icon
                   (click)="onTakePhoto(idx)"
                   [name]="photos.at(idx).value ? 'close-outline' : 'add-outline'"
                   [ngClass]="photos.at(idx).value ? 'icon-close' : 'icon-add'"
-                ></ion-icon>      
+                ></ion-icon>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  style="display: none"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                />
                 </ion-col>
               </ion-row>
             </ion-col>
@@ -125,7 +134,7 @@
             </ion-button>
           </ion-col>
         </ion-row>
-    
+
     </ion-grid>
   </form>
 </ion-content>

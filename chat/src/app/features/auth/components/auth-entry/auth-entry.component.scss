@@ -10,7 +10,16 @@ ion-content {
         align-items: center;
         display: flex;
         justify-content: center;
+        position: relative;
+        .languages {
+          position: absolute;
+          right: 0;
 
+          ::ng-deep app-languages-switcher ion-icon {
+            --color: var(--ion-color-grey-7);
+            font-size: 1.5rem;
+          }
+        }
         ::ng-deep app-logo div {
           ion-icon {
             color: var(--ion-color-grey-1);

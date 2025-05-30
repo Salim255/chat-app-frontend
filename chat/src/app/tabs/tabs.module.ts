@@ -8,10 +8,11 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 import { SharedModule } from '../shared/shared.module';
+import { DiscoverPageModule } from '../features/discover/discover.module';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, FormsModule, IonicModule, TabsPageRoutingModule, SharedModule],
+  imports: [CommonModule, FormsModule, IonicModule, TabsPageRoutingModule, SharedModule, DiscoverPageModule ],
   declarations: [TabsPage],
 })
 export class TabsPageModule {}

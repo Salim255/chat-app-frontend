@@ -40,7 +40,6 @@ export class HammerSwipeDirective {
   onPanStart(event: HammerInput): void {
     //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
-    console.log(event)
     // Determine if it's more horizontal or vertical movement
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
       this.isHorizontalSwipe = true;
@@ -70,6 +69,7 @@ export class HammerSwipeDirective {
     } else if (this.isScrolling) {
       // Allow vertical scrolling
       element.style.transform = `translateY(${event.deltaY}px)`;
+       this.interactionBtnService.setActionDirection(SwipeDirection.SwipeUp);
     }
   }
 

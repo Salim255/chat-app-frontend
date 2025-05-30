@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from "@angular/core";
 import { StringUtils } from "src/app/shared/utils/string-utils";
 import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
+import { ActionSheetController } from "@ionic/angular";
 
 @Component({
   selector: 'app-edit-media',
@@ -15,7 +16,9 @@ export class MediaComponent implements OnChanges {
   private photoUploads: (FormData | null)[] = [null, null, null, null];
   private currentPhotoIndex: number | null = null;
 
-  constructor(private photoService: PhotoService) {}
+  constructor(
+    private actionSheetController: ActionSheetController,
+    private photoService: PhotoService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -23,6 +26,35 @@ export class MediaComponent implements OnChanges {
     if (changes['photos'] && changes['photos'].currentValue) {
       this.photos = this.setUserImages();
     }
+  }
+
+   async presentPhotoDialog(): Promise<void>{
+    const modal = await this.actionSheetController.create({
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () =>{
+            this.deleteImage();
+          },
+        },
+        {
+          text: 'Replace',
+          handler: () => {
+            this.currentPhotoIndex && this.onTakePhoto(this.currentPhotoIndex);
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+
+          },
+        },
+      ],
+    });
+
+    await modal.present();
   }
 
    trackByIndex(index: number): number {
@@ -39,17 +71,31 @@ export class MediaComponent implements OnChanges {
     return imagesList;
   }
 
-  async onTakePhoto(slotIndex: number): Promise<void>{
+  onActionSheet(slotIndex: number): void{
+    this.currentPhotoIndex = slotIndex;
+    if (this.photos[this.currentPhotoIndex]) {
+      this.presentPhotoDialog();
+    }
+  }
 
+  deleteImage(): void{
+    if (this.currentPhotoIndex && this.photos[this.currentPhotoIndex]) {
+      this.photos[this.currentPhotoIndex] = '';
+      this.photoUploads[this.currentPhotoIndex] = null;
+      return;
+    }
+  }
+
+  async onTakePhoto(slotIndex: number): Promise<void>{
     try {
       const { preview, formData }: PhotoCaptureResult = await this.photoService.takePicture( );
-    if (!preview || !formData) return;
+      if (!preview || !formData) return;
 
-    // 1) Set preview for UI
-    this.photos[slotIndex] = preview ;
+      // 1) Set preview for UI
+      this.photos[slotIndex] = preview ;
 
-    // 2) Store the FormData for submission later
-    this.photoUploads[slotIndex] = formData;
+      // 2) Store the FormData for submission later
+      this.photoUploads[slotIndex] = formData;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

@@ -9,6 +9,8 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
 
+
+
 @NgModule({
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [ AppComponent ],

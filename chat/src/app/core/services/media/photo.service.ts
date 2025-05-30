@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CameraResult, CameraService } from './camera.service';
-import { ImageConversionService } from './image-conversion-service';
+import { ImageConversionService } from './image-conversion.service';
 import { ToastService } from 'src/app/shared/services/toast/toast.service';
 
 export interface PhotoCaptureResult {

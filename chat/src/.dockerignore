@@ -1,0 +1,30 @@
+# Node modules (installed in container)
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-lock.yaml
+
+# Output folders
+dist
+www
+build
+
+# Environment files
+.env
+.env.*
+
+# OS and IDE files
+.DS_Store
+*.swp
+*.swo
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Docker itself
+Dockerfile
+docker-compose.yml
+.dockerignore

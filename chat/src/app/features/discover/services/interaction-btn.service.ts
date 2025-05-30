@@ -10,7 +10,6 @@ export class InteractionBtnService {
   constructor() {}
 
   setActionDirection(action: SwipeDirection | null): void {
-    console.log('Hello', action)
     this.actionDirectionSource.next(action);
   }
 

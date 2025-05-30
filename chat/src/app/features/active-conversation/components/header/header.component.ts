@@ -68,6 +68,8 @@ export class headerComponent implements OnChanges {
             match_status: 0,
             avatar: '',
             photos: this.partnerInfo.photos,
+            bio: this.partnerInfo.bio,
+            looking_for: this.partnerInfo.looking_for,
           }
     this.profileViewerService.openProfileViewerModal(data);
   }

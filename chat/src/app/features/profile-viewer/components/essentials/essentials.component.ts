@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Profile } from 'src/app/features/discover/model/profile.model';
+
 
 @Component({
   selector: 'app-profile-essentials',
@@ -6,4 +8,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./essentials.component.scss'],
   standalone: false,
 })
-export class EssentialsComponent {}
+export class EssentialsComponent {
+  @Input() profile!: Profile;
+}

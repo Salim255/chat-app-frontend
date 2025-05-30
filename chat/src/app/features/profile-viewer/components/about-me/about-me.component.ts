@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-profile-about-me',
@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./about-me.component.scss'],
   standalone: false,
 })
-export class AboutMeComponent {}
+export class AboutMeComponent {
+  @Input() bio!: string;
+  constructor(){}
+}
