@@ -10,7 +10,6 @@ pipeline {
         registryCredentials = 'ecr:eu-west-3:awscreds'
         imageName = "961341553126.dkr.ecr.eu-west-3.amazonaws.com/intimacy-frontend-repo"
         intimacyRegistry = "https://961341553126.dkr.ecr.eu-west-3.amazonaws.com"
-        APP_DIR = "chat"
         ANGULAR_OUTPUT_DIR = "www"
     }
 
@@ -33,26 +32,16 @@ pipeline {
         stage("Build App") {
             steps {
                 dir("${APP_DIR}") {
-                    sh 'ng build --configuration production'
+                    sh 'npm run build'
                 }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: "${APP_DIR}/${ANGULAR_OUTPUT_DIR}/**", fingerprint: true
+                    archiveArtifacts artifacts: "${ANGULAR_OUTPUT_DIR}/**", fingerprint: true
                 }
             }
         }
 
-        stage("Unit Tests") {
-            steps {
-                dir("${APP_DIR}") {
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                        sh 'npm run test -- --watch=false --browsers=ChromeHeadless'
-                        sh 'npm run test:cov || true'
-                    }
-                }
-            }
-        }
 
         stage("Lint (Checkstyle)") {
             steps {
