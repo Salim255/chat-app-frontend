@@ -15,23 +15,29 @@ pipeline {
 
     stages {
 
+        stage("Clean Workspace") {
+            steps {
+                // Remove node_modules folder before install to ensure fresh install
+                sh 'rm -rf node_modules'
+            }
+        }
+
         stage("Fetch Code") {
             steps {
-                git branch: 'develop', url: 'https://github.com/Salim255/intimacy-frontend.git'
+                git branch: 'develop', url: 'https://github.com/Salim255/chat-app-frontend.git'
             }
         }
 
         stage("Install Dependencies") {
             steps {
-               sh 'npm ci'
+               sh 'npm install'
             }
         }
 
         stage("Build App") {
             steps {
                 script {
-                    sh 'npx ng cache clean'
-                    sh 'ng build --configuration production --verbose'
+                    sh 'npm run build'
                 }
             }
             post {
@@ -44,12 +50,12 @@ pipeline {
         stage("Lint (Checkstyle)") {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    sh 'npm run lint -- --format json -o eslint-report.json'
+                    sh 'npm run lint -- --format json > eslint-report.json'
                 }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: "${APP_DIR}/eslint-report.json", fingerprint: true
+                    archiveArtifacts artifacts: "${ANGULAR_OUTPUT_DIR}/eslint-report.json", fingerprint: true
                 }
             }
         }
@@ -59,7 +65,6 @@ pipeline {
                 SONARQUBE_SCANNER_HOME = tool 'sonar7.1'
             }
             steps {
-
                 withSonarQubeEnv('sonarserver') {
                     sh '''
                         ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
@@ -125,6 +130,12 @@ pipeline {
                         dockerImage.push("${BUILD_NUMBER}")
                         dockerImage.push("latest")
                     }
+                    // Remove local docker image after push to free disk space
+                    sh "docker rmi ${imageName}:${BUILD_NUMBER} || true"
+                    sh "docker rmi ${imageName}:latest || true"
+                    // Clean dangling images and build cache
+                    sh "docker image prune -f"
+                    sh "docker builder prune -f"
                 }
             }
         }

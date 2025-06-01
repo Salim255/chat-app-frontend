@@ -1,33 +1,33 @@
-# Stage 1: Build the app
-FROM node:20 AS build
+# -----------------------------
+# 🛠️ Stage 1: Build Ionic Angular App
+# -----------------------------
+FROM node:20-alpine AS builder
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files separately to leverage Docker cache
 COPY package*.json ./
+
+# Install dependencies (use --frozen-lockfile if you use yarn)
 RUN npm install
 
-# Copy app source code
+# Copy the rest of the application code
 COPY . .
 
-# Build the Ionic Angular app (can also be "ionic build" if using Ionic CLI directly)
+# Build the Angular + Ionic app for production
 RUN npm run build
 
-# Stage 2: Serve the app using Nginx
-FROM nginx:alpine
+# -----------------------------
+# 🚀 Stage 2: Serve app with Nginx
+# -----------------------------
+FROM nginx:stable-alpine
 
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+# Copy built app from the builder stage
+COPY --from=builder /app/www /usr/share/nginx/html
 
-# Copy built Angular app from Stage 1
-COPY --from=build /app/www /usr/share/nginx/html
-
-# Copy custom Nginx config if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
+# Expose port 80 to the outside world
 EXPOSE 80
 
-# Start Nginx
+# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

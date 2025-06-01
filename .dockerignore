@@ -28,3 +28,12 @@ build
 Dockerfile
 docker-compose.yml
 .dockerignore
+
+*.log
+*.md
+coverage
+tmp
+.env
+
+android/
+ios/

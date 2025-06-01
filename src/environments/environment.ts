@@ -4,8 +4,11 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:3000/api/v2',
-  socketUrl: 'http://localhost:3000',
+  apiUrl: 'http://intimacy.com/api/v2',
+/*   socketUrl: 'http://intimacy.com:3000', */
+  socketUrl: 'http://intimacy.com/socket',
+ /*  apiUrl: 'http://localhost:3000/api/v2',
+  socketUrl: 'http://localhost:3000', */
   mapBaseUrl: 'https://api.opencagedata.com/geocode/v1/json',
   mapApiKey: 'd5adeba61c104499a2bfb61f2d2c898d',
 };
