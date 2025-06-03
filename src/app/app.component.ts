@@ -8,7 +8,7 @@ import { LoadingSpinnerService } from './shared/components/app-loading-spinner/l
 import { TranslateService } from '@ngx-translate/core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Capacitor } from '@capacitor/core';
-
+import { SplashScreen } from '@capacitor/splash-screen';
 //
 register();
 @Component({
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    SplashScreen.hide();
     if (Capacitor.getPlatform() !== 'web') {
       // Overlay the web view on the status bar
       StatusBar.setOverlaysWebView({ overlay: true });

@@ -17,7 +17,7 @@ const config: CapacitorConfig = {
     },
     SplashScreen: {
       launchShowDuration: 3000,
-      launchAutoHide: true,
+      launchAutoHide: false,
       splashFullScreen: true,
       splashImmersive: true,
     },
