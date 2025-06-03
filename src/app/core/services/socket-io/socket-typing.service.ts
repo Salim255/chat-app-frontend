@@ -39,6 +39,7 @@ export class SocketTypingService {
   }
 
   userTyping(toUserId: number):void {
+
     const typingPayload: TypingPayload | null =
     this.buildTypingNotification(toUserId, TypingStatus.Typing);
     if (!typingPayload) return;
@@ -55,7 +56,6 @@ export class SocketTypingService {
 
   notifyTyping(): void {
     this.socket?.on('notify-user-typing', (data: TypingPayload) => {
-      console.log('Notify partner that we are typing');
       if (data.typingStatus) {
         this.userTypingStatusSubject.next(data);
       }
@@ -69,12 +69,16 @@ export class SocketTypingService {
     });
   }
 
-  buildTypingNotification(toUserId: number, typingStatus: TypingStatus): TypingPayload | null  {
+  buildTypingNotification(
+    toUserId: number,
+    typingStatus: TypingStatus,
+  ): TypingPayload | null  {
+
     this.socket = this.socketCoreService.getSocket();
     const roomString = this.socketRoomService.getRoom;
     const chatId = this.getActiveConversationId();
-    if (!roomString || !chatId) return null;
 
+    if (!roomString || !chatId) return null;
     const typingPayload: TypingPayload =
     {
       chatId: chatId,
@@ -84,6 +88,7 @@ export class SocketTypingService {
     }
     return typingPayload;
   }
+
   getActiveConversationId(): number | null{
     const chatId = this.activeConversationService.getActiveConversationValue?.id;
     return chatId ?? null;

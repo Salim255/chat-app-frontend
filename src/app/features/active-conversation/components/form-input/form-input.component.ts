@@ -44,7 +44,6 @@ export class FormInputComponent {
   onTextChange(text: any):void {
     // Debouncing: Emit "typing" only once until the user stops typing
     if (!this.isTypingDebounced() && this.toUserId) {
-      console.log('From start typing', text)
       this.socketTypingService.userTyping(this.toUserId);
       this.isTypingDebounced.set(true);
     }
