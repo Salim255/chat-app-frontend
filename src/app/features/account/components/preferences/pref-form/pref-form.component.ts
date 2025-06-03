@@ -69,7 +69,7 @@ export class PrefFormComponent implements OnInit{
       case this.FieldName.Distance:
         return 'Distance from you';
       case this.FieldName.LookingFor:
-        return 'Interested in';
+        return 'Looking for';
       default:
         return null;
     }

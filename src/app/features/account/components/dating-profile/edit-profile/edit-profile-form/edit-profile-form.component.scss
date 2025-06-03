@@ -22,17 +22,9 @@ ion-header {
       --padding-start: 0;
       --inner-padding-start: 0;
       --inner-padding-end: 0;
-      ion-label {
-        color: var(--ion-color-grey-7);
-        font-weight: bold;
-        font-size: 1rem;
-        margin-bottom: .2rem;
-      }
       ion-textarea {
-        //border: 2px solid var(--ion-color-grey-3);
-        //border-style: dashed;
         border-radius: .5rem;
-        //--color: var(--ion-color-grey-7);
+        --color: var(--ion-color-grey-7);
         padding-left: .5rem;
         padding-right: .5rem;
         padding-bottom: .5rem;
@@ -44,15 +36,15 @@ ion-header {
   &__gender{
     ion-label {
       color: var(--ion-color-grey-7);
-      font-weight: bold;
-      font-size: 1rem;
+      font-weight: 600;
+      font-size: .9rem;
     }
   }
   &__home-town{
     .main-label {
-        color: var(--ion-color-grey-7);
-        font-weight: bold;
-        font-size: 1rem;
+      color: var(--ion-color-grey-7);
+      font-weight: 600;
+      font-size: .9rem;
     }
     ion-item{
       --background: transparent;

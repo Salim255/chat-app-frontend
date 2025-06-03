@@ -39,6 +39,8 @@ ion-header {
 
     ion-label {
       color: var(--ion-color-grey-7);
+      font-size: .9rem;
+      font-weight: 600;
     }
 
     ion-label:last-child {
@@ -54,8 +56,9 @@ ion-header {
 
     ion-label {
       color: var(--ion-color-grey-7);
+      font-size: .9rem;
+      font-weight: 600;
     }
-
 
     ion-range {
       --bar-background: var(--ion-color-grey-3);
@@ -71,6 +74,7 @@ ion-header {
       opacity: .8;
     }
   }
+
   &__interested {
     ion-col {
       ion-item {
