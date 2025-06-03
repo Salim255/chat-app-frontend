@@ -56,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     });
 
+
     this.afMessaging.messages.subscribe((message) => {
       console.log('New message:', message);
       // You can show a toast or alert
