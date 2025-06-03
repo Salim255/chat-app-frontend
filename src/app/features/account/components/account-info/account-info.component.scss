@@ -13,11 +13,11 @@ ion-grid {
           rgb(1, 71, 51) 50%,
           rgb(222, 218, 218) 50%
         );
-        height: 7.5rem;
-        width: 7.5rem;
+        height: 5.5rem;
+        width: 5.5rem;
         img {
-          height: 7rem;
-          width: 7rem;
+          height: 5rem;
+          width: 5rem;
           object-fit: cover;
           object-position: top;
           position: absolute;
@@ -36,6 +36,7 @@ ion-grid {
     text-align: center;
     ion-col {
       margin-top: .5rem;
+      margin-bottom: 2rem;
       ion-text {
         font-size: 1rem;
         font-weight: 500;
