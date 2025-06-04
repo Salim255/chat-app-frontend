@@ -24,7 +24,7 @@ import { environment } from 'src/environments/environment';
     CoreModule ,
     AppRoutingModule,
     SharedModule,
-     AngularFireModule.initializeApp(environment.firebaseConfig),
+     /* AngularFireModule.initializeApp(environment.firebaseConfig), */
     AngularFireMessagingModule,
   ],
   providers: [
