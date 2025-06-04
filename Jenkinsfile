@@ -67,7 +67,7 @@ pipeline {
                 withSonarQubeEnv('sonarserver') { // Ensure you have configured SonarQube server in Jenkins
                     sh '''
                         ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=intimacy-back-v2 \
+                        -Dsonar.projectKey=intimacy-front-v2 \
                         -Dsonar.projectName="Intimacy Frontend" \
                         -Dsonar.projectVersion=1.0 \
                         -Dsonar.sources=src \
