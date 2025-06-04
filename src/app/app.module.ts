@@ -8,9 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
-import { environment } from 'src/environments/environment';
 
 @NgModule({
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
