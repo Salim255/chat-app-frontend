@@ -1,8 +1,8 @@
 <ion-card (click)="onOpenConversation()">
   <ion-card-content>
     <img alt="Silhouette of a person's head" [src]="getAvatarUrl()" />
+    <div>
+      <ion-text>  {{ partnerInfo.name }} </ion-text>
+    </div>
   </ion-card-content>
-  <ion-card-header>
-    <ion-card-title>{{ partnerInfo.name }}</ion-card-title>
-  </ion-card-header>
 </ion-card>
