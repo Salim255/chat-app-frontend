@@ -1,6 +1,6 @@
 ion-card {
   ion-card-header {
-    padding: .5rem !important;
+    padding-bottom: 0.5rem ;
     ion-card-subtitle {
       text-align: left;
       display: flex;
@@ -18,9 +18,6 @@ ion-card {
         font-size: 1.2rem;
       }
     }
-  }
-  ion-card-content {
-    padding: 0rem 0.5rem 0.5rem .8rem;
   }
 }
 

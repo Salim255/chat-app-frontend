@@ -19,7 +19,6 @@ import {
 export class AppHeaderComponent implements OnInit, OnDestroy {
   @Output() closeCompleteProfile = new EventEmitter();
   @Output() settings = new EventEmitter();
-  //@Output() closeProfileViewer = new EventEmitter()
   @Input() pageName: string | null = null;
   @Input() partnerInfo!: Partner;
 
@@ -69,12 +68,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.tapStatusSourceSubscription = this.tabsService.getHidingTapStatus.subscribe((status) => {
       this.hidingTapStatus = status;
     });
-
-  /*   this.takingPictureStateSourceSubscription = this.photoService.getTakingPictureStatus.subscribe(
-      (status) => {
-        this.takingPictureStatus = status;
-      }
-    ); */
   }
 
   // Unsubscribe from all services
