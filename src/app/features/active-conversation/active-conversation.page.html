@@ -6,7 +6,8 @@
 <ion-content [scrollY]="true">
   <app-chat-messages
    [messagesList]="activeChat?.messages ?? []"
-   [userId]="userId">
+   [userId]="hostUserId"
+   >
   </app-chat-messages>
 </ion-content>
 
@@ -15,8 +16,8 @@
     <ion-row>
       <ion-col>
         <app-form-input
-        *ngIf="partnerInfo"
-         [toUserId]="partnerInfo.partner_id" (submitObs)="onSubmit($event)">
+         *ngIf="partnerInfo"
+         [toUserId]="partnerInfo.user_id" (submitObs)="onSubmit($event)">
         </app-form-input>
       </ion-col>
     </ion-row>

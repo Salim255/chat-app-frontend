@@ -50,7 +50,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
   private deliveredMessageSubscription!: Subscription;
 
   activeChat: Conversation | null = null;
-  userId: number | null = null;
+  hostUserId: number | null = null;
   partnerInfo!: any;
   messagesList = signal<Message[]>([]);
   //isTyping = signal<boolean>(false);
@@ -89,7 +89,7 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
 
   private subscribeToUserId(): void {
     this.userIdSubscription = this.authService.userId.subscribe((data) => {
-      this.userId = data;
+      this.hostUserId = data;
     });
   }
 
@@ -100,11 +100,11 @@ export class ActiveConversationPage implements OnInit, OnDestroy {
       (partnerInfo) => {
         if (partnerInfo) {
           this.partnerInfo = partnerInfo;
-          if (!(this.partnerInfo.partner_id && this.userId)) return;
+          if (!(this.partnerInfo.user_id && this.hostUserId)) return;
 
           const usersData: JoinRomData = {
-            fromUserId: this.userId,
-            toUserId: this.partnerInfo?.partner_id,
+            fromUserId: this.hostUserId,
+            toUserId: this.partnerInfo?.user_id,
             chatId: this.activeChat && this.activeChat.id,
           };
           this.socketRoomService.initiateRoom(usersData);

@@ -8,8 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-
-
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 
 @NgModule({
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -23,6 +22,8 @@ import { CoreModule } from './core/core.module';
     CoreModule ,
     AppRoutingModule,
     SharedModule,
+     /* AngularFireModule.initializeApp(environment.firebaseConfig), */
+    AngularFireMessagingModule,
   ],
   providers: [
     JsonPipe,

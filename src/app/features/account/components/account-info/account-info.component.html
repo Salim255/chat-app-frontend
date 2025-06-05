@@ -6,25 +6,27 @@
       </div>
     </ion-col>
   </ion-row>
-  <ion-row>
+  <ion-row class="account-info">
     <ion-col>
       <ion-text *ngIf="accountInfoData"> {{ accountInfoData.name }}, {{ accountInfoData.age }}</ion-text>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col>
-      <div (click)="onProfile()" >
+      <div class="pref-btn"  (click)="onPreferences()" >
         <ion-button shape="round" fill="outline">
           <ion-icon slot="icon-only" name="cog"></ion-icon>
         </ion-button>
-        <ion-text> Profile </ion-text>
+        <ion-text>  </ion-text>
       </div>
-      <div>
-        <ion-button fill="outline" shape="round" (click)="onPreferences()">
+    </ion-col>
+    <ion-col >
+       <div class="profile-btn">
+        <ion-button fill="outline" shape="round" (click)="onProfile()" >
           <ion-icon slot="icon-only" name="camera"></ion-icon>
           <ion-icon name="add" class="add-icon"></ion-icon>
         </ion-button>
-        <ion-text> Preferences</ion-text>
+        <ion-text></ion-text>
       </div>
     </ion-col>
   </ion-row>

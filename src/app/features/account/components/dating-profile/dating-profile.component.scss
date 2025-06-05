@@ -3,12 +3,16 @@ ion-header {
     ion-back-button {
     color: var(--ion-color-grey-7);
     }
+    ion-title {
+      text-transform: capitalize;
+      color: var(--ion-color-grey-7);
+    }
     padding-bottom: .5rem;
   }
 
   ion-segment-view, ion-segment {
-  position: relative;
-  z-index: 10;
+    position: relative;
+    z-index: 10;
   }
 
   ion-segment {

@@ -16,8 +16,8 @@ const config: CapacitorConfig = {
       resize: KeyboardResize.Body, // Use a valid resize option
     },
     SplashScreen: {
-      launchShowDuration: 3000,
-      launchAutoHide: true,
+      launchShowDuration: 4000,
+      launchAutoHide: false,
       splashFullScreen: true,
       splashImmersive: true,
     },

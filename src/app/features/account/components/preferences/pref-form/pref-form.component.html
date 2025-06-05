@@ -67,13 +67,15 @@
           <ion-item lines="none">
             <ion-checkbox label-placement="start"
                 label-placement="start"
-                (ionChange)="onSingleCheckboxSelect('man')">Chatting</ion-checkbox>
+                [checked]="isChecked('chatting')"
+                (ionChange)="onCheckboxToggle('chatting', $event.detail.checked)">Chatting</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                (ionChange)="onSingleCheckboxSelect('woman')">
+                [checked]="isChecked('friendship')"
+                (ionChange)="onCheckboxToggle('friendship', $event.detail.checked)">
                   Friendship
               </ion-checkbox>
             </ion-item>
@@ -81,7 +83,8 @@
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                (ionChange)="onSingleCheckboxSelect('other')">
+                [checked]="isChecked('something casual')"
+                (ionChange)="onCheckboxToggle('casual', $event.detail.checked)">
                   Something casual
               </ion-checkbox>
             </ion-item>
@@ -89,7 +92,8 @@
              <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                (ionChange)="onSingleCheckboxSelect('other')">
+                [checked]="isChecked('long-term relationship')"
+                (ionChange)="onCheckboxToggle('long-term', $event.detail.checked)">
                   Long-term relationship
               </ion-checkbox>
             </ion-item>

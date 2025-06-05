@@ -5,19 +5,18 @@
     "SWIPE": "un swipe"
   },
   "TERMS": {
-    "TEXT": "By tapping",
-    "TERM": "Terms",
-    "LEARN": "Learn how we process your data in our",
-    "POLICY": "Privacy Policy",
-    "AND": "and",
-    "COOKIES": "Cookies Policy",
-    "OR": "or",
-    "SIGNUP": "Create account",
-    "LOGIN": "Sign in",
-    "AGREE": "you agree to our"
-
+    "TEXT": "En cliquant sur",
+    "SIGNUP": "Créer un compte",
+    "OR": "ou",
+    "LOGIN": "Se connecter",
+    "AGREE": "vous acceptez les",
+    "TERM": "Conditions d'utilisation",
+    "LEARN": "Découvrez comment nous traitons vos données dans notre",
+    "POLICY": "Politique de Confidentialité",
+    "AND": "et",
+    "COOKIES": "Politique de Cookies"
   },
 
-  "CREATE_ACCOUNT": "Create account",
-  "SIGN_IN": "Sign in"
+  "CREATE_ACCOUNT": "Créer un compte",
+  "SIGN_IN": "Se connecter"
 }

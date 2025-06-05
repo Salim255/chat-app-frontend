@@ -6,8 +6,9 @@ ion-item-group {
 
   ion-item, ion-item-divider {
     ion-label {
-      color: var(--ion-color-grey-7);
       text-transform: capitalize;
+      font-size: 1rem;
+      font-weight: 300;
     }
   }
 

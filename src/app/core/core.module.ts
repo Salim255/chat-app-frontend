@@ -13,6 +13,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // Import HttpClientModule and HttpClient to enable HTTP requests
 import { HttpClient } from '@angular/common/http';
+import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
 @NgModule({
   imports: [
@@ -53,6 +54,10 @@ import { HttpClient } from '@angular/common/http';
       provide: HAMMER_GESTURE_CONFIG,
       useClass: CustomHammerConfig,
     },
+    {
+      provide: LocationStrategy,
+      useClass: PathLocationStrategy
+    },
      provideHttpClient(withInterceptorsFromDi()),
    ]
 })
@@ -70,3 +75,4 @@ export class CoreModule {
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');//
 }
+

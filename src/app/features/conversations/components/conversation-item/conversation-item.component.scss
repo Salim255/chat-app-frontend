@@ -1,30 +1,30 @@
 ion-item {
   margin: 0.5rem 0;
+
   ion-avatar {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     margin: 0;
     img {
       object-position: top;
       object-fit: cover;
-      height: 3rem;
-      width: 3rem;
+      height: 4rem;
+      width: 4rem;
     }
-
     // For partner connection status
     position: relative;
     &::after {
       content: '';
-      height: var(--status-color-dimension);
-      width: var(--status-color-dimension);
+      height: .7rem;
+      width: .7rem;
       position: absolute;
       left: 50%;
-      bottom: -1%;
+      bottom: -15%;
       transform: translate(-50%, -50%);
-      background-color: var(--ion-color-online);
+      background-color: var(--status-color) ;
       border-radius: 50%;
-      outline: 4px solid var(--ion-color-grey-0);
-    }
+      border: 4px solid  var(--ion-color-grey-0);
+      }
   }
   ion-label {
     display: flex;
@@ -34,7 +34,7 @@ ion-item {
       font-weight: bold;
     }
     ion-text:last-child {
-      color: var(--ion-color-grey-6);
+      color: var(--ion-color-grey-7);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

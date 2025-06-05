@@ -74,7 +74,7 @@ ion-content {
         ::ng-deep app-button {
           ion-button {
             --background: none;
-            background: var(--ion-color-grey-2);
+            background: var(--ion-background-color);
             color: var(--ion-color-grey-7);
           }
         }

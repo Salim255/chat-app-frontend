@@ -33,7 +33,6 @@ export class SocketPresenceService {
 
   randomUserGoesOffline(): void{
     this.socket?.on('user-offline', (updatedUser: RandomUserConnectionStatus) => {
-      console.log( updatedUser, 'Hello from random user goes offline')
       if(!updatedUser) return;
       //console.log( updatedUser, 'Hello from random user goes offline')
       this.setRandomUserConnectionStatus(updatedUser);
@@ -42,7 +41,6 @@ export class SocketPresenceService {
 
   randomUserGoesOnline():void {
     this.socket?.on('user-online', (updatedUser: RandomUserConnectionStatus) => {
-
       if (!updatedUser) return;
       this.setRandomUserConnectionStatus(updatedUser);
     });

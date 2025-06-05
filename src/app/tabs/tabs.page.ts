@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { IonTabs } from '@ionic/angular';
-import { TabsService } from './services/tabs/tabs.service';
 import { Subscription } from 'rxjs';
 import { SocketPresenceService } from '../core/services/socket-io/socket-presence.service';
 import { SocketCoreService } from '../core/services/socket-io/socket-core.service';
@@ -8,6 +7,7 @@ import { AuthService } from '../features/auth/services/auth.service';
 import { SocketRoomService } from '../core/services/socket-io/socket-room.service';
 import { SocketMessageService } from '../core/services/socket-io/socket-message.service';
 import { InteractionBtnService } from '../features/discover/services/interaction-btn.service';
+import { SocketTypingService } from '../core/services/socket-io/socket-typing.service';
 
 export type displayTap = 'show' | 'hide';
 @Component({
@@ -33,7 +33,8 @@ export class TabsPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private socketPresenceService: SocketPresenceService,
     private socketRoomService: SocketRoomService,
-    private socketMessageService: SocketMessageService
+    private socketMessageService: SocketMessageService,
+    private socketTypingService: SocketTypingService
   ) {
 
   }
@@ -62,6 +63,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.socketPresenceService.initializePresenceListener();
         this.socketRoomService.initializeRoomListeners();
         this.socketMessageService.initializeMessageListener();
+        this.socketTypingService.initializeTypingListener();
       }
     });
   }

@@ -3,11 +3,12 @@
   justify-content: space-around;
   align-items: center;
   &__btn {
-    background: var(--ion-color-grey-3);
+    background: var(--ion-color-grey-4);
     border-radius: 50%;
     position: relative;
     align-self: center;
     transition: all 0.2s ease;
+    box-shadow: inset 3px 4px 5px rgba(0, 0, 0, 0.2);
     ion-icon {
        position: absolute;
       top: 50%;
@@ -64,10 +65,10 @@
       height 0.3s ease,
       width 0.3s ease; /* Transition effect for height and width */
       &__0 {
-        background: red; /* Change this to your desired color */
+        background: #FF5A5F; /* Change this to your desired color */
       }
       &__1 {
-        background: linear-gradient(#ea0b25, #f85c6e);
+        background: linear-gradient(#FF5A5F, #f85c6e);
       }
       &__2 {
         background: rgb(225, 255, 0); /* Change this to your desired color */

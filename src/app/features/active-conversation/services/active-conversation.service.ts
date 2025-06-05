@@ -95,6 +95,7 @@ export class ActiveConversationService {
       this.markMessagesAsRead(conversation.id).pipe(take(1)).subscribe();
     }
     this.setPartnerInfo(partnerInfo);
+    //this.activeConversationPartnerService.setPartnerInRoomStatus()
     this.setActiveConversation(conversation);
     this.activeConversationUIService.openChatModal();
   }
@@ -222,6 +223,7 @@ export class ActiveConversationService {
   }
 
   private handlePostMessageSent(message: Message): void {
+
     if (!this.activeConversationSource?.value?.messages) return
     const updatedConversation: Conversation =
      {
@@ -236,6 +238,7 @@ export class ActiveConversationService {
     this.activeConversationUIService.setMessagePageScroll();
     // Notify partner of this message, if its not in room
     const roomStatus = this.activeConversationPartnerService.partnerInRoomStatus;
+     console.log(message, roomStatus)
     if (
       (roomStatus === PartnerConnectionStatus.ONLINE)
       || (roomStatus === PartnerConnectionStatus.InRoom)
@@ -245,6 +248,7 @@ export class ActiveConversationService {
   }
 
   handlePartnerNotification(partnerInRoomStatus: 'in-room'| 'online'): void {
+    console.log(partnerInRoomStatus);
     const toUserId = this.activeConversationPartnerService.partnerInfo?.user_id;
     const chatId = this.activeConversationSource.value?.id;
     const fromUserId = this.userId;
@@ -326,6 +330,7 @@ export class ActiveConversationService {
 
   // Update Partner Connection Status
   private updatePartnerConnectionStatus(status: string): void {
+    console.log(status);
     const roomStatus =
       status === 'online' ? PartnerConnectionStatus.ONLINE : PartnerConnectionStatus.OFFLINE;
     this.activeConversationPartnerService.setPartnerInRoomStatus(roomStatus)

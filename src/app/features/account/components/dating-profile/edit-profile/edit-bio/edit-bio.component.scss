@@ -2,8 +2,12 @@ ion-item-group {
   ion-item-divider {
     padding-left: .3rem;
     padding-right: .3rem;
+    ion-label {
+      font-size: 1rem;
+      font-weight: 300;
+    }
   }
-  ion-item, ion-item-divider {
+  ion-item{
     ion-label {
       color: var(--ion-color-grey-7);
     }

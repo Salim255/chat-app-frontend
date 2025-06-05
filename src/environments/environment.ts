@@ -3,7 +3,19 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
+  production: false,
+/*   firebaseConfig: {
+    apiKey: "AIzaSyDHIOD38rLTJ3oschEswBjMycY9aiEm7Ho",
+    authDomain: "chat-app-d15ec.firebaseapp.com",
+    projectId: "chat-app-d15ec",
+    storageBucket: "chat-app-d15ec.firebasestorage.app",
+    messagingSenderId: "80385309310",
+    appId: "1:80385309310:web:780e4abc15b5fbc6f2762f",
+    measurementId: "G-19M6RW2GR4"
+  }, */
+ /*  apiUrl: 'http://intimacy.com/api/v2', */
+/*   socketUrl: 'http://intimacy.com:3000', */
+  //socketUrl: 'http://intimacy.com/socket',
   apiUrl: 'http://localhost:3000/api/v2',
   socketUrl: 'http://localhost:3000',
   mapBaseUrl: 'https://api.opencagedata.com/geocode/v1/json',

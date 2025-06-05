@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PrefFieldName } from "../../../services/preferences.service";
 import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
+import { LookingFor } from "src/app/features/profile-viewer/components/looking-for/looking-for.component";
 
 
 @Component({
@@ -19,6 +20,7 @@ export class PrefFormComponent implements OnInit{
   editPrefFormFields!: FormGroup;
   ageOptions: number [] = [] // Age 18 to 100
   distanceOptions: number [] = []; // Distance 1 to 150 miles
+  selectedLookingFor: string[] = [];
   ageRange: { minAge: number, maxAge: number } = { minAge: 18, maxAge: 86 };
   distanceRange: number = 1;
 
@@ -36,6 +38,10 @@ export class PrefFormComponent implements OnInit{
 
     if (this.fieldName === this.FieldName.Distance) {
       this.buildDistanceOptions();
+    }
+
+    if (this.fieldName === this.FieldName.LookingFor) {
+      this.buildLookingForOptions();
     }
   }
   onSave(): void{
@@ -62,6 +68,10 @@ export class PrefFormComponent implements OnInit{
     this.distanceOptions = Array.from({ length: 150 }, (_, i) => i + 1);
   }
 
+  buildLookingForOptions(): void{
+
+  }
+
   formTitle(): string| null{
     switch(this.fieldName){
       case this.FieldName.Age:
@@ -69,7 +79,7 @@ export class PrefFormComponent implements OnInit{
       case this.FieldName.Distance:
         return 'Distance from you';
       case this.FieldName.LookingFor:
-        return 'Interested in';
+        return 'Looking for';
       default:
         return null;
     }
@@ -94,7 +104,19 @@ export class PrefFormComponent implements OnInit{
     this.editPrefFormFields.get(this.fieldName)?.setValue(this.distanceRange);
   }
 
-  onSingleCheckboxSelect(gender: string):void{
-    console.log(gender);
+
+  onCheckboxToggle(value: string, checked: boolean): void {
+    if (checked) {
+      if (!this.selectedLookingFor.includes(value)) {
+        this.selectedLookingFor.push(value);
+      }
+    } else {
+      this.selectedLookingFor = this.selectedLookingFor.filter(item => item !== value);
+    }
+    this.editPrefFormFields.get(this.fieldName)?.setValue(this.selectedLookingFor)
+  }
+
+  isChecked(value: string): boolean {
+    return this.selectedLookingFor.includes(value);
   }
 }

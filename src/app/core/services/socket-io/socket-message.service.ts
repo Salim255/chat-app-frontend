@@ -24,11 +24,13 @@ export class SocketMessageService {
    ) { }
 
   initializeMessageListener(): void{
+    console.log("Hello from inti Listnere")
     this.socket = this.socketCoreService.getSocket();
     this.listenToComingMessage();
   }
 
   notifyPartnerOfComingMessage(notificationData: MessageNotifierPayload): void {
+    console.log(notificationData, "Hello")
     this.socket = this.socketCoreService.getSocket();
     this.socket?.emit('coming-message', notificationData);
   }

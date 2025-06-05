@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonDatetime } from "@ionic/angular";
 import { formatDate } from "@angular/common";
@@ -6,7 +6,6 @@ import { CompleteProfileService } from "../../services/complete-profile.service"
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
-
 
 export enum InterestedIn {
   Men = 'men',
@@ -38,8 +37,9 @@ export  type ProfilePayload = {
 })
 
 export class CreateProfileComponent {
-    @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('birthDatePicker', { static: false }) birthDatePicker!: IonDatetime;
+
   profileForm!: FormGroup;
   maxDate: string = new Date().toISOString(); // prevent future date
   InterestedIn = InterestedIn;
@@ -74,6 +74,7 @@ export class CreateProfileComponent {
         ], Validators.maxLength(4)),
       });
   }
+
 
   // in your component class
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -2,16 +2,13 @@
 
 ion-content {
   --background: transparent;
-
-  //height: 100vh;
   position: relative;
-
   .profile-card {
     position: fixed;
     top: 50%;
     left: 0;
     right: 0;
-    height: calc(100% - 240px);
+    height: calc(100% - 200px);
     transform: translate(-0%, -50%);
     background-color: transparent;
   }

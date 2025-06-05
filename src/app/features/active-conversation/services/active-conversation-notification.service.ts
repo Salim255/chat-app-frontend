@@ -13,6 +13,7 @@ export class ActiveConversationNotificationService {
   ){}
 
   notifyPartnerOfNewMessage(notificationData: MessageNotifierPayload): void {
+    console.log(notificationData);
     this.socketMessageService.notifyPartnerOfComingMessage(notificationData);
   }
 

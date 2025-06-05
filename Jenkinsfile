@@ -8,30 +8,35 @@ pipeline {
 
     environment {
         registryCredentials = 'ecr:eu-west-3:awscreds'
-        imageName = "961341553126.dkr.ecr.eu-west-3.amazonaws.com/intimacy-frontend-repo"
+        imageName = "961341553126.dkr.ecr.eu-west-3.amazonaws.com/intimacy-repository"
         intimacyRegistry = "https://961341553126.dkr.ecr.eu-west-3.amazonaws.com"
         ANGULAR_OUTPUT_DIR = "www"
     }
 
     stages {
 
+        stage("Clean Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage("Fetch Code") {
             steps {
-                git branch: 'develop', url: 'https://github.com/Salim255/intimacy-frontend.git'
+                git branch: 'develop', url: 'https://github.com/Salim255/chat-app-frontend.git'
             }
         }
 
         stage("Install Dependencies") {
             steps {
-               sh 'npm ci'
+               sh 'npm install'
             }
         }
 
         stage("Build App") {
             steps {
                 script {
-                    sh 'npx ng cache clean'
-                    sh 'ng build --configuration production --verbose'
+                    sh 'npm run build'
                 }
             }
             post {
@@ -44,76 +49,54 @@ pipeline {
         stage("Lint (Checkstyle)") {
             steps {
                 catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
-                    sh 'npm run lint -- --format json -o eslint-report.json'
+                    sh 'npm run lint -- --format json > eslint-report.json'
                 }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: "${APP_DIR}/eslint-report.json", fingerprint: true
+                    archiveArtifacts artifacts: 'eslint-report.json', fingerprint: true
                 }
             }
         }
 
-        stage("SonarQube Analysis") {
+        stage('SonarQube Analysis') {
             environment {
-                SONARQUBE_SCANNER_HOME = tool 'sonar7.1'
+                SONARQUBE_SCANNER_HOME = tool 'sonar7.1' // Ensure you have configured SonarQube scanner in Jenkins
             }
             steps {
-
-                withSonarQubeEnv('sonarserver') {
+                withSonarQubeEnv('sonarserver') { // Ensure you have configured SonarQube server in Jenkins
                     sh '''
                         ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=intimacy-frontend \
+                        -Dsonar.projectKey=intimacy-front-v2 \
                         -Dsonar.projectName="Intimacy Frontend" \
                         -Dsonar.projectVersion=1.0 \
                         -Dsonar.sources=src \
+                        -Dsonar.exclusions=src/infrastructure/**/* \
                         -Dsonar.sourceEncoding=UTF-8 \
                         -Dsonar.eslint.reportPaths=eslint-report.json \
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                     '''
+
+                    // Upload the ESLint report to SonarQube server
+                    echo "========SonarQube Analysis executed successfully========"
                 }
             }
         }
 
         stage("Quality Gate") {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+                 //jenkins-ci-webhook
             }
         }
 
-        stage("Archive Artifact") {
-            steps {
-                sh "tar -czf ../${ANGULAR_OUTPUT_DIR}.tar.gz ${ANGULAR_OUTPUT_DIR}"
-                archiveArtifacts artifacts: "www.tar.gz", fingerprint: true
-            }
-        }
-
-        stage("Upload to Nexus") {
-            steps {
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: '172.31.4.90:8081',
-                    groupId: 'QA',
-                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
-                    repository: 'intimacy-frontend-repository',
-                    credentialsId: 'nexuslogin',
-                    artifacts: [[
-                        artifactId: 'intimacy-frontend',
-                        classifier: '',
-                        file: "${ANGULAR_OUTPUT_DIR}.tar.gz",
-                        type: 'tgz'
-                    ]]
-                )
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${imageName}:${BUILD_NUMBER}", ".")
+                    dockerImage = docker.build("${imageName}:frontend-${BUILD_NUMBER}", ".")
                 }
             }
         }
@@ -122,9 +105,19 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry(intimacyRegistry, registryCredentials) {
-                        dockerImage.push("${BUILD_NUMBER}")
-                        dockerImage.push("latest")
+                      dockerImage.push("frontend-${BUILD_NUMBER}")
+                      dockerImage.push("latest")
                     }
+                }
+            }
+        }
+
+        stage("Deploy to Cluster"){
+            agent { label 'minikube' }
+            steps {
+                script {
+                    sh 'pwd'
+                    sh 'kubectl rollout restart deployment client-deployment -n default'
                 }
             }
         }

@@ -38,7 +38,8 @@ ion-header {
     }
 
     ion-label {
-      color: var(--ion-color-grey-7);
+      font-size: 1rem;
+      font-weight: 300;
     }
 
     ion-label:last-child {
@@ -53,14 +54,14 @@ ion-header {
     }
 
     ion-label {
-      color: var(--ion-color-grey-7);
+      font-size: 1rem;
+      font-weight: 300;
     }
-
 
     ion-range {
       --bar-background: var(--ion-color-grey-3);
       --bar-background-active: var(--ion-color-primary);
-      --bar-height: .8rem;
+      --bar-height: .2rem;
       --bar-border-radius: .4rem;
       --knob-background: var(--ion-color-cyan-6);
     }
@@ -71,13 +72,14 @@ ion-header {
       opacity: .8;
     }
   }
+
   &__interested {
     ion-col {
       ion-item {
         ion-checkbox {
           --border-radius: 6px;
-          color: var(--ion-color-grey-7);
-          font-weight: 500;
+          font-size: 1rem;
+          font-weight: 300;
         }
       }
     }

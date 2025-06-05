@@ -42,9 +42,10 @@ implements OnDestroy, OnChanges {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.partnerInfo, this.partnerConnection)
     this.initializeConversation();
-    this.subscribeToPartnerConnectionStatus();
     this.subscribeToTyping();
+    this.setPartnerConnectionStatus()
   }
 
   private subscribeToTyping():void {
@@ -55,7 +56,7 @@ implements OnDestroy, OnChanges {
      );
   }
 
-  private subscribeToPartnerConnectionStatus() {
+  private setPartnerConnectionStatus() {
     if (
       !this.partnerInfo
       || !this.partnerConnection
@@ -90,6 +91,12 @@ implements OnDestroy, OnChanges {
   onOpenChat(): void {
     if (!this.conversation || !this.partnerInfo?.user_id) return;
     this.activeConversationService.openConversation(this.partnerInfo, this.conversation);
+  }
+
+  getStatusColor(status: string): string {
+    return status === 'online'
+      ? 'var(--ion-color-online)'
+      : 'var(--ion-color-offline)';
   }
 
   ngOnDestroy(): void {
