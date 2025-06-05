@@ -16,7 +16,7 @@
     <ion-row>
       <ion-col>
         <app-form-input
-        *ngIf="partnerInfo"
+         *ngIf="partnerInfo"
          [toUserId]="partnerInfo.user_id" (submitObs)="onSubmit($event)">
         </app-form-input>
       </ion-col>

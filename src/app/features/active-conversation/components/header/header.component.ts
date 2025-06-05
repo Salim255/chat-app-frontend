@@ -73,4 +73,10 @@ export class headerComponent implements OnChanges {
           }
     this.profileViewerService.openProfileViewerModal(data);
   }
+
+   getStatusColor(status: string): string {
+    return status === 'online'
+      ? 'var(--ion-color-online)'
+      : 'var(--ion-color-offline)';
+  }
 }

@@ -93,6 +93,12 @@ implements OnDestroy, OnChanges {
     this.activeConversationService.openConversation(this.partnerInfo, this.conversation);
   }
 
+  getStatusColor(status: string): string {
+    return status === 'online'
+      ? 'var(--ion-color-online)'
+      : 'var(--ion-color-offline)';
+  }
+
   ngOnDestroy(): void {
     this.messageDeliverySubscription?.unsubscribe();
   }

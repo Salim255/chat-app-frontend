@@ -7,6 +7,7 @@ import { StatusBar, StatusBarStyle } from '@capacitor/status-bar';
 import { LoadingSpinnerService } from './shared/components/app-loading-spinner/loading-spinner.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Capacitor } from '@capacitor/core';
+import { Keyboard } from '@capacitor/keyboard';
 
 //
 register();
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
       StatusBar.setOverlaysWebView({ overlay: true });
       StatusBar.setStyle({ style: StatusBarStyle.Light });
     }
+    Keyboard.setScroll({ isDisabled: false }); // Allows auto scroll////
 
     this.subscribeToAuth();
     this.subscribeToSpinner();

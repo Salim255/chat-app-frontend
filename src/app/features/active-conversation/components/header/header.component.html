@@ -10,7 +10,7 @@
 
    <ion-item
       lines="none"
-      [style.--status-color-dimension]="partnerInfo.connection_status === 'online' ? '.7rem' : '0'"
+      [style.--status-color]="getStatusColor(partnerInfo.connection_status)"
     >
       <div class="profile-info">
         <div class="profile-info__avatar-container">

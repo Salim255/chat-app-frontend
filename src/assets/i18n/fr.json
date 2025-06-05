@@ -5,17 +5,16 @@
     "SWIPE": "un swipe"
   },
   "TERMS": {
-    "TEXT": "En cliquant",
+    "TEXT": "En cliquant sur",
+    "SIGNUP": "Créer un compte",
+    "OR": "ou",
+    "LOGIN": "Se connecter",
+    "AGREE": "vous acceptez les",
     "TERM": "Conditions d'utilisation",
     "LEARN": "Découvrez comment nous traitons vos données dans notre",
     "POLICY": "Politique de Confidentialité",
     "AND": "et",
-    "COOKIES": "Politique de Cookies",
-    "OR": "ou",
-    "SIGNUP": "Créer un compte",
-    "LOGIN": "Se connecter",
-    "AGREE": "vous acceptez notre"
-
+    "COOKIES": "Politique de Cookies"
   },
 
   "CREATE_ACCOUNT": "Créer un compte",
