@@ -30,19 +30,22 @@ ion-header {
         transform: translate(-50%, -50%) rotate(-45deg);;
       }
     }
-    padding-bottom: 1rem;
   }
 
 }
 ion-content {
   --background: var(--ion-color-grey-3);
   ion-grid {
-    margin: 0 .5rem;
     padding: 0;
     margin-bottom: 6rem;
     position: relative;
     ion-row {
       margin-bottom: .5rem;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+    }
+    ion-row:first-child {
+       margin-bottom: .5rem;
     }
     ion-row:last-child {
       position: fixed;

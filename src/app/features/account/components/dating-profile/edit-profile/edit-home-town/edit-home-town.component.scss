@@ -3,14 +3,14 @@ ion-item-group {
     padding-left: .3rem;
     padding-right: .3rem;
      ion-label {
-      font-weight: 600;
+      font-weight: 300;
       font-size: 1rem;
     }
   }
 
-  ion-item, ion-item-divider {
+  ion-item {
     ion-label {
-      color: var(--ion-color-grey-7);
+     color: var(--ion-color-grey-7);
     }
   }
 
