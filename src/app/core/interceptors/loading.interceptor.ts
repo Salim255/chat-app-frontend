@@ -20,10 +20,10 @@ export class LoadingInterceptor implements HttpInterceptor {
       return next.handle(req);
     }
 
-    this.loadingService.showSpinner();
+    //this.loadingService.showSpinner();
     return next.handle(req).pipe(
       finalize(() => {
-        this.loadingService.hideSpinner();
+       // this.loadingService.hideSpinner();
       })
     );
   }

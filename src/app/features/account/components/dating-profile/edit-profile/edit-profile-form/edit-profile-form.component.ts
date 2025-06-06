@@ -96,28 +96,29 @@ export class EditProfileFormComponent implements OnInit {
   onCancelEditing(): void{
     this.editingProfileService.onDismissEditFormModal();
   }
- onLocationSuggestionSelect(location: string): void {
-  this.selectedLocation = location;
 
-  // Example: if the format is "City, Country, Continent"
-  const parts = location.split(',').map(part => part.trim());
-  const city = parts[0] || '';
-  const country = parts[1] || '';
+  onLocationSuggestionSelect(location: string): void {
+    this.selectedLocation = location;
 
-  // Update form controls
-  this.editProfileFormFields.get(FieldName.City)?.setValue(city);
-  this.editProfileFormFields.get('country')?.setValue(country);
+    // Example: if the format is "City, Country, Continent"
+    const parts = location.split(',').map(part => part.trim());
+    const city = parts[0] || '';
+    const country = parts[1] || '';
 
-  // Update search bar input as well
-  this.editProfileFormFields.get(FieldName.City)?.markAsTouched();
-  this.locationSuggestions = []; // Clear suggestions
-}
+    // Update form controls
+    this.editProfileFormFields.get(FieldName.City)?.setValue(city);
+    this.editProfileFormFields.get('country')?.setValue(country);
+
+    // Update search bar input as well
+    this.editProfileFormFields.get(FieldName.City)?.markAsTouched();
+    this.locationSuggestions = []; // Clear suggestions
+  }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
   onCityInput(event: any): void {
-  const value = event.detail.value;
-  this.geolocationService.searchLocationsByText(value).subscribe(suggestions => {
-    this.locationSuggestions = suggestions;
-    console.log('Location suggestions:', this.locationSuggestions);
-  });
-}
+    const value = event.detail.value;
+    this.geolocationService.searchLocationsByText(value).subscribe(suggestions => {
+      this.locationSuggestions = suggestions;
+      console.log('Location suggestions:', this.locationSuggestions);
+    });
+  }
 }

@@ -33,7 +33,6 @@ export class GeolocationService {
         const position = await new Promise<GeolocationPosition>((resolve, reject) =>{
           navigator.geolocation.getCurrentPosition(resolve, reject);
          });
-
         this.userCoordinates.latitude = position.coords.latitude;
         this.userCoordinates.longitude = position.coords.longitude;
         return this.userCoordinates;
@@ -45,6 +44,7 @@ export class GeolocationService {
       }
 
       const position = await Geolocation.getCurrentPosition();
+      console.log(position);
       this.userCoordinates.latitude = position.coords.latitude;
       this.userCoordinates.longitude = position.coords.longitude;
       return this.userCoordinates;

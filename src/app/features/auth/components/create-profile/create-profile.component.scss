@@ -33,32 +33,11 @@
         opacity: 0.8;
       }
      }
-    ion-datetime {
-      margin: auto;
-      --wheel-highlight-background: transparent;
-      --wheel-fade-background-rgb: 255, 255, 255;
-      --wheel-highlight-border-radius: 0px;
-      --wheel-highlight-border-margin-left: 0;
-    }
+   ion-text {
+    text-align: center;
+    color: var(--ion-color-offline);
+   }
 
-    ion-datetime::part(wheel-item) {
-      color: var(--ion-color-grey-7);
-
-    }
-
-    ion-datetime::part(wheel-item active) {
-      color: var(--ion-color-primary);
-      font-weight: bold;
-      border-bottom: 2px solid var(--ion-color-primary);
-      padding-bottom: 4px;
-    }
-
-    ion-datetime::part(calendar-day),
-    ion-datetime::part(calendar-month),
-    ion-datetime::part(calendar-year),
-    ion-datetime::part(wheel-item) {
-      font-size: 1rem;
-    }
   }
   &__name {
 

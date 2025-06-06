@@ -4,28 +4,25 @@
   <form [formGroup]="profileForm" >
     <ion-grid class="create-account">
         <!-- Date of Birth -->
-        <ion-row>
-          <ion-col class="create-account__date-picker">
-           <ion-item lines="none">
-              <ion-label> Birthday</ion-label>
-              <span>
-                {{
-                  profileForm.value.birthDate
-                    ? formatDate(profileForm.value.birthDate)
-                    : 'Select date'
-                }}
-              </span>
-            </ion-item>
-            <ion-datetime
-            display-format="DD/MM/YYYY"
-            [value]="profileForm.value.birthDate"
-            [max]="maxDate"
-            presentation="date"
-            prefer-wheel="true"
-            (ionChange)="onDateSelected($event)">
-
-          </ion-datetime>
-          </ion-col>
+        <ion-row >
+            <ion-col class="create-account__date-picker">
+              <ion-item>
+                <ion-label>Birthday</ion-label>
+                <ion-input
+                  placeholder="DDMMYYYY"
+                  formControlName="birthDate"
+                  maxlength="14"
+                  inputmode="numeric"
+                  (ionInput)="onDateInput($event)"
+                ></ion-input>
+              </ion-item>
+              <ion-text *ngIf="profileForm.get('birthDate')?.hasError('invalidDateFormat')">
+                <small >Please enter a valid date in DDMMYYYY format.</small>
+              </ion-text>
+              <ion-text *ngIf="profileForm.get('birthDate')?.hasError('underage')">
+                <small>You must be at least 18 years old.</small>
+              </ion-text>
+            </ion-col>
         </ion-row>
         <!-- display name -->
         <ion-row>
@@ -46,33 +43,14 @@
                 interface="action-sheet"
                 formControlName="gender"
                 placeholder="Select gender">
-                <ion-select-option value="male">Male</ion-select-option>
-                <ion-select-option value="female">Female</ion-select-option>
+                <ion-select-option value="male">Man</ion-select-option>
+                <ion-select-option value="female">Woman</ion-select-option>
                 <ion-select-option value="other">Other</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-col>
         </ion-row>
 
-        <!-- Country -->
-        <ion-row>
-          <ion-col class="create-account__country">
-            <ion-item>
-              <ion-label >Country</ion-label>
-              <ion-input #searchInput formControlName="country" placeholder="your country is..."></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-
-        <!-- City -->
-        <ion-row>
-          <ion-col class="create-account__city">
-            <ion-item>
-              <ion-label >City</ion-label>
-              <ion-input  #searchInput formControlName="city" placeholder="your city is..."></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
 
         <!--  Interested In -->
         <ion-row>
