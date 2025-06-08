@@ -18,6 +18,7 @@ import { LoadingSpinnerComponent } from './components/app-loading-spinner/loadin
 import { CardMediaComponent } from './components/card-media/card.component';
 import { LanguagesSwitcherComponent } from './components/languages-switcher/languages-switcher';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LocationPickerComponent } from './components/location-picker/location-picker.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -36,7 +37,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CustomSwiperDirective,
     LoadingSpinnerComponent,
     CardMediaComponent,
-    LanguagesSwitcherComponent
+    LanguagesSwitcherComponent,
+    LocationPickerComponent
   ],
   exports: [
     LogoComponent,
@@ -53,7 +55,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CustomSwiperDirective,
     LoadingSpinnerComponent,
     CardMediaComponent,
-    LanguagesSwitcherComponent
+    LanguagesSwitcherComponent,
+    LocationPickerComponent
   ],
   imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })

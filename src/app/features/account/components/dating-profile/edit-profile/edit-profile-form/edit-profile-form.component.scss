@@ -15,7 +15,7 @@ ion-header {
   }
 }
 .edit-profile {
-  margin: .5rem;
+ // margin: .5rem;
   &__bio{
     ion-item {
       --background: transparent;
@@ -41,19 +41,28 @@ ion-header {
     }
   }
   &__home-town{
-    .main-label {
-      color: var(--ion-color-grey-7);
-      font-weight: 600;
-      font-size: .9rem;
+    ion-col {
+      position: relative;
+      height: 10rem;
+      width: 100%;
+
+      ion-item{
+        left: 0;
+        right: 0;
+        width: 100%;
+        position: absolute;
+        top: 0;
+         background-color:  rgba(0, 0, 0, 0.3);
+
+        ion-searchbar {
+          --border-radius: 1rem;
+          padding-inline-start: 0;
+          padding-inline-end: 0;
+          --color: var(--ion-color-grey-0);
+          --background: rgba(0, 0, 0, 0.5);
+          --clear-button-color: ar(--ion-color-grey-0);
+        }
     }
-    ion-item{
-      --background: transparent;
-      ion-searchbar {
-        --border-radius: 1rem;
-        padding-inline-start: 0;
-        padding-inline-end: 0;
-        --color: var(--ion-color-grey-7);
-      }
     }
 
     ion-list {

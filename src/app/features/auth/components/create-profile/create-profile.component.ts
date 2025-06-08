@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IonDatetime } from "@ionic/angular";
-import { formatDate } from "@angular/common";
 import { CompleteProfileService } from "../../services/complete-profile.service";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { PhotoCaptureResult, PhotoService } from "src/app/core/services/media/photo.service";
 import { Coordinates, GeolocationService } from "src/app/core/services/geolocation/geolocation.service";
+
 
 export enum InterestedIn {
   Men = 'men',
@@ -42,7 +42,6 @@ export class CreateProfileComponent implements OnInit {
   @ViewChild('birthDatePicker', { static: false }) birthDatePicker!: IonDatetime;
 
   profileForm!: FormGroup;
-  maxDate: string = new Date().toISOString(); // prevent future date
   InterestedIn = InterestedIn;
   private clickedPhotoIndex: number | null = null;
   // Parallel array of FormData objects (or null) for submission
@@ -59,25 +58,18 @@ export class CreateProfileComponent implements OnInit {
     private photoService: PhotoService,
     private geolocationService: GeolocationService,
   ){
-    const today = new Date();
-    today.setFullYear(today.getFullYear() - 18);
-    this.maxDate = today.toISOString().split('T')[0]; // format: YYYY-MM-DD
-
     this.profileForm = this.fb.group(
       {
         name: ['', Validators.required],
         birthDate: ['',
-               [
-                 Validators.required,
-                this.completeProfileService.dateFormatValidator()
-               ]
-              ],
+          [
+            Validators.required,
+            this.completeProfileService.dateFormatValidator()
+          ]
+        ],
         gender: [null, Validators.required],
-        country: ['', Validators.required],
-        city: ['', Validators.required],
-        day: [null, Validators.required],
-        month: [null, Validators.required],
-        year: [null, Validators.required],
+        country: [],
+        city: [],
         interestedIn: [null, Validators.required],
         latitude: [],
         longitude: [],
@@ -90,75 +82,40 @@ export class CreateProfileComponent implements OnInit {
       });
   }
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.getCoordinates();
-    console.log(this.profileForm);
-    //this.updateBirthDate();
-    // latitude: 50.63256229343488, longitude: 3.0136012571323887
-  }
-  restrictDateInput(event: any): void {
-    console.log(event, "hello")
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.replace(/[^0-9/]/g, ''); // allow only digits and slashes
-    this.profileForm.get('birthDate')?.setValue(input.value);
-}
-   onCityInput(event: any): void {
-    const value = event.detail.value;
-    this.geolocationService.searchLocationsByText(value).subscribe(suggestions => {
-      this.locationSuggestions = suggestions;
-      console.log('Location suggestions:', this.locationSuggestions);
-    });
   }
 
   onDateInput(event: any): void {
-  let input = event.detail.value || '';
-  input = input.replace(/\D/g, '');
+    let input = event.detail.value || '';
+    input = input.replace(/\D/g, '');
 
-  // Limit to 12 digits max (DDMMYYYY)
-  if (input.length > 12) {
-    input = input.slice(0, 12);
+    // Limit to 12 digits max (DDMMYYYY)
+    if (input.length > 12) {
+      input = input.slice(0, 12);
+    }
+
+    // Add spaces around slashes for clarity
+    if (input.length >= 5) {
+      input = `${input.slice(0, 2)} / ${input.slice(2, 4)} / ${input.slice(4)}`;
+    } else if (input.length >= 3) {
+      input = `${input.slice(0, 2)} / ${input.slice(2)}`;
+    }
+
+    this.profileForm.get('birthDate')?.setValue(input, { emitEvent: false });
   }
-
-  // Add spaces around slashes for clarity
-  if (input.length >= 5) {
-    input = `${input.slice(0, 2)} / ${input.slice(2, 4)} / ${input.slice(4)}`;
-  } else if (input.length >= 3) {
-    input = `${input.slice(0, 2)} / ${input.slice(2)}`;
-  }
-
-  this.profileForm.get('birthDate')?.setValue(input, { emitEvent: false });
-}
-
 
   async getCoordinates(): Promise<Coordinates> {
-   const cor =  await this.geolocationService.getCurrentCoordinates();
-   this.profileForm.get('longitude')?.setValue(cor.longitude);
-   this.profileForm.get('latitude')?.setValue(cor.latitude);
-   return cor
+   const result =  await this.geolocationService.getCurrentCoordinates();
+   this.profileForm.get('longitude')?.setValue(result.longitude);
+   this.profileForm.get('latitude')?.setValue(result.latitude);
+   return result;
   }
 
-  onLocationSuggestionSelect(location: string): void {
-    this.selectedLocation = location;
-
-    // Example: if the format is "City, Country, Continent"
-    const parts = location.split(',').map(part => part.trim());
-    const city = parts[0] || '';
-    const country = parts[1] || '';
-
-    // Update form controls
-    this.profileForm.get('city')?.setValue(city);
-    this.profileForm.get('country')?.setValue(country);
-
-    // Update search bar input as well
-    this.locationSuggestions = []; // Clear suggestions
-  }
   // in your component class
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackByIndex(index: number): number {
     return index;
   }
-
 
   onFileSelected(event: Event):void {
 
@@ -169,19 +126,13 @@ export class CreateProfileComponent implements OnInit {
     const result =  this.photoService.webPlatformFileUpload(file);
     if (result && result as PhotoCaptureResult) {
       this.photoUploads[this.clickedPhotoIndex] = result.formData;
-        this.photos.at(this.clickedPhotoIndex).setValue(result.preview );
+      this.photos.at(this.clickedPhotoIndex).setValue(result.preview );
     }
   }
 
   onClose(): void{
     this.location.back();
   }
-
-  onDateSelected(event: CustomEvent): void {
-    const rawDate = event.detail.value;
-    this.profileForm.patchValue({ birthDate: rawDate });
-  }
-
 
   async onTakePhoto(slotIndex: number): Promise<void>{
    try {
@@ -222,11 +173,6 @@ export class CreateProfileComponent implements OnInit {
     return this.profileForm.get('photos') as FormArray;
   }
 
-  formatDate(rawDate: Date): string {
-    const formatted = formatDate(rawDate, 'dd/MM/y', 'en-US');
-    return formatted;
-  }
-
   onSubmit(): void{
     if(this.profileForm.invalid) return;
 
@@ -246,7 +192,24 @@ export class CreateProfileComponent implements OnInit {
     // Append other fields…
     Object.entries(this.profileForm.value)
     .filter(([k]) => k !== 'photos')
-    .forEach(([key, val]) => multiPart.append(key, val as string));
+    .forEach(([key, val]) => {
+      if (key === 'birthDate') {
+        if (typeof val === 'string') {
+          // Convert the formatted string to a Date object
+          const [dayStr, monthStr, yearStr] = val.split('/').map((p: string) => p.trim());
+          const dateObj = new Date(+yearStr, +monthStr - 1, +dayStr);
+          if (!isNaN(dateObj.getTime())) {
+            multiPart.append(key, dateObj.toISOString()); // or .toLocaleDateString(), depending on backend
+          } else {
+            // Handle invalid date (if somehow it passed validation)
+            multiPart.append(key, '');
+          }
+        }
+      } else {
+        multiPart.append(key, val as string);
+      }
+    });
+
 
     this.completeProfileService.createProfile(multiPart).subscribe({
       next:() => {

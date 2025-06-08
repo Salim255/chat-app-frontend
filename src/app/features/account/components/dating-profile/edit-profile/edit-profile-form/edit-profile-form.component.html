@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="" (click)="onCancelEditing()" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title> {{fieldName}} </ion-title>
+    <ion-title> {{ fieldName === FieldName.City ? 'Travel to': fieldName }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onSubmit()">Save</ion-button>
     </ion-buttons>
@@ -58,24 +58,14 @@
 
       <ion-row *ngIf="fieldName === FieldName.City"  class="edit-profile__home-town">
         <ion-col >
-          <ion-item>
-            <ion-label class="main-label" position="stacked">Where are you from?</ion-label>
+          <ion-item lines="none">
+            <!-- <ion-label class="main-label" position="stacked">Where are you from?</ion-label> -->
             <ion-searchbar
               [value]="selectedLocation"
-              (ionInput)="onCityInput($event)"
-              placeholder="Search cities" ></ion-searchbar>
+              class="custom"
+              placeholder="Selected location" ></ion-searchbar>
           </ion-item>
-
-          <!-- Suggestions list -->
-          <ion-list  *ngIf="locationSuggestions.length > 0">
-            @for (result of locationSuggestions; track result) {
-            <ion-item  button (click)="onLocationSuggestionSelect(result)">
-              <ion-icon name="location-outline" slot="start"></ion-icon>
-              <ion-label>{{ result }}</ion-label>
-            </ion-item>
-            }
-          </ion-list>
-
+           <app-location-picker (locationSelected)="onSelectLocation($event)"></app-location-picker>
         </ion-col>
       </ion-row>
 
