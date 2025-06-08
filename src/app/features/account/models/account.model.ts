@@ -1,3 +1,5 @@
+import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
+
 export class Account {
   constructor(
     public id: number,
@@ -12,9 +14,12 @@ export class Account {
     public latitude: number,
     public longitude: number,
     public bio: string,
+    public min_age: number,
+    public max_age: number,
     public education: string,
     public height: number,
     public children: boolean,
+    public looking_for: LookingFor [],
     public photos: string[],
     public created_at: Date,
     public updated_at: Date,

@@ -3,7 +3,7 @@ import { ModalController } from "@ionic/angular";
 import { PreferencesComponent } from "../components/preferences/preferences.component";
 import { PrefFormComponent } from "../components/preferences/pref-form/pref-form.component";
 import { catchError, EMPTY, Observable, tap } from "rxjs";
-import { AgeRange, FetchAccountDto } from "./account-http.service";
+import { AgeRange, DistanceRange, FetchAccountDto, LookingForOptions, LookingForPayload } from "./account-http.service";
 import { AccountHttpService } from "./account-http.service";
 import { AccountService } from "./account.service";
 import { MatchesService } from "../../matches/services/matches.service";
@@ -40,11 +40,28 @@ export class PreferencesService {
     )
   }
 
-   updateDistanceRage(ageRange: { minAge: number, maxAge: number } ): Observable <FetchAccountDto | null>{
+   updateDistanceRage(distanceRange: number ): Observable <FetchAccountDto | null>{
      const profileId = this.accountService.getAccountId;
     if (!profileId ) return EMPTY;
-    const ageRangPayload: AgeRange = {...ageRange, profileId}
-    return this.accountHttpService.updateAgePreference(ageRangPayload)
+    const ageRangPayload: DistanceRange = { distanceRange, profileId}
+    return this.accountHttpService.updateDistancePreference(ageRangPayload)
+    .pipe(
+      tap((response) => {
+         if(!response.data.profile) return;
+        this.accountService.setAccountWithUpdate(response.data.profile);
+        this.matchesService.fetchMatches();
+      }),
+      catchError(() => {
+        return EMPTY;
+      })
+    )
+  }
+
+  updateLookingForOptions(options: LookingForOptions[] ): Observable <FetchAccountDto | null>{
+     const profileId = this.accountService.getAccountId;
+    if (!profileId ) return EMPTY;
+    const lookingForPayload: LookingForPayload = { lookingFor: options, profileId }
+    return this.accountHttpService.updateLookingForOption(lookingForPayload)
     .pipe(
       tap((response) => {
          if(!response.data.profile) return;

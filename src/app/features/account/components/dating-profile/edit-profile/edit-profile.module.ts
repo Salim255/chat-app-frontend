@@ -35,7 +35,4 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     EditProfileFormComponent ],
 })
 
-export class EditProfileModule {
-
-
-}
+export class EditProfileModule {}

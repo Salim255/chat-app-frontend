@@ -44,6 +44,13 @@ export type AgeRange = {
   maxAge: number;
 }
 
+export type LookingForOptions = 'chat' | 'friendship'| 'casual'| 'long_term';
+
+export type LookingForPayload = {
+  profileId: number;
+  lookingFor: LookingForOptions[];
+}
+
 export type DistanceRange = {
   profileId: number;
   distanceRange: number;
@@ -55,6 +62,7 @@ export class AccountHttpService {
   baseUrl = `${this.ENV.apiUrl}/profiles`;
 
   constructor(private http:  HttpClient){}
+
   getAccount(): Observable<FetchAccountDto>{
     return this.http.get<FetchAccountDto>(`${this.baseUrl}`)
   }
@@ -72,7 +80,6 @@ export class AccountHttpService {
   }
 
   updateHome(updatePayload: UpdateHomePayLoad): Observable<FetchAccountDto>{
-    console.log(updatePayload)
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-home`, updatePayload)
   }
 
@@ -82,5 +89,9 @@ export class AccountHttpService {
 
   updateDistancePreference(distanceRange: DistanceRange):Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-distance-range`, distanceRange)
+  }
+
+  updateLookingForOption( options: LookingForPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-looking-for`, options)
   }
 }

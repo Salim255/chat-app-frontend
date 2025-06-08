@@ -3,6 +3,6 @@
     <ion-label>I'm Looking for</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button>
-    <ion-label> Chatting</ion-label>
+    <ion-text *ngFor="let item of lookingFor"> {{ item }},</ion-text>
   </ion-item>
 </ion-item-group>

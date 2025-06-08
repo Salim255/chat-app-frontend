@@ -42,9 +42,15 @@ export class AccountService {
 
   get getHostUserPhoto():Observable<string | null> {
     return this.account.asObservable().pipe(
-      map((account) => account?.photos[0] ?? null)
+      map((account) => {
+        if (account?.photos?.length) {
+          return account?.photos[0]
+        }
+        return null
+      })
     );
   }
+
   get getHostCoordinates():Coordinates| null {
     if (!this.account.value?.latitude) return null
     return {latitude: this.account.value?.latitude, longitude:  this.account.value?.longitude}

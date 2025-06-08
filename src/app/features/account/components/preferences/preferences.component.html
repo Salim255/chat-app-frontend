@@ -16,12 +16,12 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <app-age-range-pref></app-age-range-pref>
+        <app-age-range-pref [minAge]="account.min_age" [maxAge]="account.max_age" ></app-age-range-pref>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
-        <app-looking-for-pref></app-looking-for-pref>
+        <app-looking-for-pref [lookingFor]="account.looking_for" ></app-looking-for-pref>
       </ion-col>
     </ion-row>
   </ion-grid>

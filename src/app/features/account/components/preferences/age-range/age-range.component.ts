@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PreferencesService } from '../../../services/preferences.service';
 import { PrefFieldName } from '../../../services/preferences.service';
 @Component({
@@ -9,6 +9,8 @@ import { PrefFieldName } from '../../../services/preferences.service';
 })
 
 export class AgeRangeRefComponent {
+  @Input() minAge!: number;
+  @Input() maxAge!: number;
   constructor(private preferencesService : PreferencesService ){}
 
   onEditRange(): void{

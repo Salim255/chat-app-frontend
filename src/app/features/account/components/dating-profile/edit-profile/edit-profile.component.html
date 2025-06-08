@@ -1,12 +1,12 @@
 <ion-grid class="edit-profile">
   <ion-row class="edit-profile__media">
     <ion-col>
-       <app-edit-media [photos]="account?.photos"></app-edit-media>
+       <app-edit-media [photos]="account?.photos ?? []"></app-edit-media>
     </ion-col>
   </ion-row>
   <ion-row class="edit-profile__bio">
     <ion-col>
-      <app-edit-bio [bio]="account?.bio"></app-edit-bio>
+      <app-edit-bio [bio]="account?.bio ?? ''"></app-edit-bio>
     </ion-col>
   </ion-row>
   <ion-row class="edit-profile__gender">

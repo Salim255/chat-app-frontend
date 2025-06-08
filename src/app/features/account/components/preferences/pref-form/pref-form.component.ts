@@ -5,6 +5,7 @@ import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
 import { LookingFor } from "src/app/features/profile-viewer/components/looking-for/looking-for.component";
 import { AccountService } from "../../../services/account.service";
+import { DistanceRange } from "../../../services/account-http.service";
 
 @Component({
   selector: 'app-pref-form',
@@ -46,10 +47,33 @@ export class PrefFormComponent implements OnInit{
   }
 
   onSubmit(): void{
-    if (this.fieldName === this.FieldName.Age) {
-        //this.accountService.
-    }
     this.preferencesService.dismissPrefForm();
+    const control = this.editPrefFormFields.get(this.fieldName);
+    const value = control?.value;
+
+    if(!value) return;
+
+    switch(this.fieldName){
+      case this.FieldName.Age:
+        const payload = { minAge: value.lower, maxAge: value.upper }
+        this.preferencesService.updateAgeRage(payload).subscribe(result => {
+          console.log(result)
+        });
+      return;
+
+      case this.FieldName.Distance:
+        this.preferencesService.updateDistanceRage(value).subscribe(result => {
+          console.log(result)
+        })
+        return;
+      case this.FieldName.LookingFor:
+         this.preferencesService.updateLookingForOptions(value).subscribe(result => {
+          console.log(result)
+        })
+        return;
+      default:
+        return;
+    }
   }
 
   onCancelEditing(): void{

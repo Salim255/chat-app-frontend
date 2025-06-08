@@ -36,17 +36,13 @@ export class AccountInfoComponent {
     this.preferencesService.presentPreferences();
   }
 
-  onSubmit(): void {
-    if (!this.selectedPhotoString) {
-      return;
-    }
-    // Reset form
-    this.selectedPhotoString = null;
-    this.photoPreview = null;
-  }
 
   setAccountImage(): string {
-    const accountAvatar = StringUtils.getAvatarUrl(this.accountInfoData?.photos[0] ?? null);
+    let imgString = null;
+    if (this.accountInfoData?.photos?.length) {
+      imgString = this.accountInfoData?.photos[0] ;
+    }
+    const accountAvatar = StringUtils.getAvatarUrl(imgString);
     return accountAvatar;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AccountService } from "../../../services/account.service";
+import { Account } from "../../../models/account.model";
 
 @Component({
   selector: 'app-edit-profile',
@@ -9,11 +10,10 @@ import { AccountService } from "../../../services/account.service";
   standalone: false,
 })
 export class EditProfileComponent implements OnInit, OnDestroy {
-  account!: any;
+  account!: Account;
   private accountSubscription!: Subscription;
-  constructor(private accountService: AccountService) {
-    console.log('EditProfileModule loaded');
-  }
+
+  constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -25,11 +25,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     //this.location.back()
   }
 
-    private subscribeToAccount():void{
+  private subscribeToAccount():void{
     this.accountSubscription = this.accountService.getAccount.subscribe((account) => {
-      console.log(account);
-      this.account = account;
-
+       if (account) this.account  = account;
     });
   }
 

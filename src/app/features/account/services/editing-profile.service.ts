@@ -53,6 +53,7 @@ export class EditingProfileService {
     return this.accountHttpService.updateBio(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
+        console.log(result.data.profile)
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
       catchError(error => {

@@ -13,7 +13,7 @@ export class DatingProfileComponent {
   constructor(
     private editingProfileService:  EditingProfileService,
     private router: Router,
-    private location: Location) { }
+  ) { }
   onBack():void{
    // this.location.back();
    this.editingProfileService.onDismissModal();
