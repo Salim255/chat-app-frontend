@@ -10,6 +10,7 @@ import { PrefFieldName } from '../../../services/preferences.service';
 
 export class AgeRangeRefComponent {
   constructor(private preferencesService : PreferencesService ){}
+
   onEditRange(): void{
     this.preferencesService.presentPrefForm(PrefFieldName.Age);
   }

@@ -21,20 +21,7 @@ ion-header {
     ion-item-divider {
       padding: 0 .5rem;
       --inner-padding-end: 0;
-      margin-bottom: 1rem;
-    }
-
-    ion-picker {
-      --highlight-background: transparent;
-      --fade-background-rgb: 233, 236, 239;
-      --wheel-fade-background-rgb: 255, 255, 255;
-        ion-picker-column-option {
-        font-size: 1.2rem;
-        color: var(--ion-color-grey-7);
-        }
-      ion-picker-column-option.option-active{
-        color: var(--ion-color-primary);
-      }
+      //margin-bottom: 1rem;
     }
 
     ion-label {

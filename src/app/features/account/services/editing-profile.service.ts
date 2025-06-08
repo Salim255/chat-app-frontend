@@ -57,7 +57,7 @@ export class EditingProfileService {
       }),
       catchError(error => {
       return EMPTY;
-  })
+      })
     )
   }
 

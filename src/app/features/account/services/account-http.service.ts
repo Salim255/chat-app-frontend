@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
 import { Account } from "../models/account.model";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
@@ -38,6 +38,16 @@ export type UpdateCoordinatesPayload = {
   latitude: number,
 }
 
+export type AgeRange = {
+  profileId: number;
+  minAge: number ;
+  maxAge: number;
+}
+
+export type DistanceRange = {
+  profileId: number;
+  distanceRange: number;
+}
 @Injectable({providedIn: 'root'})
 
 export class AccountHttpService {
@@ -64,5 +74,13 @@ export class AccountHttpService {
   updateHome(updatePayload: UpdateHomePayLoad): Observable<FetchAccountDto>{
     console.log(updatePayload)
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-home`, updatePayload)
+  }
+
+  updateAgePreference(agePayload: AgeRange):Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-age-range`, agePayload)
+  }
+
+  updateDistancePreference(distanceRange: DistanceRange):Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-distance-range`, distanceRange)
   }
 }

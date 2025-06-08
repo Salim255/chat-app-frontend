@@ -37,14 +37,14 @@
               <ion-checkbox label-placement="start"
                 label-placement="start"
                 [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'female'"
-                (ionChange)="onSingleCheckboxSelect('female')">female</ion-checkbox>
+                (ionChange)="onSingleCheckboxSelect('female')">woman</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
                 [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'male'"
-                (ionChange)="onSingleCheckboxSelect('male')">male</ion-checkbox>
+                (ionChange)="onSingleCheckboxSelect('male')">man</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
@@ -59,7 +59,6 @@
       <ion-row *ngIf="fieldName === FieldName.City"  class="edit-profile__home-town">
         <ion-col >
           <ion-item lines="none">
-            <!-- <ion-label class="main-label" position="stacked">Where are you from?</ion-label> -->
             <ion-searchbar
               [value]="selectedLocation"
               class="custom"

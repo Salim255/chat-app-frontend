@@ -9,7 +9,8 @@ import { EditingProfileService, FieldName } from "src/app/features/account/servi
 })
 
 export class EditHomeTownComponent {
-  @Input() homeTown: string = '';
+  @Input() city: string = '';
+  @Input() country: string = '';
   constructor(private editingProfileService: EditingProfileService) {}
   onEditHome(): void {
     //this.location.back()

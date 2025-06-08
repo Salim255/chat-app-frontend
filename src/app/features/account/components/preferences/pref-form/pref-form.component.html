@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title> {{ formTitle() }} </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSave()"
+      <ion-button (click)="onSubmit()"
             [disabled]="editPrefFormFields.invalid">Save</ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -19,26 +19,19 @@
           <ion-item-group >
             <ion-item-divider>
               <ion-label>How old are they ?</ion-label>
-              <ion-label slot="end"> {{ ageRange.minAge }} - {{ ageRange.maxAge }}</ion-label>
+              <ion-label slot="end"> {{  ageRange.lower }} - {{  ageRange.upper }}</ion-label>
             </ion-item-divider>
-           <ion-item lines="none">
-             <ion-picker  >
-              <ion-picker-column value="minAge" (ionChange)="onPickerChangeMin($event)">
-                <ion-picker-column-option
-                  *ngFor="let age of ageOptions"
-                  [value]="age">
-                  {{ age }}
-                </ion-picker-column-option>
-              </ion-picker-column>
-              <ion-picker-column value="maxAge" (ionChange)="onPickerChangeMax($event)" >
-                <ion-picker-column-option
-                  *ngFor="let age of ageOptions"
-                  [value]="age">
-                    {{ age }}
-                </ion-picker-column-option>
-              </ion-picker-column>
-            </ion-picker>
-           </ion-item>
+            <ion-item lines="none">
+                <ion-range
+                  #ionRange
+                  [dualKnobs]="true"
+                  [min]="18"
+                  [max]="100"
+                  [pin]="true"
+                  [value]="ageRange"
+                  (ionInput)="onRangeInput($event)">
+                </ion-range>
+            </ion-item>
           </ion-item-group>
         </ion-col>
       </ion-row>
@@ -68,14 +61,14 @@
             <ion-checkbox label-placement="start"
                 label-placement="start"
                 [checked]="isChecked('chatting')"
-                (ionChange)="onCheckboxToggle('chatting', $event.detail.checked)">Chatting</ion-checkbox>
+                (ionChange)="onLookingCheckboxToggle('chatting', $event.detail.checked)">Chatting</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
                 [checked]="isChecked('friendship')"
-                (ionChange)="onCheckboxToggle('friendship', $event.detail.checked)">
+                (ionChange)="onLookingCheckboxToggle('friendship', $event.detail.checked)">
                   Friendship
               </ion-checkbox>
             </ion-item>
@@ -84,7 +77,7 @@
               <ion-checkbox
                 label-placement="start"
                 [checked]="isChecked('something casual')"
-                (ionChange)="onCheckboxToggle('casual', $event.detail.checked)">
+                (ionChange)="onLookingCheckboxToggle('casual', $event.detail.checked)">
                   Something casual
               </ion-checkbox>
             </ion-item>
@@ -93,7 +86,7 @@
               <ion-checkbox
                 label-placement="start"
                 [checked]="isChecked('long-term relationship')"
-                (ionChange)="onCheckboxToggle('long-term', $event.detail.checked)">
+                (ionChange)="onLookingCheckboxToggle('long-term', $event.detail.checked)">
                   Long-term relationship
               </ion-checkbox>
             </ion-item>
