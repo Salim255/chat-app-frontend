@@ -3,9 +3,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PrefFieldName } from "../../../services/preferences.service";
 import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
-import { LookingFor } from "src/app/features/profile-viewer/components/looking-for/looking-for.component";
 import { AccountService } from "../../../services/account.service";
-import { DistanceRange } from "../../../services/account-http.service";
+
 
 @Component({
   selector: 'app-pref-form',
@@ -16,12 +15,11 @@ import { DistanceRange } from "../../../services/account-http.service";
 
 export class PrefFormComponent implements OnInit{
   @ViewChild('ionRange', { read: ElementRef }) ionRangeRef!: ElementRef;
-  @Input() fieldValue: string = '';
+  @Input() fieldValue: any;
   @Input() fieldName: string = '';
 
   FieldName = PrefFieldName;
   editPrefFormFields!: FormGroup;
-  distanceOptions: number [] = []; // Distance 1 to 150 miles
   selectedLookingFor: string[] = [];
   ageRange = { lower: 20, upper: 80 };
   minGap = 4;
@@ -32,17 +30,15 @@ export class PrefFormComponent implements OnInit{
 
   constructor(
     private preferencesService: PreferencesService,
-    private fieldBuilder: FormBuilder,
-    private accountService: AccountService
+    private fieldBuilder: FormBuilder
   ){}
 
   ngOnInit(): void {
     if(this.fieldName) {
       this.buildForm();
     }
-
-    if (this.fieldName === this.FieldName.Distance) {
-      this.buildDistanceOptions();
+    if (this.fieldName === this.FieldName.LookingFor) {
+      this.selectedLookingFor = [...this.fieldValue];
     }
   }
 
@@ -66,10 +62,10 @@ export class PrefFormComponent implements OnInit{
           console.log(result)
         })
         return;
+
       case this.FieldName.LookingFor:
-         this.preferencesService.updateLookingForOptions(value).subscribe(result => {
-          console.log(result)
-        })
+        console.log(value);
+         this.preferencesService.updateLookingForOptions(value).subscribe()
         return;
       default:
         return;
@@ -83,15 +79,11 @@ export class PrefFormComponent implements OnInit{
   buildForm():void {
     if (this.fieldName) {
       this.editPrefFormFields = this.fieldBuilder.group({
-        [this.fieldName]: [this.fieldValue || '', Validators.required],
+        [this.fieldName]: [ null, Validators.required],
       });
     }
   }
 
-
-  buildDistanceOptions(): void {
-    this.distanceOptions = Array.from({ length: 150 }, (_, i) => i + 1);
-  }
 
   onRangeInput(event: any): void {
     const lower = event.detail.value.lower;
@@ -131,7 +123,6 @@ export class PrefFormComponent implements OnInit{
     this.editPrefFormFields.get(this.fieldName)?.setValue(this.distanceRange);
   }
 
-
   onLookingCheckboxToggle(value: string, checked: boolean): void {
     if (checked) {
       if (!this.selectedLookingFor.includes(value)) {
@@ -140,11 +131,8 @@ export class PrefFormComponent implements OnInit{
     } else {
       this.selectedLookingFor = this.selectedLookingFor.filter(item => item !== value);
     }
+
     this.editPrefFormFields.get(this.fieldName)?.setValue(this.selectedLookingFor);
-    console.log(this.selectedLookingFor, this.fieldName, this.editPrefFormFields.get(this.fieldName));
   }
 
-  isChecked(value: string): boolean {
-    return this.selectedLookingFor.includes(value);
-  }
 }

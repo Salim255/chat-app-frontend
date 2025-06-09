@@ -53,7 +53,6 @@ export class EditingProfileService {
     return this.accountHttpService.updateBio(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
-        console.log(result.data.profile)
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
       catchError(error => {
@@ -67,7 +66,6 @@ export class EditingProfileService {
     if (!profileId) return EMPTY;
 
     const payLoad: UpdateGenderPayLoad = { gender, profileId};
-    console.log(payLoad);
     return this.accountHttpService.updateGender(payLoad).pipe(
       tap((result) => {
         console.log(result);
@@ -87,7 +85,6 @@ export class EditingProfileService {
     const payLoad: UpdateHomePayLoad = { ...home, profileId};
     return this.accountHttpService.updateHome(payLoad).pipe(
       tap((result) => {
-        console.log(result);
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),

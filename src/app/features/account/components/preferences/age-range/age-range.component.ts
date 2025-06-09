@@ -14,6 +14,6 @@ export class AgeRangeRefComponent {
   constructor(private preferencesService : PreferencesService ){}
 
   onEditRange(): void{
-    this.preferencesService.presentPrefForm(PrefFieldName.Age);
+    this.preferencesService.presentPrefForm(PrefFieldName.Age, { minAge: this.minAge, maxAge: this.maxAge});
   }
 }

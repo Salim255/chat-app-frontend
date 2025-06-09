@@ -85,11 +85,12 @@ export class PreferencesService {
     await this.modalController.dismiss();
   }
 
-  async presentPrefForm(prefFieldName : PrefFieldName ): Promise<void>{
+  async presentPrefForm(prefFieldName : PrefFieldName, value: any ): Promise<void>{
     const modal = await this.modalController.create({
       component: PrefFormComponent,
       componentProps:{
-        fieldName:  prefFieldName
+        fieldName:  prefFieldName,
+        fieldValue: value
       },
     });
 

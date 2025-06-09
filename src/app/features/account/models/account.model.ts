@@ -20,6 +20,7 @@ export class Account {
     public height: number,
     public children: boolean,
     public looking_for: LookingFor [],
+    public max_distance_km: number,
     public photos: string[],
     public created_at: Date,
     public updated_at: Date,

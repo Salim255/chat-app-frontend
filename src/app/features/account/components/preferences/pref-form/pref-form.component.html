@@ -47,6 +47,7 @@
            <ion-item lines="none">
             <ion-range
               [min]="1"
+              [value]="fieldValue"
               [max]="150"
               (ionKnobMoveEnd)="onIonKnobMoveEnd($event)"
               [pin]="true">
@@ -60,14 +61,14 @@
           <ion-item lines="none">
             <ion-checkbox label-placement="start"
                 label-placement="start"
-                [checked]="isChecked('chatting')"
+                [checked]="selectedLookingFor.includes('chat')"
                 (ionChange)="onLookingCheckboxToggle('chat', $event.detail.checked)">Chatting</ion-checkbox>
             </ion-item>
 
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                [checked]="isChecked('friendship')"
+                [checked]="selectedLookingFor.includes('friendship')"
                 (ionChange)="onLookingCheckboxToggle('friendship', $event.detail.checked)">
                   Friendship
               </ion-checkbox>
@@ -76,7 +77,7 @@
             <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                [checked]="isChecked('something casual')"
+                [checked]="selectedLookingFor.includes('casual')"
                 (ionChange)="onLookingCheckboxToggle('casual', $event.detail.checked)">
                   Something casual
               </ion-checkbox>
@@ -85,7 +86,7 @@
              <ion-item lines="none">
               <ion-checkbox
                 label-placement="start"
-                [checked]="isChecked('long-term relationship')"
+                [checked]="selectedLookingFor.includes('long_term')"
                 (ionChange)="onLookingCheckboxToggle('long_term', $event.detail.checked)">
                   Long-term relationship
               </ion-checkbox>
