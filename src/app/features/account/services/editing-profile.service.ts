@@ -3,7 +3,7 @@ import { ModalController } from "@ionic/angular";
 import { DatingProfileComponent } from "../components/dating-profile/dating-profile.component";
 import { EditProfileFormComponent } from "../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component";
 import { catchError, EMPTY, Observable, tap } from "rxjs";
-import { ChildrenStatusPayload, FetchAccountDto, SexOrientationPayload, UpdateBioPayLoad, UpdateEducationPayload, UpdateGenderPayLoad, UpdateHomePayLoad } from "./account-http.service";
+import { ChildrenStatusPayload, FetchAccountDto, SexOrientationPayload, UpdateBioPayLoad, UpdateEducationPayload, UpdateGenderPayLoad, UpdateHeightPayload, UpdateHomePayLoad } from "./account-http.service";
 import { AccountService } from "./account.service";
 import { AccountHttpService } from "./account-http.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
@@ -143,6 +143,22 @@ export class EditingProfileService {
 
     const payLoad: UpdateEducationPayload = { education, profileId};
     return this.accountHttpService.updateEducation(payLoad).pipe(
+      tap((result) => {
+        if(!result.data.profile) return;
+        this.accountService.setAccountWithUpdate(result.data.profile);
+      }),
+      catchError(error => {
+      return EMPTY;
+      })
+    )
+  }
+
+  updateHeight(userHeight: number): Observable<FetchAccountDto | null>{
+    const profileId = this.accountService.getAccountId;
+    if (!profileId) return EMPTY;
+
+    const payLoad: UpdateHeightPayload = {height: userHeight, profileId};
+    return this.accountHttpService.updateHeight(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);

@@ -119,6 +119,11 @@ export class EditProfileFormComponent implements OnInit {
     if (this.fieldName === FieldName.Education) {
       this.editingProfileService.updateEducation(value).subscribe();
     }
+
+    if (this.fieldName === FieldName.UserHeight) {
+      this.editingProfileService.updateHeight(value).subscribe();
+    }
+
     this.editingProfileService.onDismissEditFormModal();
   }
 

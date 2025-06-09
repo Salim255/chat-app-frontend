@@ -72,6 +72,11 @@ export type UpdateEducationPayload = {
   education: string;
 }
 
+export type UpdateHeightPayload = {
+  profileId: number;
+  height: number;
+}
+
 
 @Injectable({providedIn: 'root'})
 
@@ -123,5 +128,9 @@ export class AccountHttpService {
 
   updateEducation( payload: UpdateEducationPayload ): Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-education`, payload)
+  }
+
+   updateHeight( payload: UpdateHeightPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-height`, payload)
   }
 }
