@@ -113,9 +113,9 @@
           <ion-col>
               <ion-item lines="none">
                 <ion-input
-                  []
-                  [formControlName]="FieldName.Education"
+                  [value]="educationTextValue"
                   placeholder="About your school"
+                  (ionInput)="onEducationInput($event)"
                   autoGrow="true">
                 </ion-input>
               </ion-item>

@@ -62,6 +62,17 @@ export type SexOrientationPayload = {
   sexOrientation: SexOrientation;
 }
 
+export type ChildrenStatusPayload = {
+  profileId: number;
+  status: boolean;
+}
+
+export type UpdateEducationPayload = {
+  profileId: number;
+  education: string;
+}
+
+
 @Injectable({providedIn: 'root'})
 
 export class AccountHttpService {
@@ -102,8 +113,15 @@ export class AccountHttpService {
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-looking-for`, options)
   }
 
-  updateSexOrientation( options: SexOrientationPayload ): Observable<FetchAccountDto>{
-    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-sex-orientation`, options)
+  updateSexOrientation( payload: SexOrientationPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-sex-orientation`, payload)
   }
 
+  updateChildrenStatus( payload: ChildrenStatusPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-children`, payload)
+  }
+
+  updateEducation( payload: UpdateEducationPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-education`, payload)
+  }
 }

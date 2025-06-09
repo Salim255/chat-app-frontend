@@ -47,7 +47,7 @@ export class EditProfileFormComponent implements OnInit {
   heightOptions: number[] = [];
   selectedHeight: number | null = null;
   editProfileFormFields!: FormGroup;
-
+  educationTextValue: string = '' ;
   constructor(
     private editingProfileService: EditingProfileService,
     private fb: FormBuilder) {}
@@ -57,15 +57,20 @@ export class EditProfileFormComponent implements OnInit {
     if (this.fieldName === this.FieldName.Children) {
       const value =  (this.fieldValue as boolean) === false
         ?  this.childrenOptions[0]
-        : (this.fieldValue as boolean) === false
+        : (this.fieldValue as boolean) === true
         ? this.childrenOptions[1]: null;
       this.selectedChildrenOption = value;
     }
 
-    if( this.fieldName ===  this.FieldName.UserHeight) {
+    if(this.fieldName ===  this.FieldName.UserHeight) {
        this.heightOptions = Array.from({ length: 101 }, (_, i) => 120 + i);
        const value = this.fieldValue as number;
        this.selectedHeight = value ?? 170;
+    }
+
+    if(this.fieldName === this.FieldName.Education){
+      const value = this.fieldValue as string;
+      this.educationTextValue = value;
     }
   }
 
@@ -77,16 +82,24 @@ export class EditProfileFormComponent implements OnInit {
     const value = event.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
   }
+  onEducationInput(event: any): void{
+    const value = event.detail.value.trim();
+    if (value.length) {
+      this.educationTextValue = value;
+      this.editProfileFormFields.get(this.fieldName)?.setValue(value);
+    }else {
+      this.editProfileFormFields.get(this.fieldName)?.setValue(null);
+    }
+
+  }
   onSubmit(): void{
     const value = this.editProfileFormFields.get(this.fieldName)?.value;
     if(this.fieldName === FieldName.Bio) {
-      this.editingProfileService
-      .updateBio(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
+      this.editingProfileService.updateBio(value).subscribe();
     }
 
     if(this.fieldName === FieldName.Gender) {
-      this.editingProfileService
-      .updateGender(this.editProfileFormFields.get(this.fieldName)?.value).subscribe();
+      this.editingProfileService.updateGender(value).subscribe();
     }
 
     if (this.fieldName === FieldName.City) {
@@ -97,6 +110,14 @@ export class EditProfileFormComponent implements OnInit {
 
     if(this.fieldName === FieldName.SexOrientation) {
       this.editingProfileService.updateSexOrientation(value).subscribe();
+    }
+
+    if (this.fieldName === FieldName.Children) {
+      this.editingProfileService.updateChildrenStatus(value).subscribe();
+    }
+
+    if (this.fieldName === FieldName.Education) {
+      this.editingProfileService.updateEducation(value).subscribe();
     }
     this.editingProfileService.onDismissEditFormModal();
   }
@@ -112,7 +133,7 @@ export class EditProfileFormComponent implements OnInit {
 
     if (this.fieldName) {
       this.editProfileFormFields = this.fb.group({
-        [this.fieldName]: [this.fieldValue || '', Validators.required],
+        [this.fieldName]: [null, Validators.required],
       });
     }
   }
@@ -120,9 +141,11 @@ export class EditProfileFormComponent implements OnInit {
   onSingleCheckboxSelect(value: string): void {
     this.editProfileFormFields.get(FieldName.Gender)?.setValue(value);
   }
+
   get genderControl(): FormControl {
     return this.editProfileFormFields.get(FieldName.Gender) as FormControl;
   }
+
   onSave(): void{
     this.editingProfileService.onDismissEditFormModal();
   }
@@ -138,7 +161,7 @@ export class EditProfileFormComponent implements OnInit {
   }
   onSelectChildrenOption(event : any): void{
     const value = event.detail.value;
-    this.editProfileFormFields.get(this.fieldName)?.setValue(value);
+    this.editProfileFormFields.get(this.fieldName)?.setValue(value === this.childrenOptions[1]);
   }
   onSelectLocation(event: {city: string, country: string}): void {
     this.selectedLocation = `${event.city}, ${event.country}`
