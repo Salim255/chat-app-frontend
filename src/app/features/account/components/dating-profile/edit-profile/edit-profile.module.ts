@@ -11,8 +11,17 @@ import { EditProfileFormComponent } from "./edit-profile-form/edit-profile-form.
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EditChildrenComponent } from "./edit-children/edit-children.component";
 import { EditSexComponent } from "./edit-sex-orientation/edit-sex.component";
+import { EditHeightComponent } from "./edit-height/edit-height.component";
+import { EditEducationComponent } from "./edit-education/edit-education.component";
 
 @NgModule({
+  imports: [
+    CommonModule,
+    IonicModule,
+    SharedModule,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
   declarations: [
     MediaComponent,
     EditProfileComponent,
@@ -21,15 +30,10 @@ import { EditSexComponent } from "./edit-sex-orientation/edit-sex.component";
     EditHomeTownComponent,
     EditProfileFormComponent,
     EditChildrenComponent,
-    EditSexComponent
+    EditSexComponent,
+    EditHeightComponent,
+    EditEducationComponent
    ],
-  imports: [
-    CommonModule,
-    IonicModule,
-    SharedModule,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
   exports: [
     MediaComponent,
     EditProfileComponent,
@@ -39,6 +43,8 @@ import { EditSexComponent } from "./edit-sex-orientation/edit-sex.component";
     EditProfileFormComponent,
     EditChildrenComponent,
     EditSexComponent,
+    EditHeightComponent,
+    EditEducationComponent,
   ],
 })
 

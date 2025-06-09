@@ -1,8 +1,8 @@
 <ion-item-group>
   <ion-item-divider>
-    <ion-label>Bio</ion-label>
+    <ion-label>Your heigh</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button (click)="onEditFormModal()">
-    <ion-label> {{ bio === '' ? '-' : bio }}</ion-label>
+    <ion-label> {{ userHeight ?? '-' }}</ion-label>
   </ion-item>
 </ion-item-group>

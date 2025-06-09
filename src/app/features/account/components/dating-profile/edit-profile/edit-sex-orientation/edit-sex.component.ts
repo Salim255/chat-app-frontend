@@ -14,6 +14,6 @@ export class EditSexComponent {
   constructor(private editingProfileService: EditingProfileService){}
 
   onEditFormModal(): void {
-      this.editingProfileService.onEditFormModal(FieldName.Children, this.sexOrientation);
+      this.editingProfileService.onEditFormModal(FieldName.SexOrientation, this.sexOrientation);
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { Gender, InterestedIn } from "src/app/features/auth/components/create-profile/create-profile.component";
 import { EditingProfileService, FieldName } from "src/app/features/account/services/editing-profile.service";
 import { GeolocationService } from "src/app/core/services/geolocation/geolocation.service";
+import { SexOrientation } from "../edit-children/edit-children.component";
 
 export  type EditProfilePayload = {
   name: string;
@@ -34,6 +35,12 @@ export class EditProfileFormComponent implements OnInit {
     female: false,
     other: false,
   };
+  selectedSexOrientation: SexOrientation | null = null;
+  readonly sexOrientationList =  [ 'straight','heterosexual','gay',
+    'lesbian','bisexual','asexual',
+    'pansexual','queer','questioning',
+    'demisexual',
+  ]
 
   editProfileFormFields!: FormGroup;
   constructor(
@@ -76,6 +83,7 @@ export class EditProfileFormComponent implements OnInit {
       });
       return;
     }
+
     if (this.fieldName) {
       this.editProfileFormFields = this.fb.group({
         [this.fieldName]: [this.fieldValue || '', Validators.required],
@@ -97,6 +105,13 @@ export class EditProfileFormComponent implements OnInit {
     this.editingProfileService.onDismissEditFormModal();
   }
 
+  onSexOrientation(event: any): void{
+   // console.log(event.detail.value)
+   console.log(this.editProfileFormFields.get(this.fieldName)?.value)
+    const value = event.detail.value;
+    this.editProfileFormFields.get(this.fieldName)?.setValue(value);
+
+  }
   onSelectLocation(event: {city: string, country: string}): void {
     this.selectedLocation = `${event.city}, ${event.country}`
     // Update form controls

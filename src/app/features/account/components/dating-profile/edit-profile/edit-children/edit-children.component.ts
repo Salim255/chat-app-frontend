@@ -26,6 +26,6 @@ export class EditChildrenComponent {
   constructor(private editingProfileService: EditingProfileService){}
 
   onEditFormModal(): void {
-      this.editingProfileService.onEditFormModal(FieldName.Children, this.childrenStatus);
+    this.editingProfileService.onEditFormModal(FieldName.Children, this.childrenStatus);
   }
 }

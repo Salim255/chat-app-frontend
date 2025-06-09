@@ -34,18 +34,8 @@ ion-header {
     }
   }
 
-  &__distance {
-     ion-item-divider {
-      padding: 0 .5rem;
-      --inner-padding-end: 0;
-    }
-
-    ion-label {
-      font-size: 1rem;
-      font-weight: 300;
-    }
-
-    ion-range {
+  &__age, &__distance {
+     ion-range {
       --bar-background: var(--ion-color-grey-3);
       --bar-background-active: var(--ion-color-primary);
       --bar-height: .2rem;
@@ -59,12 +49,23 @@ ion-header {
       opacity: .8;
     }
   }
+  &__distance {
+     ion-item-divider {
+      padding: 0 .5rem;
+      --inner-padding-end: 0;
+    }
+
+    ion-label {
+      font-size: 1rem;
+      font-weight: 300;
+    }
+  }
 
   &__interested {
     ion-col {
       ion-item {
         ion-checkbox {
-          --border-radius: 6px;
+          --border-radius: 4px;
           font-size: 1rem;
           font-weight: 300;
         }

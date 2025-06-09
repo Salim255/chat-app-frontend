@@ -5,7 +5,11 @@
     </ion-buttons>
     <ion-title> {{ fieldName === FieldName.City ? 'Travel to': fieldName }} </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSubmit()">Save</ion-button>
+      <ion-button
+      (click)="onSubmit()"
+      [disabled]="editProfileFormFields.invalid">
+        Save
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -80,6 +84,52 @@
           </ion-item>
         </ion-col>
       </ion-row>
+
+       <ion-row *ngIf="fieldName === FieldName.SexOrientation" class="edit-profile__sex-orientation" >
+        <ion-col>
+           <ion-radio-group
+           [value]="selectedSexOrientation"
+           (ionChange)="onSexOrientation($event)">
+            @for(item of sexOrientationList; track item) {
+             <ion-item>
+                <ion-radio mode="md" [value]="item" justify="space-between"  aria-label="Custom" > {{ item }}</ion-radio>
+             </ion-item>
+            }
+          </ion-radio-group>
+        </ion-col>
+      </ion-row>
+
+       <ion-row *ngIf="fieldName === FieldName.Children" >
+        <ion-col>
+           <ion-radio-group value="space-between">
+            <ion-radio value="space-between" justify="space-between"aria-label="Custom checkbox">I don't have children</ion-radio>
+            <ion-radio value="space-between" justify="space-between" aria-label="Custom checkbox that is checked"> I have children</ion-radio>
+          </ion-radio-group>
+        </ion-col>
+      </ion-row>
+
+       <ion-row *ngIf="fieldName === FieldName.Education" class="edit-profile__bio" >
+          <ion-col>
+              <ion-item lines="none">
+                <ion-input
+                  [formControlName]="FieldName.Education"
+                  placeholder="About your school"
+                 autoGrow="true">
+                </ion-input>
+              </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="fieldName === FieldName.UserHeight" class="edit-profile__bio" >
+          <ion-col>
+              <ion-item lines="none">
+                <ion-input
+                  [formControlName]="FieldName.UserHeight"
+                  placeholder="About your school"
+                  autoGrow="true">
+                </ion-input>
+              </ion-item>
+          </ion-col>
+        </ion-row>
     </ion-grid>
   </form>
 </ion-content>

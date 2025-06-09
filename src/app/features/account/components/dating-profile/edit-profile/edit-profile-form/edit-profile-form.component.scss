@@ -15,8 +15,17 @@ ion-header {
   }
 }
 .edit-profile {
- // margin: .5rem;
+  &__sex-orientation{
+    ion-radio {
+        --border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 400;
+        text-transform: capitalize;
+        color: var(--ion-color-grey-7);
+    }
+  }
   &__bio{
+    margin: .5rem;
     ion-item {
       --background: transparent;
       --padding-start: 0;

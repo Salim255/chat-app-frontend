@@ -3,6 +3,6 @@
     <ion-label>Sex orientation</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button (click)="onEditFormModal()">
-    <ion-label> {{ sexOrientation }}</ion-label>
+    <ion-label> {{ sexOrientation ?? '-' }}</ion-label>
   </ion-item>
 </ion-item-group>

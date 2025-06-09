@@ -14,7 +14,10 @@ export enum FieldName {
   Country = 'country',
   Gender = 'gender',
   Bio = 'bio',
-  Children = 'children'
+  Children = 'children',
+  Education = 'education',
+  UserHeight = 'user-height',
+  SexOrientation = 'sex-orientation',
 }
 
 @Injectable({providedIn: 'root'})
@@ -34,7 +37,7 @@ export class EditingProfileService {
     await this.modalController.dismiss();
   }
 
-  async onEditFormModal(fieldName: FieldName, value: string | boolean | SexOrientation | null): Promise<void> {
+  async onEditFormModal(fieldName: FieldName, value: string | boolean | SexOrientation | number |  null): Promise<void> {
     const modal = await this.modalController.create({
       component: EditProfileFormComponent,componentProps: {
         fieldName: fieldName,

@@ -11,9 +11,20 @@ import { LookingFor } from "src/app/features/profile-viewer/components/looking-f
 
 export class LookingForPrefComponent {
   @Input() lookingFor: LookingFor[] = [];
+  readonly lookingForLabels: Record<string, string> = {
+    chat: 'Chatting',
+    casual: 'Casual',
+    friendship: 'Friends',
+    long_term: 'Long‑term'
+  };
   constructor(private preferencesService: PreferencesService){}
+
 
   onEditInterest(): void{
     this.preferencesService.presentPrefForm(PrefFieldName.LookingFor, this.lookingFor)
+  }
+
+  displayItems(){
+
   }
 }

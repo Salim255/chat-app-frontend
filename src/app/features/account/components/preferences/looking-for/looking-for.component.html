@@ -2,7 +2,9 @@
   <ion-item-divider>
     <ion-label>I'm Looking for</ion-label>
   </ion-item-divider>
-  <ion-item lines="none" button>
-    <ion-text *ngFor="let item of lookingFor"> {{ item }},</ion-text>
+  <ion-item lines="none" button >
+    <ion-text *ngFor="let item of lookingFor; let isLast = last">
+      {{ lookingForLabels[item] }}<ng-container *ngIf="!isLast">, </ng-container>
+    </ion-text>
   </ion-item>
 </ion-item-group>
