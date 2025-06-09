@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
 
 export type FetchAccountDto = {
   status: string,
@@ -55,6 +56,12 @@ export type DistanceRange = {
   profileId: number;
   distanceRange: number;
 }
+
+export type SexOrientationPayload = {
+  profileId: number;
+  sexOrientation: SexOrientation;
+}
+
 @Injectable({providedIn: 'root'})
 
 export class AccountHttpService {
@@ -94,4 +101,9 @@ export class AccountHttpService {
   updateLookingForOption( options: LookingForPayload ): Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-looking-for`, options)
   }
+
+  updateSexOrientation( options: SexOrientationPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-sex-orientation`, options)
+  }
+
 }

@@ -55,7 +55,7 @@
               <ion-checkbox
                   label-placement="start"
                   [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'other'"
-                  (ionChange)="onSingleCheckboxSelect('other')">other</ion-checkbox>
+                  (ionChange)="onSingleCheckboxSelect('other')">both</ion-checkbox>
             </ion-item>
           </ion-col>
        </ion-row>
@@ -72,19 +72,6 @@
         </ion-col>
       </ion-row>
 
-     <ion-row *ngIf="fieldName === FieldName.Country" >
-        <ion-col>
-          <ion-item>
-            <ion-label position="floating"> country </ion-label>
-            <ion-input
-              [formControlName]="FieldName.Country"
-              type="text"
-              placeholder="Enter your country"
-            ></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-
        <ion-row *ngIf="fieldName === FieldName.SexOrientation" class="edit-profile__sex-orientation" >
         <ion-col>
            <ion-radio-group
@@ -92,42 +79,59 @@
            (ionChange)="onSexOrientation($event)">
             @for(item of sexOrientationList; track item) {
              <ion-item>
-                <ion-radio mode="md" [value]="item" justify="space-between"  aria-label="Custom" > {{ item }}</ion-radio>
+                <ion-radio
+                  mode="md" [value]="item"
+                  justify="space-between"
+                  aria-label="Custom" >
+                  {{ item }}
+                </ion-radio>
              </ion-item>
             }
           </ion-radio-group>
         </ion-col>
       </ion-row>
 
-       <ion-row *ngIf="fieldName === FieldName.Children" >
+       <ion-row *ngIf="fieldName === FieldName.Children" class="edit-profile__children" >
         <ion-col>
-           <ion-radio-group value="space-between">
-            <ion-radio value="space-between" justify="space-between"aria-label="Custom checkbox">I don't have children</ion-radio>
-            <ion-radio value="space-between" justify="space-between" aria-label="Custom checkbox that is checked"> I have children</ion-radio>
+           <ion-radio-group
+           (ionChange)="onSelectChildrenOption($event)"
+           [value]="selectedChildrenOption">
+            @for(item of childrenOptions; track item) {
+              <ion-item>
+                <ion-radio
+                  mode="md" [value]="item"
+                  justify="space-between" aria-label="Custom">
+                    {{item}}
+                </ion-radio>
+              </ion-item>
+            }
           </ion-radio-group>
         </ion-col>
       </ion-row>
 
-       <ion-row *ngIf="fieldName === FieldName.Education" class="edit-profile__bio" >
+       <ion-row *ngIf="fieldName === FieldName.Education" class="edit-profile__education" >
           <ion-col>
               <ion-item lines="none">
                 <ion-input
+                  []
                   [formControlName]="FieldName.Education"
-                  placeholder="About your school"
-                 autoGrow="true">
-                </ion-input>
-              </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row *ngIf="fieldName === FieldName.UserHeight" class="edit-profile__bio" >
-          <ion-col>
-              <ion-item lines="none">
-                <ion-input
-                  [formControlName]="FieldName.UserHeight"
                   placeholder="About your school"
                   autoGrow="true">
                 </ion-input>
               </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="fieldName === FieldName.UserHeight" class="edit-profile__height" >
+          <ion-col>
+            <ion-picker (ionChange)="onHeightPicker($event)">
+              <ion-picker-column [value]="selectedHeight">
+                <ion-picker-column-option value="" disabled="true">--</ion-picker-column-option>
+                  @for(item of heightOptions; track item) {
+                    <ion-picker-column-option [value]="item">{{item}}</ion-picker-column-option>
+                  }
+                <div slot="suffix">cm</div>
+              </ion-picker-column>
+            </ion-picker>
           </ion-col>
         </ion-row>
     </ion-grid>

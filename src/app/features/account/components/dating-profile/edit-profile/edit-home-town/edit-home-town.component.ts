@@ -14,6 +14,6 @@ export class EditHomeTownComponent {
   constructor(private editingProfileService: EditingProfileService) {}
   onEditHome(): void {
     //this.location.back()
-    this.editingProfileService.onEditFormModal(FieldName.City, 'France');
+    this.editingProfileService.onEditFormModal(FieldName.City, this.city);
   }
 }

@@ -15,13 +15,19 @@ ion-header {
   }
 }
 .edit-profile {
+  &__children,
   &__sex-orientation{
     ion-radio {
-        --border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 400;
-        text-transform: capitalize;
-        color: var(--ion-color-grey-7);
+      --border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--ion-color-grey-7);
+    }
+  }
+
+   &__sex-orientation{
+    ion-radio {
+      text-transform: capitalize;
     }
   }
   &__bio{

@@ -3,7 +3,7 @@ import { ModalController } from "@ionic/angular";
 import { DatingProfileComponent } from "../components/dating-profile/dating-profile.component";
 import { EditProfileFormComponent } from "../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component";
 import { catchError, EMPTY, Observable, tap } from "rxjs";
-import { FetchAccountDto, UpdateBioPayLoad, UpdateGenderPayLoad, UpdateHomePayLoad } from "./account-http.service";
+import { FetchAccountDto, SexOrientationPayload, UpdateBioPayLoad, UpdateGenderPayLoad, UpdateHomePayLoad } from "./account-http.service";
 import { AccountService } from "./account.service";
 import { AccountHttpService } from "./account-http.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
@@ -37,7 +37,10 @@ export class EditingProfileService {
     await this.modalController.dismiss();
   }
 
-  async onEditFormModal(fieldName: FieldName, value: string | boolean | SexOrientation | number |  null): Promise<void> {
+  async onEditFormModal(
+    fieldName: FieldName,
+    value: string | boolean | SexOrientation | number |  null
+  ): Promise<void> {
     const modal = await this.modalController.create({
       component: EditProfileFormComponent,componentProps: {
         fieldName: fieldName,
@@ -46,6 +49,7 @@ export class EditingProfileService {
     });
     await modal.present();
   }
+
   async onDismissEditFormModal(): Promise<void> {
     await this.modalController.dismiss();
   }
@@ -89,6 +93,22 @@ export class EditingProfileService {
 
     const payLoad: UpdateHomePayLoad = { ...home, profileId};
     return this.accountHttpService.updateHome(payLoad).pipe(
+      tap((result) => {
+        if(!result.data.profile) return;
+        this.accountService.setAccountWithUpdate(result.data.profile);
+      }),
+      catchError(error => {
+      return EMPTY;
+      })
+    )
+  }
+
+  updateSexOrientation(sexOrientation: SexOrientation):Observable<FetchAccountDto | null>{
+    const profileId = this.accountService.getAccountId;
+    if (!profileId) return EMPTY;
+
+    const payLoad: SexOrientationPayload = { sexOrientation, profileId};
+    return this.accountHttpService.updateSexOrientation(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
