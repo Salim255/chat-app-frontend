@@ -2,17 +2,19 @@ import { Injectable } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { DatingProfileComponent } from "../components/dating-profile/dating-profile.component";
 import { EditProfileFormComponent } from "../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component";
-import { catchError, EMPTY, Observable, of, tap } from "rxjs";
+import { catchError, EMPTY, Observable, tap } from "rxjs";
 import { FetchAccountDto, UpdateBioPayLoad, UpdateGenderPayLoad, UpdateHomePayLoad } from "./account-http.service";
 import { AccountService } from "./account.service";
 import { AccountHttpService } from "./account-http.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
 
 export enum FieldName {
   City ='city',
   Country = 'country',
   Gender = 'gender',
   Bio = 'bio',
+  Children = 'children'
 }
 
 @Injectable({providedIn: 'root'})
@@ -32,7 +34,7 @@ export class EditingProfileService {
     await this.modalController.dismiss();
   }
 
-  async onEditFormModal(fieldName: FieldName, value: string): Promise<void> {
+  async onEditFormModal(fieldName: FieldName, value: string | boolean | SexOrientation | null): Promise<void> {
     const modal = await this.modalController.create({
       component: EditProfileFormComponent,componentProps: {
         fieldName: fieldName,

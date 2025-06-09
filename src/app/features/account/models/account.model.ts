@@ -1,4 +1,5 @@
 import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
 
 export class Account {
   constructor(
@@ -20,6 +21,7 @@ export class Account {
     public height: number,
     public children: boolean,
     public looking_for: LookingFor [],
+    public sexual_orientation: SexOrientation,
     public max_distance_km: number,
     public photos: string[],
     public created_at: Date,

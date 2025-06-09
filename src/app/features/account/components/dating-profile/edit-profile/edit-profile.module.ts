@@ -9,6 +9,8 @@ import { EditGenderComponent } from "./edit-gender/edit-gender.component";
 import { EditHomeTownComponent } from "./edit-home-town/edit-home-town.component";
 import { EditProfileFormComponent } from "./edit-profile-form/edit-profile-form.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { EditChildrenComponent } from "./edit-children/edit-children.component";
+import { EditSexComponent } from "./edit-sex-orientation/edit-sex.component";
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     EditBioComponent,
     EditGenderComponent,
     EditHomeTownComponent,
-    EditProfileFormComponent
+    EditProfileFormComponent,
+    EditChildrenComponent,
+    EditSexComponent
    ],
   imports: [
     CommonModule,
@@ -32,7 +36,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     EditBioComponent,
     EditGenderComponent,
     EditHomeTownComponent,
-    EditProfileFormComponent ],
+    EditProfileFormComponent,
+    EditChildrenComponent,
+    EditSexComponent,
+  ],
 })
 
 export class EditProfileModule {}

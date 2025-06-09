@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PrefFieldName } from "../../../services/preferences.service";
 import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
-import { AccountService } from "../../../services/account.service";
-
 
 @Component({
   selector: 'app-pref-form',
@@ -15,7 +13,7 @@ import { AccountService } from "../../../services/account.service";
 
 export class PrefFormComponent implements OnInit{
   @ViewChild('ionRange', { read: ElementRef }) ionRangeRef!: ElementRef;
-  @Input() fieldValue: any;
+  @Input() fieldValue!: { minAge: number, maxAge: number } | string[] | number;
   @Input() fieldName: string = '';
 
   FieldName = PrefFieldName;
@@ -37,8 +35,19 @@ export class PrefFormComponent implements OnInit{
     if(this.fieldName) {
       this.buildForm();
     }
-    if (this.fieldName === this.FieldName.LookingFor) {
-      this.selectedLookingFor = [...this.fieldValue];
+    if(this.fieldName === this.FieldName.LookingFor) {
+      this.selectedLookingFor = [...(this.fieldValue as string[])];
+    }
+    if(this.fieldName === this.FieldName.Distance) {
+      this.distanceRange = this.fieldValue as number;
+    }
+
+    if(this.fieldName === this.FieldName.Age) {
+      const fieldVal = this.fieldValue as { minAge: number, maxAge: number };
+      this.ageRange = {
+        lower: fieldVal.minAge,
+        upper: fieldVal.maxAge
+      };
     }
   }
 
@@ -58,13 +67,13 @@ export class PrefFormComponent implements OnInit{
       return;
 
       case this.FieldName.Distance:
+        console.log(value)
         this.preferencesService.updateDistanceRage(value).subscribe(result => {
           console.log(result)
         })
         return;
 
       case this.FieldName.LookingFor:
-        console.log(value);
          this.preferencesService.updateLookingForOptions(value).subscribe()
         return;
       default:

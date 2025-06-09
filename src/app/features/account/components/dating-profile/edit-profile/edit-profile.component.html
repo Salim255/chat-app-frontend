@@ -1,12 +1,12 @@
 <ion-grid class="edit-profile">
   <ion-row class="edit-profile__media">
     <ion-col>
-       <app-edit-media [photos]="account?.photos ?? []"></app-edit-media>
+       <app-edit-media [photos]="account.photos"></app-edit-media>
     </ion-col>
   </ion-row>
   <ion-row class="edit-profile__bio">
     <ion-col>
-      <app-edit-bio [bio]="account?.bio ?? ''"></app-edit-bio>
+      <app-edit-bio [bio]="account.bio"></app-edit-bio>
     </ion-col>
   </ion-row>
   <ion-row class="edit-profile__gender">
@@ -15,6 +15,26 @@
     </ion-col>
   </ion-row>
    <ion-row class="edit-profile__home">
+    <ion-col>
+      <app-edit-home-town [city]="account.city" [country]="account.country" ></app-edit-home-town>
+    </ion-col>
+  </ion-row>
+    <ion-row class="edit-profile__orientation">
+    <ion-col>
+      <app-edit-sex-orientation [sexOrientation]="account.sexual_orientation"></app-edit-sex-orientation>
+    </ion-col>
+  </ion-row>
+  <ion-row class="edit-profile__children">
+    <ion-col>
+     <app-edit-children [childrenStatus]="account.children"></app-edit-children>
+    </ion-col>
+  </ion-row>
+  <ion-row class="edit-profile__education">
+    <ion-col>
+      <app-edit-home-town [city]="account.city" [country]="account.country" ></app-edit-home-town>
+    </ion-col>
+  </ion-row>
+  <ion-row class="edit-profile__height">
     <ion-col>
       <app-edit-home-town [city]="account.city" [country]="account.country" ></app-edit-home-town>
     </ion-col>
