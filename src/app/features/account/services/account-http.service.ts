@@ -4,7 +4,7 @@ import { Account } from "../models/account.model";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
-import { Gender } from "../../auth/components/create-profile/create-profile.component";
+import { Gender, InterestedIn } from "../../auth/components/create-profile/create-profile.component";
 import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
 
 export type FetchAccountDto = {
@@ -45,6 +45,10 @@ export type AgeRange = {
   maxAge: number;
 }
 
+export type InterestedInPayload = {
+  profileId: number;
+  interestedIn: InterestedIn;
+}
 export type LookingForOptions = 'chat' | 'friendship'| 'casual'| 'long_term';
 
 export type LookingForPayload = {
@@ -118,6 +122,10 @@ export class AccountHttpService {
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-looking-for`, options)
   }
 
+  updateInterestedInOption( payload: InterestedInPayload ): Observable<FetchAccountDto>{
+    console.log(payload, "Hello from HTTP");
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-interests`, payload)
+  }
   updateSexOrientation( payload: SexOrientationPayload ): Observable<FetchAccountDto>{
     return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-sex-orientation`, payload)
   }

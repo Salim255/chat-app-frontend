@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { PrefFieldName } from "../../../services/preferences.service";
 import { PreferencesService } from "../../../services/preferences.service";
 import { RangeCustomEvent } from "@ionic/angular";
+import { InterestedIn } from "src/app/features/auth/components/create-profile/create-profile.component";
 
 @Component({
   selector: 'app-pref-form',
@@ -13,7 +14,7 @@ import { RangeCustomEvent } from "@ionic/angular";
 
 export class PrefFormComponent implements OnInit{
   @ViewChild('ionRange', { read: ElementRef }) ionRangeRef!: ElementRef;
-  @Input() fieldValue!: { minAge: number, maxAge: number } | string[] | number;
+  @Input() fieldValue!: { minAge: number, maxAge: number } | string[] | number | InterestedIn;
   @Input() fieldName: string = '';
 
   FieldName = PrefFieldName;
@@ -25,6 +26,11 @@ export class PrefFormComponent implements OnInit{
   maxAge = 100;
 
   distanceRange: number = 1;
+
+  readonly interestInOptions: InterestedIn[] =
+     [InterestedIn.Women,InterestedIn.Men,InterestedIn.Both];
+
+  selectedInterestInOption: InterestedIn | null = null;
 
   constructor(
     private preferencesService: PreferencesService,
@@ -49,6 +55,11 @@ export class PrefFormComponent implements OnInit{
         upper: fieldVal.maxAge
       };
     }
+
+    if(this.fieldName === this.FieldName.InterestedIn) {
+      const fieldVal = this.fieldValue as InterestedIn;
+      this.selectedInterestInOption = fieldVal
+    }
   }
 
   onSubmit(): void{
@@ -67,7 +78,7 @@ export class PrefFormComponent implements OnInit{
       return;
 
       case this.FieldName.Distance:
-        console.log(value)
+
         this.preferencesService.updateDistanceRage(value).subscribe(result => {
           console.log(result)
         })
@@ -76,6 +87,11 @@ export class PrefFormComponent implements OnInit{
       case this.FieldName.LookingFor:
          this.preferencesService.updateLookingForOptions(value).subscribe()
         return;
+
+      case this.FieldName.InterestedIn:
+        this.preferencesService.updateInterestedInOption(value).subscribe();
+        return;
+
       default:
         return;
     }
@@ -93,6 +109,11 @@ export class PrefFormComponent implements OnInit{
     }
   }
 
+  onSelectInterestIn(event: any): void{
+    const value = event.detail.value;
+    this.selectedInterestInOption = value;
+    this.editPrefFormFields.get(this.fieldName)?.setValue(value);
+  }
 
   onRangeInput(event: any): void {
     const lower = event.detail.value.lower;

@@ -56,7 +56,7 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="fieldName === FieldName.LookingFor" class="edit-preference__interested" >
+      <ion-row *ngIf="fieldName === FieldName.LookingFor" class="edit-preference__looking-for" >
         <ion-col size="12" >
           <ion-item lines="none">
             <ion-checkbox label-placement="start"
@@ -92,6 +92,24 @@
               </ion-checkbox>
             </ion-item>
           </ion-col>
+      </ion-row>
+
+      <ion-row class="edit-preference__interested-in" *ngIf="fieldName === FieldName.InterestedIn">
+        <ion-col>
+          <ion-radio-group
+           (ionChange)="onSelectInterestIn($event)"
+           [value]="selectedInterestInOption">
+            @for(item of interestInOptions; track item) {
+              <ion-item lines="none">
+                <ion-radio
+                  mode="md" [value]="item"
+                  justify="space-between" aria-label="Custom">
+                    {{item}}
+                </ion-radio>
+              </ion-item>
+            }
+          </ion-radio-group>
+        </ion-col>
       </ion-row>
     </ion-grid>
   </form>

@@ -64,13 +64,25 @@ ion-header {
     }
   }
 
-  &__interested {
+  &__looking-for {
     ion-col {
       ion-item {
         ion-checkbox {
           --border-radius: 4px;
           --size: 1.2rem;
           color: var(--ion-color-grey-8);
+        }
+      }
+    }
+  }
+
+  &__interested-in {
+    ion-col {
+      ion-item {
+        ion-radio {
+          --border-radius: 4px;
+          color: var(--ion-color-grey-8);
+          text-transform: capitalize;
         }
       }
     }
