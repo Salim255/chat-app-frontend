@@ -53,7 +53,10 @@ export class AccountService {
 
   get getHostCoordinates():Coordinates| null {
     if (!this.account.value?.latitude) return null
-    return {latitude: this.account.value?.latitude, longitude:  this.account.value?.longitude}
+    return {
+      latitude: this.account.value?.latitude,
+      longitude:  this.account.value?.longitude
+    }
   }
 
   get getAccountId(): number| null {

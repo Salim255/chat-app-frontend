@@ -29,11 +29,7 @@ export class EditProfileFormComponent implements OnInit {
   locationSuggestions: string[] = [];
   selectedLocation: string = '';
   FieldName = FieldName;
-  gender = {
-    male: false,
-    female: false,
-    other: false,
-  };
+
   selectedSexOrientation: SexOrientation | null = null;
   readonly sexOrientationList =  [ 'straight','heterosexual','gay',
     'lesbian','bisexual','asexual',
@@ -135,6 +131,10 @@ export class EditProfileFormComponent implements OnInit {
       const city = this.editProfileFormFields.get(this.FieldName.City)?.value;
       const country = this.editProfileFormFields.get(this.FieldName.Country)?.value;
       this.editingProfileService.updateHome({city, country}).subscribe();
+      const latitude = this.editProfileFormFields.get('latitude')?.value;
+      const longitude = this.editProfileFormFields.get('longitude')?.value;
+      console.log({ latitude, longitude });
+      this.editingProfileService.updateHomeByCoordinate({ latitude, longitude }).subscribe();
     }
 
     if(this.fieldName === FieldName.SexOrientation) {
@@ -159,8 +159,10 @@ export class EditProfileFormComponent implements OnInit {
    buildForm():void {
     if (this.fieldName === FieldName.City) {
         this.editProfileFormFields = this.fb.group({
-        [this.fieldName]: [this.fieldValue || '', Validators.required],
-        country: ['', Validators.required],
+        [this.fieldName]: [null, Validators.required],
+        country: [null, Validators.required],
+        latitude: [null, Validators.required],
+        longitude: [null, Validators.required],
       });
       return;
     }
@@ -193,16 +195,20 @@ export class EditProfileFormComponent implements OnInit {
     const value = event.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
   }
+
   onSelectChildrenOption(event : any): void{
     const value = event.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value === this.childrenOptions[1]);
   }
-  onSelectLocation(event: {city: string, country: string}): void {
-    this.selectedLocation = `${event.city}, ${event.country}`
+
+  onSelectLocation(event: {city: string, country: string, latitude: number, longitude: number}): void {
+    this.selectedLocation = `${event.city}, ${event.country}`;
+    console.log(event.latitude, event.longitude);
     // Update form controls
     this.editProfileFormFields.get(FieldName.City)?.setValue(event.city);
     this.editProfileFormFields.get('country')?.setValue(event.country);
-    console.log(this.editProfileFormFields)
+    this.editProfileFormFields.get('latitude')?.setValue(event.latitude);
+    this.editProfileFormFields.get('longitude')?.setValue(event.longitude);
     // Update search bar input as well
     this.editProfileFormFields.get(FieldName.City)?.markAsTouched();
   }

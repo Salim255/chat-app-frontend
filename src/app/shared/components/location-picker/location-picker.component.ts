@@ -8,7 +8,7 @@ import { GoogleMapsLoaderService } from '../../../core/services/geolocation/goog
 })
 export class LocationPickerComponent implements AfterViewInit {
   @ViewChild('mapElement', { static: false }) mapElementRef!: ElementRef;
-  @Output() locationSelected = new EventEmitter<{city : string, country: string }>();
+  @Output() locationSelected = new EventEmitter<{city : string, country: string, longitude: number, latitude: number }>();
 
   map!: google.maps.Map;
   marker!: google.maps.Marker;
@@ -49,11 +49,11 @@ export class LocationPickerComponent implements AfterViewInit {
     this.map.addListener('click', async (event: google.maps.MapMouseEvent) => {
       const lat = event.latLng?.lat();
       const lng = event.latLng?.lng();
-
+      console.log(lat, lng)
       if (lat !== undefined && lng !== undefined) {
         this.setMarker(lat, lng);
         const result =  await this.mapsLoader.getCityCountryFromLatLng(lat, lng);
-        if (result) this.locationSelected.emit(result);
+        if (result) this.locationSelected.emit({...result, longitude: lng, latitude: lat});
       }
     });
   }

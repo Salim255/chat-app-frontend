@@ -7,6 +7,7 @@ import { LookingForPrefComponent } from "./looking-for/looking-for.component";
 import { PrefFormComponent } from "./pref-form/pref-form.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { InterestedInComponent } from "./interested-in/interested-in.component";
 
 @NgModule({
   imports:[
@@ -19,7 +20,8 @@ import { CommonModule } from "@angular/common";
     PreferencesComponent,
     AgeRangeRefComponent,
     LookingForPrefComponent,
-    PrefFormComponent
+    PrefFormComponent,
+    InterestedInComponent
   ],
   exports: [PreferencesComponent]
 })

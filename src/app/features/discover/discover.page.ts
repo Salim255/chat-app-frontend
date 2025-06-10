@@ -205,6 +205,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.potentialMatchesSource =
       this.discoverService.getPotentialMatchesArray
       .subscribe((profiles) => {
+        console.log(profiles);
         this.potentialMatches.set([...profiles]);
       });
   }
@@ -214,7 +215,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.potentialMatchesSource?.unsubscribe();
     this.profileToRemoveSubscription?.unsubscribe();
     this.discoverProfileToggleSubscription?.unsubscribe();
-     this.profileActionSubscription?.unsubscribe();
+    this.profileActionSubscription?.unsubscribe();
     this.hostProfileSubscription?.unsubscribe();
     this.profileActionSubscription?.unsubscribe();
   }

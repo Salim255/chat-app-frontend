@@ -19,12 +19,7 @@ export class LookingForPrefComponent {
   };
   constructor(private preferencesService: PreferencesService){}
 
-
-  onEditInterest(): void{
+  onEditLookingFor(): void{
     this.preferencesService.presentPrefForm(PrefFieldName.LookingFor, this.lookingFor)
-  }
-
-  displayItems(){
-
   }
 }

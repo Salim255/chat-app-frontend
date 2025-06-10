@@ -11,7 +11,6 @@ export class CompleteProfileService {
     return this.completeProfileHttpService.postProfile(profile);
   }
 
-
   dateFormatValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;

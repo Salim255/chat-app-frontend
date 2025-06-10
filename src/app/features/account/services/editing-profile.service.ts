@@ -3,7 +3,7 @@ import { ModalController } from "@ionic/angular";
 import { DatingProfileComponent } from "../components/dating-profile/dating-profile.component";
 import { EditProfileFormComponent } from "../components/dating-profile/edit-profile/edit-profile-form/edit-profile-form.component";
 import { catchError, EMPTY, Observable, tap } from "rxjs";
-import { ChildrenStatusPayload, FetchAccountDto, SexOrientationPayload, UpdateBioPayLoad, UpdateEducationPayload, UpdateGenderPayLoad, UpdateHeightPayload, UpdateHomePayLoad } from "./account-http.service";
+import { ChildrenStatusPayload, FetchAccountDto, SexOrientationPayload, UpdateBioPayLoad, UpdateCoordinatesPayload, UpdateEducationPayload, UpdateGenderPayLoad, UpdateHeightPayload, UpdateHomePayLoad } from "./account-http.service";
 import { AccountService } from "./account.service";
 import { AccountHttpService } from "./account-http.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
@@ -93,6 +93,23 @@ export class EditingProfileService {
 
     const payLoad: UpdateHomePayLoad = { ...home, profileId};
     return this.accountHttpService.updateHome(payLoad).pipe(
+      tap((result) => {
+        if(!result.data.profile) return;
+        this.accountService.setAccountWithUpdate(result.data.profile);
+      }),
+      catchError(error => {
+      return EMPTY;
+      })
+    )
+  }
+
+  updateHomeByCoordinate( coordinates: { latitude: number; longitude: number }):Observable<FetchAccountDto | null>{
+    const profileId = this.accountService.getAccountId;
+    if (!profileId) return EMPTY;
+
+    const payLoad: UpdateCoordinatesPayload = { ...coordinates, profileId};
+    console.log(payLoad);
+    return this.accountHttpService.updateAccountCoordinates(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);

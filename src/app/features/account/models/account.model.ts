@@ -1,3 +1,4 @@
+import { InterestedIn } from "../../auth/components/create-profile/create-profile.component";
 import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
 import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
 
@@ -11,7 +12,7 @@ export class Account {
     public gender:  string,
     public country: string,
     public city: string,
-    public interested_in: string,
+    public interested_in: InterestedIn,
     public latitude: number,
     public longitude: number,
     public bio: string,

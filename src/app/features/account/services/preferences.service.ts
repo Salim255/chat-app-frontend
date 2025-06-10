@@ -12,6 +12,7 @@ export enum PrefFieldName {
   Age ='age',
   Distance = 'distance',
   LookingFor = 'looking-for',
+  InterestedIn = 'interested-in'
 }
 
 @Injectable({providedIn: 'root'})

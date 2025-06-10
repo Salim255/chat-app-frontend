@@ -90,8 +90,8 @@ export class AccountHttpService {
     return this.http.get<FetchAccountDto>(`${this.baseUrl}`)
   }
 
-  patchAccountCoordinates(updatePayload: UpdateCoordinatesPayload ): Observable<UpdateCoordinatesResponse>{
-    return this.http.patch<UpdateCoordinatesResponse>(`${this.baseUrl}/update-location`, updatePayload)
+  updateAccountCoordinates(updatePayload: UpdateCoordinatesPayload ): Observable<FetchAccountDto>{
+    return this.http.patch<FetchAccountDto>(`${this.baseUrl}/update-location`, updatePayload)
   }
 
   updateBio(updatePayload: UpdateBioPayLoad): Observable<FetchAccountDto>{
