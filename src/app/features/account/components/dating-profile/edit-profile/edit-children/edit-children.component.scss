@@ -2,20 +2,19 @@ ion-item-group {
   ion-item-divider {
     padding-left: .3rem;
     padding-right: .3rem;
-    ion-label {
-      font-size: 1rem;
-      font-weight: 300;
+   ion-label {
+      margin-bottom: .5rem;
     }
   }
   ion-item{
     ion-label {
-      color: var(--ion-color-grey-7);
+      color: var(--ion-color-grey-8);
     }
   }
   ion-item {
     --background: transparent;
     --border-radius: 1rem;
-    border: 2px solid var(--ion-color-grey-3);
+    border: 1px solid var(--ion-color-grey-5);
     margin-left: 0.2rem;
     margin-right: 0.2rem;
     border-radius: .5rem;

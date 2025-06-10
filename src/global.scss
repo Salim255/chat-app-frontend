@@ -50,6 +50,7 @@ ion-item-divider {
 
 ion-content {
   --background: var(--ion-color-grey-1);
+  --background: var(--ion-background-color);
   padding-top: env(safe-area-inset-top);
 }
 

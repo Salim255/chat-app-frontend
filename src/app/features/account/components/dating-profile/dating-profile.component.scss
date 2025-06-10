@@ -1,7 +1,7 @@
 ion-header {
   ion-toolbar {
     ion-back-button {
-    color: var(--ion-color-grey-7);
+      color: var(--ion-color-grey-7);
     }
     ion-title {
       text-transform: capitalize;
@@ -27,7 +27,7 @@ ion-header {
       --border-radius: 0px;
       --indicator-box-shadow: none;
       --indicator-color: transparent;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--ion-color-grey-7);
     }
 

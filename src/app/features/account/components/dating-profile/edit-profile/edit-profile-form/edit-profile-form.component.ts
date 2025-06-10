@@ -42,12 +42,20 @@ export class EditProfileFormComponent implements OnInit {
   ]
 
   readonly childrenOptions = [`I don't have children`, 'I have children'];
+  readonly genderOptions = [
+      {title: 'female', value: 'woman'},
+      {title: 'male', value: 'man'},
+      {title: 'other', value: 'other'}
+    ]
+  genderValue: Gender | null = null;
   selectedChildrenOption: string | null = null;
 
   heightOptions: number[] = [];
   selectedHeight: number | null = null;
   editProfileFormFields!: FormGroup;
   educationTextValue: string = '' ;
+  bioTextValue: string = '';
+
   constructor(
     private editingProfileService: EditingProfileService,
     private fb: FormBuilder) {}
@@ -72,6 +80,16 @@ export class EditProfileFormComponent implements OnInit {
       const value = this.fieldValue as string;
       this.educationTextValue = value;
     }
+
+    if (this.fieldName === this.FieldName.Bio) {
+      const value  = this.fieldValue as string;
+      this.bioTextValue = value;
+    }
+
+    if(this.fieldName === this.FieldName.Gender) {
+      const value = this.fieldValue as Gender;
+      this.genderValue =  value;
+    }
   }
 
   customCounterFormatter(inputLength: number, maxLength: number): string {
@@ -82,12 +100,23 @@ export class EditProfileFormComponent implements OnInit {
     const value = event.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
   }
+
+  onBioInput(event: any): void{
+    const value = event.detail.value.trim();
+     if (value.length) {
+      this.bioTextValue = value;
+      this.editProfileFormFields.get(this.fieldName)?.setValue(value);
+    } else {
+      this.editProfileFormFields.get(this.fieldName)?.setValue(null);
+    }
+  }
+
   onEducationInput(event: any): void{
     const value = event.detail.value.trim();
     if (value.length) {
       this.educationTextValue = value;
       this.editProfileFormFields.get(this.fieldName)?.setValue(value);
-    }else {
+    } else {
       this.editProfileFormFields.get(this.fieldName)?.setValue(null);
     }
 
@@ -143,7 +172,8 @@ export class EditProfileFormComponent implements OnInit {
     }
   }
 
-  onSingleCheckboxSelect(value: string): void {
+  onSelectGender(value: string): void {
+    this.genderValue = value as Gender;
     this.editProfileFormFields.get(FieldName.Gender)?.setValue(value);
   }
 
@@ -162,7 +192,6 @@ export class EditProfileFormComponent implements OnInit {
   onSexOrientation(event: any): void{
     const value = event.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
-
   }
   onSelectChildrenOption(event : any): void{
     const value = event.detail.value;

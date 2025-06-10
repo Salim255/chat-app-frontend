@@ -21,42 +21,25 @@
           <ion-col>
               <ion-item lines="none">
                 <ion-textarea
-                  [formControlName]="FieldName.Bio"
+                  [value]="bioTextValue"
+                  (ionInput)="onBioInput($event)"
                   maxlength="250"
-                  placeholder="Tell us about yourself"
-                 autoGrow="true">
+                  placeholder="Tell them about yourself..."
+                  autoGrow="true">
                 </ion-textarea>
               </ion-item>
           </ion-col>
         </ion-row>
         <ion-row *ngIf="fieldName === FieldName.Gender" class="edit-profile__gender" >
-          <ion-col size="12">
-            <ion-item>
-              <ion-label class="ion-text-wrap">Select Gender</ion-label>
-            </ion-item>
-          </ion-col>
-
           <ion-col size="12" >
+            @for(item of genderOptions; track item ) {
             <ion-item lines="none">
               <ion-checkbox label-placement="start"
                 label-placement="start"
-                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'female'"
-                (ionChange)="onSingleCheckboxSelect('female')">woman</ion-checkbox>
+                [checked]="genderValue === item.title "
+                (ionChange)="onSelectGender(item.title)"> {{ item.value }}</ion-checkbox>
             </ion-item>
-
-            <ion-item lines="none">
-              <ion-checkbox
-                label-placement="start"
-                [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'male'"
-                (ionChange)="onSingleCheckboxSelect('male')">man</ion-checkbox>
-            </ion-item>
-
-            <ion-item lines="none">
-              <ion-checkbox
-                  label-placement="start"
-                  [checked]="editProfileFormFields.get(FieldName.Gender)?.value === 'other'"
-                  (ionChange)="onSingleCheckboxSelect('other')">both</ion-checkbox>
-            </ion-item>
+            }
           </ion-col>
        </ion-row>
 
@@ -78,7 +61,7 @@
            [value]="selectedSexOrientation"
            (ionChange)="onSexOrientation($event)">
             @for(item of sexOrientationList; track item) {
-             <ion-item>
+             <ion-item lines="none">
                 <ion-radio
                   mode="md" [value]="item"
                   justify="space-between"
@@ -97,7 +80,7 @@
            (ionChange)="onSelectChildrenOption($event)"
            [value]="selectedChildrenOption">
             @for(item of childrenOptions; track item) {
-              <ion-item>
+              <ion-item lines="none">
                 <ion-radio
                   mode="md" [value]="item"
                   justify="space-between" aria-label="Custom">
@@ -112,12 +95,12 @@
        <ion-row *ngIf="fieldName === FieldName.Education" class="edit-profile__education" >
           <ion-col>
               <ion-item lines="none">
-                <ion-input
+                <ion-textarea
                   [value]="educationTextValue"
                   placeholder="About your school"
                   (ionInput)="onEducationInput($event)"
-                  autoGrow="true">
-                </ion-input>
+                  rows="1">
+                </ion-textarea>
               </ion-item>
           </ion-col>
         </ion-row>
