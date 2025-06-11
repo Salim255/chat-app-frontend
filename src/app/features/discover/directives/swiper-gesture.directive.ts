@@ -3,6 +3,7 @@ import {
   ElementRef,
   Output,
   EventEmitter,
+  AfterViewInit,
 } from '@angular/core';
 import { GestureController } from '@ionic/angular';
 import { InteractionBtnService } from '../services/interaction-btn.service';
@@ -13,7 +14,7 @@ import { SwipeDirection } from '../discover.page';
   selector: '[appSwipeGesture]',
   standalone: false
 })
-export class SwipeGestureDirective {
+export class SwipeGestureDirective implements AfterViewInit {
   @Output() swipeLeft = new EventEmitter<void>();
   @Output() swipeRight = new EventEmitter<void>();
   @Output() swipeUp = new EventEmitter<void>();
@@ -105,14 +106,20 @@ private onSwipeMove(event: any): void {
   }
 
   private resetProfilePosition(): void {
-    const element = this.el.nativeElement;
-    element.style.transition = 'transform 0.3s ease-out';
-    element.style.transform = 'translateX(0) translateY(0) rotate(0)';
+  const element = this.el.nativeElement;
 
-    // Add shake effect
+  // Reset position smoothly
+  element.style.transition = 'transform 0.3s ease-out';
+  element.style.transform = 'translateX(0) translateY(0) rotate(0)';
+
+  // Wait for the transform to finish before shaking
+  setTimeout(() => {
+    element.classList.add('shake');
+    this.interactionBtnService.setActionDirection(null);
+    // Remove class after animation ends to allow re-adding it later
     setTimeout(() => {
-      element.classList.add('shake');
-      setTimeout(() => element.classList.remove('shake'), 300);
-    }, 310);
-  }
+      element.classList.remove('shake');
+    }, 300); // match this with your animation duration
+  }, 310); // wait a bit more than the transform duration
+}
 }
