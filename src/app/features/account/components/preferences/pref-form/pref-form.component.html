@@ -6,7 +6,9 @@
     <ion-title> {{ formTitle() }} </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onSubmit()"
-            [disabled]="editPrefFormFields.invalid">Save</ion-button>
+        [disabled]="editPrefFormFields.invalid">
+       Save
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -41,7 +43,7 @@
           <ion-item-group >
             <ion-item-divider>
               <ion-label>How far are they ?</ion-label>
-              <ion-label slot="end"> {{ distanceRange }} km</ion-label>
+              <ion-label slot="end"> {{ distanceRange >= 120 ? distanceRange + '+' : distanceRange }} km</ion-label>
             </ion-item-divider>
           </ion-item-group>
            <ion-item lines="none">
@@ -58,47 +60,32 @@
 
       <ion-row *ngIf="fieldName === FieldName.LookingFor" class="edit-preference__looking-for" >
         <ion-col size="12" >
-          <ion-item lines="none">
-            <ion-checkbox label-placement="start"
-                label-placement="start"
-                [checked]="selectedLookingFor.includes('chat')"
-                (ionChange)="onLookingCheckboxToggle('chat', $event.detail.checked)">Chatting</ion-checkbox>
-            </ion-item>
-
+          <ion-item-group>
+            <ion-item-divider>
+                <ion-label>You are looking for ?</ion-label>
+            </ion-item-divider>
+          </ion-item-group>
+          @for(item of lookingForOptions; track item){
             <ion-item lines="none">
-              <ion-checkbox
+              <ion-checkbox label-placement="start"
                 label-placement="start"
-                [checked]="selectedLookingFor.includes('friendship')"
-                (ionChange)="onLookingCheckboxToggle('friendship', $event.detail.checked)">
-                  Friendship
+                [checked]="selectedLookingFor.includes(item.title)"
+                (ionChange)="onLookingCheckboxToggle(item.title, $event.detail.checked)">
+                {{item.value}}
               </ion-checkbox>
             </ion-item>
-
-            <ion-item lines="none">
-              <ion-checkbox
-                label-placement="start"
-                [checked]="selectedLookingFor.includes('casual')"
-                (ionChange)="onLookingCheckboxToggle('casual', $event.detail.checked)">
-                  Something casual
-              </ion-checkbox>
-            </ion-item>
-
-             <ion-item lines="none">
-              <ion-checkbox
-                label-placement="start"
-                [checked]="selectedLookingFor.includes('long_term')"
-                (ionChange)="onLookingCheckboxToggle('long_term', $event.detail.checked)">
-                  Long-term relationship
-              </ion-checkbox>
-            </ion-item>
+          }
           </ion-col>
       </ion-row>
 
       <ion-row class="edit-preference__interested-in" *ngIf="fieldName === FieldName.InterestedIn">
         <ion-col>
           <ion-radio-group
-           (ionChange)="onSelectInterestIn($event)"
+           (ionChange)="onSelectInterestedIn($event)"
            [value]="selectedInterestInOption">
+              <ion-item-divider>
+              <ion-label>You are interested in ?</ion-label>
+            </ion-item-divider>
             @for(item of interestInOptions; track item) {
               <ion-item lines="none">
                 <ion-radio

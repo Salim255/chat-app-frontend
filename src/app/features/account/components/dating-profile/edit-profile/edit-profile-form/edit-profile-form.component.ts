@@ -1,8 +1,8 @@
 import { Component, Input, OnInit} from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Gender, InterestedIn } from "src/app/features/auth/components/create-profile/create-profile.component";
 import { EditingProfileService, FieldName } from "src/app/features/account/services/editing-profile.service";
-import { SexOrientation } from "../edit-children/edit-children.component";
+import { SexOrientation } from "../edit-sex-orientation/edit-sex.component";
 
 export  type EditProfilePayload = {
   name: string;
@@ -31,7 +31,8 @@ export class EditProfileFormComponent implements OnInit {
   FieldName = FieldName;
 
   selectedSexOrientation: SexOrientation | null = null;
-  readonly sexOrientationList =  [ 'straight','heterosexual','gay',
+  readonly sexOrientationList =  [
+    'straight', 'heterosexual','gay',
     'lesbian','bisexual','asexual',
     'pansexual','queer','questioning',
     'demisexual',
@@ -92,13 +93,15 @@ export class EditProfileFormComponent implements OnInit {
     return `${maxLength - inputLength} characters remaining`;
   }
 
-  onHeightPicker(event: any): void{
-    const value = event.detail.value;
+  onHeightPicker(event: Event): void{
+    const customEvent = event  as CustomEvent<{ value: number }>;
+    const value = customEvent .detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
   }
 
-  onBioInput(event: any): void{
-    const value = event.detail.value.trim();
+  onBioInput(event: Event): void{
+    const customEvent = event  as CustomEvent<{ value: string }>;
+    const value = customEvent.detail.value.trim();
      if (value.length) {
       this.bioTextValue = value;
       this.editProfileFormFields.get(this.fieldName)?.setValue(value);
@@ -107,53 +110,53 @@ export class EditProfileFormComponent implements OnInit {
     }
   }
 
-  onEducationInput(event: any): void{
-    const value = event.detail.value.trim();
+  onEducationInput(event: Event): void{
+    const customEvent = event as CustomEvent<{value: string}>;
+    const value = customEvent.detail.value.trim();
     if (value.length) {
       this.educationTextValue = value;
       this.editProfileFormFields.get(this.fieldName)?.setValue(value);
     } else {
       this.editProfileFormFields.get(this.fieldName)?.setValue(null);
     }
-
   }
+
   onSubmit(): void{
     const value = this.editProfileFormFields.get(this.fieldName)?.value;
-    if(this.fieldName === FieldName.Bio) {
-      this.editingProfileService.updateBio(value).subscribe();
-    }
-
-    if(this.fieldName === FieldName.Gender) {
-      this.editingProfileService.updateGender(value).subscribe();
-    }
-
-    if (this.fieldName === FieldName.City) {
-      const city = this.editProfileFormFields.get(this.FieldName.City)?.value;
-      const country = this.editProfileFormFields.get(this.FieldName.Country)?.value;
-      this.editingProfileService.updateHome({city, country}).subscribe();
-      const latitude = this.editProfileFormFields.get('latitude')?.value;
-      const longitude = this.editProfileFormFields.get('longitude')?.value;
-      console.log({ latitude, longitude });
-      this.editingProfileService.updateHomeByCoordinate({ latitude, longitude }).subscribe();
-    }
-
-    if(this.fieldName === FieldName.SexOrientation) {
-      this.editingProfileService.updateSexOrientation(value).subscribe();
-    }
-
-    if (this.fieldName === FieldName.Children) {
-      this.editingProfileService.updateChildrenStatus(value).subscribe();
-    }
-
-    if (this.fieldName === FieldName.Education) {
-      this.editingProfileService.updateEducation(value).subscribe();
-    }
-
-    if (this.fieldName === FieldName.UserHeight) {
-      this.editingProfileService.updateHeight(value).subscribe();
-    }
-
     this.editingProfileService.onDismissEditFormModal();
+    switch(this.fieldName){
+      case FieldName.Bio:
+        this.editingProfileService.updateBio(value).subscribe();
+        return;
+
+      case FieldName.Gender:
+        this.editingProfileService.updateGender(value).subscribe();
+        return;
+
+      case FieldName.City:
+        const city = this.editProfileFormFields.get(this.FieldName.City)?.value;
+        const country = this.editProfileFormFields.get(this.FieldName.Country)?.value;
+        this.editingProfileService.updateHome({city, country}).subscribe();
+        const latitude = this.editProfileFormFields.get('latitude')?.value;
+        const longitude = this.editProfileFormFields.get('longitude')?.value;
+        this.editingProfileService.updateHomeByCoordinate({ latitude, longitude }).subscribe();
+        return
+
+      case  FieldName.SexOrientation:
+        this.editingProfileService.updateSexOrientation(value).subscribe();
+        return;
+
+      case FieldName.Children :
+        this.editingProfileService.updateChildrenStatus(value).subscribe();
+        return;
+
+      case FieldName.Education:
+        this.editingProfileService.updateEducation(value).subscribe();
+        return;
+      case FieldName.UserHeight:
+        this.editingProfileService.updateHeight(value).subscribe();
+        return;
+    }
   }
 
    buildForm():void {
@@ -167,11 +170,10 @@ export class EditProfileFormComponent implements OnInit {
       return;
     }
 
-    if (this.fieldName) {
-      this.editProfileFormFields = this.fb.group({
-        [this.fieldName]: [null, Validators.required],
-      });
-    }
+    this.editProfileFormFields = this.fb.group({
+      [this.fieldName]: [null, Validators.required],
+    });
+
   }
 
   onSelectGender(value: string): void {
@@ -179,31 +181,29 @@ export class EditProfileFormComponent implements OnInit {
     this.editProfileFormFields.get(FieldName.Gender)?.setValue(value);
   }
 
-  get genderControl(): FormControl {
-    return this.editProfileFormFields.get(FieldName.Gender) as FormControl;
-  }
-
-  onSave(): void{
-    this.editingProfileService.onDismissEditFormModal();
-  }
-
   onCancelEditing(): void{
     this.editingProfileService.onDismissEditFormModal();
   }
 
-  onSexOrientation(event: any): void{
-    const value = event.detail.value;
+  onSexOrientation(event: Event): void{
+    const customEvent = event as CustomEvent<{value: string}>;
+    const value = customEvent.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value);
   }
 
-  onSelectChildrenOption(event : any): void{
-    const value = event.detail.value;
+  onSelectChildrenOption(event: Event): void{
+    const customEvent = event as CustomEvent<{value: string}>;
+    const value = customEvent.detail.value;
     this.editProfileFormFields.get(this.fieldName)?.setValue(value === this.childrenOptions[1]);
   }
 
-  onSelectLocation(event: {city: string, country: string, latitude: number, longitude: number}): void {
+  onSelectLocation(
+    event: {
+      city: string, country: string,
+      latitude: number, longitude: number
+    }
+  ): void {
     this.selectedLocation = `${event.city}, ${event.country}`;
-    console.log(event.latitude, event.longitude);
     // Update form controls
     this.editProfileFormFields.get(FieldName.City)?.setValue(event.city);
     this.editProfileFormFields.get('country')?.setValue(event.country);

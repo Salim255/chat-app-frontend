@@ -3,6 +3,6 @@
     <ion-label>Children</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button (click)="onEditFormModal()">
-    <ion-label> {{ childrenStatus === true ? 'I have children' : childrenStatus === false ? `I don't have children` : '-' }}</ion-label>
+    <ion-label> {{ formatText(childrenStatus) }}</ion-label>
   </ion-item>
 </ion-item-group>

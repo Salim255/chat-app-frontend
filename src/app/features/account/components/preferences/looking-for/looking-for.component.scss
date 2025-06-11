@@ -17,5 +17,8 @@ ion-item-group {
     margin-left: 0.2rem;
     margin-right: 0.2rem;
     border-radius: .5rem;
+    ion-text:not(last-child) {
+      margin-right: .3rem;
+    }
   }
 }

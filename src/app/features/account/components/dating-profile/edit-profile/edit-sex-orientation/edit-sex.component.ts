@@ -1,6 +1,18 @@
 import { Component, Input } from "@angular/core";
-import { SexOrientation } from "../edit-children/edit-children.component";
 import { EditingProfileService, FieldName } from "src/app/features/account/services/editing-profile.service";
+
+export enum SexOrientation {
+  Straight = 'straight',
+  Heterosexual = 'heterosexual',
+  Gay = 'gay',
+  Lesbian = 'lesbian',
+  Bisexual = 'bisexual',
+  Asexual = 'asexual',
+  Pansexual = 'pansexual',
+  Queer = 'queer',
+  Questioning = 'questioning',
+  Demisexual = 'demisexual',
+}
 
 @Component({
   selector: 'app-edit-sex-orientation',

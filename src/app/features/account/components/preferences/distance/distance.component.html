@@ -3,6 +3,6 @@
     <ion-label>Distance from me</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button>
-    <ion-label> Within {{ distance }} km</ion-label>
+    <ion-label> Within {{ distance >= 120 ? distance + '+' : distance }} km</ion-label>
   </ion-item>
 </ion-item-group>

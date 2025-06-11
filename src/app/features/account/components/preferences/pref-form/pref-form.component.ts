@@ -19,7 +19,13 @@ export class PrefFormComponent implements OnInit{
 
   FieldName = PrefFieldName;
   editPrefFormFields!: FormGroup;
-  selectedLookingFor: string[] = [];
+  selectedLookingFor: string [] = [];
+  lookingForOptions = [
+    { value: 'Chatting', title: 'chat' },
+    {title: 'friendship', value: 'Friendship'},
+    { title: 'casual', value: 'Something casual' },
+    { value: 'Long-term relationship', title: 'long_term'}
+  ]
   ageRange = { lower: 20, upper: 80 };
   minGap = 4;
   minAge = 18;
@@ -41,25 +47,6 @@ export class PrefFormComponent implements OnInit{
     if(this.fieldName) {
       this.buildForm();
     }
-    if(this.fieldName === this.FieldName.LookingFor) {
-      this.selectedLookingFor = [...(this.fieldValue as string[])];
-    }
-    if(this.fieldName === this.FieldName.Distance) {
-      this.distanceRange = this.fieldValue as number;
-    }
-
-    if(this.fieldName === this.FieldName.Age) {
-      const fieldVal = this.fieldValue as { minAge: number, maxAge: number };
-      this.ageRange = {
-        lower: fieldVal.minAge,
-        upper: fieldVal.maxAge
-      };
-    }
-
-    if(this.fieldName === this.FieldName.InterestedIn) {
-      const fieldVal = this.fieldValue as InterestedIn;
-      this.selectedInterestInOption = fieldVal
-    }
   }
 
   onSubmit(): void{
@@ -72,20 +59,16 @@ export class PrefFormComponent implements OnInit{
     switch(this.fieldName){
       case this.FieldName.Age:
         const payload = { minAge: value.lower, maxAge: value.upper }
-        this.preferencesService.updateAgeRage(payload).subscribe(result => {
-          console.log(result)
-        });
+        this.preferencesService.updateAgeRage(payload).subscribe();
       return;
 
       case this.FieldName.Distance:
-
-        this.preferencesService.updateDistanceRage(value).subscribe(result => {
-          console.log(result)
-        })
+        this.preferencesService.updateDistanceRage(value).subscribe()
         return;
 
       case this.FieldName.LookingFor:
-         this.preferencesService.updateLookingForOptions(value).subscribe()
+        console.log(value);
+         this.preferencesService.updateLookingForOptions(value).subscribe();
         return;
 
       case this.FieldName.InterestedIn:
@@ -97,24 +80,48 @@ export class PrefFormComponent implements OnInit{
     }
   }
 
+  buildForm():void {
+    this.editPrefFormFields = this.fieldBuilder.group({
+        [this.fieldName]: [ null, Validators.required],
+      });
+    switch(this.fieldName){
+      case this.FieldName.LookingFor:
+        this.selectedLookingFor = [...(this.fieldValue as string[])];
+        return ;
+      case this.FieldName.Distance:
+        this.distanceRange = this.fieldValue as number;
+        return;
+
+      case this.FieldName.Age:
+        const fieldAgeVal = this.fieldValue as { minAge: number, maxAge: number };
+        this.ageRange = {
+          lower: fieldAgeVal.minAge,
+          upper: fieldAgeVal.maxAge
+        };
+        return ;
+
+      case this.FieldName.InterestedIn:
+        const fieldVal2 = this.fieldValue as InterestedIn;
+        this.selectedInterestInOption = fieldVal2;
+        return;
+      default:
+        return;
+    }
+  }
+
+
   onCancelEditing(): void{
     this.preferencesService.dismissPrefForm()
   }
 
-  buildForm():void {
-    if (this.fieldName) {
-      this.editPrefFormFields = this.fieldBuilder.group({
-        [this.fieldName]: [ null, Validators.required],
-      });
-    }
-  }
-
-  onSelectInterestIn(event: any): void{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+  onSelectInterestedIn(event: any): void{
     const value = event.detail.value;
     this.selectedInterestInOption = value;
     this.editPrefFormFields.get(this.fieldName)?.setValue(value);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
   onRangeInput(event: any): void {
     const lower = event.detail.value.lower;
     const upper = event.detail.value.upper;
@@ -135,19 +142,6 @@ export class PrefFormComponent implements OnInit{
     this.editPrefFormFields.get('age')?.setValue(this.ageRange);
   }
 
-  formTitle(): string| null{
-    switch(this.fieldName){
-      case this.FieldName.Age:
-        return'Age range';
-      case this.FieldName.Distance:
-        return 'Distance from you';
-      case this.FieldName.LookingFor:
-        return 'Looking for';
-      default:
-        return null;
-    }
-  }
-
   onIonKnobMoveEnd(event: RangeCustomEvent): void {
     if (event.detail.value) this.distanceRange = (event.detail.value as number);
     this.editPrefFormFields.get(this.fieldName)?.setValue(this.distanceRange);
@@ -161,8 +155,22 @@ export class PrefFormComponent implements OnInit{
     } else {
       this.selectedLookingFor = this.selectedLookingFor.filter(item => item !== value);
     }
-
+    console.log(this.selectedLookingFor);
     this.editPrefFormFields.get(this.fieldName)?.setValue(this.selectedLookingFor);
   }
 
+  formTitle(): string| null{
+    switch(this.fieldName){
+      case this.FieldName.Age:
+        return'Age range';
+      case this.FieldName.Distance:
+        return 'Distance from you';
+      case this.FieldName.LookingFor:
+        return 'Looking for';
+      case this.FieldName.InterestedIn:
+        return 'Interested in';
+      default:
+        return null;
+    }
+  }
 }

@@ -1,6 +1,4 @@
 ion-card {
-  box-shadow: none; /* Removes shadow */
-  --box-shadow: none; /* Ensures Ionic's shadow is removed */
   height: 9rem;
   width: 7rem;
 
@@ -8,7 +6,6 @@ ion-card {
   margin: 0;
   padding: 0;
   position: relative;
-
   ion-card-content {
     padding: 0;
     height: 100%;
@@ -21,7 +18,8 @@ ion-card {
     }
   }
   div {
-    background: linear-gradient(to bottom, transparent, var(--ion-color-primary));
+    background: linear-gradient(to bottom, transparent, rgb(135, 12, 82));
+
     position: absolute;
     bottom: 0;
     width: 100%;

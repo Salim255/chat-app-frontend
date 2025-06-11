@@ -8,7 +8,7 @@ import { EditingProfileService, FieldName } from "src/app/features/account/servi
   standalone: false,
 })
 export class EditBioComponent {
-  @Input() bio!: string ;
+  @Input() bio!: string  | null;
   constructor(private editingProfileService: EditingProfileService) {}
   onEditFormModal(): void {
     this.editingProfileService.onEditFormModal(FieldName.Bio, this.bio);

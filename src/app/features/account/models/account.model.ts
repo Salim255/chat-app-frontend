@@ -1,6 +1,6 @@
-import { InterestedIn } from "../../auth/components/create-profile/create-profile.component";
+import { Gender, InterestedIn } from "../../auth/components/create-profile/create-profile.component";
 import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
-import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 
 export class Account {
   constructor(
@@ -9,7 +9,7 @@ export class Account {
     public name: string,
     public avatar: null,
     public birth_date: Date,
-    public gender:  string,
+    public gender:  Gender,
     public country: string,
     public city: string,
     public interested_in: InterestedIn,

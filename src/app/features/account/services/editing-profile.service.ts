@@ -7,7 +7,8 @@ import { ChildrenStatusPayload, FetchAccountDto, SexOrientationPayload, UpdateBi
 import { AccountService } from "./account.service";
 import { AccountHttpService } from "./account-http.service";
 import { Gender } from "../../auth/components/create-profile/create-profile.component";
-import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
+
 
 export enum FieldName {
   City ='city',
@@ -64,7 +65,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -81,7 +82,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
   })
     )
@@ -97,7 +98,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -108,13 +109,12 @@ export class EditingProfileService {
     if (!profileId) return EMPTY;
 
     const payLoad: UpdateCoordinatesPayload = { ...coordinates, profileId};
-    console.log(payLoad);
     return this.accountHttpService.updateAccountCoordinates(payLoad).pipe(
       tap((result) => {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -130,7 +130,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -148,7 +148,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -164,7 +164,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )
@@ -180,7 +180,7 @@ export class EditingProfileService {
         if(!result.data.profile) return;
         this.accountService.setAccountWithUpdate(result.data.profile);
       }),
-      catchError(error => {
+      catchError(() => {
       return EMPTY;
       })
     )

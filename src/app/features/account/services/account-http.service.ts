@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { Coordinates } from "src/app/core/services/geolocation/geolocation.service";
 import { Gender, InterestedIn } from "../../auth/components/create-profile/create-profile.component";
-import { SexOrientation } from "../components/dating-profile/edit-profile/edit-children/edit-children.component";
+import { SexOrientation } from "../components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 
 export type FetchAccountDto = {
   status: string,
