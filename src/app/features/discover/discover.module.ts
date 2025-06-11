@@ -11,6 +11,7 @@ import { InteractionBtnsComponent } from './components/interaction-btns/interact
 import { DiscoverHeaderComponent } from './components/profile-header/discover-header.component';
 import { DiscoverPageRoutingModule } from './discover-routing.module';
 import { HammerSwipeDirective } from './directives/hammer-swiper/hammer-swipe.directive';
+import { SwipeGestureDirective } from './directives/ionic-ges.directive';
 import { ProfileViewerFeatureModule } from '../profile-viewer/profile-viewer-feature.module';
 import { FormsModule } from '@angular/forms';
 import { DiscoverContainerComponent } from './components/discover-cards/discover-container.component';
@@ -34,6 +35,7 @@ import { DiscoverContainerComponent } from './components/discover-cards/discover
     InteractionBtnsComponent,
     DiscoverHeaderComponent,
     HammerSwipeDirective,
+    SwipeGestureDirective,
     DiscoverContainerComponent
   ],
   exports: [DiscoverPage]

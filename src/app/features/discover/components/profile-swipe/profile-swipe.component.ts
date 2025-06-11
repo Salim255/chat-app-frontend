@@ -17,13 +17,6 @@ export class ProfileSwipeComponent {
   @Input() profile!: Profile;
   @Input() profileToView: DisableProfileSwipe | null = null;
 
-  // Typically referenced to your ion-router-outlet
-  presentingElement!: HTMLElement | null;
-  isModalOpen = true;
-  currentTransformX: number = 0; // Keeps track of the current of the card
-  isAnimating = signal<boolean>(false);
-  resetProfileTimer: any;
-
   constructor(private discoverService: DiscoverService) {}
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-unused-vars
   onSwipeLeft(event: any): void {
@@ -43,9 +36,5 @@ export class ProfileSwipeComponent {
     } else {
       return 'hammer-swiper-container ';
     }
-  }
-
-  setOpen(){
-    this.isModalOpen = false
   }
 }

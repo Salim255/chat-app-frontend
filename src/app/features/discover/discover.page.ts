@@ -41,7 +41,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   discoverToggleStatus = signal<boolean | null>(null);
   animationClass = signal<string>('');
   isAnimating = signal<boolean>(false);
-  animationType: SwipeDirection | null = null;
+  animationType = signal< SwipeDirection | null>(null);
 
   potentialMatches = signal<Profile[]>([]);
   profileToView = signal<DisableProfileSwipe | null>(null);
@@ -86,7 +86,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
   private subscribeToInteractionBtn() {
     this.btnInteractionSubscription = this.interactionBtnService.getActionDirection
     .subscribe((action) => {
-      this.animationType = action ;
+      this.animationType.set(action) ;
     });
   }
 
@@ -205,7 +205,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
     this.potentialMatchesSource =
       this.discoverService.getPotentialMatchesArray
       .subscribe((profiles) => {
-        console.log(profiles);
         this.potentialMatches.set([...profiles]);
       });
   }

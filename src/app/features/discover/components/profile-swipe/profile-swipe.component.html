@@ -1,4 +1,4 @@
- <ion-card
+<!--  <ion-card
   #cardElement
   appHammerSwipe
   (swipeLeft)="onSwipeLeft($event)"
@@ -10,6 +10,19 @@
     [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
   >
   </app-profile-content>
-</ion-card>
+</ion-card> -->
 
+ <ion-card
+  #cardElement
+  appSwipeGesture
+  (swipeLeft)="onSwipeLeft($event)"
+  (swipeRight)="onSwipeRight($event)"
+  [ngClass]="disableHammerSwiper(profileToView)"
+>
+  <app-profile-content
+    [profile]="profile"
+    [profileToView]="profile.user_id === profileToView?.profile?.user_id ? profileToView : null"
+  >
+  </app-profile-content>
+</ion-card>
 

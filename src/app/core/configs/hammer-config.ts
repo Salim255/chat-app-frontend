@@ -8,6 +8,11 @@ export class CustomHammerConfig extends HammerGestureConfig {
   // with our parameters
   override overrides = {
     /*     swipe: { direction: 31 }, // Enable horizontal swipe */
-    pan: { direction: 31, threshold: 10 }, // Enable vertical pan/scroll
+    pan: {
+      direction: 31, // Enable horizontal + vertical pan
+      threshold: 1, // Lower threshold for faster reaction
+      velocity: 0.1, // Reduce required velocity to trigger
+      enable: true, // Ensure gesture is enabled
+    }, // Enable vertical pan/scroll
   };
 }

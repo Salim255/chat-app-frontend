@@ -38,7 +38,6 @@ export class HammerSwipeDirective {
 
   @HostListener('panstart', ['$event'])
   onPanStart(event: HammerInput): void {
-    //this.isSwiping = true;
     this.swipeStartPosition = this.currentTransformX;
     // Determine if it's more horizontal or vertical movement
     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
@@ -55,6 +54,8 @@ export class HammerSwipeDirective {
   @HostListener('pan', ['$event'])
   onPan(event: HammerInput): void {
     const element = this.el.nativeElement;
+    console.log(event)
+    element.style.transform = `translate(${event.deltaX}px, ${event.deltaY}px)`;
     if (!element) return;
 
     if (this.isSwiping) {
@@ -64,11 +65,7 @@ export class HammerSwipeDirective {
           this.interactionBtnService.setActionDirection(SwipeDirection.SwipeRight);
         else this.interactionBtnService.setActionDirection(SwipeDirection.SwipeLeft);
       }
-      element.style.transform =
-      `translateX(${this.currentTransformX}px) rotate(${this.currentTransformX / 30}deg)`;
     } else if (this.isScrolling) {
-      // Allow vertical scrolling
-      element.style.transform = `translateY(${event.deltaY}px)`;
        this.interactionBtnService.setActionDirection(SwipeDirection.SwipeUp);
     }
   }
@@ -77,8 +74,9 @@ export class HammerSwipeDirective {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onPanEnd(event: HammerInput): void {
     this.isSwiping = false;
+    const cardWidth = this.el.nativeElement.offsetWidth; // Get the actual width of the card
+    const threshold = cardWidth / 2; // Set swipe threshold as half of card width
 
-    const threshold = window.innerWidth / 4;
 
     if (this.isHorizontalSwipe) {
       if (this.currentTransformX > threshold) {
@@ -88,11 +86,13 @@ export class HammerSwipeDirective {
       }
       this.resetProfilePosition();
     } else {
-      // If it's vertical scroll, allow scrolling to happen naturally
-      if (!this.isSwiping) {
-        const element = this.el.nativeElement;
-        element.style.transform = `translateY(0)`;
-      }
+        const verticalThreshold = this.el.nativeElement.offsetHeight / 3; // Define vertical threshold based on card height
+        if (event.deltaY > verticalThreshold) {
+          //this.swipeDown.emit();
+        } else if (event.deltaY < -verticalThreshold) {
+          //this.swipeUp.emit();
+        }
+        this.resetProfilePosition();
     }
 
     this.isSwiping = false;
@@ -101,17 +101,31 @@ export class HammerSwipeDirective {
     this.interactionBtnService.setActionDirection(null);
   }
 
-  private resetProfilePosition(): void {
-    if (this.resetProfileTimer) {
-      clearTimeout(this.resetProfileTimer);
-    }
-    this.currentTransformX = 0;
-    this.resetProfileTimer = setTimeout(() => {
-      const element = this.el.nativeElement;
-      if (element) {
-        element.style.transition = 'transform 0.3s ease-out';
-        element.style.transform = 'translateX(0) rotate(0)';
-      }
-    }, 300);
+ private resetProfilePosition(): void {
+  if (this.resetProfileTimer) {
+    clearTimeout(this.resetProfileTimer);
   }
+
+  const element = this.el.nativeElement;
+  if (!element) return;
+
+  this.currentTransformX = 0;
+
+  // Apply smooth return to center
+  element.style.transition = 'transform 0.3s ease-out';
+  element.style.transform = 'translateX(0) rotate(0)';
+
+  // Use requestAnimationFrame for a smooth shake effect after position reset
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      element.classList.add('shake');
+
+      setTimeout(() => {
+        element.classList.remove('shake');
+      }, 300); // Duration of shake effect
+
+    }, 310); // Small delay after transition ends
+  });
+}
+
 }
