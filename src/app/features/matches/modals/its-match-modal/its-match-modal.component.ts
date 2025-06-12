@@ -42,6 +42,7 @@ export class ItsMatchModalComponent implements OnInit {
       bio: this.matchedProfile.bio,
       looking_for: this.matchedProfile.looking_for,
       is_admin: false,
+      matched_at: this.matchedProfile.match_updated_at
     }
     this.activeConversationService.openConversation(profileInChat, null);
     this.itsMatchModalService.closeModal();

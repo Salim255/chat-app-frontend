@@ -19,7 +19,7 @@ import { CardMediaComponent } from './components/card-media/card.component';
 import { LanguagesSwitcherComponent } from './components/languages-switcher/languages-switcher';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LocationPickerComponent } from './components/location-picker/location-picker.component';
-
+import { TimeAgoPipe } from './custom-pipes/time-ago.pipe';
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
@@ -38,7 +38,8 @@ import { LocationPickerComponent } from './components/location-picker/location-p
     LoadingSpinnerComponent,
     CardMediaComponent,
     LanguagesSwitcherComponent,
-    LocationPickerComponent
+    LocationPickerComponent,
+    TimeAgoPipe
   ],
   exports: [
     LogoComponent,
@@ -56,7 +57,8 @@ import { LocationPickerComponent } from './components/location-picker/location-p
     LoadingSpinnerComponent,
     CardMediaComponent,
     LanguagesSwitcherComponent,
-    LocationPickerComponent
+    LocationPickerComponent,
+    TimeAgoPipe
   ],
   imports: [IonicModule, CommonModule, ReactiveFormsModule],
 })

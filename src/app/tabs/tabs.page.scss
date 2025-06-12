@@ -1,7 +1,7 @@
 .discover-swipe-overlay {
   position: absolute;
   inset: 0; // full screen
-
+  //background: var(--ion-background-color-2);
   //pointer-events: none; /* Enable only when needed */
   &__active {
   pointer-events: auto; /* Enable only when needed */

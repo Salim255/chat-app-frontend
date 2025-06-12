@@ -12,7 +12,14 @@ import { DiscoverPageModule } from '../features/discover/discover.module';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, FormsModule, IonicModule, TabsPageRoutingModule, SharedModule, DiscoverPageModule ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    TabsPageRoutingModule,
+    SharedModule,
+    DiscoverPageModule,
+   ],
   declarations: [TabsPage],
 })
 export class TabsPageModule {}

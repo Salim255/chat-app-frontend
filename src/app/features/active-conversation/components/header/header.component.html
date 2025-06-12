@@ -1,11 +1,12 @@
 <ion-header [translucent]="true" collapse="fade">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-icon
+      <ion-back-button defaultHref="/home"  (click)="onBackArrow()" text=""></ion-back-button>
+     <!--  <ion-icon
         size="large"
         name="chevron-back-outline"
-        (click)="onBackArrow()"
-      ></ion-icon>
+
+      ></ion-icon> -->
     </ion-buttons>
 
    <ion-item

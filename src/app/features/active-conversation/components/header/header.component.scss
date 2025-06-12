@@ -4,8 +4,6 @@ ion-header {
   ion-toolbar {
     padding-top: 2rem;
     padding-bottom: 1rem;
-    padding-left: 0;
-    padding-right: 0;
     ion-chip {
       --background: transparent;
       ion-avatar {
@@ -14,8 +12,9 @@ ion-header {
       }
     }
     ion-buttons {
-      ion-icon {
-        color: var(--ion-text-color-1);
+      ion-back-button {
+        color: var(--ion-color-grey-7);
+        font-size: .9rem;
       }
     }
 

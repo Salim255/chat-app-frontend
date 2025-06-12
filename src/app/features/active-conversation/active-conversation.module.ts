@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { TypingComponent } from './components/typing/typing.component';
 import { headerComponent } from './components/header/header.component';
 import { FormInputComponent } from './components/form-input/form-input.component';
+import { MessagesPlaceholderComponent } from './components/messages-placeholder/messages-placeholder.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,13 @@ import { FormInputComponent } from './components/form-input/form-input.component
     ActiveConversationPageRoutingModule,
     SharedModule,
   ],
-  declarations: [ActiveConversationPage, headerComponent, FormInputComponent, MessagesComponent, TypingComponent],
+  declarations: [
+    ActiveConversationPage,
+    headerComponent,
+    FormInputComponent,
+    MessagesComponent,
+    TypingComponent,
+    MessagesPlaceholderComponent
+  ],
 })
 export class ActiveConversationPageModule {}

@@ -14,6 +14,7 @@ export type UserInChatDto = {
   city: string;
   country: string;
   public_key: string | null;
+  matched_at: Date | null;
 
 }
 

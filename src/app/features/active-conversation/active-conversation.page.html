@@ -4,11 +4,20 @@
 </app-active-conversation-header>
 
 <ion-content [scrollY]="true">
-  <app-chat-messages
+ <ng-container *ngIf="messagesList.length > 0; else placeHolder">
+   <app-chat-messages
    [messagesList]="activeChat?.messages ?? []"
    [userId]="hostUserId"
    >
   </app-chat-messages>
+ </ng-container>
+
+<ng-template #placeHolder>
+  <app-messages-placeholder
+    [partnerInfo]="partnerInfo"
+    ></app-messages-placeholder>
+</ng-template>
+
 </ion-content>
 
 <ion-footer>

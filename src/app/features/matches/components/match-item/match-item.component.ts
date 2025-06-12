@@ -41,6 +41,7 @@ export class MatchItemComponent {
       photos: match.photos,
       bio: match.bio,
       looking_for: match.looking_for,
+      matched_at: match.match_updated_at
     }
   }
 }

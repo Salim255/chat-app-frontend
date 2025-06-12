@@ -1,0 +1,15 @@
+<ion-item-group>
+  <ion-item lines="none">
+    <ion-text>
+      Looks like <strong >{{ partnerInfo.name }}</strong> is into you too  <br/>
+    </ion-text>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-avatar>
+    <img alt="account-avatar" [src]="getAvatarUrl()" />
+    </ion-avatar>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-text> You are Matched  {{ partnerInfo.matched_at | timeAgo  }} </ion-text>
+  </ion-item>
+</ion-item-group>

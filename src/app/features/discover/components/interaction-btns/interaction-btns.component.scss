@@ -28,9 +28,12 @@
   &__btn:nth-child(odd) {
     height: 2.5rem;
     width: 2.5rem;
+    opacity: 0;
+    display: none;
     ion-icon {
       font-size: 1px;
       transform: translate(-50%, -50%) scale(20);
+      opacity: 0;
     }
   }
 
@@ -72,6 +75,7 @@
       }
       &__2 {
         background: rgb(225, 255, 0); /* Change this to your desired color */
+
       }
       &__3 {
         background: linear-gradient(#098652, #c5f02a);

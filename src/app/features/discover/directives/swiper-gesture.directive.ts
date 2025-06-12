@@ -67,13 +67,15 @@ private onSwipeMove(event: any): void {
   const cardBottom = cardRect.bottom;
 
   if (cardBottom <= containerMiddleY) {
-    newDirection = SwipeDirection.SwipeUp;
+    // newDirection = SwipeDirection.SwipeUp;
+    newDirection = SwipeDirection.SwipeRight;
   } else {
     // Otherwise, decide based on movement delta
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       newDirection = deltaX > 0 ? SwipeDirection.SwipeRight : SwipeDirection.SwipeLeft;
     } else {
-      newDirection = deltaY > 0 ? SwipeDirection.SwipeDown : SwipeDirection.SwipeUp;
+      //newDirection = deltaY > 0 ? SwipeDirection.SwipeDown : SwipeDirection.SwipeUp;
+      newDirection = deltaY > 0 ? SwipeDirection.SwipeLeft : SwipeDirection.SwipeRight;
     }
   }
 
@@ -97,8 +99,8 @@ private onSwipeMove(event: any): void {
       if (event.deltaX > threshold) this.swipeRight.emit();
       else if (event.deltaX < -threshold) this.swipeLeft.emit();
     } else {
-      if (event.deltaY > verticalThreshold) this.swipeDown.emit();
-      else if (event.deltaY < -verticalThreshold) this.swipeUp.emit();
+      if (event.deltaY > verticalThreshold) this.swipeLeft.emit() /* this.swipeDown.emit() */;
+      else if (event.deltaY < -verticalThreshold)  this.swipeRight.emit()/* this.swipeUp.emit() */;
     }
 
     this.currentDirection = null;
@@ -109,7 +111,7 @@ private onSwipeMove(event: any): void {
   const element = this.el.nativeElement;
 
   // Reset position smoothly
-  element.style.transition = 'transform 0.3s ease-out';
+  element.style.transition = 'transform 0.2s ease-out';
   element.style.transform = 'translateX(0) translateY(0) rotate(0)';
 
   // Wait for the transform to finish before shaking

@@ -4,7 +4,7 @@
   </ion-item-divider>
   <ion-item lines="none" button >
     <ion-text *ngFor="let item of lookingFor; let isLast = last">
-      {{ lookingForLabels[item] }}<ng-container *ngIf="!isLast">, </ng-container>
+      {{ lookingForLabels[item] }} <ng-container *ngIf="!isLast">, </ng-container>
     </ion-text>
   </ion-item>
 </ion-item-group>

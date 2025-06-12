@@ -1,0 +1,32 @@
+ion-item-group{
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+
+  ion-item {
+    padding-bottom: 1rem;
+    text-align: center;
+    ion-text {
+      color: var(--ion-color-grey-7);
+      strong {
+        color: var(--ion-color-primary);
+        font-size: 1rem;
+      }
+    }
+  }
+
+ion-item {
+  display: flex;
+  justify-content: center;
+  ion-avatar {
+    margin: auto;
+    height: 10rem;
+    width: 10rem;
+  }
+  ion-text {
+    margin: auto;
+  }
+}
+}
