@@ -13,7 +13,7 @@ import { UserInChatDto } from 'src/app/features/conversations/interfaces/convers
   standalone: false,
 })
 export class ItsMatchModalComponent implements OnInit {
-  @Input() matchedProfile!: Match;
+  @Input() matchedProfile!: Match ;
   hostUserPhoto!: string;
   matchedAvatar!: string;
 

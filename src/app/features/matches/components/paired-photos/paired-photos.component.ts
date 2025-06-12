@@ -1,7 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { AccountService } from 'src/app/features/account/services/account.service';
-import { StringUtils } from 'src/app/shared/utils/string-utils';
-import { take } from 'rxjs';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-paired-photos',
@@ -12,5 +9,6 @@ import { take } from 'rxjs';
 export class PairedPhotosComponent {
   @Input() matchedAvatar!: string ;
   @Input() hostUserPhoto!: string ;
+
   constructor() {}
 }

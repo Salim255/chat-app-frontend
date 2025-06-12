@@ -1,6 +1,5 @@
 <ion-content
   scroll-y="false"
-  [style.--background]="'url(' + matchedAvatar + ') no-repeat center center / cover'"
   class="ion-padding"
 >
   <ion-grid>
@@ -11,9 +10,10 @@
           <ion-text>You matched with </ion-text>
           <ion-text> {{ matchedProfile.name }} </ion-text>
         </div>
-        <app-paired-photos 
+        <app-paired-photos
         [hostUserPhoto]="hostUserPhoto"
-        [matchedAvatar]="matchedAvatar"></app-paired-photos>
+        [matchedAvatar]="matchedAvatar">
+      </app-paired-photos>
       </ion-col>
     </ion-row>
     <ion-row>

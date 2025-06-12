@@ -1,6 +1,5 @@
 div {
   position: relative;
-  //background: yellow;
   height: 10rem;
   width: 100%;
   ion-icon {
@@ -21,17 +20,17 @@ div {
     top: 50%;
     width: 10rem;
     height: 10rem;
-    border-radius: 50%;
+    border-radius: 1rem;
     object-fit: cover;
     object-position: top;
     border: 2px solid var(--ion-color-grey-0);
   }
   img:first-child {
     left: 28%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotate(-20deg);
   }
   img:last-child {
     right: 28%;
-    transform: translate(50%, -50%);
+    transform: translate(50%, -50%) rotate(20deg);
   }
 }

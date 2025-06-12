@@ -1,9 +1,9 @@
 ion-button {
   border-radius: 2rem;
   font-weight: bold;
-  color: #f7fffffd;
+  color: var(--ion-color-grey-0);
   font-size: 1rem;
   padding: 0.4rem 0;
   width: 100%;
-  background: linear-gradient(to right bottom, rgba(#2ed4f1, 1), rgba(#0c0c0c, 1));
+  background: linear-gradient(to right bottom, rgba(#0097b2, .8), rgba(#0c0c0c, 1));
 }

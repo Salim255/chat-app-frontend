@@ -118,7 +118,6 @@ export class DiscoverPage implements OnInit, OnDestroy {
     })
   }
 
-
   private handleProfileInteraction(actionType: InteractionType): void {
     if (actionType === InteractionType.DISLIKE) this.handleDislikeProfile();
     if (actionType === InteractionType.LIKE) this.handleLikeProfile();
