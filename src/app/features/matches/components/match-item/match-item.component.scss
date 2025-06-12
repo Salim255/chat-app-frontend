@@ -1,10 +1,7 @@
 ion-card {
-  height: 9rem;
-  width: 7rem;
-
   border-radius: 0.4rem;
-  margin: 0;
   padding: 0;
+  margin: 0;
   position: relative;
   ion-card-content {
     padding: 0;
@@ -17,9 +14,8 @@ ion-card {
       border-radius: 0.4rem;
     }
   }
-  div {
+  .card-overlay {
     background: linear-gradient(to bottom, transparent, rgb(135, 12, 82));
-
     position: absolute;
     bottom: 0;
     width: 100%;

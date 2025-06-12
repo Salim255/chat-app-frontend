@@ -3,18 +3,16 @@
 <ion-content [fullscreen]="true">
   <ion-grid class="matches">
     <ng-container *ngIf="matchesArray().length > 0; else default">
-      <ion-row class="matches__list">
+      <ion-row class="matches__title">
         <ion-col>
           <ion-text>Matches</ion-text>
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row class="matches__list">
         <ion-col>
-          <ion-list>
-            <ion-item lines="none" *ngFor="let item of matchesArray();  trackBy: trackById">
-              <app-match-item [partnerInfo]="item"></app-match-item>
-            </ion-item>
-          </ion-list>
+          @for(item of matchesArray(); track item) {
+            <app-match-item [partnerInfo]="item"></app-match-item>
+          }
         </ion-col>
       </ion-row>
     </ng-container>

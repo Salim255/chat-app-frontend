@@ -22,12 +22,6 @@ export class MatchesPage implements OnDestroy {
     private matchesService: MatchesService,
   ) {}
 
-
-  // Add a trackBy function for better performance
-  trackById(index: number, match: Match): string | number {
-    return match.match_id;
-  }
-
   ionViewWillEnter(): void {
     this.subscribeToMatches();
     this.matchesService.fetchMatches().subscribe();

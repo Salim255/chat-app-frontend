@@ -2,33 +2,22 @@ ion-content {
   position: relative;
   height: 100vh;
   .matches {
+    &__title{
+      margin: .5rem .5rem 0 .5rem;
+      ion-text {
+        font-weight: 600;
+        font-size: .9rem;
+        color: var(--ion-color-grey-7);
+      }
+    }
     &__list {
+      padding: 1rem;
       ion-col {
-        margin: 0.3rem;
-        ion-text {
-          font-weight: 600;
-          font-size: .9rem;
-          color: var(--ion-color-grey-7);
-        }
-        ion-list {
-          display: flex;
-          padding: 0 0.7rem;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          ion-item {
-            width: calc(33.333% - 0.7rem);
-            margin-bottom: 0.2rem;
-            box-sizing: border-box; /* Prevents overflow */
-            display: flex;
-            align-items: center; /* Vertically center content */
-            justify-content: center;
-            --inner-padding-start: 0px;
-            --inner-padding-end: 0px;
-            --padding-start: 0px;
-            --padding-end: 0px;
-            --inner-margin: 0px;
-          }
-        }
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 0 auto;
+        padding: 0;
       }
     }
     &__place-holder {
