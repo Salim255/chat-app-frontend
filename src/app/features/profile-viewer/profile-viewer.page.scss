@@ -34,7 +34,7 @@ ion-header {
 }
 ion-content {
   --background: var(--ion-color-grey-3);
-  ion-grid {
+   ion-grid {
     padding: 0;
     margin-bottom: 6rem;
     position: relative;
@@ -46,15 +46,42 @@ ion-content {
     ion-row:first-child {
        margin-bottom: .5rem;
     }
-    ion-row:last-child {
-      position: fixed;
-      bottom: 4%;
-      width: 100%;
-      z-index: 2;
+  }
+}
+
+
+
+ion-card {
+  ion-card-header {
+    padding-bottom: .5rem;
+  }
+  ion-card-subtitle {
+    text-align: left;
+    display: flex;
+    ion-text {
+      box-decoration-break: clone;
+      margin-left: 0.5rem;
+      font-size: 1rem;
+      align-self: center;
+      text-transform: capitalize;
+      span {
+        text-transform: lowercase;
+      }
+    }
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+  ion-card-content {
+    ion-item {
+      font-size: .9rem;
     }
   }
 
-  .interaction-btns {
-    position: fixed;
+}
+
+ion-item-divider{
+  ion-item {
+     width: 100%;
   }
 }

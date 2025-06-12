@@ -66,10 +66,10 @@ export class headerComponent implements OnChanges {
             name: this.partnerInfo.name,
             match_id: 0,
             match_status: 0,
-            avatar: '',
             photos: this.partnerInfo.photos,
             bio: this.partnerInfo.bio,
             looking_for: this.partnerInfo.looking_for,
+            sexual_orientation: this.partnerInfo.sexual_orientation
           }
     this.profileViewerService.openProfileViewerModal(data);
   }

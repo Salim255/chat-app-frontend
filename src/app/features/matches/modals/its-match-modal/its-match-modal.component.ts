@@ -41,6 +41,7 @@ export class ItsMatchModalComponent implements OnInit {
       photos: this.matchedProfile.photos,
       bio: this.matchedProfile.bio,
       looking_for: this.matchedProfile.looking_for,
+      sexual_orientation: this.matchedProfile.sexual_orientation,
       is_admin: false,
       matched_at: this.matchedProfile.match_updated_at
     }

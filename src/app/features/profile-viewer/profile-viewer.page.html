@@ -17,7 +17,27 @@
         ></app-profile-slider>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="profile.bio">
+    @for(content of profileContent; track content) {
+      <ion-row>
+        <ion-col>
+          <ion-card class="view-profile-child">
+            <ion-card-header>
+              <ion-card-subtitle>
+                <ion-icon [name]="content.iconName"></ion-icon>
+                <ion-label> {{ content.title }} </ion-label>
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-text>
+                {{ content.value }}
+              </ion-text>
+            </ion-card-content>
+          </ion-card>
+
+        </ion-col>
+      </ion-row>
+    }
+<!--     <ion-row *ngIf="profile.bio">
       <ion-col >
         <app-profile-about-me [bio]="profile.bio"></app-profile-about-me>
       </ion-col>
@@ -33,7 +53,37 @@
         <app-profile-essentials [profile]="profile"></app-profile-essentials>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col >
+        <app-height ></app-height>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col >
+        <app-children ></app-children>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col >
+        <app-home ></app-home>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col >
+        <app-shool ></app-shool>
+      </ion-col>
+    </ion-row>
+
       <ion-row>
+      <ion-col >
+        <app-languages ></app-languages>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col >
         <app-report-profile [profile]="profile"></app-report-profile>
       </ion-col>
@@ -42,14 +92,7 @@
       <ion-col >
         <app-block-profile [profile]="profile"></app-block-profile>
       </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <app-interaction-btns></app-interaction-btns>
-      </ion-col>
-    </ion-row>
+    </ion-row> -->
   </ion-grid>
-  <div class="interaction-btns">
-    <app-interaction-btns [pageName]="'viewer'"></app-interaction-btns>
-  </div>
+
 </ion-content>

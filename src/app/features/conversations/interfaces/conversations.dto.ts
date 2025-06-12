@@ -1,3 +1,4 @@
+import { SexOrientation } from "../../account/components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 import { RequestStatus } from "../../active-conversation/services/active-conversation-http.service";
 import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
 import { Conversation } from "../models/conversation.model";
@@ -13,6 +14,7 @@ export type UserInChatDto = {
   birth_date: Date;
   city: string;
   country: string;
+  sexual_orientation: SexOrientation;
   public_key: string | null;
   matched_at: Date | null;
 

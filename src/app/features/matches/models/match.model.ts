@@ -1,3 +1,4 @@
+import { SexOrientation } from "../../account/components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
 
 export class Match {
@@ -14,6 +15,7 @@ export class Match {
     public photos: string [],
     public bio: string,
     public looking_for: LookingFor,
+    public sexual_orientation: SexOrientation,
     public match_status: number,
     public match_created_at: Date,
     public match_updated_at: Date,
