@@ -1,8 +1,8 @@
 ion-content {
   position: relative;
   height: 100vh;
-  ion-grid {
-    ion-row:first-child {
+  .conversation {
+    &__list{
       margin-top: .3rem;
       ion-text {
         font-weight: 600;
@@ -11,6 +11,7 @@ ion-content {
       }
     }
   }
+
   .place-holder {
     position: absolute;
     left: 50%;

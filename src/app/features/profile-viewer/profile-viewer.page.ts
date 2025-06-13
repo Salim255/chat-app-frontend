@@ -52,7 +52,7 @@ export class ProfileViewerPage implements OnInit {
     }
     if(this.profile.city && this.profile.country ) {
       this.profileContent.push({
-        title: 'home',
+        title: 'Lives in',
         value: `${this.profile.city}, ${this.profile.country}`,
         iconName: "home-outline"
       })

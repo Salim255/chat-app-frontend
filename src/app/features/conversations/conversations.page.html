@@ -1,8 +1,8 @@
 <app-header [pageName]="'conversations'"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
-    <ion-row *ngIf="!isEmpty; else default">
+  <ion-grid class="conversation">
+    <ion-row *ngIf="!isEmpty; else default" class="conversation__list">
       <ion-col>
          <ion-text>Messages</ion-text>
         <ion-list *ngIf="userId">

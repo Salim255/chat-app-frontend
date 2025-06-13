@@ -7,7 +7,7 @@ import { DiscoverService } from 'src/app/features/discover/services/discover.ser
   styleUrls: ['./block.component.scss'],
   standalone: false,
 })
-export class blockComponent implements OnInit, OnDestroy {
+export class BlockComponent implements OnInit, OnDestroy {
   @Input() profile: any;
   private viewedProfileSubscription!: Subscription;
   constructor(private discoverService: DiscoverService) {}

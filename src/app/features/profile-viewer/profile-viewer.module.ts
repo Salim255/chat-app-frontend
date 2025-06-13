@@ -5,12 +5,13 @@ import { ProfileViewerPage } from './profile-viewer.page';
 import { ProfileViewerPageRoutingModule } from './profile-viewer-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DiscoverPageModule } from 'src/app/features/discover/discover.module';
-
+import { ProfileViewerFeatureModule } from './profile-viewer-feature.module';
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
     ProfileViewerPageRoutingModule,
+    ProfileViewerFeatureModule,
     SharedModule,
     DiscoverPageModule
 ],
