@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content *ngIf="profile">
-  <ion-grid>
-    <ion-row>
+  <ion-grid  class="profile-viewer">
+    <ion-row class="profile-viewer__slider">
       <ion-col >
         <app-profile-slider
           [profile]="profile"
@@ -18,81 +18,45 @@
       </ion-col>
     </ion-row>
     @for(content of profileContent; track content) {
-      <ion-row>
+      <ion-row class="profile-viewer__contents">
         <ion-col>
-          <ion-card class="view-profile-child">
+          <ion-card class="profile-viewer__contents--single-content">
             <ion-card-header>
               <ion-card-subtitle>
-                <ion-icon [name]="content.iconName"></ion-icon>
-                <ion-label> {{ content.title }} </ion-label>
-              </ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-text>
+                <ng-container *ngIf="content.title !== 'Height'; else svgIcon ">
+                     <ion-icon [name]="content.iconName"></ion-icon>
+                </ng-container>
+
+               <ng-template #svgIcon>
+                 <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#000000"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 3l4 4l-14 14l-4 -4z" />
+                  <path d="M16 7l-1.5 -1.5" />
+                  <path d="M13 10l-1.5 -1.5" />
+                  <path d="M10 13l-1.5 -1.5" />
+                  <path d="M7 16l-1.5 -1.5" />
+                </svg>
+               </ng-template>
+              <ion-label> {{ content.title }} </ion-label>
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+              <ion-text class="card-content">
                 {{ content.value }}
               </ion-text>
             </ion-card-content>
-          </ion-card>
-
+        </ion-card>
         </ion-col>
       </ion-row>
     }
-<!--     <ion-row *ngIf="profile.bio">
-      <ion-col >
-        <app-profile-about-me [bio]="profile.bio"></app-profile-about-me>
-      </ion-col>
-    </ion-row>
-    <ion-row *ngIf="profile.looking_for">
-      <ion-col>
-        <app-profile-looking-for [lookingFor]="profile.looking_for"></app-profile-looking-for>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col >
-        <app-profile-essentials [profile]="profile"></app-profile-essentials>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col >
-        <app-height ></app-height>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col >
-        <app-children ></app-children>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col >
-        <app-home ></app-home>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col >
-        <app-shool ></app-shool>
-      </ion-col>
-    </ion-row>
-
-      <ion-row>
-      <ion-col >
-        <app-languages ></app-languages>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col >
-        <app-report-profile [profile]="profile"></app-report-profile>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col >
-        <app-block-profile [profile]="profile"></app-block-profile>
-      </ion-col>
-    </ion-row> -->
   </ion-grid>
-
 </ion-content>

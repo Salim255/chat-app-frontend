@@ -16,6 +16,7 @@ export class AccountLocationService {
     return from(this.geolocationService.getCurrentCoordinates()).pipe(
       switchMap((coordinates) => {
         if(!coordinates) return EMPTY;
+        console.log(coordinates);
         // Otherwise, send coordinates to the backend
         const payload :  UpdateCoordinatesPayload = {profileId, ...coordinates}
         return this.accountHttpService.updateAccountCoordinates(payload).pipe(

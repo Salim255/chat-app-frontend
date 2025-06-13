@@ -1,5 +1,5 @@
 import { Gender, InterestedIn } from "../../auth/components/create-profile/create-profile.component";
-import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
+import { LookingFor } from "../../profile-viewer/profile-viewer.page";
 import { SexOrientation } from "../components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 
 export class Account {

@@ -1,4 +1,5 @@
-<ion-item-group>
+@if(partnerInfo){
+  <ion-item-group >
   <ion-item lines="none">
     <ion-text>
       Looks like <strong >{{ partnerInfo.name }}</strong> is into you too  <br/>
@@ -13,3 +14,4 @@
     <ion-text> You are Matched  {{ partnerInfo.matched_at | timeAgo  }} </ion-text>
   </ion-item>
 </ion-item-group>
+}

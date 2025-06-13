@@ -34,7 +34,7 @@ ion-header {
 }
 ion-content {
   --background: var(--ion-color-grey-3);
-   ion-grid {
+   .profile-viewer {
     padding: 0;
     margin-bottom: 6rem;
     position: relative;
@@ -43,45 +43,45 @@ ion-content {
       margin-left: 0.2rem;
       margin-right: 0.2rem;
     }
-    ion-row:first-child {
-       margin-bottom: .5rem;
+    &__slider{
+
     }
-  }
-}
 
-
-
-ion-card {
-  ion-card-header {
-    padding-bottom: .5rem;
-  }
-  ion-card-subtitle {
-    text-align: left;
-    display: flex;
-    ion-text {
-      box-decoration-break: clone;
-      margin-left: 0.5rem;
-      font-size: 1rem;
-      align-self: center;
-      text-transform: capitalize;
-      span {
-        text-transform: lowercase;
+    &__contents {
+      &--single-content {
+        margin: 0;
+        padding: 0;
+        ion-card-header {
+          padding-bottom: .5rem;
+        }
+        ion-card-subtitle {
+          text-align: left;
+          display: flex;
+          ion-label {
+            box-decoration-break: clone;
+            margin-left: 0.5rem;
+            //font-size: 1rem;
+            align-self: center;
+            text-transform: capitalize;
+            span {
+              text-transform: lowercase;
+            }
+          }
+          ion-icon {
+            font-size: 1.2rem;
+          }
+        }
+        ion-card-content {
+          ion-text {
+            font-size: .9rem;
+          }
+        }
+        ion-item-divider{
+          ion-item {
+            width: 100%;
+          }
+        }
       }
     }
-    ion-icon {
-      font-size: 1.2rem;
-    }
-  }
-  ion-card-content {
-    ion-item {
-      font-size: .9rem;
-    }
-  }
-
-}
-
-ion-item-divider{
-  ion-item {
-     width: 100%;
   }
 }

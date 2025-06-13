@@ -60,10 +60,11 @@ export class EditProfileFormComponent implements OnInit {
   ngOnInit(): void {
     if(this.fieldName) this.buildForm();
     if (this.fieldName === this.FieldName.Children) {
-      const value =  (this.fieldValue as boolean) === false
-        ?  this.childrenOptions[0]
-        : (this.fieldValue as boolean) === true
-        ? this.childrenOptions[1]: null;
+      const value =
+      (this.fieldValue as boolean) === false
+      ?  this.childrenOptions[0]
+      : (this.fieldValue as boolean) === true
+      ? this.childrenOptions[1]: '-';
       this.selectedChildrenOption = value;
     }
 

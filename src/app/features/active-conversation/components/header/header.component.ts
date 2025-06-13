@@ -59,15 +59,21 @@ export class headerComponent implements OnChanges {
           {
             user_id: this.partnerInfo.user_id,
             profile_id: 0,
+            name: this.partnerInfo.name,
             birth_date: this.partnerInfo.birth_date,
             city: this.partnerInfo.city,
             connection_status: this.partnerInfo.connection_status,
             country: this.partnerInfo.country,
-            name: this.partnerInfo.name,
+            height: this.partnerInfo.height,
+            children: this.partnerInfo.children,
+            latitude: this.partnerInfo.latitude,
+            longitude: this.partnerInfo.longitude,
+            education: this.partnerInfo.education,
             match_id: 0,
             match_status: 0,
             photos: this.partnerInfo.photos,
             bio: this.partnerInfo.bio,
+            languages: this.partnerInfo.languages,
             looking_for: this.partnerInfo.looking_for,
             sexual_orientation: this.partnerInfo.sexual_orientation
           }

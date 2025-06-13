@@ -3,6 +3,6 @@
     <ion-label>Heigh</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button (click)="onEditFormModal()">
-    <ion-label> {{ userHeight ?? '-' }}</ion-label>
+    <ion-label> {{ userHeight ? userHeight + ' cm': '-' }}</ion-label>
   </ion-item>
 </ion-item-group>

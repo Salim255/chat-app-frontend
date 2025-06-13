@@ -1,8 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Match } from '../../models/match.model';
 import { StringUtils } from 'src/app/shared/utils/string-utils';
 import { ActiveConversationService } from 'src/app/features/active-conversation/services/active-conversation.service';
@@ -42,6 +38,12 @@ export class MatchItemComponent {
       bio: match.bio,
       sexual_orientation: match.sexual_orientation,
       looking_for: match.looking_for,
+      height: match.height,
+      latitude: match.latitude,
+      longitude: match.longitude,
+      children: match.children,
+      education: match.education,
+      languages: match.languages,
       matched_at: match.match_updated_at
     }
   }

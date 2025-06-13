@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { PreferencesService, PrefFieldName } from "../../../services/preferences.service";
-import { LookingFor } from "src/app/features/profile-viewer/components/looking-for/looking-for.component";
+import { LookingFor } from "src/app/features/profile-viewer/profile-viewer.page";
+
 
 @Component({
   selector: 'app-looking-for-pref',

@@ -3,8 +3,13 @@
     <ion-label>I'm Looking for</ion-label>
   </ion-item-divider>
   <ion-item lines="none" button >
-    <ion-text *ngFor="let item of lookingFor; let isLast = last">
-      {{ lookingForLabels[item] }} <ng-container *ngIf="!isLast">, </ng-container>
-    </ion-text>
+    <ng-container *ngIf="lookingFor.length; else lookingPlaceholder ">
+      <ion-text *ngFor="let item of lookingFor; let isLast = last">
+        {{ lookingForLabels[item] }} <ng-container *ngIf="!isLast">, </ng-container>
+      </ion-text>
+    </ng-container>
+    <ng-template #lookingPlaceholder>
+      <ion-text> - </ion-text>
+    </ng-template>
   </ion-item>
 </ion-item-group>

@@ -42,6 +42,12 @@ export class ItsMatchModalComponent implements OnInit {
       bio: this.matchedProfile.bio,
       looking_for: this.matchedProfile.looking_for,
       sexual_orientation: this.matchedProfile.sexual_orientation,
+      height: this.matchedProfile.height,
+      children: this.matchedProfile.children,
+      latitude: this.matchedProfile.latitude,
+      longitude: this.matchedProfile.longitude,
+      education: this.matchedProfile.education,
+      languages: this.matchedProfile.languages,
       is_admin: false,
       matched_at: this.matchedProfile.match_updated_at
     }

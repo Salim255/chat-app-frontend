@@ -1,23 +1,30 @@
 import { SexOrientation } from "../../account/components/dating-profile/edit-profile/edit-sex-orientation/edit-sex.component";
 import { RequestStatus } from "../../active-conversation/services/active-conversation-http.service";
-import { LookingFor } from "../../profile-viewer/components/looking-for/looking-for.component";
+import { LookingFor } from "../../profile-viewer/profile-viewer.page";
 import { Conversation } from "../models/conversation.model";
 
-export type UserInChatDto = {
-  user_id: number;
-  photos: string[];
-  name: string;
-  bio: string;
-  looking_for: LookingFor;
-  connection_status: string;
-  is_admin: boolean;
-  birth_date: Date;
-  city: string;
-  country: string;
-  sexual_orientation: SexOrientation;
-  public_key: string | null;
-  matched_at: Date | null;
-
+export class UserInChatDto {
+  constructor(
+    public user_id: number,
+    public photos: string[],
+    public name: string,
+    public bio: string,
+    public looking_for: LookingFor[],
+    public connection_status: string,
+    public is_admin: boolean,
+    public birth_date: Date,
+    public city: string,
+    public country: string,
+    public sexual_orientation: SexOrientation,
+    public height: number,
+    public children: boolean,
+    public latitude: number,
+    public longitude: number,
+    public education: string,
+    public public_key: string | null,
+    public languages: string [],
+    public matched_at: Date | null,
+  ){}
 }
 
 
