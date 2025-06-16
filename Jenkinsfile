@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         registryCredentials = 'ecr:eu-west-3:awscreds'
-        imageName = "961341553126.dkr.ecr.eu-west-3.amazonaws.com/intimacy-repository"
+        imageName = "961341553126.dkr.ecr.eu-west-3.amazonaws.com/intimacy-frontend"
         intimacyRegistry = "https://961341553126.dkr.ecr.eu-west-3.amazonaws.com"
         ANGULAR_OUTPUT_DIR = "www"
     }
