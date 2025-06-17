@@ -7,3 +7,5 @@ fi
 
 docker buildx create --use
 docker buildx build --platform linux/amd64 -t crawan/intimacy-client:amd64 --push .
+
+mkdir -p ~/jenkins-agent-workdir
