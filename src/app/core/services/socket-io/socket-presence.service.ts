@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SocketCoreService } from "./socket-core.service";
 import { Socket } from "socket.io-client";
-import { SocketRoomService } from "./socket-room.service";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export type RandomUserConnectionStatus = {
@@ -14,10 +13,8 @@ export class SocketPresenceService {
   private randomUserConnectionStatusSubject = new BehaviorSubject< RandomUserConnectionStatus| null>(null);
 
   constructor(
-    private socketRoomService: SocketRoomService,
     private socketCore: SocketCoreService) {
     this.initializePresenceListener();
-    console.log('Hello from Presence')
   }
 
   initializePresenceListener():void{
@@ -34,7 +31,6 @@ export class SocketPresenceService {
   randomUserGoesOffline(): void{
     this.socket?.on('user-offline', (updatedUser: RandomUserConnectionStatus) => {
       if(!updatedUser) return;
-      //console.log( updatedUser, 'Hello from random user goes offline')
       this.setRandomUserConnectionStatus(updatedUser);
     });
   }

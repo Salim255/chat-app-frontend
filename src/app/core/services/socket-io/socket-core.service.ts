@@ -4,7 +4,6 @@ import { io, Socket } from "socket.io-client";
 import { environment } from "src/environments/environment";
 import { ConversationService } from "src/app/features/conversations/services/conversations.service";
 
-
 export enum ConnectionStatus {
   Online = 'online',
   Offline = 'offline',
@@ -15,7 +14,8 @@ export class SocketCoreService {
   private socket: Socket | null = null;
   private readonly ENV = environment;
 
-  private readonly connectionStatusSubject = new BehaviorSubject<ConnectionStatus>(ConnectionStatus.Offline);
+  private readonly connectionStatusSubject =
+    new BehaviorSubject<ConnectionStatus>(ConnectionStatus.Offline);
   readonly connectionStatus$ = this.connectionStatusSubject.asObservable();
   constructor(private conversationService : ConversationService ){}
 
@@ -31,7 +31,6 @@ export class SocketCoreService {
     });
 
     this.socket?.on('connect', () => {
-      console.log(`✅ Connected as User: ${userId}`);
       this.connectionStatusSubject.next(ConnectionStatus.Online);
       this.conversationService.fetchConversations().pipe(take(1)).subscribe();
       this.socket?.emit('register-user', userId);
@@ -39,7 +38,6 @@ export class SocketCoreService {
     });
 
     this.socket?.on('disconnect', () => {
-      console.log(`❌ Disconnected`);
       this.connectionStatusSubject.next(ConnectionStatus.Offline);
     });
   }

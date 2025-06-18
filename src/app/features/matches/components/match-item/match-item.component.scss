@@ -15,7 +15,7 @@ ion-card {
     }
   }
   .card-overlay {
-    background: linear-gradient(to bottom, transparent, rgb(135, 12, 82));
+    background: linear-gradient(to bottom, transparent, var(--ion-color-primary));
     position: absolute;
     bottom: 0;
     width: 100%;

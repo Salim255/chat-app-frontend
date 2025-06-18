@@ -120,17 +120,20 @@ export class ProfileViewerPage implements OnInit {
       });
       }
     }
-    const childrenText =
-      this.profile.children === false
-      ? `I don't have children`
-      : this.profile.children
-      ? 'I have children' : `-`;
 
-    this.profileContent.push({
-      title: 'Children',
-      value:  childrenText ,
-      iconName: "people-outline"
-    });
+    if (this.profile.children !== undefined || this.profile.children !== null) {
+      const childrenText =
+        this.profile.children === false
+        ? `I don't have children`
+        : 'I have children';
+
+      this.profileContent.push({
+        title: 'Children',
+        value:  childrenText ,
+        iconName: "people-outline"
+      });
+    }
+
   }
 
   capitalizeText(text: string): string {

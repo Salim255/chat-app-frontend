@@ -15,7 +15,6 @@ export class AppTranslateService {
     } else  {
       this.translateService.use('fr');
     }
-
   }
 
   get getCurrentLang(): string{

@@ -30,7 +30,6 @@ export class SocketMessageService {
   }
 
   notifyPartnerOfComingMessage(notificationData: MessageNotifierPayload): void {
-    console.log(notificationData, "Hello")
     this.socket = this.socketCoreService.getSocket();
     this.socket?.emit('coming-message', notificationData);
   }
@@ -52,7 +51,6 @@ export class SocketMessageService {
        this.getActiveConversationService().fetchActiveConversation()
        .pipe(take(1))
        .subscribe((response)=>{
-          console.log(response.data.chat);
           // update the conversation with updated conversation
           const updatedConversations =  this.conversationService.updateConversationsList(response.data.chat);
           this.conversationService.setConversations([...updatedConversations]);

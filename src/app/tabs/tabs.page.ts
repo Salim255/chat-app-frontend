@@ -8,6 +8,7 @@ import { SocketRoomService } from '../core/services/socket-io/socket-room.servic
 import { SocketMessageService } from '../core/services/socket-io/socket-message.service';
 import { InteractionBtnService } from '../features/discover/services/interaction-btn.service';
 import { SocketTypingService } from '../core/services/socket-io/socket-typing.service';
+import { AccountService } from '../features/account/services/account.service';
 
 export type displayTap = 'show' | 'hide';
 @Component({
@@ -28,6 +29,7 @@ export class TabsPage implements OnInit, OnDestroy {
   isDiscoverActive = true;
 
   constructor(
+    private accountService: AccountService,
     private interactionBtnService:InteractionBtnService,
     private socketCoreService: SocketCoreService,
     private authService: AuthService,
@@ -64,6 +66,7 @@ export class TabsPage implements OnInit, OnDestroy {
         this.socketRoomService.initializeRoomListeners();
         this.socketMessageService.initializeMessageListener();
         this.socketTypingService.initializeTypingListener();
+        this.accountService.fetchAccount().subscribe();
       }
     });
   }

@@ -72,7 +72,7 @@ export class AuthFormComponent implements OnInit {
         if(this.authMode === AuthMode.signup) {
           this.router.navigateByUrl('auth/create-profile')
         } else {
-          this.router.navigateByUrl('/tabs/discover');
+          this.router.navigateByUrl('/tabs/account');
         }
 
         //
