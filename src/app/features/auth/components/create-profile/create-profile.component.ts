@@ -213,7 +213,7 @@ export class CreateProfileComponent implements OnInit {
 
     this.completeProfileService.createProfile(multiPart).subscribe({
       next:() => {
-        this.router.navigateByUrl('/tabs/discover');
+        this.router.navigateByUrl('/tabs/account');
       },
       error: (err) => {
         console.log(err);

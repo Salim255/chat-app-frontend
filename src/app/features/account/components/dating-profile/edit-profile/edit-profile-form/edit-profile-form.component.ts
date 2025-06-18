@@ -213,4 +213,24 @@ export class EditProfileFormComponent implements OnInit {
     // Update search bar input as well
     this.editProfileFormFields.get(FieldName.City)?.markAsTouched();
   }
+
+  formTextHeader(fieldName: FieldName ): string {
+    switch (fieldName) {
+      case FieldName.Bio:
+        return 'Your bio';
+      case FieldName.Children:
+        return 'Do you have children?';
+      case FieldName.City:
+        return 'Where do you live?';
+      case FieldName.Education:
+        return 'Your shool';
+      case FieldName.Gender:
+        return 'Your gender';
+      case FieldName.SexOrientation:
+        return 'Your sexual orientation';
+      case FieldName.UserHeight:
+        return 'Your height';
+      default:
+        return '';}
+  }
 }

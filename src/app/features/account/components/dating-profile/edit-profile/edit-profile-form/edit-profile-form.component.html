@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="" (click)="onCancelEditing()" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title> {{ fieldName === FieldName.City ? 'Travel to': fieldName }} </ion-title>
+    <ion-title> {{ formTextHeader(fieldName)}} </ion-title>
     <ion-buttons slot="end">
       <ion-button
       (click)="onSubmit()"
