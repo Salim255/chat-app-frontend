@@ -1,10 +1,13 @@
 ion-content {
-  --background: linear-gradient(to bottom,
-  var(--ion-color-cyan-5), var(--ion-color-cyan-6));
-  .custom-grid {
+  --background: linear-gradient(
+      to bottom,
+      var(--ion-color-cyan-5),
+      var(--ion-color-cyan-6)
+   );
+  .auth-entry {
     height: 100vh;
     padding: 0 1rem;
-    .row-logo {
+    &__app-logo {
       height: 15%;
       padding-top: 4rem;
       ion-col {
@@ -15,7 +18,6 @@ ion-content {
         .languages {
           position: absolute;
           right: 0;
-
           ::ng-deep app-languages-switcher ion-icon {
             --color: var(--ion-color-grey-7);
             font-size: 1.5rem;
@@ -36,7 +38,7 @@ ion-content {
       }
     }
 
-    .row-intro {
+    &__intro {
       height: 10%;
       ion-col {
         align-items: center;
@@ -48,7 +50,7 @@ ion-content {
       }
     }
 
-    .row-terms {
+    &__terms {
       height: 50%;
       display: flex;
       align-items: flex-end;
@@ -62,7 +64,7 @@ ion-content {
       }
     }
 
-    .row-button {
+    &__button {
       height: 10%;
       ion-col {
         & {

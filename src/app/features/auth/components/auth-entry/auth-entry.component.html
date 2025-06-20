@@ -1,14 +1,14 @@
 <ion-content [fullscreen]="true">
-  <ion-grid class="custom-grid">
-    <ion-row class="row-logo">
-      <ion-col>
+  <ion-grid class="auth-entry">
+    <ion-row class="auth-entry__app-logo">
+      <ion-col >
        <app-logo></app-logo>
-        <div class="languages">
+        <div class="auth-entry__app-logo--languages">
            <app-languages-switcher></app-languages-switcher>
         </div>
       </ion-col>
     </ion-row>
-    <ion-row class="row-intro">
+    <ion-row class="auth-entry__intro">
       <ion-col>
         <ion-text>
           <strong> {{ 'INTRO.START' | translate }} </strong>
@@ -17,7 +17,7 @@
           </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row class="row-terms">
+    <ion-row class="auth-entry__terms">
       <ion-col>
         <ion-text>
           {{ 'TERMS.TEXT' | translate }}  &quot;{{ "TERMS.SIGNUP" | translate }}&quot;
@@ -29,7 +29,7 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row class="row-button">
+    <ion-row class="auth-entry__button">
       <ion-col>
         <app-button [btnText]="'CREATE_ACCOUNT' | translate" (click)="onCreate()"></app-button>
         <app-button [btnText]="'SIGN_IN' | translate" (click)="onSignIn()"></app-button>
